@@ -1,0 +1,15 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://admin:Trang123@cluster0.mll6ctp.mongodb.net/flower-shop
+
+application:
+  version: "v1"
+  default:
+    paging:
+      page: 0
+      size: 20
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
