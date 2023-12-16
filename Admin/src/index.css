@@ -1,0 +1,69 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.rti--container {
+  --rti-bg: transparent !important;
+  --rti-tag: rgba(126, 58, 242, 1) !important;
+  --rti-tag-padding: 5px 8px !important;
+  margin-top: 0.5rem;
+  --rti-main: 0 0 0 3px hsla(210, 2.4%, 83.9%, 0.45);
+  /* --rti-border: rgba(76, 79, 82, 1); */
+}
+
+.rti--input {
+  background: transparent !important;
+  width: 100%;
+}
+.rti--tag {
+  color: #fff;
+  background: var(--rti-tag);
+}
+@media (min-width: 640px) {
+  .sm\:max-w-xl {
+    max-width: 65rem;
+    /* max-width: none; */
+  }
+}
+.theme-dark .dark\:border-gray-600 {
+  background-color: transparent !important;
+}
+.rti--container:focus-within {
+  box-shadow: 0 0 0 3px hsla(210, 2.4%, 83.9%, 0.45);
+  border-color: transparent;
+}
+
+.ck-editor__editable {
+  height: 120px;
+  padding: 0.5rem 1.4rem !important;
+}
+.ck-editor__editable:focus {
+  box-shadow: none !important;
+}
+ul {
+  list-style: none;
+}
+.blog-img {
+  width: 244px;
+  height: 163px;
+}
+.blog-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
