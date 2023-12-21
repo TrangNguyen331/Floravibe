@@ -60,7 +60,7 @@ const SingleBlog = () => {
                 <img
                   src={blog.image}
                   alt=""
-                  className="max-w-2xl m-auto rounded-lg"
+                  className="max-w-2xl m-auto rounded-lg blog-details-img"
                 />
               </div>
 

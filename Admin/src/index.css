@@ -67,3 +67,8 @@ ul {
   height: 100%;
   object-fit: cover;
 }
+.blog-details-img{
+  width:612px;
+  height: 408px;
+  object-fit: cover;
+}
