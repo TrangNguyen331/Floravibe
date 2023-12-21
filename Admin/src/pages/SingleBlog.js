@@ -72,7 +72,7 @@ const SingleBlog = () => {
 
                 <div className="flex items-center justify-between py-5">
                   <div className="text-gray-500 text-sm font-semibold">
-                    Author: {blog.author}P
+                    Author: {blog.author}
                   </div>
                   <div className="">
                     {blog && blog.category && blog.category.length > 0
