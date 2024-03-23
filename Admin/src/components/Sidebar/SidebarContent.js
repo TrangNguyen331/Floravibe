@@ -19,7 +19,7 @@ function SidebarContent() {
         Floravibe
       </a>
       <ul className="mt-6">
-        {routes.slice(0, 3).map((route) =>
+        {routes.slice(0, 4).map((route) =>
           route.routes ? (
             <SidebarSubmenu route={route} key={route.name} />
           ) : (

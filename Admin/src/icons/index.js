@@ -37,7 +37,7 @@ import { ReactComponent as StarIcon } from "./star.svg";
 import { ReactComponent as AddIcon } from "./add.svg";
 import { ReactComponent as PublishIcon } from "./publish.svg";
 import { ReactComponent as StoreIcon } from "./store.svg";
-
+import { ReactComponent as VoucherICon } from "./coupon.svg";
 export {
   GroupIcon,
   UserIcon,
@@ -78,4 +78,5 @@ export {
   OutlinePersonIcon,
   OutlineCogIcon,
   OutlineLogoutIcon,
+  VoucherICon,
 };
