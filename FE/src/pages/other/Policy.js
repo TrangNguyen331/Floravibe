@@ -4,7 +4,7 @@ import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import { MetaTags } from "react-meta-tags";
 import LayoutOne from "../../layouts/LayoutOne";
 import "../../assets/scss/_policy.scss";
-import {Container, Col, Row} from "reactstrap";
+import {Col, Row} from "reactstrap";
 
 
 
@@ -57,9 +57,6 @@ const Policy = () => {
                     <div className="first_section">
                         <Row>
                             <Col lg="4" md="4">
-                                <h1 className="first_title">
-                                Lorem ipsum
-                                </h1>
                                 <h1 className="first_title">
                                 Lorem ipsum
                                 </h1>
