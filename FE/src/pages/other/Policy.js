@@ -60,6 +60,9 @@ const Policy = () => {
                                 <h1 className="first_title">
                                 Lorem ipsum
                                 </h1>
+                                <h1 className="first_title">
+                                Lorem ipsum
+                                </h1>
                             </Col>
                             <Col lg="8" md="8">
                                 <p>
