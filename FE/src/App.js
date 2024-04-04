@@ -29,6 +29,7 @@ const Wishlist = lazy(() => import("./pages/other/Wishlist"));
 // const Compare = lazy(() => import("./pages/other/Compare"));
 const Checkout = lazy(() => import("./pages/other/Checkout"));
 const NotFound = lazy(() => import("./pages/other/NotFound"));
+const Policy = lazy(() => import("./pages/other/Policy"));
 
 const App = () => {
   return (
@@ -121,6 +122,10 @@ const App = () => {
                 <Route
                   path={process.env.PUBLIC_URL + "/not-found"}
                   component={NotFound}
+                />
+                <Route
+                  path={process.env.PUBLIC_URL + "/policy"}
+                  component={Policy}
                 />
 
                 <Route exact component={NotFound} />
