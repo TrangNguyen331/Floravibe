@@ -9,7 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
 @Service
 public class VoucherServiceImpl implements VoucherService {
     private final VoucherRepository repository;
@@ -21,6 +21,7 @@ public class VoucherServiceImpl implements VoucherService {
     public Page<Voucher> getPaging(String search, Pageable pageable) {
         return repository.getPaging(search,pageable);
     }
+
 
     @Override
     public Voucher addNew(VoucherDto dto){
@@ -36,10 +37,12 @@ public class VoucherServiceImpl implements VoucherService {
                 .orElseThrow(() -> new NotFoundException("Voucher not found!"));
         // Cập nhật các trường dữ liệu của voucher từ DTO
         voucher.setVoucherName(dto.getVoucherName());
+        voucher.setVoucherValue(dto.getVoucherValue());
         voucher.setDescription(dto.getDescription());
         voucher.setEffectiveDate(dto.getEffectiveDate());
         voucher.setValidUntil(dto.getValidUntil());
         voucher.setQuantity(dto.getQuantity());
+        voucher.setUsedVoucher(dto.getUsedVoucher());
         // Lưu trữ lại voucher đã cập nhật
         repository.save(voucher);
         return voucher;
@@ -51,5 +54,9 @@ public class VoucherServiceImpl implements VoucherService {
         voucher.setActive(!voucher.isActive);
         repository.save(voucher);
         return voucher;
+    }
+    @Override
+    public List<Voucher> getAllVouchers() {
+        return repository.findAll();
     }
 }

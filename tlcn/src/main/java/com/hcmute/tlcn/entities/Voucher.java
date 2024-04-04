@@ -15,6 +15,7 @@ public class Voucher {
     @Id
     public String id;
     public String voucherName;
+    public double voucherValue;
     public String description;
     public LocalDate effectiveDate;
     public LocalDate validUntil;

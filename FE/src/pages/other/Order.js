@@ -62,7 +62,6 @@ const Order = ({ location }) => {
                               </p>
                             </div>
                           </li>
-
                           <li>
                             <div className="order-status-qty">
                               <p className="order-status">

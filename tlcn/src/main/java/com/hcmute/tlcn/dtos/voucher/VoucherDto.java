@@ -14,6 +14,7 @@ import java.time.LocalDate;
 public class VoucherDto {
     public String id;
     public String voucherName;
+    public double voucherValue;
     public String description;
     public LocalDate effectiveDate;
     public LocalDate validUntil;

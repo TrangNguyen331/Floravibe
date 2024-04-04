@@ -32,7 +32,7 @@ const NotFound = lazy(() => import("./pages/other/NotFound"));
 
 const App = () => {
   return (
-    <ToastProvider placement="bottom-left">
+    <ToastProvider placement="top-right">
       <BreadcrumbsProvider>
         <Router>
           <ScrollToTop>

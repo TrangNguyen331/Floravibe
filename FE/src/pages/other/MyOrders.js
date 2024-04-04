@@ -46,7 +46,7 @@ const MyOrders = ({ location }) => {
 
     fetchData();
   }, []);
-  console.log(orders);
+  console.log("allOrders", orders);
   const { pathname } = location;
   return (
     <Fragment>
