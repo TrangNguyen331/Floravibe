@@ -3,6 +3,7 @@ package com.hcmute.tlcn.services.Impl;
 import com.hcmute.tlcn.dtos.order.OrderDetailDto;
 import com.hcmute.tlcn.dtos.order.OrderDto;
 import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
+import com.hcmute.tlcn.dtos.voucher.VoucherDto;
 import com.hcmute.tlcn.entities.Account;
 import com.hcmute.tlcn.entities.Order;
 import com.hcmute.tlcn.exceptions.NotFoundException;
@@ -70,6 +71,15 @@ public class OrderServiceImpl implements OrderService {
     public Order addNew(OrderDto dto) {
         Order order=new Order();
         modelMapper.map(dto,order);
+        VoucherDto voucherDto = new VoucherDto();
+        voucherDto.setVoucherName(dto.getVoucherDetail().getVoucherName());
+        voucherDto.setVoucherValue(dto.getVoucherDetail().getVoucherValue());
+        voucherDto.setDescription(dto.getVoucherDetail().getDescription());
+        voucherDto.setEffectiveDate(dto.getVoucherDetail().getEffectiveDate());
+        voucherDto.setValidUntil(dto.getVoucherDetail().getValidUntil());
+        voucherDto.setQuantity(dto.getVoucherDetail().getQuantity());
+        voucherDto.setUsedVoucher(dto.getVoucherDetail().getUsedVoucher());
+        order.setVoucherDetail(voucherDto);
         repository.save(order);
         return order;
     }

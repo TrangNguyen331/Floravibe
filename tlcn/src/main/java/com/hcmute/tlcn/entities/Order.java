@@ -1,6 +1,7 @@
 package com.hcmute.tlcn.entities;
 
 import com.hcmute.tlcn.dtos.order.AdditionalOrderDetailDto;
+import com.hcmute.tlcn.dtos.voucher.VoucherDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +21,9 @@ public class Order {
     private String id;
     private List<OrderDetail> details;
     private AdditionalOrderDetailDto additionalOrder;
+
     private double total;
+    private VoucherDto voucherDetail;
     private String status;
     private String methodPaid;
     private boolean isPaid =false;
