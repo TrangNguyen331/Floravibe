@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/${application.version}/vouchers")
 public class VoucherController {
@@ -32,7 +30,6 @@ public class VoucherController {
         Page<Voucher> result = service.getPaging(search,pageable);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
     @PostMapping
     public ResponseEntity<Voucher> addNewVoucher(@RequestBody VoucherDto dto){
         Voucher result = service.addNew(dto);
@@ -49,11 +46,5 @@ public class VoucherController {
     public ResponseEntity<Voucher> deleteVoucher(@PathVariable String id) {
         Voucher result = service.delete(id);
         return ResponseEntity.ok(result);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Voucher>> getAllVouchers() {
-        List<Voucher> vouchers = service.getAllVouchers();
-        return new ResponseEntity<>(vouchers, HttpStatus.OK);
     }
 }
