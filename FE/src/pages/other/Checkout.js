@@ -17,6 +17,9 @@ const Checkout = ({ location, cartItems, currency }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const history = useHistory();
+  const [orders, setOrders] = useState([]);
+  const [voucherDiscount, setVoucherDiscount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [submitData, setSubmitData] = useState({
     firstName: "",
     lastName: "",
@@ -28,11 +31,10 @@ const Checkout = ({ location, cartItems, currency }) => {
     voucherName: "",
   });
   let cartTotalPrice = 0;
-  const [orders, setOrders] = useState([]);
+
   const [appliedVoucherName, setAppliedVoucherName] = useState("");
   const [vouchers, setVouchers] = useState([]);
-  const [voucherDiscount, setVoucherDiscount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+
   const getVouchers = async () => {
     try {
       const response = await axiosInstance.get("/api/v1/vouchers");
@@ -52,7 +54,6 @@ const Checkout = ({ location, cartItems, currency }) => {
       [name]: value,
     });
   };
-
   const applyCoupon = () => {
     setIsLoading(true);
     if (!submitData.voucherName) {
@@ -67,45 +68,10 @@ const Checkout = ({ location, cartItems, currency }) => {
       (voucher) => voucher.voucherName === submitData.voucherName
     );
 
-    // setTimeout(() => {
-    //   if (selectedVoucher && selectedVoucher.quantity>0) {
-    //     setVoucherDiscount(selectedVoucher.voucherValue);
-    //     setAppliedVoucherName(submitData.voucherName);
-    //   } else {
-    //     setVoucherDiscount(0);
-    //   }
-    //   setSubmitData({ ...submitData, voucherName: "" });
-    //   setIsLoading(false);
-    //   console.log("applied");
-    // }, 1200);
-    // if (selectedVoucher) {
-    //   if (selectedVoucher.quantity > 0) {
-    //     setTimeout(() => {
-    //       setVoucherDiscount(selectedVoucher.voucherValue);
-    //       setAppliedVoucherName(submitData.voucherName);
-    //       setSubmitData({ ...submitData, voucherName: "" });
-    //       setIsLoading(false);
-    //       console.log("applied");
-    //     }, 1300);
-    //   } else {
-    //     setIsLoading(false);
-    //     addToast("This voucher is out of stock!", {
-    //       appearance: "error",
-    //       autoDismiss: true,
-    //     });
-    //   }
-    // } else {
-    //   setIsLoading(false);
-    //   addToast("Invalid voucher code!", {
-    //     appearance: "error",
-    //     autoDismiss: true,
-    //   });
-    // }
     if (selectedVoucher) {
       const currentDate = new Date();
       const effectiveDate = new Date(selectedVoucher.effectiveDate);
       const validUntil = new Date(selectedVoucher.validUntil);
-
       // Kiểm tra xem ngày hiện tại có nằm trong khoảng từ effectiveDate đến validUntil không
       if (currentDate >= effectiveDate && currentDate <= validUntil) {
         if (selectedVoucher.quantity > 0) {
@@ -244,11 +210,12 @@ const Checkout = ({ location, cartItems, currency }) => {
       });
     }
   };
+
   const getAllOrders = async () => {
     try {
       const response = await axiosInstance.get("/api/v1/orders");
       setOrders(response.data);
-      console.log(orders);
+      console.log("orders", orders);
     } catch (error) {
       console.log("Fail to load my orders");
     }
@@ -299,7 +266,6 @@ const Checkout = ({ location, cartItems, currency }) => {
             <li>Order Complete</li>
           </ul>
         </div>
-        {/* Apply voucher */}
         <div className="container mt-5">
           <div className="discount-code-wrapper col-lg-6">
             <h4>Use Coupon Code</h4>
@@ -397,6 +363,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                         <label>Email Address</label>
                         <input
                           type="text"
+                          disabled
                           name="email"
                           value={submitData.email}
                           onChange={handleInputChange}
@@ -419,6 +386,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                   </div>
                 </div>
               </div>
+              {/* Order info */}
               <div className="col-lg-5">
                 <div className="your-order-area">
                   <h3>Your order</h3>
@@ -503,8 +471,17 @@ const Checkout = ({ location, cartItems, currency }) => {
                         <ul>
                           <li className="order-total">Total</li>
                           <li>
-                            {cartTotalPrice.toLocaleString("vi-VN") +
-                              currency.currencySymbol}
+                            {orders.length === 0
+                              ? (
+                                  cartTotalPrice -
+                                  cartTotalPrice * 0.1 -
+                                  voucherDiscount
+                                ).toLocaleString("vi-VN") +
+                                currency.currencySymbol
+                              : (
+                                  cartTotalPrice - voucherDiscount
+                                ).toLocaleString("vi-VN") +
+                                currency.currencySymbol}
                           </li>
                         </ul>
                       </div>

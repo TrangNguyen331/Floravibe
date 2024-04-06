@@ -356,40 +356,6 @@ h3.cart-page-title {
       }
     }
   }
-  .discount-code {
-    margin: 21px 0 0;
-    p {
-      margin: 0 0 15px;
-    }
-    form {
-      input {
-        height: 40px;
-        margin-bottom: 30px;
-        padding-left: 10px;
-
-        border: 1px solid #ebebeb;
-        background: #fff;
-      }
-      button.cart-btn-2 {
-        font-size: 14px;
-        font-weight: 500;
-
-        padding: 13px 42px 12px;
-
-        cursor: pointer;
-        transition: all 0.3s ease 0s;
-        text-transform: uppercase;
-
-        color: #fff;
-        border: medium none;
-        border-radius: 50px;
-        background-color: $theme-color;
-        &:hover {
-          background-color: #333;
-        }
-      }
-    }
-  }
 }
 
 .grand-totall {
