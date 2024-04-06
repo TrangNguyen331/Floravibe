@@ -6,12 +6,15 @@ import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import axiosInstance from "../../axiosInstance";
 import { useParams } from "react-router-dom";
 import { formatReadableDate, getStatus } from "../../helpers/helper";
-
-const Order = ({ location }) => {
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+const Order = ({ location, cartItems, currency }) => {
   console.log("Order details page");
   const [order, setOrder] = useState(null);
+  const [orders, setOrders] = useState([]);
   const { id } = useParams();
   console.log(id);
+  let cartTotalPrice = 0;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,9 +28,21 @@ const Order = ({ location }) => {
     };
 
     fetchData();
+    getAllOrders();
   }, []);
   console.log(order);
   const { pathname } = location;
+
+  const getAllOrders = async () => {
+    try {
+      const response = await axiosInstance.get("/api/v1/orders");
+      setOrders(response.data);
+      console.log("orders", orders);
+    } catch (error) {
+      console.log("Fail to load my orders");
+    }
+  };
+  const isFirstOrder = orders.length > 0 && orders[0].id === order.id;
   return !order ? (
     ""
   ) : (
@@ -62,6 +77,7 @@ const Order = ({ location }) => {
                               </p>
                             </div>
                           </li>
+
                           <li>
                             <div className="order-status-qty">
                               <p className="order-status">
@@ -78,6 +94,32 @@ const Order = ({ location }) => {
                             <span className="order-bottom-left">Shipping</span>
                             <span>Free</span>
                           </li>
+                          {isFirstOrder && (
+                            <li className="mt-3">
+                              <span className="order-bottom-left">
+                                First order
+                              </span>
+                              {order.details.forEach((detail) => {
+                                cartTotalPrice += detail.subtotal;
+                              })}
+                              <span>
+                                {"-" +
+                                  (cartTotalPrice * 0.1).toLocaleString(
+                                    "vi-VN"
+                                  ) +
+                                  currency.currencySymbol}
+                              </span>
+                            </li>
+                          )}
+                          {order.voucherDetail.id && (
+                            <li>
+                              <span className="order-bottom-left">Voucher</span>
+                              <span>
+                                {"-" + order.voucherDetail.voucherValue}đ
+                              </span>
+                            </li>
+                          )}
+
                           <li>
                             <span className="order-bottom-left">
                               Payment Method
@@ -186,5 +228,18 @@ const Order = ({ location }) => {
     </Fragment>
   );
 };
+Order.propTypes = {
+  cartItems: PropTypes.array,
+  currency: PropTypes.object,
+  location: PropTypes.object,
+};
 
-export default Order;
+const mapStateToProps = (state) => {
+  return {
+    cartItems: state.cartData,
+    currency: state.currencyData,
+  };
+};
+
+export default connect(mapStateToProps)(Order);
+// export default Order;

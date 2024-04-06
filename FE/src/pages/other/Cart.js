@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import MetaTags from "react-meta-tags";
@@ -15,7 +15,7 @@ import {
 } from "../../redux/actions/cartActions";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
-import axiosInstance from "../../axiosInstance";
+
 const Cart = ({
   location,
   cartItems,
@@ -29,19 +29,7 @@ const Cart = ({
   const { addToast } = useToasts();
   const { pathname } = location;
   let cartTotalPrice = 0;
-  const [data, setData] = useState([]);
-  const getVouchers = async () => {
-    try {
-      const response = await axiosInstance.get("/api/v1/vouchers");
-      setData(response.data);
-    } catch (error) {
-      console.log("Fetch data error", error);
-    }
-  };
-  useEffect(() => {
-    getVouchers();
-  }, []);
-  console.log(data);
+
   return (
     <Fragment>
       <MetaTags>
@@ -235,6 +223,7 @@ const Cart = ({
                   </div>
                 </div>
                 <div className="row">
+                  {/* <div className="col-lg-4 col-md-6"></div> */}
                   <div className="col-lg-12">
                     <div className="grand-totall">
                       <div className="title-wrap">

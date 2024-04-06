@@ -50,7 +50,6 @@ const IconGroup = ({
     };
     setDataInit();
   }, []);
-  console.log(userAvatar);
   return (
     <div
       className={`header-right-wrap ${iconWhiteClass ? iconWhiteClass : ""}`}

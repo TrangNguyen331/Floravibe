@@ -32,7 +32,6 @@ public class VoucherController {
         Page<Voucher> result = service.getPaging(search,pageable);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
     @PostMapping
     public ResponseEntity<Voucher> addNewVoucher(@RequestBody VoucherDto dto){
         Voucher result = service.addNew(dto);
@@ -50,7 +49,6 @@ public class VoucherController {
         Voucher result = service.delete(id);
         return ResponseEntity.ok(result);
     }
-
     @GetMapping
     public ResponseEntity<List<Voucher>> getAllVouchers() {
         List<Voucher> vouchers = service.getAllVouchers();
