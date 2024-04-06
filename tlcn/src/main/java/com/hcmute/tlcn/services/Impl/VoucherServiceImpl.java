@@ -36,15 +36,13 @@ public class VoucherServiceImpl implements VoucherService {
     public Voucher update(String id, VoucherDto dto) {
         Voucher voucher = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Voucher not found!"));
-        // Cập nhật các trường dữ liệu của voucher từ DTO
         voucher.setVoucherName(dto.getVoucherName());
-        voucher.setVoucherValue(dto.getVoucherValue());
+        voucher.setVoucherValue((dto.getVoucherValue()));
         voucher.setDescription(dto.getDescription());
         voucher.setEffectiveDate(dto.getEffectiveDate());
         voucher.setValidUntil(dto.getValidUntil());
         voucher.setQuantity(dto.getQuantity());
         voucher.setUsedVoucher(dto.getUsedVoucher());
-        // Lưu trữ lại voucher đã cập nhật
         repository.save(voucher);
         return voucher;
     }

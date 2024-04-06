@@ -71,7 +71,9 @@ public class OrderServiceImpl implements OrderService {
     public Order addNew(OrderDto dto) {
         Order order=new Order();
         modelMapper.map(dto,order);
+
         VoucherDto voucherDto = new VoucherDto();
+        voucherDto.setId(dto.getVoucherDetail().getId());
         voucherDto.setVoucherName(dto.getVoucherDetail().getVoucherName());
         voucherDto.setVoucherValue(dto.getVoucherDetail().getVoucherValue());
         voucherDto.setDescription(dto.getVoucherDetail().getDescription());
@@ -100,6 +102,7 @@ public class OrderServiceImpl implements OrderService {
                 orderDto.getDetails() ) {
             detailDto.setProduct(productRepository.findById(detailDto.getProductId()).orElse(null));
         }
+//        orderDto.setVoucherDetail(order.getVoucherDetail());
         return orderDto;
     }
 }

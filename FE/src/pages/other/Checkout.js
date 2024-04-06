@@ -31,7 +31,10 @@ const Checkout = ({ location, cartItems, currency }) => {
     voucherName: "",
   });
   let cartTotalPrice = 0;
+
+  const [appliedVoucherName, setAppliedVoucherName] = useState("");
   const [vouchers, setVouchers] = useState([]);
+
   const getVouchers = async () => {
     try {
       const response = await axiosInstance.get("/api/v1/vouchers");
@@ -53,19 +56,54 @@ const Checkout = ({ location, cartItems, currency }) => {
   };
   const applyCoupon = () => {
     setIsLoading(true);
+    if (!submitData.voucherName) {
+      setIsLoading(false);
+      addToast("Please enter a valid voucher code!", {
+        appearance: "error",
+        autoDismiss: true,
+      });
+      return;
+    }
     const selectedVoucher = vouchers.find(
       (voucher) => voucher.voucherName === submitData.voucherName
     );
-    setTimeout(() => {
-      if (selectedVoucher) {
-        setVoucherDiscount(selectedVoucher.voucherValue);
+
+    if (selectedVoucher) {
+      const currentDate = new Date();
+      const effectiveDate = new Date(selectedVoucher.effectiveDate);
+      const validUntil = new Date(selectedVoucher.validUntil);
+      // Kiểm tra xem ngày hiện tại có nằm trong khoảng từ effectiveDate đến validUntil không
+      if (currentDate >= effectiveDate && currentDate <= validUntil) {
+        if (selectedVoucher.quantity > 0) {
+          setTimeout(() => {
+            setVoucherDiscount(selectedVoucher.voucherValue);
+            setAppliedVoucherName(submitData.voucherName);
+            setSubmitData({ ...submitData, voucherName: "" });
+            setIsLoading(false);
+            console.log("applied");
+          }, 1300);
+        } else {
+          setIsLoading(false);
+          addToast("This voucher is out of stock!", {
+            appearance: "error",
+            autoDismiss: true,
+          });
+        }
       } else {
-        setVoucherDiscount(0);
+        setIsLoading(false);
+        addToast("This voucher is not currently valid!", {
+          appearance: "error",
+          autoDismiss: true,
+        });
       }
-      // Set isLoading to false after applying coupon
+    } else {
       setIsLoading(false);
-      console.log("applied");
-    }, 1300);
+      addToast("Invalid voucher code!", {
+        appearance: "error",
+        autoDismiss: true,
+      });
+    }
+    console.log("selectedVoucher", selectedVoucher);
   };
 
   const placeOrder = async () => {
@@ -76,13 +114,13 @@ const Checkout = ({ location, cartItems, currency }) => {
       );
       const firstDiscount = totalValue * 0.1;
       const selectedVoucher = vouchers.find(
-        (voucher) => voucher.voucherName === submitData.voucherName
+        (voucher) => voucher.voucherName === appliedVoucherName
       );
-      console.log(selectedVoucher);
 
       const voucherDiscount = selectedVoucher
         ? selectedVoucher.voucherValue
         : 0;
+
       const body = {
         details: cartItems.map((item) => ({
           productId: item.id,
@@ -98,16 +136,28 @@ const Checkout = ({ location, cartItems, currency }) => {
           address: submitData.streetAddress,
           additionalInformation: submitData.additionalInformation,
         },
-        voucherDetail: {
-          id: selectedVoucher.id,
-          voucherName: submitData.voucherName,
-          voucherValue: selectedVoucher.voucherValue,
-          description: selectedVoucher.description,
-          effectiveDate: selectedVoucher.effectiveDate,
-          validUntil: selectedVoucher.validUntil,
-          quantity: selectedVoucher.quantity,
-          usedVoucher: selectedVoucher.usedVoucher,
-        },
+        voucherDetail: selectedVoucher
+          ? {
+              id: selectedVoucher.id,
+              voucherName: appliedVoucherName,
+              voucherValue: selectedVoucher.voucherValue,
+              description: selectedVoucher.description,
+              effectiveDate: selectedVoucher.effectiveDate,
+              validUntil: selectedVoucher.validUntil,
+              quantity: selectedVoucher.quantity,
+              usedVoucher: selectedVoucher.usedVoucher,
+            }
+          : {
+              id: null,
+              voucherName: "",
+              voucherValue: 0,
+              description: "",
+              effectiveDate: "",
+              validUntil: "",
+              quantity: 0,
+              usedVoucher: 0,
+            },
+
         total:
           orders.length === 0
             ? totalValue - firstDiscount - voucherDiscount
@@ -118,10 +168,11 @@ const Checkout = ({ location, cartItems, currency }) => {
       };
 
       try {
-        axiosInstance.post("/api/v1/orders", body);
+        await axiosInstance.post("/api/v1/orders", body);
 
         if (selectedVoucher) {
-          const quantity = selectedVoucher.quantity - 1;
+          const quantity =
+            selectedVoucher.quantity === 0 ? 0 : selectedVoucher.quantity - 1;
           const usedVoucher = selectedVoucher.usedVoucher + 1;
           let voucherBody = {
             voucherName: selectedVoucher.voucherName,
@@ -138,6 +189,7 @@ const Checkout = ({ location, cartItems, currency }) => {
             voucherBody
           );
         }
+
         addToast("Order success", {
           appearance: "success",
           autoDismiss: true,
@@ -405,7 +457,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                         {voucherDiscount > 0 && (
                           <ul className="mt-3">
                             <li className="your-order-shipping">
-                              {submitData.voucherName}
+                              {appliedVoucherName && appliedVoucherName}
                             </li>
                             <li>
                               {"-" +

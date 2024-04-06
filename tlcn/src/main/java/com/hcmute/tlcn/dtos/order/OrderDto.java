@@ -16,6 +16,7 @@ import java.util.List;
 public class OrderDto {
     private List<OrderDetail> details;
     private AdditionalOrderDetailDto additionalOrder;
+    private VoucherDto voucherDetail;
     private double total;
     private VoucherDto voucherDetail;
 
