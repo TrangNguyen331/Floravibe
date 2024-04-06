@@ -46,9 +46,11 @@ const Vouchers = () => {
         id: null,
         voucherName: null,
         description: null,
+        voucherValue: null,
         effectiveDate: null,
         validUntil: null,
         quantity: null,
+        usedVoucher: null,
       });
     }
     setMode(mode);
@@ -59,9 +61,11 @@ const Vouchers = () => {
     id: null,
     voucherName: null,
     description: null,
+    voucherValue: null,
     effectiveDate: null,
     validUntil: null,
     quantity: null,
+    usedVoucher: null,
   });
   const fetchData = async (page) => {
     try {
@@ -96,9 +100,11 @@ const Vouchers = () => {
       let body = {
         voucherName: voucherInfo.voucherName,
         description: voucherInfo.description,
+        voucherValue: voucherInfo.voucherValue,
         effectiveDate: voucherInfo.effectiveDate,
         validUntil: voucherInfo.validUntil,
         quantity: voucherInfo.quantity,
+        usedVoucher: voucherInfo.usedVoucher,
       };
 
       if (mode === "add") {
@@ -114,11 +120,11 @@ const Vouchers = () => {
           )
         );
       }
-
       closeModal();
       setVoucherInfo({
         id: null,
         voucherName: null,
+        voucherValue: null,
         description: null,
         effectiveDate: null,
         validUntil: null,
@@ -214,6 +220,7 @@ const Vouchers = () => {
             <tr>
               <TableCell>Voucher Name</TableCell>
               <TableCell>Description</TableCell>
+              <TableCell>Voucher Value</TableCell>
               <TableCell>Effective Date</TableCell>
               <TableCell>Valid Til</TableCell>
               <TableCell>Quantity</TableCell>
@@ -229,6 +236,9 @@ const Vouchers = () => {
                 </TableCell>
                 <TableCell className="text-base">
                   {voucher.description}
+                </TableCell>
+                <TableCell className="text-base">
+                  {voucher.voucherValue}
                 </TableCell>
                 <TableCell className="text-base">
                   {new Date(voucher.effectiveDate).toLocaleDateString()}

@@ -25,8 +25,25 @@ const Checkout = ({ location, cartItems, currency }) => {
     phone: "",
     email: "",
     additionalInformation: "",
+    voucherName: "",
   });
   let cartTotalPrice = 0;
+  const [orders, setOrders] = useState([]);
+  const [appliedVoucherName, setAppliedVoucherName] = useState("");
+  const [vouchers, setVouchers] = useState([]);
+  const [voucherDiscount, setVoucherDiscount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const getVouchers = async () => {
+    try {
+      const response = await axiosInstance.get("/api/v1/vouchers");
+      setVouchers(response.data);
+    } catch (error) {
+      console.log("Fetch data error", error);
+    }
+  };
+  useEffect(() => {
+    getVouchers();
+  }, []);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -36,44 +53,210 @@ const Checkout = ({ location, cartItems, currency }) => {
     });
   };
 
-  const placeOrder = () => {
-    const totalValue = cartItems.reduce(
-      (sum, item) => sum + item.quantity * item.price,
-      0
+  const applyCoupon = () => {
+    setIsLoading(true);
+    if (!submitData.voucherName) {
+      setIsLoading(false);
+      addToast("Please enter a valid voucher code!", {
+        appearance: "error",
+        autoDismiss: true,
+      });
+      return;
+    }
+    const selectedVoucher = vouchers.find(
+      (voucher) => voucher.voucherName === submitData.voucherName
     );
-    const body = {
-      details: cartItems.map((item) => ({
-        productId: item.id,
-        quantity: item.quantity,
-        subtotal: item.price * item.quantity,
-      })),
-      additionalOrder: {
-        email: submitData.email,
-        phone: submitData.phone,
-        firstName: submitData.firstName,
-        lastName: submitData.lastName,
-        fullName: submitData.fullName,
-        address: submitData.streetAddress,
-        additionalInformation: submitData.additionalInformation,
-      },
-      total: totalValue,
-      status: "IN_REQUEST",
-      methodPaid: "CASH",
-      paid: false,
-    };
-    try {
-      axiosInstance.post("/api/v1/orders", body);
-      addToast("Order success", { appearance: "success", autoDismiss: true });
-      dispatch(deleteAllFromCart(addToast));
-      history.push(process.env.PUBLIC_URL + "/order-thankyou");
-    } catch (error) {
-      addToast("Fail to create Order. Please try again later!", {
+
+    // setTimeout(() => {
+    //   if (selectedVoucher && selectedVoucher.quantity>0) {
+    //     setVoucherDiscount(selectedVoucher.voucherValue);
+    //     setAppliedVoucherName(submitData.voucherName);
+    //   } else {
+    //     setVoucherDiscount(0);
+    //   }
+    //   setSubmitData({ ...submitData, voucherName: "" });
+    //   setIsLoading(false);
+    //   console.log("applied");
+    // }, 1200);
+    // if (selectedVoucher) {
+    //   if (selectedVoucher.quantity > 0) {
+    //     setTimeout(() => {
+    //       setVoucherDiscount(selectedVoucher.voucherValue);
+    //       setAppliedVoucherName(submitData.voucherName);
+    //       setSubmitData({ ...submitData, voucherName: "" });
+    //       setIsLoading(false);
+    //       console.log("applied");
+    //     }, 1300);
+    //   } else {
+    //     setIsLoading(false);
+    //     addToast("This voucher is out of stock!", {
+    //       appearance: "error",
+    //       autoDismiss: true,
+    //     });
+    //   }
+    // } else {
+    //   setIsLoading(false);
+    //   addToast("Invalid voucher code!", {
+    //     appearance: "error",
+    //     autoDismiss: true,
+    //   });
+    // }
+    if (selectedVoucher) {
+      const currentDate = new Date();
+      const effectiveDate = new Date(selectedVoucher.effectiveDate);
+      const validUntil = new Date(selectedVoucher.validUntil);
+
+      // Kiểm tra xem ngày hiện tại có nằm trong khoảng từ effectiveDate đến validUntil không
+      if (currentDate >= effectiveDate && currentDate <= validUntil) {
+        if (selectedVoucher.quantity > 0) {
+          setTimeout(() => {
+            setVoucherDiscount(selectedVoucher.voucherValue);
+            setAppliedVoucherName(submitData.voucherName);
+            setSubmitData({ ...submitData, voucherName: "" });
+            setIsLoading(false);
+            console.log("applied");
+          }, 1300);
+        } else {
+          setIsLoading(false);
+          addToast("This voucher is out of stock!", {
+            appearance: "error",
+            autoDismiss: true,
+          });
+        }
+      } else {
+        setIsLoading(false);
+        addToast("This voucher is not currently valid!", {
+          appearance: "error",
+          autoDismiss: true,
+        });
+      }
+    } else {
+      setIsLoading(false);
+      addToast("Invalid voucher code!", {
         appearance: "error",
         autoDismiss: true,
       });
     }
+    console.log("selectedVoucher", selectedVoucher);
+  };
+
+  const placeOrder = async () => {
+    if (token) {
+      const totalValue = cartItems.reduce(
+        (sum, item) => sum + item.quantity * item.price,
+        0
+      );
+      const firstDiscount = totalValue * 0.1;
+      const selectedVoucher = vouchers.find(
+        (voucher) => voucher.voucherName === appliedVoucherName
+      );
+
+      const voucherDiscount = selectedVoucher
+        ? selectedVoucher.voucherValue
+        : 0;
+
+      const body = {
+        details: cartItems.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+          subtotal: item.price * item.quantity,
+        })),
+        additionalOrder: {
+          email: submitData.email,
+          phone: submitData.phone,
+          firstName: submitData.firstName,
+          lastName: submitData.lastName,
+          fullName: submitData.fullName,
+          address: submitData.streetAddress,
+          additionalInformation: submitData.additionalInformation,
+        },
+        voucherDetail: selectedVoucher
+          ? {
+              id: selectedVoucher.id,
+              voucherName: appliedVoucherName,
+              voucherValue: selectedVoucher.voucherValue,
+              description: selectedVoucher.description,
+              effectiveDate: selectedVoucher.effectiveDate,
+              validUntil: selectedVoucher.validUntil,
+              quantity: selectedVoucher.quantity,
+              usedVoucher: selectedVoucher.usedVoucher,
+            }
+          : {
+              id: null,
+              voucherName: "",
+              voucherValue: 0,
+              description: "",
+              effectiveDate: "",
+              validUntil: "",
+              quantity: 0,
+              usedVoucher: 0,
+            },
+
+        total:
+          orders.length === 0
+            ? totalValue - firstDiscount - voucherDiscount
+            : totalValue - voucherDiscount,
+        status: "IN_REQUEST",
+        methodPaid: "CASH",
+        paid: false,
+      };
+
+      try {
+        await axiosInstance.post("/api/v1/orders", body);
+
+        if (selectedVoucher) {
+          const quantity =
+            selectedVoucher.quantity === 0 ? 0 : selectedVoucher.quantity - 1;
+          const usedVoucher = selectedVoucher.usedVoucher + 1;
+          let voucherBody = {
+            voucherName: selectedVoucher.voucherName,
+            voucherValue: selectedVoucher.voucherValue,
+            description: selectedVoucher.description,
+            effectiveDate: selectedVoucher.effectiveDate,
+            validUntil: selectedVoucher.validUntil,
+            quantity: quantity,
+            usedVoucher: usedVoucher,
+          };
+
+          await axiosInstance.put(
+            "/api/v1/vouchers/" + selectedVoucher.id,
+            voucherBody
+          );
+        }
+
+        addToast("Order success", {
+          appearance: "success",
+          autoDismiss: true,
+        });
+        getAllOrders();
+        dispatch(deleteAllFromCart(addToast));
+        history.push(process.env.PUBLIC_URL + "/order-thankyou");
+      } catch (error) {
+        addToast("Fail to create Order. Please try again later!", {
+          appearance: "error",
+          autoDismiss: true,
+        });
+      }
+    } else {
+      addToast("Please login to place order!", {
+        appearance: "warning",
+        autoDismiss: true,
+      });
+    }
+  };
+  const getAllOrders = async () => {
+    try {
+      const response = await axiosInstance.get("/api/v1/orders");
+      setOrders(response.data);
+      console.log(orders);
+    } catch (error) {
+      console.log("Fail to load my orders");
+    }
   };
   useEffect(() => {
+    if (token) {
+      getAllOrders();
+    }
     const setDataInit = async () => {
       if (token) {
         const response = await axiosInstance.get("/api/v1/auth/identity");
@@ -115,6 +298,33 @@ const Checkout = ({ location, cartItems, currency }) => {
             <li className="active">Checkout</li>
             <li>Order Complete</li>
           </ul>
+        </div>
+        {/* Apply voucher */}
+        <div className="container mt-5">
+          <div className="discount-code-wrapper col-lg-6">
+            <h4>Use Coupon Code</h4>
+            <div className="discount-code">
+              <div className="row">
+                <div className="col-lg-7 col-md-6">
+                  <input
+                    type="text"
+                    required
+                    name="voucherName"
+                    placeholder="Enter coupon code"
+                    value={submitData.voucherName}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <button
+                  className="cart-btn-2"
+                  onClick={applyCoupon}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Applying..." : "Apply Coupon"}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="checkout-area pt-95 pb-100">
           <div className="container">
@@ -266,6 +476,28 @@ const Checkout = ({ location, cartItems, currency }) => {
                           <li className="your-order-shipping">Shipping</li>
                           <li>Free</li>
                         </ul>
+                        {orders.length === 0 && (
+                          <ul className="mt-3">
+                            <li className="your-order-shipping">First order</li>
+                            <li>
+                              {"-" +
+                                (cartTotalPrice * 0.1).toLocaleString("vi-VN") +
+                                currency.currencySymbol}
+                            </li>
+                          </ul>
+                        )}
+                        {voucherDiscount > 0 && (
+                          <ul className="mt-3">
+                            <li className="your-order-shipping">
+                              {appliedVoucherName && appliedVoucherName}
+                            </li>
+                            <li>
+                              {"-" +
+                                voucherDiscount.toLocaleString("vi-VN") +
+                                currency.currencySymbol}
+                            </li>
+                          </ul>
+                        )}
                       </div>
                       <div className="your-order-total">
                         <ul>

@@ -33,7 +33,7 @@ const Policy = lazy(() => import("./pages/other/Policy"));
 
 const App = () => {
   return (
-    <ToastProvider placement="bottom-left">
+    <ToastProvider placement="top-right">
       <BreadcrumbsProvider>
         <Router>
           <ScrollToTop>

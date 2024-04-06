@@ -55,6 +55,7 @@ public class TlcnApplication implements CommandLineRunner {
             // Tạo và thêm các bản ghi voucher vào danh sách
             Voucher voucher1 = new Voucher();
             voucher1.setVoucherName("Voucher A");
+            voucher1.setVoucherValue(50000);
             voucher1.setDescription("abcd");
             voucher1.setEffectiveDate(LocalDate.of(2024, 3, 19));
             voucher1.setValidUntil(LocalDate.of(2024, 5, 31));
@@ -65,6 +66,7 @@ public class TlcnApplication implements CommandLineRunner {
 
             Voucher voucher2 = new Voucher();
             voucher2.setVoucherName("Voucher B");
+            voucher2.setVoucherValue(40000);
             voucher1.setDescription("abcd");
             voucher2.setEffectiveDate(LocalDate.of(2024, 3, 20));
             voucher2.setValidUntil(LocalDate.of(2024, 5, 30));

@@ -30,7 +30,7 @@ const OrderSuccess = ({ location }) => {
               <div className="col-lg-12">
                 <div className="item-empty-area text-center">
                   <div className="item-empty-area__icon mb-30">
-                    <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                    <i className="fa fa-check-circle-o" aria-hidden="true"></i>
                   </div>
                   <div className="item-empty-area__text">
                     <h2>Thank you!</h2>
