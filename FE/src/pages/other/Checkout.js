@@ -64,9 +64,9 @@ const Checkout = ({ location, cartItems, currency }) => {
       });
       return;
     }
-    const selectedVoucher = vouchers.find(
-      (voucher) => voucher.voucherName === submitData.voucherName
-    );
+    const selectedVoucher = vouchers
+      .filter((voucher) => voucher.isActive === true)
+      .find((voucher) => voucher.voucherName === submitData.voucherName);
 
     if (selectedVoucher) {
       const currentDate = new Date();
@@ -113,9 +113,9 @@ const Checkout = ({ location, cartItems, currency }) => {
         0
       );
       const firstDiscount = totalValue * 0.1;
-      const selectedVoucher = vouchers.find(
-        (voucher) => voucher.voucherName === appliedVoucherName
-      );
+      const selectedVoucher = vouchers
+        .filter((voucher) => voucher.isActive === true)
+        .find((voucher) => voucher.voucherName === appliedVoucherName);
 
       const voucherDiscount = selectedVoucher
         ? selectedVoucher.voucherValue

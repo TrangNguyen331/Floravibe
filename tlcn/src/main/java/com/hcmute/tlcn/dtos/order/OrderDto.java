@@ -18,8 +18,6 @@ public class OrderDto {
     private AdditionalOrderDetailDto additionalOrder;
     private VoucherDto voucherDetail;
     private double total;
-    private VoucherDto voucherDetail;
-
     private String status;
     private String methodPaid;
     private boolean isPaid =false;
