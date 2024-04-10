@@ -400,9 +400,10 @@ const Checkout = ({ location, cartItems, currency }) => {
                             className="select-box form-select form-select-sm mb-3"
                             id="district"
                             value={selectedDistrict}
-                            onChange={(e) =>
-                              setSelectedDistrict(e.target.value)
-                            }
+                            onChange={(e) => {
+                              setSelectedDistrict(e.target.value);
+                              setSelectedWard(""); // Xóa lựa chọn của phường/xã khi chọn lại quận/huyện
+                            }}
                             aria-label=".form-select-sm"
                           >
                             <option value="" disabled>
