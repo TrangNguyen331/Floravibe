@@ -377,7 +377,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                     </div>
                     <div className="col-lg-12">
                       <div className="billing-info mb-20">
-                        <label>Street Address</label>
+                        <label>Address</label>
                         <div>
                           <select
                             className="select-box form-select form-select-sm mb-3"
@@ -441,6 +441,14 @@ const Checkout = ({ location, cartItems, currency }) => {
                                   </option>
                                 ))}
                           </select>
+                          <input
+                          className="billing-address"
+                          placeholder="House number and street name"
+                          type="text"
+                          name="streetAddress"
+                          value={submitData.streetAddress}
+                          onChange={handleInputChange}
+                        />
                         </div>
                       </div>
                     </div>

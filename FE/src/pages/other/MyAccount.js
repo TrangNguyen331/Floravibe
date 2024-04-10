@@ -10,6 +10,7 @@ import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import { useToasts } from "react-toast-notifications";
 import axiosInstance from "../../axiosInstance";
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
+import axios from "axios";
 
 const MyAccount = ({ location }) => {
   const { pathname } = location;
@@ -24,6 +25,13 @@ const MyAccount = ({ location }) => {
     avatar: '',
   })
   const token = useSelector((state) => state.auth.token);
+
+  const [cities, setCities] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedWard, setSelectedWard] = useState("");
 
   const [passWord, setPassword] = useState({
     password: '',
@@ -71,6 +79,20 @@ const MyAccount = ({ location }) => {
       })
 
   }
+
+  useEffect(() => {
+    axios
+      .get(
+        "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json"
+      )
+      .then((response) => {
+        const hcmCity = response.data.filter(
+          (city) => city.Name === "Thành phố Hồ Chí Minh"
+        );
+        setCities(hcmCity);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   useEffect(() => {
     const setDataInit = (async () => {
@@ -167,9 +189,83 @@ const MyAccount = ({ location }) => {
                                 <div className="col-lg-12 col-md-12">
                                   <div className="billing-info">
                                     <label>Address</label>
+                                    <div>
+                                      <select
+                                        className="select-box form-select form-select-sm mb-3"
+                                        id="city"
+                                        value={selectedCity}
+                                        onChange={(e) => setSelectedCity(e.target.value)}
+                                        aria-label=".form-select-sm"
+                                      >
+                                        <option value="" disabled>
+                                          Choose Province/City
+                                        </option>
+                                        {cities.map((city) => (
+                                          <option key={city.Id} value={city.Id}>
+                                            {city.Name}
+                                          </option>
+                                        ))}
+                                      </select>
+
+                                      <select
+                                        className="select-box form-select form-select-sm mb-3"
+                                        id="district"
+                                        value={selectedDistrict}
+                                        onChange={(e) => {
+                                          setSelectedDistrict(e.target.value);
+                                          setSelectedWard(""); // Xóa lựa chọn của phường/xã khi chọn lại quận/huyện
+                                        }}
+                                        aria-label=".form-select-sm"
+                                      >
+                                        <option value="" disabled>
+                                          Choose District
+                                        </option>
+                                        {selectedCity &&
+                                          cities
+                                            .find((city) => city.Id === selectedCity)
+                                            .Districts.map((district) => (
+                                              <option key={district.Id} value={district.Id}>
+                                                {district.Name}
+                                              </option>
+                                            ))}
+                                      </select>
+
+                                      <select
+                                        className="select-box form-select form-select-sm"
+                                        id="ward"
+                                        value={selectedWard}
+                                        onChange={(e) => setSelectedWard(e.target.value)}
+                                        aria-label=".form-select-sm"
+                                      >
+                                        <option value="" disabled>
+                                          Choose Ward
+                                        </option>
+                                        {selectedDistrict &&
+                                          cities
+                                            .find((city) => city.Id === selectedCity)
+                                            .Districts.find(
+                                              (district) => district.Id === selectedDistrict
+                                            )
+                                            .Wards.map((ward) => (
+                                              <option key={ward.Id} value={ward.Id}>
+                                                {ward.Name}
+                                              </option>
+                                            ))}
+                                      </select>
+                                      <input
+                                      className="billing-address"
+                                      placeholder="House number and street name"
+                                      type="text"
+                                      name="address"
+                                      value={userInfo.address}
+                                      onChange={handleInputChange}
+                                    />
+                                    </div>
+
+                                    {/* <label>Address</label>
                                     <input type="text" name="address"
                                       value={userInfo.address}
-                                      onChange={handleInputChange} />
+                                      onChange={handleInputChange} /> */}
                                   </div>
                                 </div>
                                 <div className="col-lg-6 col-md-6">
