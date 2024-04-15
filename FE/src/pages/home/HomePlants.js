@@ -5,7 +5,6 @@ import HeroSliderFour from "../../wrappers/hero-slider/HeroSliderFour";
 import BannerFour from "../../wrappers/banner/BannerFour";
 import TabProduct from "../../wrappers/product/TabProduct";
 import FeatureIconThree from "../../wrappers/feature-icon/FeatureIconThree";
-import BannerVoucher from "../../components/banner/BannerVoucher";
 // import Newsletter from "../../wrappers/newsletter/Newsletter";
 
 const HomePlants = () => {
@@ -27,14 +26,14 @@ const HomePlants = () => {
           bgColorClass="bg-gray-2"
           // category="plant"
         />
-        <BannerVoucher/>
+
         {/* feature icon */}
         <FeatureIconThree
           bgColorClass="bg-gray-2"
           spaceBottomClass="pb-70"
           featureShapeClass="support-shape-2"
         />
-        
+
         {/* newsletter
         <Newsletter
           bgColorClass="bg-gray-2"

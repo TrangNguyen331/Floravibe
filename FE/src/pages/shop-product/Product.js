@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, {Fragment, useEffect, useState} from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import MetaTags from "react-meta-tags";
 import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
 import { connect } from "react-redux";
@@ -8,48 +8,50 @@ import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import RelatedProductSlider from "../../wrappers/product/RelatedProductSlider";
 import ProductDescriptionTab from "../../wrappers/product/ProductDescriptionTab";
 import ProductImageDescription from "../../wrappers/product/ProductImageDescription";
-import {useParams} from "react-router-dom";
+
+import { useParams } from "react-router-dom";
 import ProductModel from "../../model/productmodel";
 import axiosInstance from "../../axiosInstance";
+import VoucherSlider from "../../wrappers/voucher-banner/VoucherSlider";
 
 const Product = ({ location }) => {
   const [product, setProduct] = useState({
-      id:'',
-      name:'',
-      description:'',
-      additionalInformation:'',
-      price:'',
-      tags:[],
-      images:[],
-      reviews:[],
-      collections:[]
-  })
-  const [isLoaded,setIsLoaded] = useState(false);
+    id: "",
+    name: "",
+    description: "",
+    additionalInformation: "",
+    price: "",
+    tags: [],
+    images: [],
+    reviews: [],
+    collections: [],
+  });
+  const [isLoaded, setIsLoaded] = useState(false);
   const { pathname } = location;
   const { id } = useParams();
-  console.log("id",id);
-    useEffect(() => {
-        const fetchData = async (productId) =>{
-            const response = await axiosInstance.get(`/api/v1/products/${productId}`)
-            console.log(response.data);
-            setProduct(
-                new ProductModel(
-                    response.data.id,
-                    response.data.name,
-                    response.data.description,
-                    response.data.additionalInformation,
-                    response.data.price,
-                    response.data.tags,
-                    response.data.images,
-                    response.data.reviews,
-                    response.data.collections
-                )
-            );
-            setIsLoaded(true);
-        }
-        fetchData(id);
-    }, [id]);
-  return isLoaded?(
+  console.log("id", id);
+  useEffect(() => {
+    const fetchData = async (productId) => {
+      const response = await axiosInstance.get(`/api/v1/products/${productId}`);
+      console.log(response.data);
+      setProduct(
+        new ProductModel(
+          response.data.id,
+          response.data.name,
+          response.data.description,
+          response.data.additionalInformation,
+          response.data.price,
+          response.data.tags,
+          response.data.images,
+          response.data.reviews,
+          response.data.collections
+        )
+      );
+      setIsLoaded(true);
+    };
+    fetchData(id);
+  }, [id]);
+  return isLoaded ? (
     <Fragment>
       <MetaTags>
         <title>Floravibe | Product Page</title>
@@ -80,9 +82,13 @@ const Product = ({ location }) => {
           spaceBottomClass="pb-95"
           category={product.collections[0]}
         />
+        {/* banner slider */}
+        <VoucherSlider spaceBottomClass="pb-95" />
       </LayoutOne>
     </Fragment>
-  ) :("");
+  ) : (
+    ""
+  );
 };
 
 Product.propTypes = {

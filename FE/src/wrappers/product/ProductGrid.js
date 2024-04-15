@@ -26,16 +26,12 @@ const ProductGrid = ({
         const response = await axiosInstance.get(
           `/api/v1/products/paging?size=${8}`
         );
-        // Dispatch an action to update the Redux store with the fetched products
-        // Note: This assumes you have a Redux action to update the products in the store
-        // You may need to create this action based on your Redux setup
+
         dispatch(updateProducts(response.data.content));
       } catch (error) {
         console.error("Error fetching products:", error);
-        // Handle the error (e.g., show an error message)
       }
     };
-
     fetchData();
   }, [dispatch]);
   return (

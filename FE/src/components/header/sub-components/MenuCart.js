@@ -5,7 +5,6 @@ import { useToasts } from "react-toast-notifications";
 // import { getDiscountPrice } from "../../../helpers/product";
 
 const MenuCart = ({ cartData, currency, deleteFromCart }) => {
-  console.log("cartData", cartData);
   let cartTotalPrice = 0;
   const { addToast } = useToasts();
   return (

@@ -20,12 +20,6 @@ const Checkout = ({ location, cartItems, currency }) => {
   const history = useHistory();
 
   const [cities, setCities] = useState([]);
-  const [districts, setDistricts] = useState([]);
-  const [wards, setWards] = useState([]);
-  const [selectedCity, setSelectedCity] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedWard, setSelectedWard] = useState("");
-
   const [orders, setOrders] = useState([]);
   const [voucherDiscount, setVoucherDiscount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +27,10 @@ const Checkout = ({ location, cartItems, currency }) => {
     firstName: "",
     lastName: "",
     fullName: "",
-    streetAddress: "",
+    ward: "",
+    district: "",
+    city: "",
+    houseNumber: "",
     phone: "",
     email: "",
     additionalInformation: "",
@@ -89,7 +86,6 @@ const Checkout = ({ location, cartItems, currency }) => {
             setAppliedVoucherName(submitData.voucherName);
             setSubmitData({ ...submitData, voucherName: "" });
             setIsLoading(false);
-            console.log("applied");
           }, 1300);
         } else {
           setIsLoading(false);
@@ -112,7 +108,6 @@ const Checkout = ({ location, cartItems, currency }) => {
         autoDismiss: true,
       });
     }
-    console.log("selectedVoucher", selectedVoucher);
   };
 
   const placeOrder = async () => {
@@ -130,6 +125,31 @@ const Checkout = ({ location, cartItems, currency }) => {
         ? selectedVoucher.voucherValue
         : 0;
 
+      let selectedCityName = "";
+      let selectedDistrictName = "";
+      let selectedWardName = "";
+
+      if (submitData.city && submitData.district && submitData.ward) {
+        const selectedCityData = cities.find(
+          (city) => city.Name === submitData.city
+        );
+        if (selectedCityData) {
+          selectedCityName = selectedCityData.Name;
+          const selectedDistrictData = selectedCityData.Districts.find(
+            (district) => district.Name === submitData.district
+          );
+          if (selectedDistrictData) {
+            selectedDistrictName = selectedDistrictData.Name;
+            const selectedWardData = selectedDistrictData.Wards.find(
+              (ward) => ward.Name === submitData.ward
+            );
+            if (selectedWardData) {
+              selectedWardName = selectedWardData.Name;
+            }
+          }
+        }
+      }
+
       const body = {
         details: cartItems.map((item) => ({
           productId: item.id,
@@ -142,7 +162,10 @@ const Checkout = ({ location, cartItems, currency }) => {
           firstName: submitData.firstName,
           lastName: submitData.lastName,
           fullName: submitData.fullName,
-          address: submitData.streetAddress,
+          ward: selectedWardName,
+          district: selectedDistrictName,
+          city: selectedCityName,
+          houseNumber: submitData.houseNumber,
           additionalInformation: submitData.additionalInformation,
         },
         voucherDetail: selectedVoucher
@@ -166,7 +189,6 @@ const Checkout = ({ location, cartItems, currency }) => {
               quantity: 0,
               usedVoucher: 0,
             },
-
         total:
           orders.length === 0
             ? totalValue - firstDiscount - voucherDiscount
@@ -242,24 +264,6 @@ const Checkout = ({ location, cartItems, currency }) => {
       })
       .catch((error) => console.error(error));
   }, []);
-  useEffect(() => {
-    if (selectedCity && selectedDistrict && selectedWard) {
-      const selectedCityName = cities.find(
-        (city) => city.Id === selectedCity
-      ).Name;
-      const selectedDistrictName = cities
-        .find((city) => city.Id === selectedCity)
-        .Districts.find((district) => district.Id === selectedDistrict).Name;
-      const selectedWardName = cities
-        .find((city) => city.Id === selectedCity)
-        .Districts.find((district) => district.Id === selectedDistrict)
-        .Wards.find((ward) => ward.Id === selectedWard).Name;
-      setSubmitData({
-        ...submitData,
-        streetAddress: `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}`,
-      });
-    }
-  }, [selectedCity, selectedDistrict, selectedWard]);
 
   useEffect(() => {
     if (token) {
@@ -273,7 +277,10 @@ const Checkout = ({ location, cartItems, currency }) => {
           firstName: response.data.firstName || "",
           lastName: response.data.lastName || "",
           fullName: response.data.fullName || "",
-          streetAddress: response.data.address || "",
+          ward: response.data.ward || "",
+          district: response.data.district || "",
+          city: response.data.city || "",
+          houseNumber: response.data.houseNumber || "",
           phone: response.data.phone || "",
           email: response.data.email || "",
         });
@@ -283,7 +290,6 @@ const Checkout = ({ location, cartItems, currency }) => {
   }, []);
 
   const [paymentMethod, setPaymentMethod] = useState("CASH");
-
   const handlePaymentMethodChange = (event) => {
     setPaymentMethod(event.target.value);
   };
@@ -345,6 +351,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                       <div className="billing-info mb-20">
                         <label>First Name</label>
                         <input
+                          required
                           type="text"
                           name="firstName"
                           value={submitData.firstName}
@@ -356,6 +363,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                       <div className="billing-info mb-20">
                         <label>Last Name</label>
                         <input
+                          required
                           type="text"
                           name="lastName"
                           value={submitData.lastName}
@@ -367,6 +375,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                       <div className="billing-info mb-20">
                         <label>Full Name</label>
                         <input
+                          required
                           className="billing-address"
                           type="text"
                           name="fullName"
@@ -377,20 +386,20 @@ const Checkout = ({ location, cartItems, currency }) => {
                     </div>
                     <div className="col-lg-12">
                       <div className="billing-info mb-20">
-                        <label>Address</label>
+                        <label>Street Address</label>
                         <div>
                           <select
                             className="select-box form-select form-select-sm mb-3"
-                            id="city"
-                            value={selectedCity}
-                            onChange={(e) => setSelectedCity(e.target.value)}
+                            name="city"
+                            value={submitData.city}
+                            onChange={handleInputChange}
                             aria-label=".form-select-sm"
                           >
                             <option value="" disabled>
                               Choose Province/City
                             </option>
                             {cities.map((city) => (
-                              <option key={city.Id} value={city.Id}>
+                              <option key={city.Id} value={city.Name}>
                                 {city.Name}
                               </option>
                             ))}
@@ -398,22 +407,26 @@ const Checkout = ({ location, cartItems, currency }) => {
 
                           <select
                             className="select-box form-select form-select-sm mb-3"
-                            id="district"
-                            value={selectedDistrict}
-                            onChange={(e) => {
-                              setSelectedDistrict(e.target.value);
-                              setSelectedWard(""); // Xóa lựa chọn của phường/xã khi chọn lại quận/huyện
-                            }}
+                            name="district"
+                            value={submitData.district}
+                            // onChange={(e) => {
+                            //   handleInputChange
+                            //   setSelectedWard(""); // Xóa lựa chọn của phường/xã khi chọn lại quận/huyện
+                            // }}
+                            onChange={handleInputChange}
                             aria-label=".form-select-sm"
                           >
                             <option value="" disabled>
                               Choose District
                             </option>
-                            {selectedCity &&
+                            {submitData.city &&
                               cities
-                                .find((city) => city.Id === selectedCity)
+                                .find((city) => city.Name === submitData.city)
                                 .Districts.map((district) => (
-                                  <option key={district.Id} value={district.Id}>
+                                  <option
+                                    key={district.Id}
+                                    value={district.Name}
+                                  >
                                     {district.Name}
                                   </option>
                                 ))}
@@ -421,34 +434,36 @@ const Checkout = ({ location, cartItems, currency }) => {
 
                           <select
                             className="select-box form-select form-select-sm"
-                            id="ward"
-                            value={selectedWard}
-                            onChange={(e) => setSelectedWard(e.target.value)}
+                            name="ward"
+                            value={submitData.ward}
+                            onChange={handleInputChange}
                             aria-label=".form-select-sm"
                           >
                             <option value="" disabled>
                               Choose Ward
                             </option>
-                            {selectedDistrict &&
+                            {submitData.district &&
                               cities
-                                .find((city) => city.Id === selectedCity)
+                                .find((city) => city.Name === submitData.city)
                                 .Districts.find(
-                                  (district) => district.Id === selectedDistrict
+                                  (district) =>
+                                    district.Name === submitData.district
                                 )
                                 .Wards.map((ward) => (
-                                  <option key={ward.Id} value={ward.Id}>
+                                  <option key={ward.Id} value={ward.Name}>
                                     {ward.Name}
                                   </option>
                                 ))}
                           </select>
                           <input
-                          className="billing-address"
-                          placeholder="House number and street name"
-                          type="text"
-                          name="streetAddress"
-                          value={submitData.streetAddress}
-                          onChange={handleInputChange}
-                        />
+                            required
+                            className="billing-address"
+                            placeholder="House number and street name"
+                            type="text"
+                            name="houseNumber"
+                            value={submitData.houseNumber}
+                            onChange={handleInputChange}
+                          />
                         </div>
                       </div>
                     </div>
@@ -456,6 +471,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                       <div className="billing-info mb-20">
                         <label>Phone</label>
                         <input
+                          required
                           type="text"
                           name="phone"
                           value={submitData.phone}

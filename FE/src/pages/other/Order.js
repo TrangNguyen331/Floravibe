@@ -43,6 +43,7 @@ const Order = ({ location, cartItems, currency }) => {
     }
   };
   const isFirstOrder = orders.length > 0 && orders[0].id === order.id;
+
   return !order ? (
     ""
   ) : (
@@ -155,7 +156,12 @@ const Order = ({ location, cartItems, currency }) => {
                             <span>Address</span>
                           </li>
                           <li>
-                            <p>{order.additionalOrder.address}</p>
+                            <p>
+                              {order.additionalOrder.houseNumber},{" "}
+                              {order.additionalOrder.ward},{" "}
+                              {order.additionalOrder.district},{" "}
+                              {order.additionalOrder.city}
+                            </p>
                           </li>
                           <li>
                             <span>Phone:</span> {order.additionalOrder.phone}

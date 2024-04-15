@@ -1,5 +1,6 @@
 package com.hcmute.tlcn.entities;
 
+import com.hcmute.tlcn.dtos.AddressDetailDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,7 +22,10 @@ public class Account {
     public String fullName;
     public String firstName;
     public String lastName;
-    public String address;
+    public String ward;
+    public String district;
+    public String city;
+    public String houseNumber;
     public String phone;
     public boolean gender; // True is man, False is woman
     public boolean isActive= true;

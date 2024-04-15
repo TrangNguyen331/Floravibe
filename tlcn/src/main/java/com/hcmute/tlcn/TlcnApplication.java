@@ -49,9 +49,6 @@ public class TlcnApplication implements CommandLineRunner {
         }
 
         if (voucherRepository.count()==0) {
-            // Tạo danh sách các bản ghi voucher
-
-
             // Tạo và thêm các bản ghi voucher vào danh sách
             Voucher voucher1 = new Voucher();
             voucher1.setVoucherName("Voucher A");
