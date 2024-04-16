@@ -9,14 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateUserInfoDto {
-    public String fullName;
-    public String firstName;
-    public String lastName;
+public class AddressDetailDto {
     public String ward;
     public String district;
     public String city;
     public String houseNumber;
-    public String phone;
-    public String avatar;
+
 }

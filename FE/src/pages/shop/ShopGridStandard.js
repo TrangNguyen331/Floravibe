@@ -39,11 +39,10 @@ const ShopGridStandard = ({ location }) => {
     }
   };
 
-  const handleSearch = (search) =>{
+  const handleSearch = (search) => {
     setSearch(search);
-    fetchDataAndProcess(0, search)
-
-  }
+    fetchDataAndProcess(0, search);
+  };
   const getLayout = (layout) => {
     setLayout(layout);
   };
@@ -57,50 +56,54 @@ const ShopGridStandard = ({ location }) => {
     setFilterSortType(sortType);
     setFilterSortValue(sortValue);
   };
-  const fetchDataAndProcess = async (page,search) => {
+  const fetchDataAndProcess = async (page, search) => {
     try {
       const response = await fetchDataProduct(0, search);
 
       const products = response.content.map(
-          (item) =>
-              new ProductModel(
-                  item.id,
-                  item.name,
-                  item.description,
-                  item.additionalInformation,
-                  item.price,
-                  item.tags,
-                  item.images,
-                  item.reviews,
-                  item.collections
-              )
+        (item) =>
+          new ProductModel(
+            item.id,
+            item.name,
+            item.description,
+            item.additionalInformation,
+            item.price,
+            item.tags,
+            item.images,
+            item.reviews,
+            item.collections
+          )
       );
 
       setProducts(products);
 
       let sortedProducts = getSortedProducts(products, sortType, sortValue);
       const filterSortedProducts = getSortedProducts(
-          sortedProducts,
-          filterSortType,
-          filterSortValue
+        sortedProducts,
+        filterSortType,
+        filterSortValue
       );
       sortedProducts = filterSortedProducts;
 
       setSortedProducts(sortedProducts);
       setCurrentData(sortedProducts.slice(offset, offset + pageLimit));
-      console.log(
-          "currentData",
-          sortedProducts.slice(offset, offset + pageLimit)
-      );
     } catch (error) {
       console.error("Error fetching data", error);
     }
   };
 
   useEffect(() => {
-    fetchDataAndProcess(currentPage,search);
+    fetchDataAndProcess(currentPage, search);
     // Dependencies for the effect: offset, sortType, sortValue, filterSortType, filterSortValue
-  }, [offset, sortType, sortValue, filterSortType, filterSortValue, search,currentPage]);
+  }, [
+    offset,
+    sortType,
+    sortValue,
+    filterSortType,
+    filterSortValue,
+    search,
+    currentPage,
+  ]);
 
   return (
     <Fragment>
