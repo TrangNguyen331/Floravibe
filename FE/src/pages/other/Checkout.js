@@ -26,6 +26,31 @@ const Checkout = ({ location, cartItems, currency }) => {
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
 
+  const [date, setDate] = useState();
+  console.log("Date", date);
+  
+  const [disableOption1, setDisableOption1] = useState(false);
+  const [disableOption2, setDisableOption2] = useState(false);
+  const [disableOption3, setDisableOption3] = useState(false);
+  const [deliveryTime, setDeliveryTime] = useState("");
+
+  useEffect(() => {
+  const currentDate = new Date();
+  const selectedDate = new Date(date);
+
+  if (selectedDate.toDateString() === currentDate.toDateString()) {
+    const currentHour = currentDate.getHours();
+
+    setDisableOption1(currentHour >= 12);
+    setDisableOption2(currentHour >= 17);
+    setDisableOption3(currentHour >= 21);
+  } else {
+    setDisableOption1(false);
+    setDisableOption2(false);
+    setDisableOption3(false);
+  }
+}, [date]);
+
   const [orders, setOrders] = useState([]);
   const [voucherDiscount, setVoucherDiscount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -451,6 +476,23 @@ const Checkout = ({ location, cartItems, currency }) => {
                         />
                         </div>
                       </div>
+                    </div>
+                    <div className="col-lg-6 col-md-6">
+                      <div className="time-delivery mb-20">
+                        <label>Delivery Date</label>
+                        <input type="date" onChange={ e=> { setDate(e.target.value); setDeliveryTime(""); }}></input>
+                      </div>
+                    </div>
+                    <div className="col-lg-6 col-md-6">
+                      <div className="time-delivery mb-20">
+                        <label>Delivery Time</label>
+                        <select className="select-time" value={deliveryTime} onChange={e => setDeliveryTime(e.target.value)}>
+                          <option value="" disabled hidden>Select a delivery time</option>
+                          <option value="10:00 AM to 12:00 PM" disabled={disableOption1}>10:00 AM to 12:00 PM</option>
+                          <option value="2:00 PM to 5:00 PM" disabled={disableOption2}>2:00 PM to 5:00 PM</option>
+                          <option value="7:00 PM to 9:00 PM" disabled={disableOption3}>7:00 PM to 9:00 PM</option>
+                        </select>
+                      </div>                      
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <div className="billing-info mb-20">
