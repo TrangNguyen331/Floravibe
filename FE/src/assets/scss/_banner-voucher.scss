@@ -1,144 +1,141 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Leckerli+One&family=Permanent+Marker&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Leckerli+One&family=Permanent+Marker&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sniglet:wght@400;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Encode+Sans+Semi+Condensed:wght@100;200;300;400;500;600;700;800;900&family=Klee+One&family=Leckerli+One&family=Permanent+Marker&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sniglet:wght@400;800&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Leckerli+One&family=Permanent+Marker&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Leckerli+One&family=Permanent+Marker&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sniglet:wght@400;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Encode+Sans+Semi+Condensed:wght@100;200;300;400;500;600;700;800;900&family=Klee+One&family=Leckerli+One&family=Permanent+Marker&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sniglet:wght@400;800&display=swap");
 
 .parent-background {
-    width: 100%;
-    height: 210px;
-    border-radius: 10px;
-    position: relative;
-    background: linear-gradient(213deg,
-            rgba(222, 191, 244, 1) 0%,
-            rgba(255, 178, 178, 1) 50%,
-            rgba(255, 215, 158, 1) 100%)
+  width: 100%;
+  height: 210px;
+  border-radius: 10px;
+  position: relative;
+  background: linear-gradient(
+    213deg,
+    rgba(222, 191, 244, 1) 0%,
+    rgba(255, 178, 178, 1) 50%,
+    rgba(255, 215, 158, 1) 100%
+  );
 }
 
 .child-background {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    left: 20px;
-    bottom: 20px;
-    background-color: white;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  left: 20px;
+  bottom: 20px;
+  background-color: white;
 }
 
 .info-voucher {
-    border-right: 2px dashed black;
-    display: flex;
-    flex-wrap: wrap;
-    text-align: start;
-    align-self: stretch;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+  border-right: 2px dashed black;
+  display: flex;
+  flex-wrap: wrap;
+  text-align: start;
+  align-self: stretch;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .voucher {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-size: 30px;
-    font-weight: 900;
-    font-family: "Dancing Script", cursive;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 30px;
+  font-weight: 900;
+  font-family: "Dancing Script", cursive;
 }
 
 .valid {
-    display: flex;
-    flex-direction: row;
-    margin-top: 10px;
-    margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .number {
-    font-family: "Leckerli One", cursive;
-    font-size: 40px;
-    font-weight: 800;
+  font-family: "Leckerli One", cursive;
+  font-size: 30px;
+  font-weight: 800;
 }
 
 .currency {
-    padding-left: 0px;
-    font-weight: 600;
-    line-height: 1;
-    order: 1;
+  padding-left: 0px;
+  font-weight: 600;
+  line-height: 1;
+  order: 1;
 }
 
 .due-date {
-    font-size: 16px;
-    color: blueviolet;
+  font-size: 15px;
+  color: blueviolet;
 }
 
 .due-date i {
-    margin-top: 40px;
+  margin-top: 40px;
 }
 
 .first-content {
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    font-size: 13px;
-    font-weight: 400;
-    margin-top: 5px;
-    font-family: "Sniglet", system-ui;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 13px;
+  font-weight: 400;
+  margin-top: 5px;
+  font-family: "Sniglet", system-ui;
 }
 
 .info-code-voucher {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .second-content {
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    line-height: 19px;
-    height: 100%;
-    font-size: 12px;
-    font-weight: 200;
-    margin-right: 5px;
-    font-family: "Sniglet", system-ui;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  line-height: 19px;
+  height: 100%;
+  font-size: 12px;
+  font-weight: 200;
+  margin-right: 5px;
+  font-family: "Sniglet", system-ui;
 }
 
 .text-enter-code {
-    width: 100%;
-    text-align: center;
-    border-bottom: 1px solid #000;
-    line-height: 0.1em;
-    margin: 20px 0 10px;
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid #000;
+  line-height: 0.1em;
+  margin: 20px 0 10px;
 }
 
 .text-enter-code span {
-    background: #fff;
-    padding: 0 10px;
+  background: #fff;
+  padding: 0 10px;
 }
 
 .code {
-    font-family: "Klee One", cursive;
-    height: fit-content;
-    width: auto;
-    padding: 4px;
-    font-weight: 800;
-    font-size: 17px;
-    color: rgba(213, 29, 29, 0.742);
-    background-color: rgb(252, 227, 243);
-    border-width: 3px;
-    border-style: solid;
-    border-image:
-        linear-gradient(to bottom,
-            red,
-            rgba(0, 0, 0, 0)) 1 100%;
+  font-family: "Klee One", cursive;
+  height: fit-content;
+  width: auto;
+  padding: 4px;
+  font-weight: 800;
+  font-size: 17px;
+  color: rgba(213, 29, 29, 0.742);
+  background-color: rgb(252, 227, 243);
+  border-width: 3px;
+  border-style: solid;
+  border-image: linear-gradient(to bottom, red, rgba(0, 0, 0, 0)) 1 100%;
 }
 
 .quantity {
-    font-size: 12px;
-    font-weight: 400;
-    font-style: italic;
-    color: #2C83D3;
+  font-size: 12px;
+  font-weight: 400;
+  font-style: italic;
+  color: #2c83d3;
 }

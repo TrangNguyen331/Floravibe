@@ -9,9 +9,17 @@ import {
   TableFooter,
   Avatar,
   Badge,
-  Pagination, Input,
+  Pagination,
+  Input,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "@windmill/react-ui";
+import { AddIcon } from "../icons";
 import axiosInstance from "../axiosInstance";
+import { AccountForm } from "./AccountForm";
 
 const UsersTable = () => {
   const [page, setPage] = useState(1);
@@ -44,24 +52,63 @@ const UsersTable = () => {
     }
   };
 
-  const handleCheckboxChange = async (userId)=>{
+  const handleCheckboxChange = async (userId) => {
     console.log("Handle on change", userId);
-    try{
-      await axiosInstance.put(`/api/v1/auth/active/${userId}`)
+    try {
+      await axiosInstance.put(`/api/v1/auth/active/${userId}`);
       await fetchData(1);
-    }
-    catch (error){
+    } catch (error) {
       console.log("Error", error);
     }
-  }
+  };
   // on page change, load new sliced data
   // here you would make another server request for new data
   useEffect(() => {
     fetchData(1);
   }, []);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  const openModal = async () => {
+    setIsModalOpen(true);
+  };
   return (
     <div>
+      {/* Add */}
+      <div className="flex items-center justify-end mt-5 mb-5">
+        <div className="flex">
+          <Button
+            size="large"
+            iconLeft={AddIcon}
+            className="mx-3"
+            onClick={() => openModal()}
+          >
+            Create account
+          </Button>
+        </div>
+      </div>
+
+      {/* Modal */}
+      <div>
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+          <ModalHeader className="flex items-center text-2xl">
+            Add New Account
+          </ModalHeader>
+          <ModalBody>
+            <AccountForm />
+          </ModalBody>
+          <ModalFooter>
+            <div className="flex items-center gap-2">
+              <Button layout="outline" onClick={closeModal}>
+                Cancel
+              </Button>
+              <Button block>Add</Button>
+            </div>
+          </ModalFooter>
+        </Modal>
+      </div>
+
       {/* Table */}
       <TableContainer className="mb-8">
         <Table>
@@ -111,7 +158,7 @@ const UsersTable = () => {
                   <Input
                     type="checkbox"
                     checked={user.isActive}
-                    onChange={() =>handleCheckboxChange(user.id)}
+                    onChange={() => handleCheckboxChange(user.id)}
                   />
                 </TableCell>
               </TableRow>

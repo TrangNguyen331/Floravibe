@@ -22,27 +22,29 @@ const EditForm = ({ data, onSave, onCancel, onProductChange }) => {
   return (
     <form action="#">
       <div>
-        <div className="grid gap-4 mb-4 grid-cols-2">
-          <div className="block text-sm font-medium text-gray-900 dark:text-white">
+        <div className="grid gap-4 mb-5 grid-cols-2">
+          <div className="block text-base font-medium text-gray-900 dark:text-white">
             <strong>Product Name</strong>
             <Input
               type="text"
+              placeholder="Type product name here"
               className="mt-2 bg-transparent border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               onChange={(e) => onProductChange("name", e.target?.value || "")}
               value={(data && data.name) || ""}
             />
           </div>
-          <div className="block text-sm font-medium text-gray-900 dark:text-white">
+          <div className="block text-base font-medium text-gray-900 dark:text-white">
             <strong>Product Price</strong>
             <Input
               type="text"
+              placeholder="Enter product price here"
               className="mt-2 bg-transparent border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-opacity-0 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               onChange={(e) => onProductChange("price", e.target?.value || "")}
               value={(data && data.price) || ""}
             />
           </div>
         </div>
-        <div className="dark:text-white mb-4">
+        <div className="dark:text-white mb-4 text-base">
           <strong>Product Image</strong>
           <TagsInput
             type="text"
@@ -53,7 +55,7 @@ const EditForm = ({ data, onSave, onCancel, onProductChange }) => {
           />
         </div>
         <div className="grid gap-4 grid-cols-2">
-          <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
+          <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
             <strong>Product Collection</strong>
             <TagsInput
               type="text"
@@ -63,7 +65,7 @@ const EditForm = ({ data, onSave, onCancel, onProductChange }) => {
               value={(data && data.collections) || []}
             />
           </div>
-          <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
+          <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
             <strong>Product Tag</strong>
             <TagsInput
               classNames="mt-2"
@@ -74,7 +76,7 @@ const EditForm = ({ data, onSave, onCancel, onProductChange }) => {
           </div>
         </div>
 
-        <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
           <strong>Product Description</strong>
           <Textarea
             id="description"
@@ -87,18 +89,10 @@ const EditForm = ({ data, onSave, onCancel, onProductChange }) => {
             value={(data && data.description) || ""}
           />
         </div>
-        <div className="block mt-2 text-sm font-medium text-gray-900 dark:text-white">
-          <strong>Product Additional Information</strong>
-          {/* <Textarea
-            id="additionalInformation"
-            rows="5"
-            className="block p-2.5 mt-2 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 bg-transparent bg-opacity-0 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-            placeholder="Write a description..."
-            onChange={(e) =>
-              onProductChange("additionalInformation", e.target?.value || "")
-            }
-            value={(data && data.additionalInformation) || ""}
-          /> */}
+        <div className="block mt-2 text-base font-medium text-gray-900 dark:text-white">
+          <div className="mb-2">
+            <strong>Product Additional Information</strong>
+          </div>
           <CKEditor
             editor={ClassicEditor}
             onChange={(event, editor) => {

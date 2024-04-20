@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Input, Textarea } from "@windmill/react-ui";
 import { TagsInput } from "react-tag-input-component";
-// import "../index.css";
+
 const AddForm = () => {
   const [tags, setTags] = useState([]);
   return (

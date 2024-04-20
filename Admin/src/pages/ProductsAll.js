@@ -27,6 +27,7 @@ import { AddIcon } from "../icons";
 import "../index.css";
 import axiosInstance from "../axiosInstance";
 import { fa, tr } from "faker/lib/locales";
+import AddForm from "../components/AddForm";
 const ProductsAll = () => {
   // Table and grid data handlling
   const [page, setPage] = useState(1);
@@ -226,7 +227,7 @@ const ProductsAll = () => {
               </p>
             </div>
 
-            <div className="flex">
+            {/* <div className="flex">
               <Button
                 size="large"
                 iconLeft={AddIcon}
@@ -235,65 +236,68 @@ const ProductsAll = () => {
               >
                 Add Product
               </Button>
-            </div>
+            </div> */}
           </div>
         </CardBody>
       </Card>
 
       {/* Product modal */}
-      <div className="modal">
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <ModalHeader className="flex items-center text-2xl">
-            {mode === "edit" && "Edit Product"}
-            {mode === "delete" && "Delete Product"}
-            {mode === "add" && "Add New Product"}
-          </ModalHeader>
-          <ModalBody>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        className="fullscreen-modal"
+      >
+        <ModalHeader className="flex items-center text-2xl mb-4">
+          {mode === "edit" && "Edit Product"}
+          {mode === "delete" && "Delete Product"}
+          {mode === "add" && "Add New Product"}
+        </ModalHeader>
+        <ModalBody>
+          {mode === "edit" ? (
+            <EditForm
+              data={selectedProduct}
+              onSave={handleSave}
+              onCancel={closeModal}
+              onProductChange={handleProductChange}
+            />
+          ) : mode === "delete" ? (
+            <p>
+              Make sure you want to delete product{" "}
+              {selectedProduct && `"${selectedProduct.name}"`}
+            </p>
+          ) : (
+            <EditForm
+              data={selectedProduct}
+              onSave={handleSave}
+              onCancel={closeModal}
+              onProductChange={handleProductChange}
+            />
+          )}
+        </ModalBody>
+        <ModalFooter className="modal-footer">
+          <div className="hidden sm:block">
+            <Button layout="outline" onClick={closeModal}>
+              Cancel
+            </Button>
+          </div>
+          <div className="hidden sm:block">
             {mode === "edit" ? (
-              <EditForm
-                data={selectedProduct}
-                onSave={handleSave}
-                onCancel={closeModal}
-                onProductChange={handleProductChange}
-              />
-            ) : mode === "delete" ? (
-              <p>
-                Make sure you want to delete product{" "}
-                {selectedProduct && `"${selectedProduct.name}"`}
-              </p>
-            ) : (
-              <EditForm
-                data={selectedProduct}
-                onSave={handleSave}
-                onCancel={closeModal}
-                onProductChange={handleProductChange}
-              />
-            )}
-          </ModalBody>
-          <ModalFooter>
-            <div className="hidden sm:block">
-              <Button layout="outline" onClick={closeModal}>
-                Cancel
+              <Button block size="large" onClick={() => handleSave("edit")}>
+                Save
               </Button>
-            </div>
-            <div className="hidden sm:block">
-              {mode === "edit" ? (
-                <Button block size="large" onClick={() => handleSave("edit")}>
-                  Save
-                </Button>
-              ) : mode === "delete" ? (
-                <Button block size="large" onClick={() => handleSave("delete")}>
-                  Delete
-                </Button>
-              ) : (
-                <Button block size="large" onClick={() => handleSave("add")}>
-                  Add Product
-                </Button>
-              )}
-            </div>
-          </ModalFooter>
-        </Modal>
-      </div>
+            ) : mode === "delete" ? (
+              <Button block size="large" onClick={() => handleSave("delete")}>
+                Delete
+              </Button>
+            ) : (
+              <Button block size="large" onClick={() => handleSave("add")}>
+                Add Product
+              </Button>
+            )}
+          </div>
+        </ModalFooter>
+      </Modal>
 
       {/* Product Views */}
       <>

@@ -49,7 +49,7 @@
     background: transparent none repeat scroll 0 0;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
     padding: 80px;
-    text-align: left;
+    // text-align: left;
     @media #{$lg-layout} {
       padding: 80px 50px;
     }
@@ -67,37 +67,48 @@
           margin-bottom: 30px;
           padding: 0 15px;
         }
-        input[type="checkbox"] {
-          height: 15px;
-          margin: 0;
+        .forgot-password-link {
           position: relative;
-          top: 1px;
-          width: 17px;
-        }
-        .button-box {
-          .login-toggle-btn {
-            padding: 10px 0 19px;
-            label {
-              color: #242424;
-              font-size: 15px;
-              font-weight: 400;
-              @media #{$xs-layout} {
-                font-size: 14px;
-              }
+          display: block;
+          a {
+            float: right;
+            color: #242424;
+            font-size: 15px;
+            @media #{$xs-layout} {
+              font-size: 14px;
             }
-            a {
-              color: #242424;
-              float: right;
-              font-size: 15px;
-              @media #{$xs-layout} {
-                font-size: 14px;
-              }
-              transition: all 0.3s ease 0s;
-              &:hover {
-                color: $theme-color;
-              }
+            transition: all 0.3s ease 0s;
+            &:hover {
+              color: $theme-color;
             }
           }
+        }
+
+        .login-btn-wrapper {
+          margin-top: 32px;
+          display: flex;
+          justify-content: center;
+          button {
+            background-color: #f2f2f2;
+            border: medium none;
+            color: #333;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1;
+            padding: 11px 30px;
+            text-transform: uppercase;
+            transition: all 0.3s ease 0s;
+            &:hover {
+              background-color: $theme-color;
+              color: #fff;
+            }
+          }
+        }
+        .button-box {
+          display: flex;
+          justify-content: center;
+          width: 100%;
           button {
             background-color: #f2f2f2;
             border: medium none;
