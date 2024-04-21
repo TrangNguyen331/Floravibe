@@ -2,6 +2,19 @@ spring:
   data:
     mongodb:
       uri: mongodb+srv://admin:Trang123@cluster0.mll6ctp.mongodb.net/flower-shop
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: blackofwhite55@gmail.com
+    password: iilunvtopjcekxcv
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+email:
+  reset-url: http://localhost:8080/forgot-password?userName=
 
 application:
   version: "v1"
