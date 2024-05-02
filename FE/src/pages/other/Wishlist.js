@@ -15,6 +15,7 @@ import { addToCart } from "../../redux/actions/cartActions";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const Wishlist = ({
   location,
@@ -28,17 +29,16 @@ const Wishlist = ({
   const { addToast } = useToasts();
   const { pathname } = location;
   useEffect(() => {}, []);
+  const {t} = useTranslation(['wishlist', 'breadcrumb', 'home'])
 
   return (
     <Fragment>
       <MetaTags>
-        <title>Wishlist</title>
+        <title>Floravibe | {t('breadcrumb:wishlist')}</title>
       </MetaTags>
 
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-        Wishlist
-      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('breadcrumb:home')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('breadcrumb:wishlist')}</BreadcrumbsItem>
 
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
@@ -58,7 +58,7 @@ const Wishlist = ({
                             <th>Product Name</th>
                             <th>Unit Price</th>
                             <th>Add To Cart</th>
-                            <th>action</th>
+                            <th>  </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -123,7 +123,7 @@ const Wishlist = ({
                                   ) : ( */}
                                   <span className="amount">
                                     {finalProductPrice.toLocaleString("vi-VN") +
-                                      currency.currencySymbol}
+                                      "₫"}
                                   </span>
                                   {/* )} */}
                                 </td>
@@ -135,14 +135,14 @@ const Wishlist = ({
                                       rel="noopener noreferrer"
                                       target="_blank"
                                     >
-                                      Buy now
+                                      {t('home:productgrid.buy-now')}
                                     </a>
                                   ) : wishlistItem.variation &&
                                     wishlistItem.variation.length >= 1 ? (
                                     <Link
                                       to={`${process.env.PUBLIC_URL}/product/${wishlistItem.id}`}
                                     >
-                                      Select option
+                                      {t('home:productgrid.select-option')}
                                     </Link>
                                   ) : (
                                     <button
@@ -161,14 +161,14 @@ const Wishlist = ({
                                       }
                                       title={
                                         wishlistItem !== undefined
-                                          ? "Added to cart"
-                                          : "Add to cart"
+                                          ? t('home:productgrid.tooltip-added-to-cart')
+                                          : t('home:productgrid.tooltip-add-to-cart')
                                       }
                                     >
                                       {cartItem !== undefined &&
                                       cartItem.quantity > 0
-                                        ? "Added"
-                                        : "Add to cart"}
+                                        ? t('home:productgrid.added')
+                                        : t('home:productgrid.add-to-cart')}
                                     </button>
                                   )}
                                 </td>
@@ -199,7 +199,7 @@ const Wishlist = ({
                     <div className="cart-shiping-update-wrapper">
                       <div className="cart-shiping-update">
                         <Link to={process.env.PUBLIC_URL + "/shop"}>
-                          Continue Shopping
+                          {t('continue-shopping')}
                         </Link>
                       </div>
                       <div className="cart-clear">
@@ -208,7 +208,7 @@ const Wishlist = ({
                             deleteAllFromWishlist(addToast);
                           }}
                         >
-                          Clear Wishlist
+                          {t('clear-wishlist')}
                         </button>
                       </div>
                     </div>
@@ -223,9 +223,9 @@ const Wishlist = ({
                       <i className="pe-7s-like"></i>
                     </div>
                     <div className="item-empty-area__text">
-                      No items found in wishlist <br />{" "}
+                      {t('no-item')} <br />{" "}
                       <Link to={process.env.PUBLIC_URL + "/shop"}>
-                        Add Items
+                        {t('add-item')}
                       </Link>
                     </div>
                   </div>

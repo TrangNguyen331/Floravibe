@@ -1,12 +1,14 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { setActiveSort } from "../../helpers/product";
+import { useTranslation } from "react-i18next";
 
 const ShopCategories = ({ categories, getSortParams }) => {
-    console.log("categories",categories);
+  console.log("categories",categories);
+  const {t} = useTranslation(['product']);
   return (
     <div className="sidebar-widget">
-      <h4 className="pro-sidebar-title">Categories </h4>
+      <h4 className="pro-sidebar-title">{t('sidebar.categories')}</h4>
       <div className="sidebar-widget-list mt-30">
         {categories ? (
           <ul>
@@ -18,7 +20,7 @@ const ShopCategories = ({ categories, getSortParams }) => {
                     setActiveSort(e);
                   }}
                 >
-                  <span className="checkmark" /> All Categories
+                  <span className="checkmark" />{t('sidebar.all-categories')}
                 </button>
               </div>
             </li>
@@ -41,7 +43,7 @@ const ShopCategories = ({ categories, getSortParams }) => {
             })}
           </ul>
         ) : (
-          "No categories found"
+          t('sidebar.no-product')
         )}
       </div>
     </div>

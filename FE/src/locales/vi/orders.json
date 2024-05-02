@@ -1,0 +1,54 @@
+{
+    "list": {
+        "history": "Lịch Sử Mua Hàng Của Bạn",
+        "all": "Tất Cả",
+        "request": "Chờ Duyệt",
+        "process": "Đang Vận Chuyển",
+        "complete": "Hoàn Thành",
+        "view-details": "Xem Chi Tiết",
+        "no-order": "Chưa Có Đơn Hàng Nào"
+
+    },
+    "detail": {
+        "id": "Mã Đơn Hàng:",
+        "date": "Thời Gian Đặt Hàng:",
+        "shipping": "Phí Vận Chuyển",
+        "products": "Sản Phẩm",
+        "free": "Miễn Phí",
+        "first-order": "Đặt Hàng Lần Đầu",
+        "pay-method": "Phương Thức Thanh Toán",
+        "total": "Tổng Cộng",
+        "shipping-address": "Địa Chỉ Giao Hàng",
+        "full-name": "Họ Tên:",
+        "address": "Địa Chỉ:",
+        "phone": "SĐT:",
+        "order-note": "Lưu ý",
+        "img":"Hình Ảnh",
+        "product-name":"Tên Sản Phẩm",
+        "unit-price": "Đơn Giá",
+        "qty": "Số Lượng",
+        "subtotal": "Tổng Cộng"
+    },
+    "complete": {
+        "order-complete": "Đặt Hàng Thành Công",
+        "shopping-cart": "Giỏ Hàng",
+        "checkout": "Đặt Hàng",
+        "notice-order-success": "Đơn Hàng Của Bạn Đã Được Đặt Thành Công.",
+        "back-to-shop": "Trở Về Cửa Hàng"
+    },
+    "cart": {
+        "shopping-cart": "Giỏ Hàng",
+        "your-cart-item": "Các Sản Phẩm Trong Giỏ Hàng Của Bạn",
+        "continue-shopping": "Tiếp Tục Mua Sắm",
+        "clear-shopping-cart": "Xóa Toàn Bộ",
+        "cart-total": "Tổng Trong Giỏ Hàng",
+        "total-product": "Tổng Số Sản Phẩm",
+        "grand-total": "Tổng Cộng",
+        "process-checkout": "Tiến hành thanh toán",
+        "no-item": "Không Có Sản Phẩm Nào Trong Giỏ Hàng",
+        "shop-now": "Mua Ngay",
+        "item": "Sản Phẩm",
+        "view-cart": "Xem Giỏ Hàng",
+        "buy-now": "Mua Ngay"
+    }
+}

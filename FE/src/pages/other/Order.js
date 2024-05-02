@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { formatReadableDate, getStatus } from "../../helpers/helper";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { useTranslation } from "react-i18next";
 const Order = ({ location, cartItems, currency }) => {
   console.log("Order details page");
   const [order, setOrder] = useState(null);
@@ -43,20 +44,17 @@ const Order = ({ location, cartItems, currency }) => {
     }
   };
   const isFirstOrder = orders.length > 0 && orders[0].id === order.id;
+  const {t} = useTranslation(['orders','breadcrumb']);
 
   return !order ? (
     ""
   ) : (
     <Fragment>
       <MetaTags>
-        <title>Orders</title>
+        <title>Floravibe | {t('breadcrumb:order-details')}</title>
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/my-order"}>
-        Back to list
-      </BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-        Order Details
-      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/my-order"}>{t('breadcrumb:back')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('breadcrumb:order-details')}</BreadcrumbsItem>
 
       <LayoutOne headerTop="visible">
         <Breadcrumb />
@@ -71,9 +69,9 @@ const Order = ({ location, cartItems, currency }) => {
                         <ul>
                           <li>
                             <div className="order-id-date">
-                              <p>Order ID: {order.id} </p>
+                              <p>{t('detail.id')} {order.id} </p>
                               <p className="order-datetime">
-                                Order Date:{" "}
+                                {t('detail.date')}{" "}
                                 {formatReadableDate(order.createdDate)}
                               </p>
                             </div>
@@ -84,7 +82,7 @@ const Order = ({ location, cartItems, currency }) => {
                               <p className="order-status">
                                 {getStatus(order.status)}
                               </p>
-                              <p>{order.details.length} Products</p>
+                              <p>{order.details.length} {t('detail.products')}</p>
                             </div>
                           </li>
                         </ul>
@@ -92,13 +90,13 @@ const Order = ({ location, cartItems, currency }) => {
                       <div className="order-bottom">
                         <ul>
                           <li>
-                            <span className="order-bottom-left">Shipping</span>
-                            <span>Free</span>
+                            <span className="order-bottom-left">{t('detail.shipping')}</span>
+                            <span>{t('detail.free')}</span>
                           </li>
                           {isFirstOrder && (
                             <li className="mt-3">
                               <span className="order-bottom-left">
-                                First order
+                                {t('detail.first-order')}
                               </span>
                               {order.details.forEach((detail) => {
                                 cartTotalPrice += detail.subtotal;
@@ -108,7 +106,7 @@ const Order = ({ location, cartItems, currency }) => {
                                   (cartTotalPrice * 0.1).toLocaleString(
                                     "vi-VN"
                                   ) +
-                                  currency.currencySymbol}
+                                  "₫"}
                               </span>
                             </li>
                           )}
@@ -116,14 +114,14 @@ const Order = ({ location, cartItems, currency }) => {
                             <li>
                               <span className="order-bottom-left">Voucher</span>
                               <span>
-                                {"-" + order.voucherDetail.voucherValue}đ
+                                {"-" + order.voucherDetail.voucherValue}₫
                               </span>
                             </li>
                           )}
 
                           <li>
                             <span className="order-bottom-left">
-                              Payment Method
+                              {t('detail.pay-method')}
                             </span>
                             <span>{order.methodPaid}</span>
                           </li>
@@ -131,8 +129,8 @@ const Order = ({ location, cartItems, currency }) => {
                       </div>
                       <div className="order-total-wrap">
                         <ul>
-                          <li className="order-total">Total</li>
-                          <li>{order.total.toLocaleString("vi-VN")}đ</li>
+                          <li className="order-total">{t('detail.total')}</li>
+                          <li>{order.total.toLocaleString("vi-VN")}₫</li>
                         </ul>
                       </div>
                     </div>
@@ -144,16 +142,16 @@ const Order = ({ location, cartItems, currency }) => {
                   <div className="order-wrap">
                     <div className="order-product-info">
                       <div className="order-top">
-                        <h4>Shipping Address</h4>
+                        <h4>{t('detail.shipping-address')}</h4>
                       </div>
                       <div className="order-details-middle">
                         <ul>
                           <li>
-                            <span>Full Name:</span>{" "}
+                            <span>{t('detail.full-name')}</span>{" "}
                             {order.additionalOrder.fullName}
                           </li>
                           <li>
-                            <span>Address</span>
+                            <span>{t('detail.address')}</span>
                           </li>
                           <li>
                             <p>
@@ -164,7 +162,7 @@ const Order = ({ location, cartItems, currency }) => {
                             </p>
                           </li>
                           <li>
-                            <span>Phone:</span> {order.additionalOrder.phone}
+                            <span>{t('detail.phone')}</span> {order.additionalOrder.phone}
                           </li>
                           <li>
                             <span>Email:</span> {order.additionalOrder.email}
@@ -173,7 +171,7 @@ const Order = ({ location, cartItems, currency }) => {
                       </div>
                       <div className="order-bottom">
                         <ul>
-                          <h4>Order notes</h4>
+                          <h4>{t('detail.order-note')}</h4>
                           <li>
                             <p>{order.additionalOrder.additionalInformation}</p>
                           </li>
@@ -189,11 +187,11 @@ const Order = ({ location, cartItems, currency }) => {
                     <table>
                       <thead>
                         <tr>
-                          <th>Image</th>
-                          <th>Product Name</th>
-                          <th>Unit Price</th>
-                          <th>Qty</th>
-                          <th>Subtotal</th>
+                          <th>{t('detail.img')}</th>
+                          <th>{t('detail.product-name')}</th>
+                          <th>{t('detail.unit-price')}</th>
+                          <th>{t('detail.qty')}</th>
+                          <th>{t('detail.subtotal')}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -211,14 +209,14 @@ const Order = ({ location, cartItems, currency }) => {
                             </td>
                             <td className="product-price-cart">
                               <span className="amount">
-                                {detail.product.price.toLocaleString("vi-VN")}đ
+                                {detail.product.price.toLocaleString("vi-VN")}₫
                               </span>
                             </td>
                             <td className="product-quantity text-center">
                               x{detail.quantity}
                             </td>
                             <td className="product-subtotal">
-                              {detail.subtotal.toLocaleString("vi-VN")}đ
+                              {detail.subtotal.toLocaleString("vi-VN")}₫
                             </td>
                           </tr>
                         ))}

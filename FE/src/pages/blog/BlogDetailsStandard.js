@@ -10,12 +10,14 @@ import BlogPost from "../../wrappers/blog/BlogPost";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import NotFound from "../other/NotFound";
 import axiosInstance from "../../axiosInstance";
+import { useTranslation } from "react-i18next";
 
 const BlogDetailsStandard = ({ location }) => {
   const { pathname } = location;
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const {t} = useTranslation(['breadcrumb'])
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,11 +40,11 @@ const BlogDetailsStandard = ({ location }) => {
   return (
     <Fragment>
       <MetaTags>
-        <title>Floravibe | Blog Post</title>
+        <title>Floravibe | {t('blog-post')}</title>
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('home')}</BreadcrumbsItem>
       <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-        Blog Post
+        {t('blog-post')}
       </BreadcrumbsItem>
       {loading ? (
         <p>Loading...</p>

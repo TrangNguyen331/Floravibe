@@ -15,6 +15,7 @@ import {
 } from "../../redux/actions/cartActions";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
+import { useTranslation } from "react-i18next";
 
 const Cart = ({
   location,
@@ -29,18 +30,19 @@ const Cart = ({
   const { addToast } = useToasts();
   const { pathname } = location;
   let cartTotalPrice = 0;
+  let totalProduct = cartItems.reduce((total, product) => total + product.quantity, 0);
+  
+  const {t} = useTranslation(['orders', 'breacrumb'])
 
   return (
     <Fragment>
       <MetaTags>
-        <title>Cart</title>
+        <title>Floravibe | {t('beadcrumb:cart')}</title>
         <meta name="Cart" content="Cart" />
       </MetaTags>
 
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-        Cart
-      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('beadcrumb:home')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('beadcrumb:cart')}</BreadcrumbsItem>
 
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
@@ -48,9 +50,9 @@ const Cart = ({
         {cartItems && cartItems.length >= 1 ? (
           <div className="container mt-5">
             <ul className="progressbar">
-              <li className="active">Shopping Cart</li>
-              <li>Checkout</li>
-              <li>Order Complete</li>
+              <li className="active">{t('cart.shopping-cart')}</li>
+              <li>{t('complete.checkout')}</li>
+              <li>{t('complete.order-complete')}</li>
             </ul>
           </div>
         ) : (
@@ -61,19 +63,19 @@ const Cart = ({
           <div className="container">
             {cartItems && cartItems.length >= 1 ? (
               <Fragment>
-                <h3 className="cart-page-title">Your cart items</h3>
+                <h3 className="cart-page-title">{t('cart.your-cart-item')}</h3>
                 <div className="row">
                   <div className="col-12">
                     <div className="table-content table-responsive cart-table-content">
                       <table>
                         <thead>
                           <tr>
-                            <th>Image</th>
-                            <th>Product Name</th>
-                            <th>Unit Price</th>
-                            <th>Qty</th>
-                            <th>Subtotal</th>
-                            <th>action</th>
+                            <th>{t('detail.img')}</th>
+                            <th>{t('detail.product-name')}</th>
+                            <th>{t('detail.unit-price')}</th>
+                            <th>{t('detail.qty')}</th>
+                            <th>{t('detail.subtotal')}</th>
+                            <th></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -141,7 +143,7 @@ const Cart = ({
                                   ) : ( */}
                                   <span className="amount">
                                     {finalProductPrice.toLocaleString("vi-VN") +
-                                      currency.currencySymbol}
+                                      "₫"}
                                   </span>
                                   {/* )} */}
                                 </td>
@@ -186,7 +188,7 @@ const Cart = ({
                                   {(
                                     finalProductPrice * cartItem.quantity
                                   ).toLocaleString("vi-VN") +
-                                    currency.currencySymbol}
+                                    "₫"}
                                 </td>
 
                                 <td className="product-remove">
@@ -211,12 +213,12 @@ const Cart = ({
                     <div className="cart-shiping-update-wrapper">
                       <div className="cart-shiping-update">
                         <Link to={process.env.PUBLIC_URL + "/shop"}>
-                          Continue Shopping
+                          {t('cart.continue-shopping')}
                         </Link>
                       </div>
                       <div className="cart-clear">
                         <button onClick={() => deleteAllFromCart(addToast)}>
-                          Clear Shopping Cart
+                          {t('cart.clear-shopping-cart')}
                         </button>
                       </div>
                     </div>
@@ -228,26 +230,29 @@ const Cart = ({
                     <div className="grand-totall">
                       <div className="title-wrap">
                         <h4 className="cart-bottom-title section-bg-gary-cart">
-                          Cart Total
+                          {t('cart.cart-total')}
                         </h4>
                       </div>
                       <h5>
-                        Total products
+                        {t('cart.total-product')}
                         <span>
-                          {cartTotalPrice.toLocaleString("vi-VN") +
-                            currency.currencySymbol}
+                          {
+                            totalProduct + " " + t('cart.item')
+                          }
+                          {/* {cartTotalPrice.toLocaleString("vi-VN") +
+                            currency.currencySymbol} */}
                         </span>
                       </h5>
 
                       <h4 className="grand-totall-title">
-                        Grand Total
+                        {t('cart.grand-total')}
                         <span>
                           {cartTotalPrice.toLocaleString("vi-VN") +
-                            currency.currencySymbol}
+                            "₫"}
                         </span>
                       </h4>
                       <Link to={process.env.PUBLIC_URL + "/checkout"}>
-                        Proceed to Checkout
+                        {t('cart.process-checkout')}
                       </Link>
                     </div>
                   </div>
@@ -261,9 +266,9 @@ const Cart = ({
                       <i className="pe-7s-cart"></i>
                     </div>
                     <div className="item-empty-area__text">
-                      No items found in cart <br />{" "}
+                      {t('cart.no-item')} <br />{" "}
                       <Link to={process.env.PUBLIC_URL + "/shop"}>
-                        Shop Now
+                        {t('cart.shop-now')}
                       </Link>
                     </div>
                   </div>

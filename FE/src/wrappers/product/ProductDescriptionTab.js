@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import axiosInstance from "../../axiosInstance";
 import { useParams, useHistory } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
+import { useTranslation } from "react-i18next";
 
 const ProductDescriptionTab = ({ spaceBottomClass }) => {
   const { id } = useParams();
@@ -93,6 +94,7 @@ const ProductDescriptionTab = ({ spaceBottomClass }) => {
     fetchData();
   }, [id, review]);
   console.log(product);
+  const {t} = useTranslation(['product']);
   return (
     <div className={`description-review-area ${spaceBottomClass}`}>
       <div className="container">
@@ -101,11 +103,11 @@ const ProductDescriptionTab = ({ spaceBottomClass }) => {
             <Nav variant="pills" className="description-review-topbar">
               <Nav.Item>
                 <Nav.Link eventKey="additionalInfo">
-                  Additional Information
+                  {t('detail.add-info')}
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="productReviews">Reviews</Nav.Link>
+                <Nav.Link eventKey="productReviews">{t('detail.reviews')}</Nav.Link>
               </Nav.Item>
             </Nav>
             <Tab.Content className="description-review-bottom">
@@ -153,7 +155,7 @@ const ProductDescriptionTab = ({ spaceBottomClass }) => {
                   </div>
                   <div className="col-lg-5">
                     <div className="rating-form-wrapper pl-50">
-                      <h3>Add a Review</h3>
+                      <h3>{t('detail.add-review')}</h3>
                       <div className="rating-form">
                         <form onSubmit={submitReview}>
                           <div className="row">
@@ -162,10 +164,10 @@ const ProductDescriptionTab = ({ spaceBottomClass }) => {
                                 <textarea
                                   name="content"
                                   onChange={handleInputChange}
-                                  placeholder="Message"
+                                  placeholder={t('detail.message')}
                                   value={review.content}
                                 />
-                                <input type="submit" defaultValue="Submit" />
+                                <input type="submit" defaultValue={t('detail.submit')} />
                               </div>
                             </div>
                           </div>

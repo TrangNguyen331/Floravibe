@@ -5,9 +5,11 @@ import MetaTags from "react-meta-tags";
 import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
+import { useTranslation } from "react-i18next";
 
 const NotFound = ({ }) => {
   const { pathname } = '';
+  const {t} = useTranslation(['breadcrumb']);
 
   return (
     <Fragment>
@@ -18,7 +20,7 @@ const NotFound = ({ }) => {
           content="404 page | Not Found"
         />
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('home')}</BreadcrumbsItem>
       <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
         404 page
       </BreadcrumbsItem>

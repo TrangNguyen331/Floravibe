@@ -1,0 +1,33 @@
+{
+    "sidebar":{
+        "search": "Tìm Kiếm",
+        "search-here": "Tìm sản phẩm...",
+        "categories": "Các Danh Mục",
+        "all-categories": "Tất Cả Danh Mục",
+        "no-product": "Không Có Danh Mục Nào",
+        "tag": "Thẻ",
+        "no-tag": "Không Có Thẻ Nào"
+    },
+    "sort": {
+        "default": "Mặc định",
+        "price-desc": "Giá từ Cao đến Thấp",
+        "price-asc": "Giá từ Thấp đến Cao"
+    },
+    "gridproduct": {
+        "show-qty": "Hiển thị",
+        "of-qty": "trong",
+        "result-qty": "sản phẩm có trong cửa hàng"
+    },
+    "detail" : {
+        "add-info": "Thông tin chi tiết",
+        "reviews": "Bình luận",
+        "add-review": "Thêm bình luận",
+        "message": "Thêm bình luận ở dây",
+        "submit": "Đăng",
+        "color": "Màu sắc",
+        "size": "Kích thước",
+        "buy-now": "Mua ngay",
+        "categories": "Phân Loại",
+        "related": "Đề Xuất Cho Bạn"
+    }
+}

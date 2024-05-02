@@ -1,0 +1,22 @@
+{
+    "heroslide":{
+        "shop-now": "MUA NGAY"
+    },
+    "tabproduct":{
+        "new-items": "CÁC SẢN PHẨM MỚI!",
+        "new-arrivals": "Hàng Mới Về",
+        "best-sellers": "Bán Chạy"
+    },
+    "productgrid":{
+        "new": "Mới",
+        "add-to-wishlist": "Thêm vào yêu thích",
+        "added-to-wishlist": "Đã thêm vào yêu thích",
+        "select-option": "Lựa chọn",
+        "buy-now": "Mua Ngay",
+        "tooltip-add-to-cart": "Thêm vào Giỏ hàng",
+        "tooltip-added-to-cart": "Đã thêm vào Giỏ hàng",
+        "add-to-cart": "Thêm vào Giỏ hàng",
+        "added": "Đã thêm",
+        "quick-view": "Xem Trước"
+    }
+}

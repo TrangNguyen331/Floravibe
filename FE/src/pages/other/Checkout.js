@@ -11,6 +11,7 @@ import axiosInstance from "../../axiosInstance";
 import { useToasts } from "react-toast-notifications";
 import { deleteAllFromCart } from "../../redux/actions/cartActions";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const Checkout = ({ location, cartItems, currency }) => {
   const { pathname } = location;
@@ -18,6 +19,7 @@ const Checkout = ({ location, cartItems, currency }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const history = useHistory();
+  const {t} = useTranslation(['checkout', 'myacc', 'orders', 'breadcrumb'])
 
   const [cities, setCities] = useState([]);
 
@@ -78,7 +80,7 @@ const Checkout = ({ location, cartItems, currency }) => {
       const response = await axiosInstance.get("/api/v1/vouchers");
       setVouchers(response.data);
     } catch (error) {
-      console.log("Fetch data error", error);
+      console.log(t('notice.load-data'), error);
     }
   };
   useEffect(() => {
@@ -96,7 +98,7 @@ const Checkout = ({ location, cartItems, currency }) => {
     setIsLoading(true);
     if (!submitData.voucherName) {
       setIsLoading(false);
-      addToast("Please enter a valid voucher code!", {
+      addToast(t('notice.enter-valid-voucher'), {
         appearance: "error",
         autoDismiss: true,
       });
@@ -121,21 +123,21 @@ const Checkout = ({ location, cartItems, currency }) => {
           }, 1300);
         } else {
           setIsLoading(false);
-          addToast("This voucher is out of stock!", {
+          addToast(t('notice.out-of-stocket-voucher'), {
             appearance: "error",
             autoDismiss: true,
           });
         }
       } else {
         setIsLoading(false);
-        addToast("This voucher is not currently valid!", {
+        addToast(t('notice.invalid-voucher'), {
           appearance: "error",
           autoDismiss: true,
         });
       }
     } else {
       setIsLoading(false);
-      addToast("Invalid voucher code!", {
+      addToast(t('notice.invalid-voucher-code'), {
         appearance: "error",
         autoDismiss: true,
       });
@@ -261,13 +263,13 @@ const Checkout = ({ location, cartItems, currency }) => {
         dispatch(deleteAllFromCart(addToast));
         history.push(process.env.PUBLIC_URL + "/order-thankyou");
       } catch (error) {
-        addToast("Fail to create Order. Please try again later!", {
+        addToast(t('notice.fail-create-order'), {
           appearance: "error",
           autoDismiss: true,
         });
       }
     } else {
-      addToast("Please login to place order!", {
+      addToast(t('notice.must-login'), {
         appearance: "warning",
         autoDismiss: true,
       });
@@ -280,7 +282,7 @@ const Checkout = ({ location, cartItems, currency }) => {
       setOrders(response.data);
       console.log("orders", orders);
     } catch (error) {
-      console.log("Fail to load my orders");
+      console.log(t('notice.load-order-fail'));
     }
   };
   useEffect(() => {
@@ -328,26 +330,24 @@ const Checkout = ({ location, cartItems, currency }) => {
   return (
     <Fragment>
       <MetaTags>
-        <title>Checkout</title>
+        <title>{t('form.checkout')}</title>
         <meta name="Checkout" content="Checkout" />
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-        Checkout
-      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('breadcrumb:home')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('form.checkout')}</BreadcrumbsItem>
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb />
         <div className="container mt-5">
           <ul className="progressbar">
-            <li className="active">Shopping Cart</li>
-            <li className="active">Checkout</li>
-            <li>Order Complete</li>
+            <li className="active">{t('form.shopping-cart')}</li>
+            <li className="active">{t('form.checkout')}</li>
+            <li>{t('form.order-complete')}</li>
           </ul>
         </div>
         <div className="container mt-5">
           <div className="discount-code-wrapper col-lg-6">
-            <h4>Use Coupon Code</h4>
+            <h4>{t('form.order-complete')}</h4>
             <div className="discount-code">
               <div className="row">
                 <div className="col-lg-7 col-md-6">
@@ -355,7 +355,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                     type="text"
                     required
                     name="voucherName"
-                    placeholder="Enter coupon code"
+                    placeholder={t('form.enter-coupon-code')}
                     value={submitData.voucherName}
                     onChange={handleInputChange}
                   />
@@ -365,7 +365,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                   onClick={applyCoupon}
                   disabled={isLoading}
                 >
-                  {isLoading ? "Applying..." : "Apply Coupon"}
+                  {isLoading ? "Applying..." : t('form.apply')}
                 </button>
               </div>
             </div>
@@ -377,11 +377,11 @@ const Checkout = ({ location, cartItems, currency }) => {
             <div className="row">
               <div className="col-lg-7">
                 <div className="billing-info-wrap">
-                  <h3>Billing Details</h3>
+                  <h3>{t('form.billing-details')}</h3>
                   <div className="row">
                     <div className="col-lg-6 col-md-6">
                       <div className="billing-info mb-20">
-                        <label>First Name</label>
+                        <label>{t('myacc:first-name')}</label>
                         <input
                           required
                           type="text"
@@ -393,7 +393,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <div className="billing-info mb-20">
-                        <label>Last Name</label>
+                        <label>{t('myacc:last-name')}</label>
                         <input
                           required
                           type="text"
@@ -405,7 +405,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                     </div>
                     <div className="col-lg-12">
                       <div className="billing-info mb-20">
-                        <label>Full Name</label>
+                        <label>{t('myacc:full-name')}</label>
                         <input
                           required
                           className="billing-address"
@@ -418,7 +418,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                     </div>
                     <div className="col-lg-12">
                       <div className="billing-info mb-20">
-                        <label>Street Address</label>
+                        <label>{t('myacc:address')}</label>
                         <div>
                           <select
                             className="select-box form-select form-select-sm mb-3"
@@ -428,7 +428,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                             aria-label=".form-select-sm"
                           >
                             <option value="" disabled>
-                              Choose Province/City
+                              {t('myacc:city')}
                             </option>
                             {cities.map((city) => (
                               <option key={city.Id} value={city.Name}>
@@ -449,7 +449,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                             aria-label=".form-select-sm"
                           >
                             <option value="" disabled>
-                              Choose District
+                              {t('myacc:district')}
                             </option>
                             {submitData.city &&
                               cities
@@ -472,7 +472,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                             aria-label=".form-select-sm"
                           >
                             <option value="" disabled>
-                              Choose Ward
+                              {t('myacc:ward')}
                             </option>
                             {submitData.district &&
                               cities
@@ -490,7 +490,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                           <input
                             required
                             className="billing-address"
-                            placeholder="House number and street name"
+                            placeholder={t('myacc:detail-address')}
                             type="text"
                             name="houseNumber"
                             value={submitData.houseNumber}
@@ -501,15 +501,15 @@ const Checkout = ({ location, cartItems, currency }) => {
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <div className="time-delivery mb-20">
-                        <label>Delivery Date</label>
+                        <label>{t('form.delivery-date')}</label>
                         <input type="date" onChange={ e=> { setDate(e.target.value); setDeliveryTime(""); }}></input>
                       </div>
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <div className="time-delivery mb-20">
-                        <label>Delivery Time</label>
+                        <label>{t('form.delivery-time')}</label>
                         <select className="select-time" value={deliveryTime} onChange={e => setDeliveryTime(e.target.value)}>
-                          <option value="" disabled hidden>Select a delivery time</option>
+                          <option value="" disabled hidden>{t('form.select-time')}</option>
                           <option value="10:00 AM to 12:00 PM" disabled={disableOption1}>10:00 AM to 12:00 PM</option>
                           <option value="2:00 PM to 5:00 PM" disabled={disableOption2}>2:00 PM to 5:00 PM</option>
                           <option value="7:00 PM to 9:00 PM" disabled={disableOption3}>7:00 PM to 9:00 PM</option>
@@ -518,7 +518,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <div className="billing-info mb-20">
-                        <label>Phone</label>
+                        <label>{t('myacc:phone')}</label>
                         <input
                           required
                           type="text"
@@ -530,7 +530,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <div className="billing-info mb-20">
-                        <label>Email Address</label>
+                        <label>Email</label>
                         <input
                           type="text"
                           disabled
@@ -543,11 +543,11 @@ const Checkout = ({ location, cartItems, currency }) => {
                   </div>
 
                   <div className="additional-info-wrap">
-                    <h3>Additional information</h3>
+                    <h3>{t('form.add-information')}</h3>
                     <div className="additional-info">
-                      <label>Order notes</label>
+                      <label>{t('form.order-note')}</label>
                       <textarea
-                        placeholder="Notes about your order, e.g. special notes for delivery. "
+                        placeholder="Notes about your order, e.g. special notes for delivery."
                         name="additionalInformation"
                         value={submitData.additionalInformation}
                         onChange={handleInputChange}
@@ -559,13 +559,13 @@ const Checkout = ({ location, cartItems, currency }) => {
               {/* Order info */}
               <div className="col-lg-5">
                 <div className="your-order-area">
-                  <h3>Your order</h3>
+                  <h3>{t('form.your-order')}</h3>
                   <div className="your-order-wrap gray-bg-4">
                     <div className="your-order-product-info">
                       <div className="your-order-top">
                         <ul>
-                          <li>Product</li>
-                          <li>Total</li>
+                          <li>{t('orders:detail.products')}</li>
+                          <li>{t('orders:detail.total')}</li>
                         </ul>
                       </div>
                       <div className="your-order-middle">
@@ -602,7 +602,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                                   {(
                                     finalProductPrice * cartItem.quantity
                                   ).toLocaleString("vi-VN") +
-                                    currency.currencySymbol}
+                                    "₫"}
                                 </span>
                               </li>
                             );
@@ -611,8 +611,8 @@ const Checkout = ({ location, cartItems, currency }) => {
                       </div>
                       <div className="your-order-bottom">
                         <ul>
-                          <li className="your-order-shipping">Shipping</li>
-                          <li>Free</li>
+                          <li className="your-order-shipping">{t('orders:detail.shipping')}</li>
+                          <li>{t('orders:detail.free')}</li>
                         </ul>
                         {orders.length === 0 && (
                           <ul className="mt-3">
@@ -620,7 +620,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                             <li>
                               {"-" +
                                 (cartTotalPrice * 0.1).toLocaleString("vi-VN") +
-                                currency.currencySymbol}
+                                "₫"}
                             </li>
                           </ul>
                         )}
@@ -632,14 +632,14 @@ const Checkout = ({ location, cartItems, currency }) => {
                             <li>
                               {"-" +
                                 voucherDiscount.toLocaleString("vi-VN") +
-                                currency.currencySymbol}
+                                "₫"}
                             </li>
                           </ul>
                         )}
                       </div>
                       <div className="your-order-total">
                         <ul>
-                          <li className="order-total">Total</li>
+                          <li className="order-total">{t('orders:detail.total')}</li>
                           <li>
                             {orders.length === 0
                               ? (
@@ -647,11 +647,11 @@ const Checkout = ({ location, cartItems, currency }) => {
                                   cartTotalPrice * 0.1 -
                                   voucherDiscount
                                 ).toLocaleString("vi-VN") +
-                                currency.currencySymbol
+                                "₫"
                               : (
                                   cartTotalPrice - voucherDiscount
                                 ).toLocaleString("vi-VN") +
-                                currency.currencySymbol}
+                                "₫"}
                           </li>
                         </ul>
                       </div>
@@ -665,7 +665,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                           onChange={handlePaymentMethodChange}
                           className="radio-input"
                         />
-                        <span>Cash</span>
+                        <span>{t('form.cash')}</span>
                       </div>
                       {/* <div>
                         <input
@@ -681,7 +681,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                   </div>
                   <div className="place-order mt-25">
                     <button className="btn-hover" onClick={() => placeOrder()}>
-                      Place Order
+                      {t('form.place-order')}
                     </button>
                   </div>
                 </div>

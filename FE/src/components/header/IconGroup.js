@@ -8,6 +8,10 @@ import { logOutUser } from "../../redux/actions/authAction";
 import { useToasts } from "react-toast-notifications";
 import { useHistory } from "react-router-dom";
 import axiosInstance from "../../axiosInstance";
+import Dropdown from 'react-bootstrap/Dropdown';
+import {useTranslation} from 'react-i18next';
+import { locales } from "../../i18n";
+
 const IconGroup = ({
   currency,
   cartData,
@@ -25,6 +29,18 @@ const IconGroup = ({
     );
     offcanvasMobileMenu.classList.add("active");
   };
+  
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const handleLanguageChange = (languageCode) => {
+  setSelectedLanguage(languageCode);
+  };
+  const { t, i18n } = useTranslation(['header']); 
+  const changeLanguage = (language) => {
+    i18n.changeLanguage(language);
+  };
+
+  const currenLanguage = locales[i18n.language];
+
   const { addToast } = useToasts();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -68,6 +84,15 @@ const IconGroup = ({
           </form>
         </div>
       </div> */}
+      <div>
+        <Dropdown className="same-style translate-wrap" onChange={(e) => changeLanguage(e.target.value)} onSelect={handleLanguageChange}>
+              <Dropdown.Toggle className="toggle" id="dropdown-basic">{currenLanguage}</Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey='en' onClick={() => changeLanguage('en')}>English</Dropdown.Item>
+                <Dropdown.Item eventKey='vi' onClick={() => changeLanguage('vi')}>Tiếng Việt</Dropdown.Item>
+              </Dropdown.Menu>
+        </Dropdown>
+      </div>
 
       <div className="same-style header-wishlist">
         <Link to={process.env.PUBLIC_URL + "/wishlist"}>
@@ -136,15 +161,15 @@ const IconGroup = ({
             <ul>
               <li>
                 <Link to={process.env.PUBLIC_URL + "/my-account"}>
-                  My account
+                  {t('my account')}
                 </Link>
               </li>
               <li>
-                <Link to={process.env.PUBLIC_URL + "/my-order"}>My orders</Link>
+                <Link to={process.env.PUBLIC_URL + "/my-order"}>{t('my orders')}</Link>
               </li>
               <li>
                 <Link to="" onClick={handleLogout}>
-                  Logout
+                  {t('logout')}
                 </Link>
               </li>
             </ul>
@@ -152,12 +177,12 @@ const IconGroup = ({
             <ul>
               <li>
                 <Link to={process.env.PUBLIC_URL + "/login-register"}>
-                  Login
+                  {t('login')}
                 </Link>
               </li>
               <li>
                 <Link to={process.env.PUBLIC_URL + "/login-register"}>
-                  Register
+                  {t('register')}
                 </Link>
               </li>
             </ul>

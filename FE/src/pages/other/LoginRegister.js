@@ -10,6 +10,7 @@ import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import { loginUser, registerUser } from "../../redux/actions/authAction";
 import { useToasts } from "react-toast-notifications";
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
+import { useTranslation } from "react-i18next";
 
 
 const LoginRegister = ({ location }) => {
@@ -46,20 +47,20 @@ const LoginRegister = ({ location }) => {
     })
   }
 
+  const {t} = useTranslation(['lore', 'breadcrumb']);
+
   return (
     isLogin ? (<Redirect to={process.env.PUBLIC_URL + "/"}></Redirect>) : (
       <Fragment>
         <MetaTags>
-          <title>Login | Register</title>
+          <title>{t('login')} | {t('register')}</title>
           <meta
             name="Login | Register"
             content="Login | Register"
           />
         </MetaTags>
-        <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
-        <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-          Login || Register
-        </BreadcrumbsItem>
+        <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('breadcrumb:home')}</BreadcrumbsItem>
+        <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('breadcrumb:login-register')}</BreadcrumbsItem>
         <LayoutOne headerTop="visible">
           {/* breadcrumb */}
           <Breadcrumb />
@@ -72,12 +73,12 @@ const LoginRegister = ({ location }) => {
                       <Nav variant="pills" className="login-register-tab-list">
                         <Nav.Item>
                           <Nav.Link eventKey="login">
-                            <h4>Login</h4>
+                            <h4>{t('login')}</h4>
                           </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                           <Nav.Link eventKey="register">
-                            <h4>Register</h4>
+                            <h4>{t('register')}</h4>
                           </Nav.Link>
                         </Nav.Item>
                       </Nav>
@@ -91,14 +92,14 @@ const LoginRegister = ({ location }) => {
                                   name="username"
                                   value={formData.username}
                                   onChange={handleInputChange}
-                                  placeholder="Username"
+                                  placeholder={t('username')}
                                 />
                                 <input
                                   type="password"
                                   name="password"
                                   value={formData.password}
                                   onChange={handleInputChange}
-                                  placeholder="Password"
+                                  placeholder={t('password')}
                                 />
                                 <div className="button-box">
                                   {/* <div className="login-toggle-btn">
@@ -109,7 +110,7 @@ const LoginRegister = ({ location }) => {
                                     </Link>
                                   </div> */}
                                   <button type="submit">
-                                    <span>Login</span>
+                                    <span>{t('login')}</span>
                                   </button>
                                 </div>
                               </form>

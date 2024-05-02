@@ -9,6 +9,7 @@ import { addToCompare } from "../../redux/actions/compareActions";
 import Rating from "./sub-components/ProductRating";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 const ProductDescriptionInfo = ({
   product,
   discountedPrice,
@@ -40,6 +41,7 @@ const ProductDescriptionInfo = ({
   );
   const token = useSelector((state) => state.auth.token);
   const history = useHistory();
+  const {t} = useTranslation(['product', 'home']);
   return (
     <div className="product-details-content ml-70">
       <h2 style={{ fontSize: "28px" }}>{product.name}</h2>
@@ -53,7 +55,7 @@ const ProductDescriptionInfo = ({
           </Fragment>
         ) : ( */}
         <span>
-          {finalProductPrice.toLocaleString("vi-VN") + currency.currencySymbol}{" "}
+          {finalProductPrice.toLocaleString("vi-VN") + "₫"}{" "}
         </span>
         {/* )} */}
       </div>
@@ -73,7 +75,7 @@ const ProductDescriptionInfo = ({
       {product.variation ? (
         <div className="pro-details-size-color">
           <div className="pro-details-color-wrap">
-            <span>Color</span>
+            <span>{t('detail.color')}</span>
             <div className="pro-details-color-content">
               {product.variation.map((single, key) => {
                 return (
@@ -102,7 +104,7 @@ const ProductDescriptionInfo = ({
             </div>
           </div>
           <div className="pro-details-size">
-            <span>Size</span>
+            <span>{t('detail.size')}</span>
             <div className="pro-details-size-content">
               {product.variation &&
                 product.variation.map((single) => {
@@ -147,7 +149,7 @@ const ProductDescriptionInfo = ({
               rel="noopener noreferrer"
               target="_blank"
             >
-              Buy Now
+              {t('detail.buy-now')}
             </a>
           </div>
         </div>
@@ -193,7 +195,7 @@ const ProductDescriptionInfo = ({
                 }}
                 disabled={productCartQty >= productStock}
               >
-                Add To Cart
+                {t('home:productgrid.buy-now')}
               </button>
             }
           </div>
@@ -203,8 +205,8 @@ const ProductDescriptionInfo = ({
               disabled={wishlistItem !== undefined}
               title={
                 wishlistItem !== undefined
-                  ? "Added to wishlist"
-                  : "Add to wishlist"
+                  ? t('home:productgrid.added-to-wishlist')
+                  : t('home:productgrid.add-to-wishlist')
               }
               onClick={() => {
                 if (token) {
@@ -225,7 +227,7 @@ const ProductDescriptionInfo = ({
       )}
       {product.collections ? (
         <div className="pro-details-meta">
-          <span>Categories :</span>
+          <span>{t('detail.categories')}:</span>
           <ul>
             {product.collections.map((single, key) => {
               return <li key={key}>{single}</li>;
@@ -237,7 +239,7 @@ const ProductDescriptionInfo = ({
       )}
       {product.tags ? (
         <div className="pro-details-meta">
-          <span>Tags :</span>
+          <span>{t('sidebar.tag')}:</span>
           <ul>
             {product.tags.map((single, key) => {
               return <li key={key}>{single}</li>;

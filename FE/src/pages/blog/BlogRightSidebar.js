@@ -9,6 +9,7 @@ import BlogSidebar from "../../wrappers/blog/BlogSidebar";
 import BlogPosts from "../../wrappers/blog/BlogPosts";
 import axiosInstance from "../../axiosInstance";
 import { useToasts } from "react-toast-notifications";
+import { useTranslation } from "react-i18next";
 
 const BlogRightSidebar = ({ location }) => {
   const { pathname } = location;
@@ -80,6 +81,7 @@ const BlogRightSidebar = ({ location }) => {
   const handelSearchEvent = (search) => {
     fetchData(0, search);
   };
+  const {t} = useTranslation(['breadcrumb']);
 
   return (
     <Fragment>
@@ -90,7 +92,7 @@ const BlogRightSidebar = ({ location }) => {
           content="Blog of flone react minimalist eCommerce template."
         />
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('home')}</BreadcrumbsItem>
       <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
         Blog
       </BreadcrumbsItem>

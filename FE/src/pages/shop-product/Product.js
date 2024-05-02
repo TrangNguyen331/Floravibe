@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import ProductModel from "../../model/productmodel";
 import axiosInstance from "../../axiosInstance";
 import VoucherSlider from "../../wrappers/voucher-banner/VoucherSlider";
+import { useTranslation } from "react-i18next";
 
 const Product = ({ location }) => {
   const [product, setProduct] = useState({
@@ -30,6 +31,7 @@ const Product = ({ location }) => {
   const { pathname } = location;
   const { id } = useParams();
   console.log("id", id);
+  const {t} = useTranslation(['breadcrumb']);
   useEffect(() => {
     const fetchData = async (productId) => {
       const response = await axiosInstance.get(`/api/v1/products/${productId}`);
@@ -54,14 +56,12 @@ const Product = ({ location }) => {
   return isLoaded ? (
     <Fragment>
       <MetaTags>
-        <title>Floravibe | Product Page</title>
+        <title>Floravibe | {t('shop-product')}</title>
         <meta name="description" content="Product page." />
       </MetaTags>
 
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-        Shop Product
-      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('home')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('shop-product')}</BreadcrumbsItem>
 
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}

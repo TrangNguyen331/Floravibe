@@ -1,0 +1,22 @@
+{
+    "my-account": "My Account",
+    "edit-acc": "Edit Your Account Information",
+    "my-acc": "My Account Information",
+    "per-detail": "Your Personal Details",
+    "first-name": "First Name",
+    "last-name": "Last Name",
+    "full-name": "Full Name",
+    "avatar": "Avatar",
+    "address": "Address",
+    "city": "Choose Province/City",
+    "district": "Choose District",
+    "ward": "Choose Ward",
+    "detail-address": "House number and street name",
+    "phone": "Phone",
+    "update": "Update",
+    "text-change-pasword": "Change Your Password",
+    "change-password": "Change Password",
+    "your-pasword": "Your Password",
+    "password": "New Password",
+    "confirm": "Password Confirm"
+}

@@ -1,0 +1,30 @@
+{
+    "notice": {
+        "load-data": "Fetch data error",
+        "enter-valid-voucher": "Please enter a valid voucher code!",
+        "out-of-stocket-voucher": "This voucher is out of stock!",
+        "invalid-voucher": "This voucher is not currently valid!",
+        "invalid-voucher-code": "Invalid voucher code!",
+        "fail-create-order": "Fail to create Order. Please try again later!",
+        "must-login": "Please login to place order!",
+        "load-order-fail": "Fail to load my order"
+    },
+    "form": {
+        "checkout": "Checkout",
+        "shopping-cart": "Shopping Cart",
+        "order-complete": "Order Complete",
+        "use-coupon": "Use Coupon Code",
+        "enter-coupon-code": "Enter coupon code",
+        "apply": "Apply Coupon",
+        "billing-details": "Billing Details",
+        "delivery-date": "Delivery Date",
+        "delivery-time": "Delivery Time",
+        "select-time": "Select a delivery time",
+        "order-note": "Order Note",
+        "ph-note": "Notes about your order, e.g. special notes for delivery.",
+        "add-information": "Additional information",
+        "your-order": "Your Order",
+        "cash": "Cash",
+        "place-order": "Place Order"
+    }
+}

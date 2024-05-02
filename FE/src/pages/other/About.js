@@ -10,20 +10,20 @@ import TextGridOne from "../../wrappers/text-grid/TextGridOne";
 import FunFactOne from "../../wrappers/fun-fact/FunFactOne";
 import TeamMemberOne from "../../wrappers/team-member/TeamMemberOne";
 import BrandLogoSliderOne from "../../wrappers/brand-logo/BrandLogoSliderOne";
+import { useTranslation } from "react-i18next";
 
 const About = ({ location }) => {
   const { pathname } = location;
   console.log("About page");
+  const {t} = useTranslation(['breadcrumb']);
   return (
     <Fragment>
       <MetaTags>
-        <title>About us</title>
+        <title>Floravibe | {t('about')}</title>
         <meta name="About us" content="About page" />
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-        About us
-      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('home')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('about')}</BreadcrumbsItem>
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb />

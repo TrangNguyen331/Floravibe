@@ -1,7 +1,7 @@
 import { SET_CURRENCY } from "../actions/currencyActions";
 
 const initState = {
-  currencySymbol: "đ",
+  currencySymbol: "₫",
   currencyName: "VN",
   currencyRate: 1
 };

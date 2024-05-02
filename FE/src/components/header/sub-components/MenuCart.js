@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Fragment } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 // import { getDiscountPrice } from "../../../helpers/product";
@@ -7,6 +8,7 @@ import { useToasts } from "react-toast-notifications";
 const MenuCart = ({ cartData, currency, deleteFromCart }) => {
   let cartTotalPrice = 0;
   const { addToast } = useToasts();
+  const {t} = useTranslation(['orders'])
   return (
     <div className="shopping-cart-content">
       {
@@ -48,12 +50,12 @@ const MenuCart = ({ cartData, currency, deleteFromCart }) => {
                           {single.name}
                         </Link>
                       </h4>
-                      <h6>Qty: {single.quantity}</h6>
+                      <h6>{t('detail.qty')}: {single.quantity}</h6>
                       <span>
                         {/* {discountedPrice !== null
                         ? finalDiscountedPrice + " " + currency.currencySymbol */}
                         {finalProductPrice.toLocaleString("vi-VN") +
-                          currency.currencySymbol}
+                          "₫"}
                       </span>
                       {single.selectedProductColor &&
                       single.selectedProductSize ? (
@@ -76,10 +78,10 @@ const MenuCart = ({ cartData, currency, deleteFromCart }) => {
             </ul>
             <div className="shopping-cart-total">
               <h4>
-                Total :
+                {t('detail.total')}
                 <span className="shop-total">
                   {cartTotalPrice.toLocaleString("vi-VN") +
-                    currency.currencySymbol}
+                    "₫"}
                 </span>
               </h4>
             </div>
@@ -88,13 +90,13 @@ const MenuCart = ({ cartData, currency, deleteFromCart }) => {
                 className="default-btn"
                 to={process.env.PUBLIC_URL + "/cart"}
               >
-                view cart
+                {t('cart.view-cart')}
               </Link>
               <Link
                 className="default-btn"
                 to={process.env.PUBLIC_URL + "/checkout"}
               >
-                checkout
+                {t('complete.checkout')}
               </Link>
             </div>
           </Fragment>

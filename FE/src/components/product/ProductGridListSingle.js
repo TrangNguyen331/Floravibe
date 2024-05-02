@@ -7,6 +7,7 @@ import Rating from "./sub-components/ProductRating";
 import ProductModal from "./ProductModal";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 const ProductGridListSingle = ({
   product,
   currency,
@@ -17,6 +18,7 @@ const ProductGridListSingle = ({
   sliderClassName,
   spaceBottomClass,
 }) => {
+  const {t} = useTranslation(['home']);
   const [modalShow, setModalShow] = useState(false);
   const { addToast } = useToasts();
   const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
@@ -49,8 +51,8 @@ const ProductGridListSingle = ({
                   disabled={wishlistItem !== undefined}
                   title={
                     wishlistItem !== undefined
-                      ? "Added to wishlist"
-                      : "Add to wishlist"
+                      ? t('productgrid.added-to-wishlist')
+                      : t('productgrid.add-to-wishlist')
                   }
                   onClick={() => {
                     if (token) {
@@ -71,11 +73,11 @@ const ProductGridListSingle = ({
                     target="_blank"
                   >
                     {" "}
-                    Buy now{" "}
+                    {t('productgrid.buy-now')}{" "}
                   </a>
                 ) : product.variation && product.variation.length >= 1 ? (
                   <Link to={`${process.env.PUBLIC_URL}/product/${product.id}`}>
-                    Select Option
+                    {t('productgrid.select-option')}
                   </Link>
                 ) : (
                   <button
@@ -93,19 +95,19 @@ const ProductGridListSingle = ({
                     }
                     disabled={cartItem !== undefined && cartItem.quantity > 0}
                     title={
-                      cartItem !== undefined ? "Added to cart" : "Add to cart"
+                      cartItem !== undefined ? t('productgrid.tooltip-added-to-cart') : t('productgrid.tooltip-add-to-cart')
                     }
                   >
                     {" "}
                     <i className="pe-7s-cart"></i>{" "}
                     {cartItem !== undefined && cartItem.quantity > 0
-                      ? "Added"
-                      : "Add to cart"}
+                      ? t('productgrid.added')
+                      : t('productgrid.add-to-cart')}
                   </button>
                 )}
               </div>
               <div className="pro-same-action pro-quickview">
-                <button onClick={() => setModalShow(true)} title="Quick View">
+                <button onClick={() => setModalShow(true)} title={t('productgrid.quick-view')}>
                   <i className="pe-7s-look" />
                 </button>
               </div>
@@ -120,7 +122,7 @@ const ProductGridListSingle = ({
             <div className="product-price">
               <span>
                 {finalProductPrice.toLocaleString("vi-VN") +
-                  currency.currencySymbol}{" "}
+                  "₫"}{" "}
               </span>
             </div>
           </div>
@@ -171,7 +173,7 @@ const ProductGridListSingle = ({
                 <div className="product-list-price">
                   <span>
                     {finalProductPrice.toLocaleString("vi-VN") +
-                      currency.currencySymbol}
+                      "₫"}
                   </span>
                 </div>
                 {product.rating && product.rating > 0 ? (
@@ -194,13 +196,13 @@ const ProductGridListSingle = ({
                         target="_blank"
                       >
                         {" "}
-                        Buy now{" "}
+                        {t('productgrid.buy-now')}{" "}
                       </a>
                     ) : product.variation && product.variation.length >= 1 ? (
                       <Link
                         to={`${process.env.PUBLIC_URL}/product/${product.id}`}
                       >
-                        Select Option
+                        {t('productgrid.select-option')}
                       </Link>
                     ) : (
                       <button
@@ -215,14 +217,14 @@ const ProductGridListSingle = ({
                         }
                         title={
                           cartItem !== undefined
-                            ? "Added to cart"
-                            : "Add to cart"
+                            ? t('productgrid.tooltip-added-to-cart') 
+                            : t('productgrid.tooltip-add-to-cart')
                         }
                       >
                         <i className="pe-7s-cart"></i>{" "}
                         {cartItem !== undefined && cartItem.quantity > 0
-                          ? "Added"
-                          : "Add to cart"}
+                          ? t('productgrid.added')
+                          : t('productgrid.add-to-cart')}
                       </button>
                     )}
                   </div>
@@ -233,8 +235,8 @@ const ProductGridListSingle = ({
                       disabled={wishlistItem !== undefined}
                       title={
                         wishlistItem !== undefined
-                          ? "Added to wishlist"
-                          : "Add to wishlist"
+                          ? t('productgrid.added-to-wishlist')
+                          : t('productgrid.add-to-wishlist')
                       }
                       onClick={() => addToWishlist(product, addToast)}
                     >

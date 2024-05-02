@@ -3,6 +3,7 @@ import React from "react";
 import Swiper from "react-id-swiper";
 import SectionTitle from "../../components/section-title/SectionTitle";
 import ProductGrid from "./ProductGrid";
+import { useTranslation } from "react-i18next";
 
 const RelatedProductSlider = ({ spaceBottomClass, category }) => {
   const settings = {
@@ -24,7 +25,7 @@ const RelatedProductSlider = ({ spaceBottomClass, category }) => {
       },
     },
   };
-
+  const {t} = useTranslation(['product']);
   return (
     <div
       className={`related-product-area ${
@@ -33,7 +34,7 @@ const RelatedProductSlider = ({ spaceBottomClass, category }) => {
     >
       <div className="container">
         <SectionTitle
-          titleText="Related Products"
+          titleText={t('detail.related')}
           positionClass="text-center"
           spaceClass="mb-50"
         />

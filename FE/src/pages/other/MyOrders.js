@@ -13,6 +13,8 @@ import {
   formatReadableDate,
   getStatus,
 } from "../../helpers/helper";
+import { useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 const MyOrders = ({ location }) => {
   const token = useSelector((state) => state.auth.token);
@@ -46,24 +48,22 @@ const MyOrders = ({ location }) => {
 
     fetchData();
   }, []);
-
+  const {t} = useTranslation(['orders','breadcrumb'])
   const { pathname } = location;
   return (
     <Fragment>
       <MetaTags>
-        <title>Orders</title>
+        <title>Floravibe | {t('breadcrumb:orders')}</title>
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-        Orders
-      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('breadcrumb:home')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('breadcrumb:orders')}</BreadcrumbsItem>
 
       <LayoutOne headerTop="visible">
         <Breadcrumb />
         <div className="order-main-area pt-90 pb-100">
           <div className="container">
             <Fragment>
-              <h3 className="order-page-title">Your order history</h3>
+              <h3 className="order-page-title">{t('list.history')}</h3>
               <div className="row">
                 <div className="col-12">
                   <Tab.Container defaultActiveKey="all">
@@ -76,7 +76,7 @@ const MyOrders = ({ location }) => {
                           eventKey="all"
                           onSelect={() => filterOrder("All")}
                         >
-                          <h4>All</h4>
+                          <h4>{t('list.all')}</h4>
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
@@ -84,7 +84,7 @@ const MyOrders = ({ location }) => {
                           eventKey="inRequest"
                           onSelect={() => filterOrder("InProgress")}
                         >
-                          <h4>In Request</h4>
+                          <h4>{t('list.request')}</h4>
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
@@ -92,7 +92,7 @@ const MyOrders = ({ location }) => {
                           eventKey="processing"
                           onSelect={() => filterOrder("Processing")}
                         >
-                          <h4>Processing</h4>
+                          <h4>{t('list.process')}</h4>
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
@@ -100,7 +100,7 @@ const MyOrders = ({ location }) => {
                           eventKey="completed"
                           onSelect={() => filterOrder("Completed")}
                         >
-                          <h4>Completed</h4>
+                          <h4>{t('list.complete')}</h4>
                         </Nav.Link>
                       </Nav.Item>
                     </Nav>
@@ -116,9 +116,9 @@ const MyOrders = ({ location }) => {
                                       <ul>
                                         <li>
                                           <div className="order-id-date">
-                                            <p>Order ID: {order.id}</p>
+                                            <p>{t('detail.id')} {order.id}</p>
                                             <p className="order-datetime">
-                                              Order Date:{" "}
+                                              {t('detail.date')}{" "}
                                               {formatReadableDate(
                                                 order.createdDate
                                               )}
@@ -143,7 +143,7 @@ const MyOrders = ({ location }) => {
                                                 {detail.subtotal.toLocaleString(
                                                   "vi-VN"
                                                 )}
-                                                đ
+                                                ₫
                                               </span>
                                             </li>
                                           ) : (
@@ -154,9 +154,9 @@ const MyOrders = ({ location }) => {
                                     </div>
                                     <div className="order-total-wrap">
                                       <ul>
-                                        <li className="order-total">Total</li>
+                                        <li className="order-total">{t('detail.total')}</li>
                                         <li>
-                                          {order.total.toLocaleString("vi-VN")}đ
+                                          {order.total.toLocaleString("vi-VN")}₫
                                         </li>
                                       </ul>
                                     </div>
@@ -169,7 +169,7 @@ const MyOrders = ({ location }) => {
                                         order.id
                                       }
                                     >
-                                      View Details{" "}
+                                      {t('list.view-details')}{" "}
                                       <i className="fa fa-long-arrow-right"></i>
                                     </Link>
                                   </div>
@@ -187,7 +187,7 @@ const MyOrders = ({ location }) => {
                                   <i className="fa fa-file-text-o"></i>
                                 </div>
                                 <div className="item-empty-area__text">
-                                  No orders yet
+                                  {t('list.no-order')}
                                   <br />
                                 </div>
                               </div>
@@ -206,9 +206,9 @@ const MyOrders = ({ location }) => {
                                       <ul>
                                         <li>
                                           <div className="order-id-date">
-                                            <p>Order ID: {order.id}</p>
+                                            <p>{t('detail.id')} {order.id}</p>
                                             <p className="order-datetime">
-                                              Order Date:{" "}
+                                              {t('detail.date')}{" "}
                                               {formatReadableDate(
                                                 order.createdDate
                                               )}
@@ -232,7 +232,7 @@ const MyOrders = ({ location }) => {
                                               {detail.subtotal.toLocaleString(
                                                 "vi-VN"
                                               )}
-                                              đ
+                                              ₫
                                             </span>
                                           </li>
                                         ))}
@@ -240,9 +240,9 @@ const MyOrders = ({ location }) => {
                                     </div>
                                     <div className="order-total-wrap">
                                       <ul>
-                                        <li className="order-total">Total</li>
+                                        <li className="order-total">{t('detail.total')}</li>
                                         <li>
-                                          {order.total.toLocaleString("vi-VN")}đ
+                                          {order.total.toLocaleString("vi-VN")}₫
                                         </li>
                                       </ul>
                                     </div>
@@ -255,7 +255,7 @@ const MyOrders = ({ location }) => {
                                         order.id
                                       }
                                     >
-                                      View Details{" "}
+                                      {t('list.view-details')}{" "}
                                       <i className="fa fa-long-arrow-right"></i>
                                     </Link>
                                   </div>
@@ -273,7 +273,7 @@ const MyOrders = ({ location }) => {
                                   <i className="fa fa-file-text-o"></i>
                                 </div>
                                 <div className="item-empty-area__text">
-                                  No orders yet
+                                  {t('list.no-order')}
                                   <br />
                                 </div>
                               </div>
@@ -292,9 +292,9 @@ const MyOrders = ({ location }) => {
                                       <ul>
                                         <li>
                                           <div className="order-id-date">
-                                            <p>Order ID: {order.id}</p>
+                                            <p>{t('detail.id')} {order.id}</p>
                                             <p className="order-datetime">
-                                              Order Date:{" "}
+                                              {t('detail.date')}{" "}
                                               {formatReadableDate(
                                                 order.createdDate
                                               )}
@@ -318,7 +318,7 @@ const MyOrders = ({ location }) => {
                                               {detail.subtotal.toLocaleString(
                                                 "vi-VN"
                                               )}
-                                              đ
+                                              ₫
                                             </span>
                                           </li>
                                         ))}
@@ -326,9 +326,9 @@ const MyOrders = ({ location }) => {
                                     </div>
                                     <div className="order-total-wrap">
                                       <ul>
-                                        <li className="order-total">Total</li>
+                                        <li className="order-total">{t('detail.total')}</li>
                                         <li>
-                                          {order.total.toLocaleString("vi-VN")}đ
+                                          {order.total.toLocaleString("vi-VN")}₫
                                         </li>
                                       </ul>
                                     </div>
@@ -341,7 +341,7 @@ const MyOrders = ({ location }) => {
                                         order.id
                                       }
                                     >
-                                      View Details{" "}
+                                      {t('list.view-details')}{" "}
                                       <i className="fa fa-long-arrow-right"></i>
                                     </Link>
                                   </div>
@@ -359,7 +359,7 @@ const MyOrders = ({ location }) => {
                                   <i className="fa fa-file-text-o"></i>
                                 </div>
                                 <div className="item-empty-area__text">
-                                  No orders yet
+                                  {t('list.no-order')}
                                   <br />
                                 </div>
                               </div>
@@ -378,9 +378,9 @@ const MyOrders = ({ location }) => {
                                       <ul>
                                         <li>
                                           <div className="order-id-date">
-                                            <p>Order ID: {order.id}</p>
+                                            <p>{t('detail.id')} {order.id}</p>
                                             <p className="order-datetime">
-                                              Order Date:{" "}
+                                              {t('detail.date')}{" "}
                                               {formatReadableDate(
                                                 order.createdDate
                                               )}
@@ -404,7 +404,7 @@ const MyOrders = ({ location }) => {
                                               {detail.subtotal.toLocaleString(
                                                 "vi-VN"
                                               )}
-                                              đ
+                                              ₫
                                             </span>
                                           </li>
                                         ))}
@@ -412,9 +412,9 @@ const MyOrders = ({ location }) => {
                                     </div>
                                     <div className="order-total-wrap">
                                       <ul>
-                                        <li className="order-total">Total</li>
+                                        <li className="order-total">{t('detail.total')}</li>
                                         <li>
-                                          {order.total.toLocaleString("vi-VN")}đ
+                                          {order.total.toLocaleString("vi-VN")}₫
                                         </li>
                                       </ul>
                                     </div>
@@ -427,7 +427,7 @@ const MyOrders = ({ location }) => {
                                         order.id
                                       }
                                     >
-                                      View Details{" "}
+                                      {t('list.view-details')}{" "}
                                       <i className="fa fa-long-arrow-right"></i>
                                     </Link>
                                   </div>
@@ -445,7 +445,7 @@ const MyOrders = ({ location }) => {
                                   <i className="fa fa-file-text-o"></i>
                                 </div>
                                 <div className="item-empty-area__text">
-                                  No orders yet
+                                  {t('list.no-order')}
                                   <br />
                                 </div>
                               </div>

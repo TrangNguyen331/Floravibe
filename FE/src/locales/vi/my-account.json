@@ -1,0 +1,22 @@
+{
+    "my-account": "Tài Khoản Của Tôi",
+    "edit-acc": "Chỉnh Sửa Thông Tin Tài Khoản Của Bạn",
+    "my-acc": "Thông Tin Tài Khoản Của Tôi",
+    "per-detail": "Thông Tin Cá Nhân Của Bạn",
+    "first-name": "Tên",
+    "last-name": "Họ",
+    "full-name": "Họ Tên",
+    "avatar": "Hình Đại Diện",
+    "address": "Địa Chỉ",
+    "city": "Chọn Tỉnh/Thành phố",
+    "district": "Chọn Quận/Huyện",
+    "ward": "Chọn Xã/Phường",
+    "detail-address": "Tên đường, số nhà, tòa nhà",
+    "phone": "Số Điện Thoại",
+    "update": "Cập Nhật",
+    "text-change-pasword": "Thay Đổi Mật Khẩu",
+    "change-password": "Đổi Mật Khẩu",
+    "your-pasword": "Mật Khẩu Của Bạn",
+    "password": "Mật Khẩu Mới",
+    "confirm": "Xác Nhận Lại Mật Khẩu"
+}

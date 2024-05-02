@@ -12,6 +12,7 @@ import ShopTopbar from "../../wrappers/product/ShopTopbar";
 import ShopProducts from "../../wrappers/product/ShopProducts";
 import axiosInstance from "../../axiosInstance";
 import ProductModel from "../../model/productmodel";
+import { useTranslation } from "react-i18next";
 
 const ShopGridStandard = ({ location }) => {
   const [layout, setLayout] = useState("grid three-column");
@@ -27,6 +28,7 @@ const ShopGridStandard = ({ location }) => {
   const [search, setSearch] = useState("");
   const pageLimit = 15;
   const { pathname } = location;
+  const {t} = useTranslation(['breadcrumb']);
 
   const fetchDataProduct = async (page, search) => {
     try {
@@ -115,10 +117,8 @@ const ShopGridStandard = ({ location }) => {
         />
       </MetaTags>
 
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-        Shop
-      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('home')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('shop')}</BreadcrumbsItem>
 
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}

@@ -4,40 +4,49 @@
       padding-bottom: 60px;
     }
   }
+
   .order-wrap {
     font-size: 16px;
     padding: 38px 45px 34px;
     background: #f6f6f6;
     margin-bottom: 18px;
+
     @media #{$lg-layout} {
       padding: 30px 20px 36px;
     }
+
     @media #{$xs-layout} {
       padding: 30px 20px 36px;
     }
+
     .order-product-info {
       .order-top {
         font-size: 16px;
+
         ul {
           display: flex;
           justify-content: space-between;
         }
+
         .order-id-date {
           p {
             font-size: 16px;
             font-weight: 600;
           }
+
           p.order-datetime {
             color: #555252;
             font-weight: 400;
           }
         }
+
         .order-status {
           font-size: 16px;
           text-transform: uppercase;
           letter-spacing: 1px;
           color: $theme-color;
         }
+
         .order-status-qty {
           p {
             font-size: 16px;
@@ -46,10 +55,12 @@
           }
         }
       }
+
       .order-middle {
         margin: 20px 0 0;
         padding: 15px 0;
         border-top: 1px solid #dee0e4;
+
         ul {
           li {
             display: flex;
@@ -58,58 +69,71 @@
           }
         }
       }
+
       .order-details-middle {
         margin: 20px 0 0;
         padding: 15px 0;
         border-top: 1px solid #dee0e4;
+
         ul {
           display: flex;
           flex-direction: column;
           gap: 14px;
+
           span {
             font-weight: 600;
           }
+
           p {
             font-size: 16px;
           }
         }
       }
+
       .order-bottom {
         padding: 15px 0;
         border-top: 1px solid #dee0e4;
+
         ul {
           display: flex;
           flex-direction: column;
           gap: 10px;
           font-size: 16px;
+
           li {
             display: flex;
             justify-content: space-between;
             font-weight: 400;
           }
+
           li.order-shipping {
             font-size: 16px;
             font-weight: 400;
             color: #212121;
           }
+
           p {
             font-size: 16px;
           }
         }
       }
+
       .order-total-wrap {
         margin: 18px 0 20px;
         padding: 17px 0 10px;
         border-top: 1px solid #dee0e4;
+
         ul {
           display: flex;
           align-items: center;
           justify-content: space-between;
           font-size: 18px;
+
           li.order-total {
             font-weight: 500;
             color: #212121;
           }
+
           li {
             font-weight: 500;
             list-style: outside none none;
@@ -118,12 +142,14 @@
         }
       }
     }
+
     .order-details-link {
       display: flex;
       justify-content: end;
     }
   }
 }
+
 h3.order-page-title {
   font-size: 20px;
   font-weight: 500;

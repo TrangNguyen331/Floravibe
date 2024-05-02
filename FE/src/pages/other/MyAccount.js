@@ -11,6 +11,7 @@ import { useToasts } from "react-toast-notifications";
 import axiosInstance from "../../axiosInstance";
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const MyAccount = ({ location }) => {
   const { pathname } = location;
@@ -155,19 +156,17 @@ const MyAccount = ({ location }) => {
     };
     setDataInit();
   }, []);
-
+  const {t} = useTranslation(['myacc','breadcrumb']);
   return !token ? (
     <Redirect to={process.env.PUBLIC_URL + "/"}></Redirect>
   ) : (
     <Fragment>
       <MetaTags>
-        <title>My Account</title>
+        <title>Floravibe | {t('breadcrumb:my-account')}</title>
         <meta name="My Account" content="My Account" />
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-        My Account
-      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('breadcrumb:home')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('breadcrumb:my-account')}</BreadcrumbsItem>
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb />
@@ -181,7 +180,7 @@ const MyAccount = ({ location }) => {
                       <Card.Header className="panel-heading">
                         <Accordion.Toggle variant="link" eventKey="0">
                           <h3 className="panel-title">
-                            <span>1 .</span> Edit your account information{" "}
+                            <span>1 .</span> {t('edit-acc')}{" "}
                           </h3>
                         </Accordion.Toggle>
                       </Card.Header>
@@ -189,13 +188,13 @@ const MyAccount = ({ location }) => {
                         <Card.Body>
                           <div className="myaccount-info-wrapper">
                             <div className="account-info-wrapper">
-                              <h4>My Account Information</h4>
-                              <h5>Your Personal Details</h5>
+                              <h4>{t('my-acc')}</h4>
+                              <h5>{t('per-detail')}</h5>
                             </div>
                             <div className="row">
                               <div className="col-lg-6 col-md-6">
                                 <div className="billing-info">
-                                  <label>First Name</label>
+                                  <label>{t('first-name')}</label>
                                   <input
                                     type="text"
                                     name="firstName"
@@ -206,7 +205,7 @@ const MyAccount = ({ location }) => {
                               </div>
                               <div className="col-lg-6 col-md-6">
                                 <div className="billing-info">
-                                  <label>Last Name</label>
+                                  <label>{t('last-name')}</label>
                                   <input
                                     type="text"
                                     name="lastName"
@@ -217,7 +216,7 @@ const MyAccount = ({ location }) => {
                               </div>
                               <div className="col-lg-12 col-md-12">
                                 <div className="billing-info">
-                                  <label>Full Name</label>
+                                  <label>{t('full-name')}</label>
                                   <input
                                     type="text"
                                     name="fullName"
@@ -228,7 +227,7 @@ const MyAccount = ({ location }) => {
                               </div>
                               <div className="col-lg-12 col-md-12">
                                 <div className="billing-info">
-                                  <label>Avatar</label>
+                                  <label>{t('avatar')}</label>
                                   <input
                                     type="text"
                                     name="avatar"
@@ -240,7 +239,7 @@ const MyAccount = ({ location }) => {
                               </div>
                               <div className="col-lg-12 col-md-12">
                                 <div className="billing-info">
-                                  <label>Address</label>
+                                  <label>{t('address')}</label>
                                   <div>
                                     <select
                                       className="select-box form-select form-select-sm mb-3"
@@ -250,7 +249,7 @@ const MyAccount = ({ location }) => {
                                       aria-label=".form-select-sm"
                                     >
                                       <option value="" disabled>
-                                        Choose Province/City
+                                        {t('city')}
                                       </option>
                                       {cities.map((city) => (
                                         <option key={city.Id} value={city.Name}>
@@ -270,7 +269,7 @@ const MyAccount = ({ location }) => {
                                       aria-label=".form-select-sm"
                                     >
                                       <option value="" disabled>
-                                        Choose District
+                                        {t('district')}
                                       </option>
                                       {userInfo.city &&
                                         cities
@@ -296,7 +295,7 @@ const MyAccount = ({ location }) => {
                                       aria-label=".form-select-sm"
                                     >
                                       <option value="" disabled>
-                                        Choose Ward
+                                        {t('ward')}
                                       </option>
                                       {userInfo.district &&
                                         cities
@@ -320,7 +319,7 @@ const MyAccount = ({ location }) => {
                                     </select>
                                     <input
                                       className="billing-address"
-                                      placeholder="House number and street name"
+                                      placeholder={t('detail-address')}
                                       type="text"
                                       name="houseNumber"
                                       value={userInfo.houseNumber}
@@ -336,7 +335,7 @@ const MyAccount = ({ location }) => {
                               </div>
                               <div className="col-lg-6 col-md-6">
                                 <div className="billing-info">
-                                  <label>Telephone</label>
+                                  <label>{t('phone')}</label>
                                   <input
                                     type="text"
                                     name="phone"
@@ -361,7 +360,7 @@ const MyAccount = ({ location }) => {
                             <div className="billing-back-btn">
                               <div className="billing-btn">
                                 <button type="submit" onClick={updateUserInfo}>
-                                  Update
+                                  {t('update')}
                                 </button>
                               </div>
                             </div>
@@ -373,7 +372,7 @@ const MyAccount = ({ location }) => {
                       <Card.Header className="panel-heading">
                         <Accordion.Toggle variant="link" eventKey="1">
                           <h3 className="panel-title">
-                            <span>2 .</span> Change your password
+                            <span>2 .</span> {t('text-change-pasword')}
                           </h3>
                         </Accordion.Toggle>
                       </Card.Header>
@@ -381,13 +380,13 @@ const MyAccount = ({ location }) => {
                         <Card.Body>
                           <div className="myaccount-info-wrapper">
                             <div className="account-info-wrapper">
-                              <h4>Change Password</h4>
-                              <h5>Your Password</h5>
+                              <h4>{t('change-password')}</h4>
+                              <h5>{t('your-pasword')}</h5>
                             </div>
                             <div className="row">
                               <div className="col-lg-12 col-md-12">
                                 <div className="billing-info">
-                                  <label>Password</label>
+                                  <label>{t('pasword')}</label>
                                   <input
                                     type="password"
                                     name="password"
@@ -398,7 +397,7 @@ const MyAccount = ({ location }) => {
                               </div>
                               <div className="col-lg-12 col-md-12">
                                 <div className="billing-info">
-                                  <label>Password Confirm</label>
+                                  <label>{t('confirm')}</label>
                                   <input
                                     type="password"
                                     name="confirmPassword"
@@ -411,7 +410,7 @@ const MyAccount = ({ location }) => {
                             <div className="billing-back-btn">
                               <div className="billing-btn">
                                 <button type="submit" onClick={updatePassword}>
-                                  Update
+                                  {t('update')}
                                 </button>
                               </div>
                             </div>

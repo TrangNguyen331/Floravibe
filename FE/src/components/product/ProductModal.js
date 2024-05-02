@@ -7,6 +7,7 @@ import Rating from "./sub-components/ProductRating";
 import { connect } from "react-redux";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function ProductModal(props) {
   const { product } = props;
@@ -87,6 +88,7 @@ function ProductModal(props) {
       </button>
     ),
   };
+  const {t} = useTranslation(['home', 'orders'])
   return (
     <Fragment>
       <Modal
@@ -152,7 +154,7 @@ function ProductModal(props) {
                   ) : ( */}
                   <span>
                     {finalproductprice.toLocaleString("vi-VN") +
-                      currency.currencySymbol}{" "}
+                      "₫"}{" "}
                   </span>
                   {/* )} */}
                 </div>
@@ -253,7 +255,7 @@ function ProductModal(props) {
                         rel="noopener noreferrer"
                         target="_blank"
                       >
-                        Buy Now
+                        {t('detail.buy-now')}
                       </a>
                     </div>
                   </div>
@@ -301,7 +303,7 @@ function ProductModal(props) {
                           }}
                         >
                           {" "}
-                          Add To Cart{" "}
+                          {t('productgrid.buy-now')}{" "}
                         </button>
                       }
                     </div>
@@ -311,8 +313,8 @@ function ProductModal(props) {
                         disabled={wishlistItem !== undefined}
                         title={
                           wishlistItem !== undefined
-                            ? "Added to wishlist"
-                            : "Add to wishlist"
+                            ? t('productgrid.added-to-wishlist')
+                            : t('productgrid.add-to-wishlist')
                         }
                         onClick={() => {
                           if (token) {

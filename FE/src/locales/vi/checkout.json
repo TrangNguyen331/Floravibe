@@ -1,0 +1,30 @@
+{
+    "notice": {
+        "load-data": "Lỗi khi tải dữ liệu",
+        "enter-valid-voucher": "Vui lòng nhập mã Voucher hợp lệ!",
+        "out-of-stocket-voucher": "Số lượng Voucher này đã hết!",
+        "invalid-voucher": "Voucher này hiện không hợp lệ!",
+        "invalid-voucher-code": "Mã voucher không hợp lệ!",
+        "fail-create-order": "Không thể tạo đơn hàng. Vui lòng thử lại sau!",
+        "must-login": "Vui lòng đăng nhập để đặt hàng!",
+        "load-order-fail": "Không thể tải đơn hàng"
+    },
+    "form": {
+        "checkout": "Thanh Toán",
+        "shopping-cart": "Giỏ Hàng",
+        "order-complete": "Đơn Hàng Đã Hoàn Tất",
+        "use-coupon": "Sử Dụng Mã Giảm Giá",
+        "enter-coupon-code": "Nhập mã code",
+        "apply": "Áp Dụng",
+        "billing-details": "Chi Tiết Thanh Toán",
+        "delivery-date": "Ngày Giao Hàng",
+        "delivery-time": "Giờ Giao Hàng",
+        "select-time": "Chọn giờ giao hàng",
+        "order-note": "Lưu Ý",
+        "ph-note": "Ghi chú về đơn hàng của bạn, ví dụ ghi chú đặc biệt cho việc giao hàng.",
+        "add-information": "Thông Tin Bổ Sung",
+        "your-order": "Đơn Hàng Của Bạn",
+        "cash": "Tiền Mặt",
+        "place-order": "Đặt Hàng"
+    }
+}

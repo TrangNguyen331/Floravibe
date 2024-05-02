@@ -5,18 +5,20 @@ import { MetaTags } from "react-meta-tags";
 import LayoutOne from "../../layouts/LayoutOne";
 import "../../assets/scss/_policy.scss";
 import {Col, Row} from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 
 
 const Policy = () => {
+    const {t} = useTranslation(['breadcrumb']);
     return (
         <div>
             <MetaTags>
-                <title>Our Policy</title>
+                <title>Floravibe | {t('policy')}</title>
                 <meta name="Our Policy" content="Policy Page"/>
             </MetaTags>
-            <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
-            <BreadcrumbsItem to={process.env.PUBLIC_URL + "/policy"}>Our Policy</BreadcrumbsItem>
+            <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('home')}</BreadcrumbsItem>
+            <BreadcrumbsItem to={process.env.PUBLIC_URL + "/policy"}>{t('policy')}</BreadcrumbsItem>
 
             <LayoutOne headerTop="visible">
                 <Breadcrumb>

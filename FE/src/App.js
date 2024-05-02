@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ToastProvider } from "react-toast-notifications";
 // import { multilanguage, loadLanguages } from "redux-multilanguage";
 // import { connect } from "react-redux";
+// import "./i18n";
 import { BreadcrumbsProvider } from "react-breadcrumbs-dynamic";
 
 const MyOrders = lazy(() => import("./pages/other/MyOrders"));
@@ -142,4 +143,4 @@ const App = () => {
 //   dispatch: PropTypes.func,
 // };
 export default App;
-// export default connect()(multilanguage(App));
+//export default connect()(multilanguage(App));

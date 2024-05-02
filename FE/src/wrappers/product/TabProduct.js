@@ -4,6 +4,7 @@ import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
 import SectionTitle from "../../components/section-title/SectionTitle";
 import ProductGrid from "./ProductGrid";
+import { useTranslation } from "react-i18next";
 
 const TabProduct = ({
   spaceTopClass,
@@ -11,6 +12,7 @@ const TabProduct = ({
   bgColorClass,
   category,
 }) => {
+  const {t} = useTranslation(['home']);
   console.log("TabProduct");
   return (
     <div
@@ -19,7 +21,7 @@ const TabProduct = ({
       } ${bgColorClass ? bgColorClass : ""}`}
     >
       <div className="container">
-        <SectionTitle titleText="NEW ITEMS!" positionClass="text-center" />
+        <SectionTitle titleText={t('tabproduct.new-items')} positionClass="text-center" />
         <Tab.Container defaultActiveKey="bestSeller">
           <Nav
             variant="pills"
@@ -27,12 +29,12 @@ const TabProduct = ({
           >
             <Nav.Item>
               <Nav.Link eventKey="newArrival">
-                <h4>New Arrivals</h4>
+                <h4>{t('tabproduct.new-arrivals')}</h4>
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
               <Nav.Link eventKey="bestSeller">
-                <h4>Best Sellers</h4>
+                <h4>{t('tabproduct.best-sellers')}</h4>
               </Nav.Link>
             </Nav.Item>
           </Nav>

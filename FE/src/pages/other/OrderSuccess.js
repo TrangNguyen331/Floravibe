@@ -4,24 +4,24 @@ import MetaTags from "react-meta-tags";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const OrderSuccess = ({ location }) => {
   const { pathname } = location;
+  const {t} = useTranslation(['orders', 'breadcrumb'])
   return (
     <Fragment>
       <MetaTags>
-        <title>Order | Completed</title>
+        <title>{t('breadcrumb:orders')} | {t('list.complete')}</title>
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-        Order Complete
-      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('breadcrumb:order-complete')}</BreadcrumbsItem>
       <LayoutOne>
         <Breadcrumb />
         <div className="container mt-5">
           <ul className="progressbar">
-            <li className="active">Shopping Cart</li>
-            <li className="active">Checkout</li>
-            <li className="active">Order Complete</li>
+            <li className="active">{t('complete.shopping-cart')}</li>
+            <li className="active">{t('complete.checkout')}</li>
+            <li className="active">{t('complete.order-complete')}</li>
           </ul>
         </div>
         <div className="thankyou-area pt-100 pb-100">
@@ -35,11 +35,11 @@ const OrderSuccess = ({ location }) => {
                   <div className="item-empty-area__text">
                     <h2>Thank you!</h2>
                     <span className="text-secondary">
-                      You order was successfuly completed.
+                      {t('complete.notice-order-success')}
                     </span>
                     <br />
                     <Link to={process.env.PUBLIC_URL + "/shop"}>
-                      Back to Shop
+                      {t('complete.back-to-shop')}
                     </Link>
                   </div>
                 </div>
