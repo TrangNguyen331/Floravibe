@@ -26,7 +26,8 @@ const ShopGridStandard = ({ location }) => {
   const [sortedProducts, setSortedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
-  const pageLimit = 15;
+  console.log(products.length);
+  const pageLimit = 999;
   const { pathname } = location;
   const {t} = useTranslation(['breadcrumb']);
 
@@ -93,7 +94,7 @@ const ShopGridStandard = ({ location }) => {
       console.error("Error fetching data", error);
     }
   };
-
+  console.log("all products", products);
   useEffect(() => {
     fetchDataAndProcess(currentPage, search);
     // Dependencies for the effect: offset, sortType, sortValue, filterSortType, filterSortValue

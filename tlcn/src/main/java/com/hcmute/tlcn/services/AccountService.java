@@ -14,4 +14,5 @@ public interface AccountService {
     Account updateAccountInfo(String userName, UpdateUserInfoDto dto);
     Account updatePassword(String userName, UpdatePasswordDto dto);
     Account activeDeActive(String id);
+    String forgotPassword(String email);
 }

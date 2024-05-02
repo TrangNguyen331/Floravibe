@@ -14,21 +14,23 @@ const routes = [
     name: "Orders",
   },
   {
-    path: "/app/all-products",
     icon: "TruckIcon",
     name: "Products",
-    // routes: [
-    //   {
-    //     path: "/app/all-products",
-    //     name: "All Products",
-    //   },
-
-    // ],
+    routes: [
+      {
+        path: "/app/all-products",
+        name: "All Products",
+      },
+      {
+        path: "/app/add-product",
+        name: "Add Product",
+      },
+    ],
   },
   {
     path: "/app/customers",
     icon: "GroupIcon",
-    name: "Customers",
+    name: "Accounts",
   },
   // {
   //   path: "/app/chats",

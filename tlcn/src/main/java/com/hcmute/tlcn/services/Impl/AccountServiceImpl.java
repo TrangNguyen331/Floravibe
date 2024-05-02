@@ -8,6 +8,7 @@ import com.hcmute.tlcn.exceptions.BadRequestException;
 import com.hcmute.tlcn.exceptions.NotFoundException;
 import com.hcmute.tlcn.repositories.AccountRepository;
 import com.hcmute.tlcn.services.AccountService;
+import com.hcmute.tlcn.services.EmailService;
 import com.hcmute.tlcn.utils.Roles;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -25,9 +26,11 @@ public class AccountServiceImpl implements AccountService {
 
     ModelMapper modelMapper = new ModelMapper();
     private final AccountRepository accountRepository;
+    private final EmailService emailService;
 
-    public AccountServiceImpl(AccountRepository accountRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository, EmailService emailService) {
         this.accountRepository = accountRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -47,6 +50,9 @@ public class AccountServiceImpl implements AccountService {
         String hashPassword=bCryptPasswordEncoder.encode(input.getPassword());
         account.setPassword(hashPassword);
         List<String> roles = List.of(Roles.ROLE_USER.name());
+        if(input.isAdmin()){
+            roles.add(Roles.ROLE_ADMIN.name());
+        }
         account.setRoles(roles);
         accountRepository.save(account);
         return "Success";
@@ -92,5 +98,20 @@ public class AccountServiceImpl implements AccountService {
         account.setActive(!account.isActive);
         accountRepository.save(account);
         return account;
+    }
+
+    @Override
+    public String forgotPassword(String email) {
+        Optional<Account> accountOptional = accountRepository.findByEmail(email);
+        if (accountOptional.isEmpty()) {
+            throw new NotFoundException("Account not found!");
+        }
+        try {
+            emailService.sendMail(accountOptional.get());
+        }
+        catch (Exception e){
+            return "Fail";
+        }
+        return "Success";
     }
 }

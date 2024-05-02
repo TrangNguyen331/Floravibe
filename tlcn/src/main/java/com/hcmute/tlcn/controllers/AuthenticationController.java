@@ -51,6 +51,18 @@ public class AuthenticationController {
        return ResponseEntity.ok(new MessageDto(HttpStatus.OK.value(), result));
     }
 
+    @PostMapping("/forgot-password")
+    public ResponseEntity<MessageDto> forgotPassword(@Valid @RequestBody ForgotPasswordDto input){
+        String result = accountService.forgotPassword(input.getEmail());
+        return ResponseEntity.ok(new MessageDto(HttpStatus.OK.value(), result));
+    }
+
+    @PostMapping("/forgot-password/change-password")
+    public ResponseEntity<Account> updatePassword(@PathVariable String userName, @RequestBody UpdatePasswordDto dto){
+        Account account = accountService.updatePassword(userName,dto);
+        return ResponseEntity.ok(account);
+    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/identity")
     public ResponseEntity<Account> getIdentity(Principal principal){

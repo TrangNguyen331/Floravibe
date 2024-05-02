@@ -31,7 +31,7 @@ const Wishlist = lazy(() => import("./pages/other/Wishlist"));
 const Checkout = lazy(() => import("./pages/other/Checkout"));
 const NotFound = lazy(() => import("./pages/other/NotFound"));
 const Policy = lazy(() => import("./pages/other/Policy"));
-
+const ResetPassword = lazy(() => import("./pages/other/ResetPassword"));
 const App = () => {
   return (
     <ToastProvider placement="top-right">
@@ -118,6 +118,10 @@ const App = () => {
                 <Route
                   path={process.env.PUBLIC_URL + "/checkout"}
                   component={Checkout}
+                />
+                <Route
+                  path={process.env.PUBLIC_URL + "/resetpassword"}
+                  component={ResetPassword}
                 />
 
                 <Route
