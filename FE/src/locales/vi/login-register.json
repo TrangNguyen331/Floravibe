@@ -2,5 +2,6 @@
     "login": "Đăng Nhập",
     "register": "Đăng Ký",
     "username": "Tài Khoản",
-    "password": "Mật Khẩu"
+    "password": "Mật Khẩu",
+    "forgot": "Quên mật khẩu"
 }
