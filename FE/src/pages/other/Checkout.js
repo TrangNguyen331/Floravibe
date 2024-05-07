@@ -12,6 +12,7 @@ import { useToasts } from "react-toast-notifications";
 import { deleteAllFromCart } from "../../redux/actions/cartActions";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
 
 const Checkout = ({ location, cartItems, currency }) => {
   const { pathname } = location;
@@ -19,44 +20,18 @@ const Checkout = ({ location, cartItems, currency }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const history = useHistory();
-  const {t} = useTranslation(['checkout', 'myacc', 'orders', 'breadcrumb'])
+  const { t } = useTranslation(["checkout", "myacc", "orders", "breadcrumb"]);
 
   const [cities, setCities] = useState([]);
 
-  const [districts, setDistricts] = useState([]);
-  const [wards, setWards] = useState([]);
-  const [selectedCity, setSelectedCity] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedWard, setSelectedWard] = useState("");
-
-  const [date, setDate] = useState();
-  console.log("Date", date);
-  
   const [disableOption1, setDisableOption1] = useState(false);
   const [disableOption2, setDisableOption2] = useState(false);
-  const [disableOption3, setDisableOption3] = useState(false);
-  const [deliveryTime, setDeliveryTime] = useState("");
-
-  useEffect(() => {
-  const currentDate = new Date();
-  const selectedDate = new Date(date);
-
-  if (selectedDate.toDateString() === currentDate.toDateString()) {
-    const currentHour = currentDate.getHours();
-
-    setDisableOption1(currentHour >= 12);
-    setDisableOption2(currentHour >= 17);
-    setDisableOption3(currentHour >= 21);
-  } else {
-    setDisableOption1(false);
-    setDisableOption2(false);
-    setDisableOption3(false);
-  }
-}, [date]);
 
   const [orders, setOrders] = useState([]);
+
   const [voucherDiscount, setVoucherDiscount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [submitData, setSubmitData] = useState({
     firstName: "",
     lastName: "",
@@ -69,6 +44,8 @@ const Checkout = ({ location, cartItems, currency }) => {
     email: "",
     additionalInformation: "",
     voucherName: "",
+    deliveryDate: "",
+    deliveryTime: "",
   });
   let cartTotalPrice = 0;
 
@@ -80,7 +57,7 @@ const Checkout = ({ location, cartItems, currency }) => {
       const response = await axiosInstance.get("/api/v1/vouchers");
       setVouchers(response.data);
     } catch (error) {
-      console.log(t('notice.load-data'), error);
+      console.log(t("notice.load-data"), error);
     }
   };
   useEffect(() => {
@@ -89,16 +66,51 @@ const Checkout = ({ location, cartItems, currency }) => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setSubmitData({
-      ...submitData,
-      [name]: value,
-    });
+    if (name === "deliveryDate") {
+      setSubmitData({
+        ...submitData,
+        [name]: value,
+        deliveryTime: "", // Reset deliveryTime to default or null
+      });
+    } else {
+      setSubmitData({
+        ...submitData,
+        [name]: value,
+      });
+    }
+    // Kiểm tra nếu ngày được chọn là ngày hiện tại
+    if (name === "deliveryDate" && dayjs(value).isSame(dayjs(), "day")) {
+      const currentTime = dayjs().add(2, "hour");
+
+      const startTime1 = dayjs().set("hour", 7).set("minute", 0);
+      const endTime1 = dayjs().set("hour", 12).set("minute", 0);
+
+      const startTime2 = dayjs().set("hour", 13).set("minute", 0);
+      const endTime2 = dayjs().set("hour", 21).set("minute", 0);
+
+      if (currentTime.isAfter(startTime1) && currentTime.isBefore(endTime1)) {
+        setDisableOption1(false);
+        setDisableOption2(false);
+      } else if (
+        currentTime.isAfter(startTime2) &&
+        currentTime.isBefore(endTime2)
+      ) {
+        setDisableOption1(true);
+        setDisableOption2(false);
+      } else {
+        setDisableOption1(true);
+        setDisableOption2(true);
+      }
+    } else {
+      setDisableOption1(false);
+      setDisableOption2(false);
+    }
   };
   const applyCoupon = () => {
     setIsLoading(true);
     if (!submitData.voucherName) {
       setIsLoading(false);
-      addToast(t('notice.enter-valid-voucher'), {
+      addToast(t("notice.enter-valid-voucher"), {
         appearance: "error",
         autoDismiss: true,
       });
@@ -123,21 +135,21 @@ const Checkout = ({ location, cartItems, currency }) => {
           }, 1300);
         } else {
           setIsLoading(false);
-          addToast(t('notice.out-of-stocket-voucher'), {
+          addToast(t("notice.out-of-stocket-voucher"), {
             appearance: "error",
             autoDismiss: true,
           });
         }
       } else {
         setIsLoading(false);
-        addToast(t('notice.invalid-voucher'), {
+        addToast(t("notice.invalid-voucher"), {
           appearance: "error",
           autoDismiss: true,
         });
       }
     } else {
       setIsLoading(false);
-      addToast(t('notice.invalid-voucher-code'), {
+      addToast(t("notice.invalid-voucher-code"), {
         appearance: "error",
         autoDismiss: true,
       });
@@ -223,6 +235,8 @@ const Checkout = ({ location, cartItems, currency }) => {
               quantity: 0,
               usedVoucher: 0,
             },
+        deliveryDate: new Date(submitData.deliveryDate),
+        deliveryTime: submitData.deliveryTime,
         total:
           orders.length === 0
             ? totalValue - firstDiscount - voucherDiscount
@@ -263,26 +277,43 @@ const Checkout = ({ location, cartItems, currency }) => {
         dispatch(deleteAllFromCart(addToast));
         history.push(process.env.PUBLIC_URL + "/order-thankyou");
       } catch (error) {
-        addToast(t('notice.fail-create-order'), {
+        addToast(t("notice.fail-create-order"), {
           appearance: "error",
           autoDismiss: true,
         });
       }
     } else {
-      addToast(t('notice.must-login'), {
+      addToast(t("notice.must-login"), {
         appearance: "warning",
         autoDismiss: true,
       });
     }
   };
-
+  const clickPlaceOrder = async () => {
+    if (
+      submitData.firstName === "" ||
+      submitData.lastName === "" ||
+      submitData.ward === "" ||
+      submitData.district === "" ||
+      submitData.city === "" ||
+      submitData.houseNumber === "" ||
+      submitData.phone === "" ||
+      submitData.email === "" ||
+      submitData.deliveryDate === "" ||
+      submitData.deliveryTime === ""
+    ) {
+      setIsError(true);
+    } else {
+      setIsError(false);
+      await placeOrder();
+    }
+  };
   const getAllOrders = async () => {
     try {
       const response = await axiosInstance.get("/api/v1/orders");
       setOrders(response.data);
-      console.log("orders", orders);
     } catch (error) {
-      console.log(t('notice.load-order-fail'));
+      console.log(t("notice.load-order-fail"));
     }
   };
   useEffect(() => {
@@ -330,32 +361,35 @@ const Checkout = ({ location, cartItems, currency }) => {
   return (
     <Fragment>
       <MetaTags>
-        <title>{t('form.checkout')}</title>
+        <title>{t("form.checkout")}</title>
         <meta name="Checkout" content="Checkout" />
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('breadcrumb:home')}</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('form.checkout')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>
+        {t("breadcrumb:home")}
+      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
+        {t("form.checkout")}
+      </BreadcrumbsItem>
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb />
         <div className="container mt-5">
           <ul className="progressbar">
-            <li className="active">{t('form.shopping-cart')}</li>
-            <li className="active">{t('form.checkout')}</li>
-            <li>{t('form.order-complete')}</li>
+            <li className="active">{t("form.shopping-cart")}</li>
+            <li className="active">{t("form.checkout")}</li>
+            <li>{t("form.order-complete")}</li>
           </ul>
         </div>
         <div className="container mt-5">
           <div className="discount-code-wrapper col-lg-6">
-            <h4>{t('form.order-complete')}</h4>
+            <h4>{t("form.order-complete")}</h4>
             <div className="discount-code">
               <div className="row">
                 <div className="col-lg-7 col-md-6">
                   <input
                     type="text"
-                    required
                     name="voucherName"
-                    placeholder={t('form.enter-coupon-code')}
+                    placeholder={t("form.enter-coupon-code")}
                     value={submitData.voucherName}
                     onChange={handleInputChange}
                   />
@@ -365,7 +399,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                   onClick={applyCoupon}
                   disabled={isLoading}
                 >
-                  {isLoading ? "Applying..." : t('form.apply')}
+                  {isLoading ? "Applying..." : t("form.apply")}
                 </button>
               </div>
             </div>
@@ -377,11 +411,15 @@ const Checkout = ({ location, cartItems, currency }) => {
             <div className="row">
               <div className="col-lg-7">
                 <div className="billing-info-wrap">
-                  <h3>{t('form.billing-details')}</h3>
+                  <h3>{t("form.billing-details")}</h3>
                   <div className="row">
                     <div className="col-lg-6 col-md-6">
-                      <div className="billing-info mb-20">
-                        <label>{t('myacc:first-name')}</label>
+                      <div
+                        className={`billing-info mb-20 ${
+                          isError && !submitData.firstName ? "error" : ""
+                        }`}
+                      >
+                        <label>{t("myacc:first-name")}</label>
                         <input
                           required
                           type="text"
@@ -392,10 +430,13 @@ const Checkout = ({ location, cartItems, currency }) => {
                       </div>
                     </div>
                     <div className="col-lg-6 col-md-6">
-                      <div className="billing-info mb-20">
-                        <label>{t('myacc:last-name')}</label>
+                      <div
+                        className={`billing-info mb-20 ${
+                          isError && !submitData.lastName ? "error" : ""
+                        }`}
+                      >
+                        <label>{t("myacc:last-name")}</label>
                         <input
-                          required
                           type="text"
                           name="lastName"
                           value={submitData.lastName}
@@ -404,10 +445,13 @@ const Checkout = ({ location, cartItems, currency }) => {
                       </div>
                     </div>
                     <div className="col-lg-12">
-                      <div className="billing-info mb-20">
-                        <label>{t('myacc:full-name')}</label>
+                      <div
+                        className={`billing-info mb-20 ${
+                          isError && !submitData.fullName ? "error" : ""
+                        }`}
+                      >
+                        <label>{t("myacc:full-name")}</label>
                         <input
-                          required
                           className="billing-address"
                           type="text"
                           name="fullName"
@@ -418,7 +462,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                     </div>
                     <div className="col-lg-12">
                       <div className="billing-info mb-20">
-                        <label>{t('myacc:address')}</label>
+                        <label>{t("myacc:address")}</label>
                         <div>
                           <select
                             className="select-box form-select form-select-sm mb-3"
@@ -428,7 +472,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                             aria-label=".form-select-sm"
                           >
                             <option value="" disabled>
-                              {t('myacc:city')}
+                              {t("myacc:city")}
                             </option>
                             {cities.map((city) => (
                               <option key={city.Id} value={city.Name}>
@@ -436,22 +480,20 @@ const Checkout = ({ location, cartItems, currency }) => {
                               </option>
                             ))}
                           </select>
-
                           <select
                             className="select-box form-select form-select-sm mb-3"
                             name="district"
                             value={submitData.district}
-                            // onChange={(e) => {
-                            //   handleInputChange
-                            //   setSelectedWard(""); // Xóa lựa chọn của phường/xã khi chọn lại quận/huyện
-                            // }}
                             onChange={handleInputChange}
                             aria-label=".form-select-sm"
                           >
                             <option value="" disabled>
-                              {t('myacc:district')}
+                              {t("myacc:district")}
                             </option>
                             {submitData.city &&
+                              cities.some(
+                                (city) => city.Name === submitData.city
+                              ) &&
                               cities
                                 .find((city) => city.Name === submitData.city)
                                 .Districts.map((district) => (
@@ -472,9 +514,13 @@ const Checkout = ({ location, cartItems, currency }) => {
                             aria-label=".form-select-sm"
                           >
                             <option value="" disabled>
-                              {t('myacc:ward')}
+                              {t("myacc:ward")}
                             </option>
                             {submitData.district &&
+                              submitData.ward &&
+                              cities.some(
+                                (city) => city.Name === submitData.city
+                              ) &&
                               cities
                                 .find((city) => city.Name === submitData.city)
                                 .Districts.find(
@@ -488,9 +534,10 @@ const Checkout = ({ location, cartItems, currency }) => {
                                 ))}
                           </select>
                           <input
-                            required
-                            className="billing-address"
-                            placeholder={t('myacc:detail-address')}
+                            className={`billing-address ${
+                              isError && !submitData.houseNumber ? "error" : ""
+                            }`}
+                            placeholder={t("myacc:detail-address")}
                             type="text"
                             name="houseNumber"
                             value={submitData.houseNumber}
@@ -500,27 +547,60 @@ const Checkout = ({ location, cartItems, currency }) => {
                       </div>
                     </div>
                     <div className="col-lg-6 col-md-6">
-                      <div className="time-delivery mb-20">
-                        <label>{t('form.delivery-date')}</label>
-                        <input type="date" onChange={ e=> { setDate(e.target.value); setDeliveryTime(""); }}></input>
+                      <div
+                        className={`time-delivery mb-20 ${
+                          isError && !submitData.deliveryDate ? "error" : ""
+                        }`}
+                      >
+                        <label>{t("form.delivery-date")}</label>
+                        <input
+                          type="date"
+                          name="deliveryDate"
+                          value={submitData.deliveryDate}
+                          onChange={handleInputChange}
+                          min={new Date().toISOString().split("T")[0]}
+                        />
                       </div>
                     </div>
                     <div className="col-lg-6 col-md-6">
-                      <div className="time-delivery mb-20">
-                        <label>{t('form.delivery-time')}</label>
-                        <select className="select-time" value={deliveryTime} onChange={e => setDeliveryTime(e.target.value)}>
-                          <option value="" disabled hidden>{t('form.select-time')}</option>
-                          <option value="10:00 AM to 12:00 PM" disabled={disableOption1}>10:00 AM to 12:00 PM</option>
-                          <option value="2:00 PM to 5:00 PM" disabled={disableOption2}>2:00 PM to 5:00 PM</option>
-                          <option value="7:00 PM to 9:00 PM" disabled={disableOption3}>7:00 PM to 9:00 PM</option>
+                      <div
+                        className={`time-delivery mb-20 ${
+                          isError && !submitData.deliveryTime ? "error" : ""
+                        }`}
+                      >
+                        <label>{t("form.delivery-time")}</label>
+                        <select
+                          name="deliveryTime"
+                          className="select-time"
+                          value={submitData.deliveryTime}
+                          onChange={handleInputChange}
+                        >
+                          <option disabled value="">
+                            {t("form.select-time")}
+                          </option>
+                          <option
+                            value="7:00 AM to 12:00 PM"
+                            disabled={disableOption1}
+                          >
+                            07:00 AM to 12:00 PM
+                          </option>
+                          <option
+                            value="1:00 PM to 9:00 PM"
+                            disabled={disableOption2}
+                          >
+                            01:00 PM to 09:00 PM
+                          </option>
                         </select>
-                      </div>                      
+                      </div>
                     </div>
                     <div className="col-lg-6 col-md-6">
-                      <div className="billing-info mb-20">
-                        <label>{t('myacc:phone')}</label>
+                      <div
+                        className={`billing-info mb-20 ${
+                          isError && !submitData.phone ? "error" : ""
+                        }`}
+                      >
+                        <label>{t("myacc:phone")}</label>
                         <input
-                          required
                           type="text"
                           name="phone"
                           value={submitData.phone}
@@ -543,9 +623,9 @@ const Checkout = ({ location, cartItems, currency }) => {
                   </div>
 
                   <div className="additional-info-wrap">
-                    <h3>{t('form.add-information')}</h3>
+                    <h3>{t("form.add-information")}</h3>
                     <div className="additional-info">
-                      <label>{t('form.order-note')}</label>
+                      <label>{t("form.order-note")}</label>
                       <textarea
                         placeholder="Notes about your order, e.g. special notes for delivery."
                         name="additionalInformation"
@@ -559,13 +639,13 @@ const Checkout = ({ location, cartItems, currency }) => {
               {/* Order info */}
               <div className="col-lg-5">
                 <div className="your-order-area">
-                  <h3>{t('form.your-order')}</h3>
+                  <h3>{t("form.your-order")}</h3>
                   <div className="your-order-wrap gray-bg-4">
                     <div className="your-order-product-info">
                       <div className="your-order-top">
                         <ul>
-                          <li>{t('orders:detail.products')}</li>
-                          <li>{t('orders:detail.total')}</li>
+                          <li>{t("orders:detail.products")}</li>
+                          <li>{t("orders:detail.total")}</li>
                         </ul>
                       </div>
                       <div className="your-order-middle">
@@ -601,8 +681,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                                       :  */}
                                   {(
                                     finalProductPrice * cartItem.quantity
-                                  ).toLocaleString("vi-VN") +
-                                    "₫"}
+                                  ).toLocaleString("vi-VN") + "₫"}
                                 </span>
                               </li>
                             );
@@ -611,8 +690,10 @@ const Checkout = ({ location, cartItems, currency }) => {
                       </div>
                       <div className="your-order-bottom">
                         <ul>
-                          <li className="your-order-shipping">{t('orders:detail.shipping')}</li>
-                          <li>{t('orders:detail.free')}</li>
+                          <li className="your-order-shipping">
+                            {t("orders:detail.shipping")}
+                          </li>
+                          <li>{t("orders:detail.free")}</li>
                         </ul>
                         {orders.length === 0 && (
                           <ul className="mt-3">
@@ -639,19 +720,19 @@ const Checkout = ({ location, cartItems, currency }) => {
                       </div>
                       <div className="your-order-total">
                         <ul>
-                          <li className="order-total">{t('orders:detail.total')}</li>
+                          <li className="order-total">
+                            {t("orders:detail.total")}
+                          </li>
                           <li>
                             {orders.length === 0
                               ? (
                                   cartTotalPrice -
                                   cartTotalPrice * 0.1 -
                                   voucherDiscount
-                                ).toLocaleString("vi-VN") +
-                                "₫"
+                                ).toLocaleString("vi-VN") + "₫"
                               : (
                                   cartTotalPrice - voucherDiscount
-                                ).toLocaleString("vi-VN") +
-                                "₫"}
+                                ).toLocaleString("vi-VN") + "₫"}
                           </li>
                         </ul>
                       </div>
@@ -665,7 +746,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                           onChange={handlePaymentMethodChange}
                           className="radio-input"
                         />
-                        <span>{t('form.cash')}</span>
+                        <span>{t("form.cash")}</span>
                       </div>
                       {/* <div>
                         <input
@@ -680,8 +761,11 @@ const Checkout = ({ location, cartItems, currency }) => {
                     </div>
                   </div>
                   <div className="place-order mt-25">
-                    <button className="btn-hover" onClick={() => placeOrder()}>
-                      {t('form.place-order')}
+                    <button
+                      className="btn-hover"
+                      onClick={() => clickPlaceOrder()}
+                    >
+                      {t("form.place-order")}
                     </button>
                   </div>
                 </div>

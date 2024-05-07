@@ -26,7 +26,6 @@ const ShopGridStandard = ({ location }) => {
   const [sortedProducts, setSortedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
-  console.log(products.length);
   const pageLimit = 999;
   const { pathname } = location;
   const {t} = useTranslation(['breadcrumb']);

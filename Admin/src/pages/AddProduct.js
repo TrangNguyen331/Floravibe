@@ -174,7 +174,6 @@ const AddProduct = () => {
               </div>
               <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
                 <FormTitle>Product Tag</FormTitle>
-
                 <TagsInput
                   classNames="mt-2"
                   placeholder="Add tags (press Enter to add)"
