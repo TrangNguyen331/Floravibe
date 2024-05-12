@@ -8,6 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/${application.version}/files")
@@ -33,8 +37,12 @@ public class FileController {
     }
 
     @PostMapping
-    public ResponseEntity<FileStorage> uploadFile(@RequestParam("file") MultipartFile file) {
-        FileStorage fileStorage = fileStorageService.uploadFile(file);
-        return ResponseEntity.ok(fileStorage);
+    public ResponseEntity<List<FileStorage>> uploadFile(@RequestParam("files") MultipartFile[] files) {
+        List<FileStorage> result = new ArrayList<>();
+        Arrays.asList(files).stream().forEach(file -> {
+            FileStorage fileStorage = fileStorageService.uploadFile(file);
+            result.add(fileStorage);
+        });
+        return ResponseEntity.ok(result);
     }
 }
