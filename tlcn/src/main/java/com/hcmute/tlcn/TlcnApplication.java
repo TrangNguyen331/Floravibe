@@ -1,5 +1,6 @@
 package com.hcmute.tlcn;
 
+import com.hcmute.tlcn.config.FileStorageProperties;
 import com.hcmute.tlcn.entities.Account;
 import com.hcmute.tlcn.entities.Voucher;
 import com.hcmute.tlcn.repositories.AccountRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -21,6 +23,9 @@ import java.util.Optional;
 @SpringBootApplication
 @EnableMongoAuditing
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableConfigurationProperties({
+        FileStorageProperties.class
+})
 public class TlcnApplication implements CommandLineRunner {
 
     public static void main(String[] args) {

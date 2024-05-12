@@ -50,17 +50,44 @@ const AddProduct = () => {
   const handleImageChange = (e) => {
     const files = e.target.files;
     const urls = [];
+    const formData = new FormData();
 
     for (let i = 0; i < files.length; i++) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        urls.push(event.target.result);
+      formData.append('files', files[i]);
+    }
+
+    axiosInstance.post('/api/v1/files', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+      .then(response => {
+        // Handle success
+        console.log('Upload successful:', response);
+        response.data.forEach(item => {
+          urls.push('http://localhost:8080/api/v1/files/viewfile/' + item.identifier);
+        });
         if (urls.length === files.length) {
           handleProductChange("images", urls);
         }
-      };
-      reader.readAsDataURL(files[i]);
-    }
+      })
+      .catch(error => {
+        // Handle error
+        console.error('Error uploading:', error);
+        // You can show an error message to the user
+      });
+
+    // for (let i = 0; i < files.length; i++) {
+    //   const reader = new FileReader();
+    //   reader.onload = (event) => {
+    //     console.log(event);
+    //     urls.push(event.target.result);
+    //     if (urls.length === files.length) {
+    //       handleProductChange("images", urls);
+    //     }
+    //   };
+    //   reader.readAsDataURL(files[i]);
+    // }
   };
   const handleSave = async () => {
     let body = {
