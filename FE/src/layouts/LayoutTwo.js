@@ -4,7 +4,6 @@ import HeaderOne from "../wrappers/header/HeaderOne";
 import FooterOne from "../wrappers/footer/FooterOne";
 
 const LayoutTwo = ({ children, footerBgClass }) => {
-  console.log(children)
   return (
     <Fragment>
       <HeaderOne />

@@ -1,86 +1,54 @@
+<Switch>
+  <Route path={process.env.PUBLIC_URL + "/"} component={HomePlants} exact />
 
-              <Switch>
+  <Route path="/about">
+    <About />
+  </Route>
 
-              <Route
-                path={process.env.PUBLIC_URL + "/"}
-                component={HomePlants}
-                exact
-              />
+  {/* Shop pages */}
+  <Route path={process.env.PUBLIC_URL + "/shop"} component={ShopGridStandard} />
 
-              <Route path="/about">
-                <About />
-              </Route>
+  {/* Shop product pages */}
+  <Route
+    path={process.env.PUBLIC_URL + "/product/:id"}
+    render={(routeProps) => (
+      <Product {...routeProps} key={routeProps.match.params.id} />
+    )}
+  />
+  <Route
+    path={process.env.PUBLIC_URL + "/product-tab-left/:id"}
+    component={ProductTabLeft}
+  />
 
-              {/* Shop pages */}
-              <Route
-                path={process.env.PUBLIC_URL + "/shop"}
-                component={ShopGridStandard}
-              />
+  {/* Blog pages */}
 
+  <Route path={process.env.PUBLIC_URL + "/blog"} component={BlogRightSidebar} />
+  <Route
+    path={process.env.PUBLIC_URL + "/blog"}
+    component={BlogDetailsStandard}
+  />
 
-              {/* Shop product pages */}
-              <Route
-                path={process.env.PUBLIC_URL + "/product/:id"}
-                render={(routeProps) => (
-                  <Product {...routeProps} key={routeProps.match.params.id} />
-                )}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/product-tab-left/:id"}
-                component={ProductTabLeft}
-              />
-             
+  {/* Other pages */}
+  <Route path={process.env.PUBLIC_URL + "/about"} component={About} />
+  <Route path={process.env.PUBLIC_URL + "/contact"} component={Contact} />
+  <Route path={process.env.PUBLIC_URL + "/my-account"} component={MyAccount} />
+  <Route
+    path={process.env.PUBLIC_URL + "/login-register"}
+    component={LoginRegister}
+  />
+  <Route path={process.env.PUBLIC_URL + "/cart"} component={Cart} />
+  <Route path={process.env.PUBLIC_URL + "/wishlist"} component={Wishlist} />
+  <Route path={process.env.PUBLIC_URL + "/compare"} component={Compare} />
+  <Route path={process.env.PUBLIC_URL + "/checkout"} component={Checkout} />
+  <Route
+    path={process.env.PUBLIC_URL + "/resetpassword"}
+    component={ResetPassword}
+  />
+  <Route
+    path={process.env.PUBLIC_URL + "/forgot-password"}
+    component={ForgotPassword}
+  />
+  <Route path={process.env.PUBLIC_URL + "/not-found"} component={NotFound} />
 
-              {/* Blog pages */}
-
-              <Route
-                path={process.env.PUBLIC_URL + "/blog"}
-                component={BlogRightSidebar}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/blog"}
-                component={BlogDetailsStandard}
-              />
-
-              {/* Other pages */}
-              <Route
-                path={process.env.PUBLIC_URL + "/about"}
-                component={About}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/contact"}
-                component={Contact}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/my-account"}
-                component={MyAccount}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/login-register"}
-                component={LoginRegister}
-              />
-
-              <Route
-                path={process.env.PUBLIC_URL + "/cart"}
-                component={Cart}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/wishlist"}
-                component={Wishlist}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/compare"}
-                component={Compare}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/checkout"}
-                component={Checkout}
-              />
-
-              <Route
-                path={process.env.PUBLIC_URL + "/not-found"}
-                component={NotFound}
-              />
-
-              <Route exact component={NotFound} />
-            </Switch>
+  <Route exact component={NotFound} />
+</Switch>;

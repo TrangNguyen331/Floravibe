@@ -127,6 +127,16 @@ const Order = ({ location, cartItems, currency }) => {
                           </li>
                         </ul>
                       </div>
+                      <div className="order-bottom">
+                        <ul>
+                          <li>
+                            <span className="order-bottom-left">
+                              Your delivery date
+                            </span>
+                            <span>{order.deliveryDate}</span>
+                          </li>
+                        </ul>
+                      </div>
                       <div className="order-total-wrap">
                         <ul>
                           <li className="order-total">{t('detail.total')}</li>

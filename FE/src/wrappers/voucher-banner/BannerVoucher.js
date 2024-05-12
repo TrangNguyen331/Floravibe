@@ -28,41 +28,45 @@ const BannerVoucher = () => {
   }, []);
   return (
     <Fragment>
-      {vouchers.map((voucher, index) => {
-        return (
-          <Col lg="5" md="5" style={{ width: "1195px" }} key={index}>
-            <div className="parent-background">
-              <div className="child-background">
-                <Row>
-                  <Col className="info-voucher" lg="7" md="7">
-                    <div className="voucher">Voucher</div>
-                    <div className="valid">
-                      <span className="number">{voucher.voucherValue}</span>
-                      <span className="currency">VND</span>
-                    </div>
-                    <div className="due-date">
-                      {formatReadableDate(voucher.effectiveDate)} -{" "}
-                      {formatReadableDate(voucher.validUntil)}
-                    </div>
-                    <div className="first-content">{voucher.description}</div>
-                  </Col>
-                  <Col className="info-code-voucher" lg="5" md="5">
-                    <div className="second-content">
-                      Applies to all invoices in the shop
-                    </div>
-                    <div className="text-enter-code">
-                      <span>Enter code</span>
-                    </div>
-                    <div className="code">{voucher.voucherName}</div>
-                    <div>AT CHECKOUT</div>
-                    <div className="quantity">Quantity: {voucher.quantity}</div>
-                  </Col>
-                </Row>
+      {vouchers
+        .filter((voucher) => voucher.isActive)
+        .map((voucher, index) => {
+          return (
+            <Col lg="5" md="5" style={{ width: "1195px" }} key={index}>
+              <div className="parent-background">
+                <div className="child-background">
+                  <Row>
+                    <Col className="info-voucher" lg="7" md="7">
+                      <div className="voucher">Voucher</div>
+                      <div className="valid">
+                        <span className="number">{voucher.voucherValue}</span>
+                        <span className="currency">VND</span>
+                      </div>
+                      <div className="due-date">
+                        {formatReadableDate(voucher.effectiveDate)} -{" "}
+                        {formatReadableDate(voucher.validUntil)}
+                      </div>
+                      <div className="first-content">{voucher.description}</div>
+                    </Col>
+                    <Col className="info-code-voucher" lg="5" md="5">
+                      <div className="second-content">
+                        Applies to all invoices in the shop
+                      </div>
+                      <div className="text-enter-code">
+                        <span>Enter code</span>
+                      </div>
+                      <div className="code">{voucher.voucherName}</div>
+                      <div>AT CHECKOUT</div>
+                      <div className="quantity">
+                        Quantity: {voucher.quantity}
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
               </div>
-            </div>
-          </Col>
-        );
-      })}
+            </Col>
+          );
+        })}
     </Fragment>
   );
 };

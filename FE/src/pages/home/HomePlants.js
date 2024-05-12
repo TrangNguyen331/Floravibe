@@ -5,6 +5,7 @@ import HeroSliderFour from "../../wrappers/hero-slider/HeroSliderFour";
 import BannerFour from "../../wrappers/banner/BannerFour";
 import TabProduct from "../../wrappers/product/TabProduct";
 import FeatureIconThree from "../../wrappers/feature-icon/FeatureIconThree";
+import VoucherSlider from "../../wrappers/voucher-banner/VoucherSlider";
 // import Newsletter from "../../wrappers/newsletter/Newsletter";
 
 const HomePlants = () => {
@@ -27,6 +28,8 @@ const HomePlants = () => {
           // category="plant"
         />
 
+        {/* voucher slider */}
+        <VoucherSlider spaceBottomClass="pb-90" bgColorClass="bg-gray-2" />
         {/* feature icon */}
         <FeatureIconThree
           bgColorClass="bg-gray-2"

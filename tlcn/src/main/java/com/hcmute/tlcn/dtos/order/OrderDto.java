@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -17,6 +19,8 @@ public class OrderDto {
     private List<OrderDetail> details;
     private AdditionalOrderDetailDto additionalOrder;
     private VoucherDto voucherDetail;
+    private LocalDate deliveryDate;
+    private String deliveryTime;
     private double total;
     private String status;
     private String methodPaid;

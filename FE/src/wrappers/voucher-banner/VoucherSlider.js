@@ -3,28 +3,18 @@ import React from "react";
 import Swiper from "react-id-swiper";
 import BannerVoucher from "./BannerVoucher";
 
-const VoucherSlider = ({ spaceBottomClass }) => {
+const VoucherSlider = ({ spaceBottomClass, bgColorClass }) => {
   const settings = {
     loop: false,
     slidesPerView: 2,
-    // breakpoints: {
-    //   1024: {
-    //     slidesPerView: 4,
-    //   },
-    //   768: {
-    //     slidesPerView: 3,
-    //   },
-    //   640: {
-    //     slidesPerView: 2,
-    //   },
-    //   320: {
-    //     slidesPerView: 1,
-    //   },
-    // },
   };
 
   return (
-    <div className={`${spaceBottomClass ? spaceBottomClass : ""}`}>
+    <div
+      className={`${spaceBottomClass ? spaceBottomClass : ""} ${
+        bgColorClass ? bgColorClass : ""
+      }`}
+    >
       <div className="container">
         {/* <SectionTitle
           titleText="Related Products"
@@ -43,6 +33,7 @@ const VoucherSlider = ({ spaceBottomClass }) => {
 
 VoucherSlider.propTypes = {
   spaceBottomClass: PropTypes.string,
+  bgColorClass: PropTypes.string,
 };
 
 export default VoucherSlider;
