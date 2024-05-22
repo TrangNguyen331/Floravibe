@@ -27,4 +27,4 @@ application:
       page: 0
       size: 20
 upload:
-  directory: classpath:/uploads
+  directory: C:\Users\DELL\Practice\React\Floravibe\tlcn\src\main\resources\uploads

@@ -6,6 +6,7 @@ import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
 import com.hcmute.tlcn.dtos.voucher.VoucherDto;
 import com.hcmute.tlcn.entities.Account;
 import com.hcmute.tlcn.entities.Order;
+import com.hcmute.tlcn.entities.Product;
 import com.hcmute.tlcn.exceptions.NotFoundException;
 import com.hcmute.tlcn.repositories.AccountRepository;
 import com.hcmute.tlcn.repositories.OrderRepository;
@@ -83,6 +84,16 @@ public class OrderServiceImpl implements OrderService {
         voucherDto.setUsedVoucher(dto.getVoucherDetail().getUsedVoucher());
         order.setVoucherDetail(voucherDto);
         repository.save(order);
+
+        ResponseOrderDto orderDto = modelMapper.map(order, ResponseOrderDto.class);
+        for (OrderDetailDto detailDto : orderDto.getDetails()) {
+            Product product = productRepository.findById(detailDto.getProductId())
+                    .orElseThrow(() -> new NotFoundException("Product not found"));
+            int remainingStock = product.getStockQty() - detailDto.getQuantity();
+            
+            product.setStockQty(remainingStock);
+            productRepository.save(product);
+        }
         return order;
     }
 

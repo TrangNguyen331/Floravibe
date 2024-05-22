@@ -21,7 +21,6 @@ const Checkout = ({ location, cartItems, currency }) => {
   const token = useSelector((state) => state.auth.token);
   const history = useHistory();
   const { t } = useTranslation(["checkout", "myacc", "orders", "breadcrumb"]);
-
   const [cities, setCities] = useState([]);
 
   const [disableOption1, setDisableOption1] = useState(false);

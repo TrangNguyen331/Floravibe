@@ -33,4 +33,9 @@ public class WishlistController {
         Wishlist result = service.delete(principal.getName(),productId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    @DeleteMapping("/clear")
+    public ResponseEntity<Wishlist> clearWishlist(Principal principal) {
+            Wishlist result = service.deleteAll(principal.getName());
+            return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

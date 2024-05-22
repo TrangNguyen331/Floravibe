@@ -24,10 +24,11 @@ import {
   ModalFooter,
   Badge,
 } from "@windmill/react-ui";
-
+import { useToasts } from "react-toast-notifications";
 const Blogs = () => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
+  const { addToast } = useToasts();
   // pagination setup
   const [resultsPerPage, setResultsPerPage] = useState(4);
   const [totalPage, setTotalPage] = useState(0);
@@ -63,8 +64,19 @@ const Blogs = () => {
     setIsModalOpen(false);
   };
   const handleSave = async (mode) => {
-    console.log("On save", mode);
-    console.log("current model", selectedBlog);
+    if (
+      !selectedBlog.image ||
+      !selectedBlog.author ||
+      !selectedBlog.content ||
+      !selectedBlog.title ||
+      selectedBlog.category.length === 0
+    ) {
+      addToast("Please fill in all the required fields", {
+        appearance: "warning",
+        autoDismiss: true,
+      });
+      return;
+    }
     try {
       if (mode === "delete") {
         try {
@@ -151,7 +163,6 @@ const Blogs = () => {
       const sortedData = response.data.content.sort(
         (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
       );
-
       setData(sortedData);
       setPage(page);
       setTotalPage(response.data.totalPages);
@@ -167,7 +178,6 @@ const Blogs = () => {
       [property]: value,
     }));
   };
-
   useEffect(() => {
     fetchData(1);
   }, []);
@@ -202,7 +212,11 @@ const Blogs = () => {
       </div>
 
       <div>
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          className="fullscreen-modal"
+        >
           <ModalHeader className="flex items-center text-2xl">
             {mode === "edit" && "Edit Blog"}
             {mode === "delete" && "Delete Blog"}
@@ -230,7 +244,7 @@ const Blogs = () => {
               />
             )}
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter className="modal-footer">
             <div className="hidden sm:block">
               <Button layout="outline" onClick={closeModal}>
                 Cancel

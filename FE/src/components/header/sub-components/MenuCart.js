@@ -8,7 +8,7 @@ import { useToasts } from "react-toast-notifications";
 const MenuCart = ({ cartData, currency, deleteFromCart }) => {
   let cartTotalPrice = 0;
   const { addToast } = useToasts();
-  const {t} = useTranslation(['orders'])
+  const { t } = useTranslation(["orders"]);
   return (
     <div className="shopping-cart-content">
       {
@@ -37,7 +37,11 @@ const MenuCart = ({ cartData, currency, deleteFromCart }) => {
                       >
                         <img
                           alt=""
-                          src={single.images[0]}
+                          src={
+                            single.images && single.images.length > 0
+                              ? single.images[0]
+                              : ""
+                          }
                           className="img-fluid"
                         />
                       </Link>
@@ -50,12 +54,13 @@ const MenuCart = ({ cartData, currency, deleteFromCart }) => {
                           {single.name}
                         </Link>
                       </h4>
-                      <h6>{t('detail.qty')}: {single.quantity}</h6>
+                      <h6>
+                        {t("detail.qty")}: {single.quantity}
+                      </h6>
                       <span>
                         {/* {discountedPrice !== null
                         ? finalDiscountedPrice + " " + currency.currencySymbol */}
-                        {finalProductPrice.toLocaleString("vi-VN") +
-                          "₫"}
+                        {finalProductPrice.toLocaleString("vi-VN") + "₫"}
                       </span>
                       {single.selectedProductColor &&
                       single.selectedProductSize ? (
@@ -78,10 +83,9 @@ const MenuCart = ({ cartData, currency, deleteFromCart }) => {
             </ul>
             <div className="shopping-cart-total">
               <h4>
-                {t('detail.total')}
+                {t("detail.total")}
                 <span className="shop-total">
-                  {cartTotalPrice.toLocaleString("vi-VN") +
-                    "₫"}
+                  {cartTotalPrice.toLocaleString("vi-VN") + "₫"}
                 </span>
               </h4>
             </div>
@@ -90,13 +94,13 @@ const MenuCart = ({ cartData, currency, deleteFromCart }) => {
                 className="default-btn"
                 to={process.env.PUBLIC_URL + "/cart"}
               >
-                {t('cart.view-cart')}
+                {t("cart.view-cart")}
               </Link>
               <Link
                 className="default-btn"
                 to={process.env.PUBLIC_URL + "/checkout"}
               >
-                {t('complete.checkout')}
+                {t("complete.checkout")}
               </Link>
             </div>
           </Fragment>

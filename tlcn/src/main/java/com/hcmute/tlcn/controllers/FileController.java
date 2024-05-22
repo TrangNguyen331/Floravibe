@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/${application.version}/files")
 public class FileController {
 
-    private FileStorageService fileStorageService;
+    private final FileStorageService fileStorageService;
 
     public FileController(FileStorageService fileStorageService) {
         this.fileStorageService = fileStorageService;

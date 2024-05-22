@@ -8,6 +8,7 @@ import ProductModal from "./ProductModal";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../axiosInstance";
 const ProductGridSingle = ({
   product,
   currency,
@@ -18,7 +19,7 @@ const ProductGridSingle = ({
   sliderClassName,
   spaceBottomClass,
 }) => {
-  const {t} = useTranslation(['home']);
+  const { t } = useTranslation(["home"]);
   const [modalShow, setModalShow] = useState(false);
   const { addToast } = useToasts();
   const token = useSelector((state) => state.auth.token);
@@ -28,7 +29,19 @@ const ProductGridSingle = ({
   // const finalDiscountedPrice = +(
   //   discountedPrice * currency.currencyRate
   // ).toFixed(2);
-
+  const handleAddToWishList = async () => {
+    try {
+      if (token) {
+        await axiosInstance.post(`/api/v1/wishlist/${product.id}`);
+      }
+      addToWishlist(product, addToast);
+    } catch (err) {
+      addToast("failed", {
+        appearance: "error",
+        autoDismiss: true,
+      });
+    }
+  };
   return (
     <Fragment>
       <div
@@ -71,7 +84,11 @@ const ProductGridSingle = ({
                 ) : (
                   ""
                 )}
-                {product.new ? <span className="purple">{t('productgrid.new')}</span> : ""}
+                {product.new ? (
+                  <span className="purple">{t("productgrid.new")}</span>
+                ) : (
+                  ""
+                )}
               </div>
             ) : (
               ""
@@ -84,12 +101,13 @@ const ProductGridSingle = ({
                   disabled={wishlistItem !== undefined}
                   title={
                     wishlistItem !== undefined
-                      ? t('productgrid.added-to-wishlist')
-                      : t('productgrid.add-to-wishlist')
+                      ? t("productgrid.added-to-wishlist")
+                      : t("productgrid.add-to-wishlist")
                   }
                   onClick={() => {
                     if (token) {
-                      addToWishlist(product, addToast);
+                      // addToWishlist(product, addToast);
+                      handleAddToWishList();
                     } else {
                       history.push("/login-register");
                     }
@@ -106,11 +124,11 @@ const ProductGridSingle = ({
                     target="_blank"
                   >
                     {" "}
-                    {t('productgrid.buy-now')}{" "}
+                    {t("productgrid.buy-now")}{" "}
                   </a>
                 ) : product.variation && product.variation.length >= 1 ? (
                   <Link to={`${process.env.PUBLIC_URL}/product/${product.id}`}>
-                    {t('productgrid.select-option')}
+                    {t("productgrid.select-option")}
                   </Link>
                 ) : (
                   <button
@@ -126,21 +144,29 @@ const ProductGridSingle = ({
                         ? "active"
                         : ""
                     }
-                    disabled={cartItem !== undefined && cartItem.quantity > 0}
+                    disabled={
+                      (cartItem !== undefined && cartItem.quantity > 0) ||
+                      product.stockQty <= 0
+                    }
                     title={
-                      cartItem !== undefined ? t('productgrid.tooltip-added-to-cart') : t('productgrid.tooltip-add-to-cart')
+                      cartItem !== undefined
+                        ? t("productgrid.tooltip-added-to-cart")
+                        : t("productgrid.tooltip-add-to-cart")
                     }
                   >
                     {" "}
                     <i className="pe-7s-cart"></i>{" "}
                     {cartItem !== undefined && cartItem.quantity > 0
-                      ? t('productgrid.added')
-                      : t('productgrid.add-to-cart')}
+                      ? t("productgrid.added")
+                      : t("productgrid.add-to-cart")}
                   </button>
                 )}
               </div>
               <div className="pro-same-action pro-quickview">
-                <button onClick={() => setModalShow(true)} title={t('productgrid.quick-view')}>
+                <button
+                  onClick={() => setModalShow(true)}
+                  title={t("productgrid.quick-view")}
+                >
                   <i className="pe-7s-look" />
                 </button>
               </div>
@@ -168,10 +194,7 @@ const ProductGridSingle = ({
                   </span>
                 </Fragment>
               ) : ( */}
-              <span>
-                {finalProductPrice.toLocaleString("vi-VN") +
-                  "₫"}{" "}
-              </span>
+              <span>{finalProductPrice.toLocaleString("vi-VN") + "₫"} </span>
               {/* )} */}
             </div>
           </div>

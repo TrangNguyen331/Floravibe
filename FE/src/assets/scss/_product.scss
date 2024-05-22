@@ -861,6 +861,9 @@
     align-items: center;
     margin-top: 40px;
     margin-bottom: 34px;
+    .warning.cart-plus-minus {
+      border: 1px solid #fa3030 !important;
+    }
     .cart-plus-minus {
       position: relative;
       display: inline-block;

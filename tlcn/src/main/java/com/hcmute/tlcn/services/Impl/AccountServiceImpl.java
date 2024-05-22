@@ -44,17 +44,26 @@ public class AccountServiceImpl implements AccountService {
             throw new BadRequestException("Email was register, please using another Email !!!");
         }
         Account account=new Account();
+        account.setFirstName(input.getFirstName());
+        account.setLastName(input.getLastName());
         account.setUsername(input.getUsername());
         account.setEmail(input.getEmail());
         BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
         String hashPassword=bCryptPasswordEncoder.encode(input.getPassword());
         account.setPassword(hashPassword);
-        List<String> roles = List.of(Roles.ROLE_USER.name());
+
+        System.out.println("isAdmin value before setting roles: " + input.isAdmin());
+
+        List<String> roles = new ArrayList<>(List.of(Roles.ROLE_USER.name()));
+//        List<String> roles = new ArrayList<>();
+//        roles.add(Roles.ROLE_USER.name());
         if(input.isAdmin()){
             roles.add(Roles.ROLE_ADMIN.name());
         }
         account.setRoles(roles);
         accountRepository.save(account);
+
+
         return "Success";
     }
 

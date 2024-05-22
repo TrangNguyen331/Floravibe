@@ -17,5 +17,7 @@ public class RegisterDto {
     private String email;
     private String username;
     private String password;
-    private boolean isAdmin=false;
+    private String firstName;
+    private String lastName;
+    private boolean admin=false;
 }

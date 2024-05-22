@@ -42,7 +42,7 @@ const ProductsAll = () => {
   // pagination change control
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [mode, setMode] = useState(null); // 'add', 'edit', 'delete'
+  const [mode, setMode] = useState(null); // 'edit', 'delete'
   const [selectedProduct, setSelectedProduct] = useState({
     id: "",
     name: "",
@@ -52,6 +52,7 @@ const ProductsAll = () => {
     tags: [],
     images: [],
     collections: [],
+    stockQty: 0,
   });
 
   // on page change, load new sliced data
@@ -125,6 +126,7 @@ const ProductsAll = () => {
       tags: [],
       images: [],
       collections: [],
+      stockQty: 0,
     });
     setIsModalOpen(false);
   };
@@ -148,6 +150,7 @@ const ProductsAll = () => {
           tags: selectedProduct.tags,
           images: selectedProduct.images,
           collections: selectedProduct.collections,
+          stockQty: selectedProduct.stockQty,
         };
         try {
           await axiosInstance.put(
@@ -158,33 +161,8 @@ const ProductsAll = () => {
           console.log("Error", error);
         }
       }
-      if (mode === "add") {
-        let body = {
-          name: selectedProduct.name,
-          description: selectedProduct.description,
-          additionalInformation: selectedProduct.additionalInformation,
-          price: selectedProduct.price,
-          tags: selectedProduct.tags,
-          images: selectedProduct.images,
-          collections: selectedProduct.collections,
-        };
-        try {
-          await axiosInstance.post("/api/v1/products", body);
-        } catch (error) {
-          console.log("Error", error);
-        }
-      }
+
       setMode(null);
-      setSelectedProduct({
-        id: "",
-        name: "",
-        description: "",
-        additionalInformation: "",
-        price: 0,
-        tags: [],
-        images: [],
-        collections: [],
-      });
       setIsModalOpen(false);
       window.location.reload();
     } catch (error) {
@@ -192,14 +170,14 @@ const ProductsAll = () => {
     }
   };
   const handleProductChange = (property, value) => {
-    console.log("trigger update");
-    console.log("property", property);
-    console.log("value", value);
     setSelectedProduct((prevProduct) => ({
       ...prevProduct,
       [property]: value,
     }));
     console.log(value);
+  };
+  const truncateContent = (content) => {
+    return content.length > 120 ? content.substr(0, 120) + "..." : content;
   };
   return (
     <div>
@@ -226,17 +204,6 @@ const ProductsAll = () => {
                 All Products
               </p>
             </div>
-
-            {/* <div className="flex">
-              <Button
-                size="large"
-                iconLeft={AddIcon}
-                className="mx-3"
-                onClick={() => openModal("add", null)}
-              >
-                Add Product
-              </Button>
-            </div> */}
           </div>
         </CardBody>
       </Card>
@@ -251,9 +218,8 @@ const ProductsAll = () => {
         <ModalHeader className="flex items-center text-2xl mb-4">
           {mode === "edit" && "Edit Product"}
           {mode === "delete" && "Delete Product"}
-          {mode === "add" && "Add New Product"}
         </ModalHeader>
-        <ModalBody>
+        <ModalBody className="modal-body">
           {mode === "edit" ? (
             <EditForm
               data={selectedProduct}
@@ -286,13 +252,9 @@ const ProductsAll = () => {
               <Button block size="large" onClick={() => handleSave("edit")}>
                 Save
               </Button>
-            ) : mode === "delete" ? (
+            ) : (
               <Button block size="large" onClick={() => handleSave("delete")}>
                 Delete
-              </Button>
-            ) : (
-              <Button block size="large" onClick={() => handleSave("add")}>
-                Add Product
               </Button>
             )}
           </div>
@@ -342,7 +304,7 @@ const ProductsAll = () => {
                     </div>
                   </TableCell>
                   <TableCell className="whitespace-normal break-words">
-                    {product.description}
+                    {truncateContent(product.description)}
                   </TableCell>
                   <TableCell className="text-sm">
                     {formatNumberWithDecimal(product.price)}đ

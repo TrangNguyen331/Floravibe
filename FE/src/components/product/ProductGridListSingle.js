@@ -8,6 +8,7 @@ import ProductModal from "./ProductModal";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../axiosInstance";
 const ProductGridListSingle = ({
   product,
   currency,
@@ -18,12 +19,25 @@ const ProductGridListSingle = ({
   sliderClassName,
   spaceBottomClass,
 }) => {
-  const {t} = useTranslation(['home']);
+  const { t } = useTranslation(["home"]);
   const [modalShow, setModalShow] = useState(false);
   const { addToast } = useToasts();
   const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
   const token = useSelector((state) => state.auth.token);
   const history = useHistory();
+  const handleAddToWishList = async () => {
+    try {
+      if (token) {
+        await axiosInstance.post(`/api/v1/wishlist/${product.id}`);
+      }
+      addToWishlist(product, addToast);
+    } catch (err) {
+      addToast("failed", {
+        appearance: "error",
+        autoDismiss: true,
+      });
+    }
+  };
   return (
     <Fragment>
       <div
@@ -51,12 +65,13 @@ const ProductGridListSingle = ({
                   disabled={wishlistItem !== undefined}
                   title={
                     wishlistItem !== undefined
-                      ? t('productgrid.added-to-wishlist')
-                      : t('productgrid.add-to-wishlist')
+                      ? t("productgrid.added-to-wishlist")
+                      : t("productgrid.add-to-wishlist")
                   }
                   onClick={() => {
                     if (token) {
-                      addToWishlist(product, addToast);
+                      // addToWishlist(product, addToast);
+                      handleAddToWishList();
                     } else {
                       history.push("/login-register");
                     }
@@ -73,11 +88,11 @@ const ProductGridListSingle = ({
                     target="_blank"
                   >
                     {" "}
-                    {t('productgrid.buy-now')}{" "}
+                    {t("productgrid.buy-now")}{" "}
                   </a>
                 ) : product.variation && product.variation.length >= 1 ? (
                   <Link to={`${process.env.PUBLIC_URL}/product/${product.id}`}>
-                    {t('productgrid.select-option')}
+                    {t("productgrid.select-option")}
                   </Link>
                 ) : (
                   <button
@@ -93,21 +108,29 @@ const ProductGridListSingle = ({
                         ? "active"
                         : ""
                     }
-                    disabled={cartItem !== undefined && cartItem.quantity > 0}
+                    disabled={
+                      (cartItem !== undefined && cartItem.quantity > 0) ||
+                      product.stockQty === 0
+                    }
                     title={
-                      cartItem !== undefined ? t('productgrid.tooltip-added-to-cart') : t('productgrid.tooltip-add-to-cart')
+                      cartItem !== undefined
+                        ? t("productgrid.tooltip-added-to-cart")
+                        : t("productgrid.tooltip-add-to-cart")
                     }
                   >
                     {" "}
                     <i className="pe-7s-cart"></i>{" "}
                     {cartItem !== undefined && cartItem.quantity > 0
-                      ? t('productgrid.added')
-                      : t('productgrid.add-to-cart')}
+                      ? t("productgrid.added")
+                      : t("productgrid.add-to-cart")}
                   </button>
                 )}
               </div>
               <div className="pro-same-action pro-quickview">
-                <button onClick={() => setModalShow(true)} title={t('productgrid.quick-view')}>
+                <button
+                  onClick={() => setModalShow(true)}
+                  title={t("productgrid.quick-view")}
+                >
                   <i className="pe-7s-look" />
                 </button>
               </div>
@@ -120,10 +143,7 @@ const ProductGridListSingle = ({
               </Link>
             </h3>
             <div className="product-price">
-              <span>
-                {finalProductPrice.toLocaleString("vi-VN") +
-                  "₫"}{" "}
-              </span>
+              <span>{finalProductPrice.toLocaleString("vi-VN") + "₫"} </span>
             </div>
           </div>
         </div>
@@ -171,10 +191,7 @@ const ProductGridListSingle = ({
                   </Link>
                 </h3>
                 <div className="product-list-price">
-                  <span>
-                    {finalProductPrice.toLocaleString("vi-VN") +
-                      "₫"}
-                  </span>
+                  <span>{finalProductPrice.toLocaleString("vi-VN") + "₫"}</span>
                 </div>
                 {product.rating && product.rating > 0 ? (
                   <div className="rating-review">
@@ -196,13 +213,13 @@ const ProductGridListSingle = ({
                         target="_blank"
                       >
                         {" "}
-                        {t('productgrid.buy-now')}{" "}
+                        {t("productgrid.buy-now")}{" "}
                       </a>
                     ) : product.variation && product.variation.length >= 1 ? (
                       <Link
                         to={`${process.env.PUBLIC_URL}/product/${product.id}`}
                       >
-                        {t('productgrid.select-option')}
+                        {t("productgrid.select-option")}
                       </Link>
                     ) : (
                       <button
@@ -213,18 +230,19 @@ const ProductGridListSingle = ({
                             : ""
                         }
                         disabled={
-                          cartItem !== undefined && cartItem.quantity > 0
+                          (cartItem !== undefined && cartItem.quantity > 0) ||
+                          product.stockQty <= 0
                         }
                         title={
                           cartItem !== undefined
-                            ? t('productgrid.tooltip-added-to-cart') 
-                            : t('productgrid.tooltip-add-to-cart')
+                            ? t("productgrid.tooltip-added-to-cart")
+                            : t("productgrid.tooltip-add-to-cart")
                         }
                       >
                         <i className="pe-7s-cart"></i>{" "}
                         {cartItem !== undefined && cartItem.quantity > 0
-                          ? t('productgrid.added')
-                          : t('productgrid.add-to-cart')}
+                          ? t("productgrid.added")
+                          : t("productgrid.add-to-cart")}
                       </button>
                     )}
                   </div>
@@ -235,8 +253,8 @@ const ProductGridListSingle = ({
                       disabled={wishlistItem !== undefined}
                       title={
                         wishlistItem !== undefined
-                          ? t('productgrid.added-to-wishlist')
-                          : t('productgrid.add-to-wishlist')
+                          ? t("productgrid.added-to-wishlist")
+                          : t("productgrid.add-to-wishlist")
                       }
                       onClick={() => addToWishlist(product, addToast)}
                     >

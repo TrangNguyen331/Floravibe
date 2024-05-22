@@ -96,7 +96,6 @@ function Dashboard() {
           <ChartLegend legends={doughnutLegends} />
         </ChartCard>
       </div> */}
-
       <PageTitle>Orders</PageTitle>
       <OrdersTable resultsPerPage={10} filter={""} />
     </>
