@@ -9,7 +9,7 @@ export const filterOrderByStatus = (orders, status) => {
           .sort((a, b) => a.createdDate - b.createdDate);
       case "Processing":
         return [...orders]
-          .filter((x) => x.status === "PROCESSING")
+          .filter((x) => x.status === "IN_PROCESSING")
           .sort((a, b) => a.createdDate - b.createdDate);
       case "Completed":
         return [...orders]
@@ -27,7 +27,7 @@ export const getStatus = (key) => {
     case "IN_REQUEST":
       // return "In Progress";
       return "In Request";
-    case "PROCESSING":
+    case "IN_PROCESSING":
       return "Processing";
     case "COMPLETED":
       return "COMPLETED";

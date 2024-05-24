@@ -5,7 +5,7 @@
 const routes = [
   {
     path: "/app/dashboard", // the url
-    icon: "HomeIcon", // the component being exported from icons/index.js
+    icon: "DashboardIcon", // the component being exported from icons/index.js
     name: "Dashboard", // name that appear in Sidebar
   },
   {
@@ -14,7 +14,7 @@ const routes = [
     name: "Orders",
   },
   {
-    icon: "TruckIcon",
+    icon: "FlowerIcon",
     name: "Products",
     routes: [
       {
@@ -44,7 +44,7 @@ const routes = [
   // },
   {
     path: "/app/blogs",
-    icon: "InvoiceIcon",
+    icon: "BlogIcon",
     name: "Blogs",
   },
   {

@@ -15,11 +15,14 @@ import {
 } from "../../helpers/helper";
 import { useTransition } from "react";
 import { useTranslation } from "react-i18next";
+import Evaluate from "./Evaluate";
+import { Button } from "react-scroll";
 
 const MyOrders = ({ location }) => {
   const token = useSelector((state) => state.auth.token);
   const [orders, setOrders] = useState([]);
   const [currentFilterOrder, setCurrentOrderFilter] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
 
   const filterOrder = (key) => {
     setCurrentOrderFilter(filterOrderByStatus(orders, key));
@@ -126,7 +129,16 @@ const MyOrders = ({ location }) => {
                                           </div>
                                         </li>
                                         <li className="order-status">
-                                          {getStatus(order.status)}
+                                          {/* {getStatus(order.status)} */}
+                                          {order.status === 'IN_REQUEST' && (
+                                            t('list.request')
+                                          )}
+                                          {order.status === 'IN_PROCESSING' && (
+                                            t('list.process')
+                                          )}
+                                          {order.status === 'COMPLETED' && (
+                                            t('list.complete')
+                                          )}
                                         </li>
                                       </ul>
                                     </div>
@@ -136,7 +148,7 @@ const MyOrders = ({ location }) => {
                                           detail.product ? (
                                             <li key={detail.productId}>
                                               <span className="order-middle-left">
-                                                {detail.product.name} X{" "}
+                                                {detail.product.name} x{" "}
                                                 {detail.quantity}
                                               </span>
                                               <span className="order-price">
@@ -162,7 +174,24 @@ const MyOrders = ({ location }) => {
                                     </div>
                                   </div>
                                   <div className="order-details-link">
+                                    {order.status === 'COMPLETED' && (
+                                      <Link
+                                        onClick={() => setModalShow(true)}
+                                        style={{
+                                          marginRight: '30px',
+                                          border: '1px solid',
+                                          borderRadius: '5px',
+                                          padding: '3px 15px',
+                                        }}
+                                      >
+                                        Rating
+                                      </Link>
+                                      
+                                    )}
                                     <Link
+                                      style={{  display: 'flex', 
+                                                alignItems: 'center', 
+                                                justifyContent: 'center' }}
                                       to={
                                         process.env.PUBLIC_URL +
                                         "/order/" +
@@ -216,7 +245,10 @@ const MyOrders = ({ location }) => {
                                           </div>
                                         </li>
                                         <li className="order-status">
-                                          {getStatus(order.status)}
+                                          {/* {getStatus(order.status)} */}
+                                          {order.status === 'IN_REQUEST' && (
+                                            t('list.request')
+                                          )}
                                         </li>
                                       </ul>
                                     </div>
@@ -225,7 +257,7 @@ const MyOrders = ({ location }) => {
                                         {order.details.map((detail) => (
                                           <li key={detail.productId}>
                                             <span className="order-middle-left">
-                                              {detail.product.name} X{" "}
+                                              {detail.product.name} x{" "}
                                               {detail.quantity}
                                             </span>
                                             <span className="order-price">
@@ -302,7 +334,10 @@ const MyOrders = ({ location }) => {
                                           </div>
                                         </li>
                                         <li className="order-status">
-                                          {getStatus(order.status)}
+                                          {/* {getStatus(order.status)} */}
+                                          {order.status === 'IN_PROCESSING' && (
+                                            t('list.process')
+                                          )}
                                         </li>
                                       </ul>
                                     </div>
@@ -311,7 +346,7 @@ const MyOrders = ({ location }) => {
                                         {order.details.map((detail) => (
                                           <li key={detail.productId}>
                                             <span className="order-middle-left">
-                                              {detail.product.name} X{" "}
+                                              {detail.product.name} x{" "}
                                               {detail.quantity}
                                             </span>
                                             <span className="order-price">
@@ -388,7 +423,10 @@ const MyOrders = ({ location }) => {
                                           </div>
                                         </li>
                                         <li className="order-status">
-                                          {getStatus(order.status)}
+                                          {/* {getStatus(order.status)} */}
+                                          {order.status === 'COMPLETED' && (
+                                            t('list.complete')
+                                          )}
                                         </li>
                                       </ul>
                                     </div>
@@ -397,7 +435,7 @@ const MyOrders = ({ location }) => {
                                         {order.details.map((detail) => (
                                           <li key={detail.productId}>
                                             <span className="order-middle-left">
-                                              {detail.product.name} X{" "}
+                                              {detail.product.name} x{" "}
                                               {detail.quantity}
                                             </span>
                                             <span className="order-price">
@@ -420,7 +458,20 @@ const MyOrders = ({ location }) => {
                                     </div>
                                   </div>
                                   <div className="order-details-link">
-                                    <Link
+                                    <Link 
+                                      onClick={() => setModalShow(true)}
+                                      style={{  marginRight: '30px',
+                                                border: '1px solid',
+                                                borderRadius: '5px',
+                                                padding: '3px 15px'
+                                      }}
+                                    > Rating
+                                    </Link>
+
+                                    <Link 
+                                      style={{  display: 'flex', 
+                                                alignItems: 'center', 
+                                                justifyContent: 'center' }}
                                       to={
                                         process.env.PUBLIC_URL +
                                         "/order/" +
@@ -461,6 +512,18 @@ const MyOrders = ({ location }) => {
           </div>
         </div>
       </LayoutOne>
+      <Evaluate
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        // product={product}
+        // currency={currency}
+        // finalproductprice={finalProductPrice}
+        // cartitem={cartItem}
+        // wishlistitem={wishlistItem}
+        // addtocart={addToCart}
+        // addtowishlist={addToWishlist}
+        // addtoast={addToast}
+      />
     </Fragment>
   );
 };

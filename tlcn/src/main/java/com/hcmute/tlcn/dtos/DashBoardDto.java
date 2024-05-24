@@ -13,4 +13,8 @@ public class DashBoardDto {
     private int totalCustomer;
     private double totalIncome;
     private int totalNewOrder;
+    private int totalShippingOrder;
+    private int totalCancelOrder;
+    private int totalCompleteOrder;
+
 }

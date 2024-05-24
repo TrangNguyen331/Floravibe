@@ -112,7 +112,7 @@ const OrdersTable = ({ resultsPerPage, filter }) => {
                 </TableCell>
                 <TableCell>
                   <span className="text-base">
-                    {order.total.toLocaleString("vi-VN") || ""} đ
+                    {order.total.toLocaleString("vi-VN") || ""} ₫
                   </span>
                 </TableCell>
                 <TableCell>

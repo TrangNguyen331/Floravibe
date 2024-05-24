@@ -37,7 +37,12 @@ import { ReactComponent as StarIcon } from "./star.svg";
 import { ReactComponent as AddIcon } from "./add.svg";
 import { ReactComponent as PublishIcon } from "./publish.svg";
 import { ReactComponent as StoreIcon } from "./store.svg";
-import { ReactComponent as VoucherICon } from "./coupon.svg";
+import { ReactComponent as VoucherICon } from "./voucher.svg";
+import { ReactComponent as FlowerIcon} from "./flower.svg";
+import { ReactComponent as BlogIcon} from "./blog.svg";
+import { ReactComponent as CheckIcon} from "./check.svg";
+import { ReactComponent as CancelIcon} from "./cancel.svg";
+import { ReactComponent as DashboardIcon} from "./dashboard.svg";
 export {
   GroupIcon,
   UserIcon,
@@ -48,9 +53,13 @@ export {
   StarIcon,
   InvoiceIcon,
   EyeIcon,
+  BlogIcon,
   ButtonsIcon,
+  CancelIcon,
   CardsIcon,
   ChartsIcon,
+  CheckIcon,
+  DashboardIcon,
   FormsIcon,
   GridViewIcon,
   ListViewIcon,
@@ -61,6 +70,7 @@ export {
   HeartIcon,
   EditIcon,
   TrashIcon,
+  FlowerIcon,
   ForbiddenIcon,
   GithubIcon,
   TwitterIcon,

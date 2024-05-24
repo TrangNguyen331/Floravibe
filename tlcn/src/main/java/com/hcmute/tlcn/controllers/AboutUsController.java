@@ -2,19 +2,15 @@ package com.hcmute.tlcn.controllers;
 
 import com.hcmute.tlcn.dtos.DashBoardDto;
 import com.hcmute.tlcn.dtos.aboutus.AboutUsDto;
-import com.hcmute.tlcn.entities.AboutUs;
-import com.hcmute.tlcn.entities.Order;
-import com.hcmute.tlcn.repositories.AboutUsRepository;
-import com.hcmute.tlcn.repositories.AccountRepository;
-import com.hcmute.tlcn.repositories.OrderRepository;
+import com.hcmute.tlcn.entities.*;
+import com.hcmute.tlcn.repositories.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/${application.version}/about-us")
@@ -46,9 +42,17 @@ public class AboutUsController {
     public ResponseEntity<DashBoardDto> getDashBoardInfo(){
         DashBoardDto result = new DashBoardDto();
         result.setTotalCustomer((int) accountRepository.count());
+
         List<Order> newOrders = orderRepository.findAllByStatus("IN_REQUEST");
         result.setTotalNewOrder(newOrders.size());
-        result.setTotalIncome(newOrders.stream().mapToDouble(Order::getTotal).sum());
+        List<Order> shippingOrders = orderRepository.findAllByStatus("IN_PROCESSING");
+        result.setTotalShippingOrder(shippingOrders.size());
+        List<Order> cancelOrders = orderRepository.findAllByStatus("CANCEL");
+        result.setTotalCancelOrder(cancelOrders.size());
+        List<Order> completeOrders = orderRepository.findAllByStatus("COMPLETED");
+        result.setTotalCompleteOrder(completeOrders.size());
+
+        result.setTotalIncome(completeOrders.stream().mapToDouble(Order::getTotal).sum());
         return ResponseEntity.ok(result);
     }
 }

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext, useContext} from "react";
 import PageTitle from "../components/Typography/PageTitle";
 import { Link, NavLink } from "react-router-dom";
-import { EditIcon, HomeIcon, TrashIcon } from "../icons";
+import { EditIcon, HomeIcon, TrashIcon, DashboardIcon } from "../icons";
 import {
   Card,
   CardBody,
@@ -208,7 +208,7 @@ const ProductsAll = () => {
       {/* Breadcum */}
       <div className="flex text-gray-800 dark:text-gray-300">
         <div className="flex items-center text-purple-600">
-          <Icon className="w-5 h-5" aria-hidden="true" icon={HomeIcon} />
+          <Icon className="w-5 h-5" aria-hidden="true" icon={DashboardIcon} />
           <NavLink exact to="/app/dashboard" className="mx-2">
             Dashboard
           </NavLink>
@@ -345,7 +345,7 @@ const ProductsAll = () => {
                     {product.description}
                   </TableCell>
                   <TableCell className="text-sm">
-                    {formatNumberWithDecimal(product.price)}đ
+                    {formatNumberWithDecimal(product.price)}₫
                   </TableCell>
                   <TableCell className="text-sm space-x-2">
                     {product &&

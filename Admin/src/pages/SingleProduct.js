@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import Icon from "../components/Icon";
 import PageTitle from "../components/Typography/PageTitle";
-import { HomeIcon } from "../icons";
+import { HomeIcon, DashboardIcon } from "../icons";
 import response from "../utils/demo/productData";
 import { Card, CardBody, Badge, Button, Avatar } from "@windmill/react-ui";
 import { genRating } from "../utils/genarateRating";
@@ -50,7 +50,7 @@ const SingleProduct = () => {
           {/* Breadcum */}
           <div className="flex text-gray-800 dark:text-gray-300">
             <div className="flex items-center text-purple-600">
-              <Icon className="w-5 h-5" aria-hidden="true" icon={HomeIcon} />
+              <Icon className="w-5 h-5" aria-hidden="true" icon={DashboardIcon} />
               <NavLink exact to="/app/dashboard" className="mx-2">
                 Dashboard
               </NavLink>

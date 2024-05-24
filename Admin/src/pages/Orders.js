@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PageTitle from "../components/Typography/PageTitle";
 import { NavLink } from "react-router-dom";
-import { HomeIcon } from "../icons";
+import { HomeIcon, DashboardIcon } from "../icons";
 import { Card, CardBody, Label, Select } from "@windmill/react-ui";
 import OrdersTable from "../components/OrdersTable";
 
@@ -42,7 +42,7 @@ const Orders = () => {
       {/* Breadcum */}
       <div className="flex text-gray-800 dark:text-gray-300">
         <div className="flex items-center text-purple-600">
-          <Icon className="w-5 h-5" aria-hidden="true" icon={HomeIcon} />
+          <Icon className="w-5 h-5" aria-hidden="true" icon={DashboardIcon} />
           <NavLink exact to="/app/dashboard" className="mx-2">
             Dashboard
           </NavLink>

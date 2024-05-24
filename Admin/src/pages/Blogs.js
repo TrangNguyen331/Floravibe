@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PageTitle from "../components/Typography/PageTitle";
 import { Link, NavLink } from "react-router-dom";
-import { EditIcon, HomeIcon, TrashIcon, AddIcon } from "../icons";
+import { EditIcon, HomeIcon, TrashIcon, AddIcon, DashboardIcon } from "../icons";
 import Icon from "../components/Icon";
 import "../index.css";
 import axiosInstance from "../axiosInstance";
@@ -178,7 +178,7 @@ const Blogs = () => {
       {/* Breadcum */}
       <div className="flex text-gray-800 dark:text-gray-300">
         <div className="flex items-center text-purple-600">
-          <Icon className="w-5 h-5" aria-hidden="true" icon={HomeIcon} />
+          <Icon className="w-5 h-5" aria-hidden="true" icon={DashboardIcon} />
           <NavLink exact to="/app/dashboard" className="mx-2">
             Dashboard
           </NavLink>

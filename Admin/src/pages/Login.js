@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import { Redirect} from 'react-router-dom'
 
-import ImageLight from '../assets/img/login-office.jpeg'
-import ImageDark from '../assets/img/login-office-dark.jpeg'
+import ImageLight from '../assets/img/login-light.jpg'
+import ImageDark from '../assets/img/login-dark.jpg'
 import { Label, Input, Button } from '@windmill/react-ui'
 import axiosInstance from "../axiosInstance";
 import {useToasts} from "react-toast-notifications";

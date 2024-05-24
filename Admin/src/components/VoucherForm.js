@@ -1,6 +1,6 @@
 import React from "react";
 import { Input } from "@windmill/react-ui";
-export const VoucherForm = ({ data, handleInputChange }) => {
+const VoucherForm = ({ data, handleInputChange }) => {
   return (
     <form action="#">
       <div>
@@ -83,3 +83,4 @@ export const VoucherForm = ({ data, handleInputChange }) => {
     </form>
   );
 };
+export default VoucherForm;

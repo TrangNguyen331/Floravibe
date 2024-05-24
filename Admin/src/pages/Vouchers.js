@@ -15,9 +15,9 @@ import {
 } from "@windmill/react-ui";
 import PageTitle from "../components/Typography/PageTitle";
 import { NavLink } from "react-router-dom";
-import { HomeIcon, AddIcon, EditIcon } from "../icons";
+import { HomeIcon, AddIcon, EditIcon, DashboardIcon } from "../icons";
 import axiosInstance from "../axiosInstance";
-import { VoucherForm } from "../components/VoucherForm";
+import VoucherForm from "../components/VoucherForm";
 
 function Icon({ icon, ...props }) {
   const Icon = icon;
@@ -150,7 +150,7 @@ const Vouchers = () => {
       {/* Breadcum */}
       <div className="flex text-gray-800 dark:text-gray-300">
         <div className="flex items-center text-purple-600">
-          <Icon className="w-5 h-5" aria-hidden="true" icon={HomeIcon} />
+          <Icon className="w-5 h-5" aria-hidden="true" icon={DashboardIcon} />
           <NavLink exact to="/app/dashboard" className="mx-2">
             Dashboard
           </NavLink>
