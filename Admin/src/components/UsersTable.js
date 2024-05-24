@@ -20,7 +20,7 @@ import {
 import { AddIcon } from "../icons";
 import axiosInstance from "../axiosInstance";
 import { AccountForm } from "./AccountForm";
-
+import { useToasts } from "react-toast-notifications";
 const UsersTable = () => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
@@ -28,8 +28,7 @@ const UsersTable = () => {
   const [totalPage, setTotalPage] = useState(0);
   const [totalResults, setTotalResult] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
-  // pagination setup
-
+  const { addToast } = useToasts();
   // pagination change control
   async function onPageChange(p) {
     console.log(p);
@@ -73,6 +72,65 @@ const UsersTable = () => {
   const openModal = async () => {
     setIsModalOpen(true);
   };
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    email: "",
+    firstName: "",
+    lastName: "",
+    admin: false,
+  });
+  const handleInputChange = (key, value) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [key]: value,
+    }));
+    console.log(key, value);
+  };
+  const handleRegister = async (event) => {
+    event.preventDefault();
+    if (
+      !formData.username ||
+      !formData.password ||
+      !formData.email ||
+      !formData.firstName ||
+      !formData.lastName
+    ) {
+      addToast("Please fill in all the required fields", {
+        appearance: "warning",
+        autoDismiss: true,
+      });
+      return;
+    }
+    try {
+      let body = {
+        username: formData.username,
+        password: formData.password,
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        admin: formData.admin,
+      };
+      console.log("FormData:", formData);
+
+      const response = await axiosInstance.post("/api/v1/auth/register", body);
+
+      addToast("Create success", { appearance: "success", autoDismiss: true });
+      closeModal();
+      setFormData({
+        username: "",
+        password: "",
+        email: "",
+        firstName: "",
+        lastName: "",
+        admin: false,
+      });
+      // window.location.reload();
+    } catch (error) {
+      console.error("Error:", error);
+      addToast("Failed", { appearance: "error", autoDismiss: true });
+    }
+  };
   return (
     <div>
       {/* Add */}
@@ -96,14 +154,19 @@ const UsersTable = () => {
             Add New Account
           </ModalHeader>
           <ModalBody>
-            <AccountForm />
+            <AccountForm
+              data={formData}
+              handleInputChange={handleInputChange}
+            />
           </ModalBody>
           <ModalFooter>
             <div className="flex items-center gap-2">
               <Button layout="outline" onClick={closeModal}>
                 Cancel
               </Button>
-              <Button block>Add</Button>
+              <Button block onClick={handleRegister}>
+                Add
+              </Button>
             </div>
           </ModalFooter>
         </Modal>
@@ -146,7 +209,6 @@ const UsersTable = () => {
                 <TableCell>
                   <span className="text-base">{user.email}</span>
                 </TableCell>
-
                 <TableCell className="space-x-2">
                   {user.roles.map((role, index) => (
                     <Badge type="success" key={index}>

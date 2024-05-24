@@ -18,7 +18,7 @@ import { NavLink } from "react-router-dom";
 import { HomeIcon, AddIcon, EditIcon, DashboardIcon } from "../icons";
 import axiosInstance from "../axiosInstance";
 import VoucherForm from "../components/VoucherForm";
-
+import { useToasts } from "react-toast-notifications";
 function Icon({ icon, ...props }) {
   const Icon = icon;
   return <Icon {...props} />;
@@ -30,6 +30,7 @@ const Vouchers = () => {
   const [totalPage, setTotalPage] = useState(0);
   const [totalResults, setTotalResult] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const { addToast } = useToasts();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState("add"); // 'add', 'edit'
   const closeModal = () => {
@@ -96,6 +97,20 @@ const Vouchers = () => {
   };
 
   const handleSave = async (mode) => {
+    if (
+      !voucherInfo.voucherName ||
+      !voucherInfo.description ||
+      !voucherInfo.voucherValue ||
+      !voucherInfo.effectiveDate ||
+      !voucherInfo.validUntil ||
+      !voucherInfo.quantity
+    ) {
+      addToast("Please fill in all the required fields", {
+        appearance: "warning",
+        autoDismiss: true,
+      });
+      return;
+    }
     try {
       let body = {
         voucherName: voucherInfo.voucherName,

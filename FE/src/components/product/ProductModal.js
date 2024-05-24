@@ -88,7 +88,7 @@ function ProductModal(props) {
       </button>
     ),
   };
-  const {t} = useTranslation(['home', 'orders'])
+  const { t } = useTranslation(["home", "orders"]);
   return (
     <Fragment>
       <Modal
@@ -153,8 +153,7 @@ function ProductModal(props) {
                     </Fragment>
                   ) : ( */}
                   <span>
-                    {finalproductprice.toLocaleString("vi-VN") +
-                      "₫"}{" "}
+                    {finalproductprice.toLocaleString("vi-VN") + "₫"}{" "}
                   </span>
                   {/* )} */}
                 </div>
@@ -255,7 +254,7 @@ function ProductModal(props) {
                         rel="noopener noreferrer"
                         target="_blank"
                       >
-                        {t('detail.buy-now')}
+                        {t("detail.buy-now")}
                       </a>
                     </div>
                   </div>
@@ -303,7 +302,7 @@ function ProductModal(props) {
                           }}
                         >
                           {" "}
-                          {t('productgrid.buy-now')}{" "}
+                          {t("productgrid.add-to-cart")}{" "}
                         </button>
                       }
                     </div>
@@ -313,8 +312,8 @@ function ProductModal(props) {
                         disabled={wishlistItem !== undefined}
                         title={
                           wishlistItem !== undefined
-                            ? t('productgrid.added-to-wishlist')
-                            : t('productgrid.add-to-wishlist')
+                            ? t("productgrid.added-to-wishlist")
+                            : t("productgrid.add-to-wishlist")
                         }
                         onClick={() => {
                           if (token) {

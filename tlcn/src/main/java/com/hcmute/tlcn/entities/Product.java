@@ -20,6 +20,7 @@ public class Product {
     public String description;
     public String additionalInformation;
     public double price;
+    public int stockQty;
     public List<String> tags=new ArrayList<>();
     public List<String> images=new ArrayList<>();
     public List<Review> reviews=new ArrayList<>();

@@ -75,4 +75,16 @@ public class WishlistServiceImpl implements WishlistService {
             return userWishList;
         }
     }
+    @Override
+    public Wishlist deleteAll(String user) {
+        Optional<Wishlist> wishlist = repository.findByUser(user);
+        if (wishlist.isPresent()) {
+            Wishlist userWishList = wishlist.get();
+            userWishList.getProducts().clear();
+            repository.save(userWishList);
+            return userWishList;
+        } else {
+            throw new NotFoundException("Wishlist not found for user: " + user);
+        }
+    }
 }

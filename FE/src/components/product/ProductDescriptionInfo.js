@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { getProductCartQuantity } from "../../helpers/product";
@@ -10,6 +10,8 @@ import Rating from "./sub-components/ProductRating";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../axiosInstance";
+
 const ProductDescriptionInfo = ({
   product,
   discountedPrice,
@@ -41,7 +43,22 @@ const ProductDescriptionInfo = ({
   );
   const token = useSelector((state) => state.auth.token);
   const history = useHistory();
-  const {t} = useTranslation(['product', 'home']);
+  const { t } = useTranslation(["product", "home"]);
+
+  const handleAddToWishList = async () => {
+    try {
+      if (token) {
+        await axiosInstance.post(`/api/v1/wishlist/${product.id}`);
+      }
+      addToWishlist(product, addToast);
+    } catch (err) {
+      addToast("failed", {
+        appearance: "error",
+        autoDismiss: true,
+      });
+    }
+  };
+
   return (
     <div className="product-details-content ml-70">
       <h2 style={{ fontSize: "28px" }}>{product.name}</h2>
@@ -54,9 +71,7 @@ const ProductDescriptionInfo = ({
             </span>
           </Fragment>
         ) : ( */}
-        <span>
-          {finalProductPrice.toLocaleString("vi-VN") + "₫"}{" "}
-        </span>
+        <span>{finalProductPrice.toLocaleString("vi-VN") + "₫"} </span>
         {/* )} */}
       </div>
       {product.rating && product.rating > 0 ? (
@@ -75,7 +90,7 @@ const ProductDescriptionInfo = ({
       {product.variation ? (
         <div className="pro-details-size-color">
           <div className="pro-details-color-wrap">
-            <span>{t('detail.color')}</span>
+            <span>{t("detail.color")}</span>
             <div className="pro-details-color-content">
               {product.variation.map((single, key) => {
                 return (
@@ -104,7 +119,7 @@ const ProductDescriptionInfo = ({
             </div>
           </div>
           <div className="pro-details-size">
-            <span>{t('detail.size')}</span>
+            <span>{t("detail.size")}</span>
             <div className="pro-details-size-content">
               {product.variation &&
                 product.variation.map((single) => {
@@ -149,13 +164,17 @@ const ProductDescriptionInfo = ({
               rel="noopener noreferrer"
               target="_blank"
             >
-              {t('detail.buy-now')}
+              {t("detail.buy-now")}
             </a>
           </div>
         </div>
       ) : (
         <div className="pro-details-quality">
-          <div className="cart-plus-minus">
+          <div
+            className={`cart-plus-minus ${
+              quantityCount > product.stockQty ? "warning" : ""
+            }`}
+          >
             <button
               onClick={() =>
                 setQuantityCount(quantityCount > 1 ? quantityCount - 1 : 1)
@@ -193,9 +212,13 @@ const ProductDescriptionInfo = ({
                     history.push("/login-register");
                   }
                 }}
-                disabled={productCartQty >= productStock}
+                disabled={
+                  productCartQty >= product.stockQty ||
+                  product.stockQty <= 0 ||
+                  quantityCount > product.stockQty
+                }
               >
-                {t('home:productgrid.buy-now')}
+                {t("home:productgrid.add-to-cart")}
               </button>
             }
           </div>
@@ -204,19 +227,20 @@ const ProductDescriptionInfo = ({
               // className={wishlistItem !== undefined ? "active" : ""}
               disabled={wishlistItem !== undefined}
               title={
-                wishlistItem !== undefined
-                  ? t('home:productgrid.added-to-wishlist')
-                  : t('home:productgrid.add-to-wishlist')
+                wishlistItem
+                  ? t("home:productgrid.added-to-wishlist")
+                  : t("home:productgrid.add-to-wishlist")
               }
               onClick={() => {
                 if (token) {
-                  addToWishlist(product, addToast);
+                  // addToWishlist(product, addToast);
+                  handleAddToWishList();
                 } else {
                   history.push("/login-register");
                 }
               }}
             >
-              {wishlistItem !== undefined ? (
+              {wishlistItem ? (
                 <i className="fa fa-heart" style={{ color: "#a749ff" }} />
               ) : (
                 <i className="fa fa-heart-o" />
@@ -225,9 +249,16 @@ const ProductDescriptionInfo = ({
           </div>
         </div>
       )}
+      <div
+        className={`pro-details-stock ${
+          product.stockQty === 0 ? "out-of-stock" : ""
+        }`}
+      >
+        Current stock: {product.stockQty}
+      </div>
       {product.collections ? (
         <div className="pro-details-meta">
-          <span>{t('detail.categories')}:</span>
+          <span>{t("detail.categories")}:</span>
           <ul>
             {product.collections.map((single, key) => {
               return <li key={key}>{single}</li>;
@@ -239,7 +270,7 @@ const ProductDescriptionInfo = ({
       )}
       {product.tags ? (
         <div className="pro-details-meta">
-          <span>{t('sidebar.tag')}:</span>
+          <span>{t("sidebar.tag")}:</span>
           <ul>
             {product.tags.map((single, key) => {
               return <li key={key}>{single}</li>;

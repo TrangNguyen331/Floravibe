@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import MetaTags from "react-meta-tags";
@@ -16,7 +16,7 @@ import {
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import { useTranslation } from "react-i18next";
-
+import axiosInstance from "../../axiosInstance";
 const Cart = ({
   location,
   cartItems,
@@ -30,19 +30,56 @@ const Cart = ({
   const { addToast } = useToasts();
   const { pathname } = location;
   let cartTotalPrice = 0;
-  let totalProduct = cartItems.reduce((total, product) => total + product.quantity, 0);
-  
-  const {t} = useTranslation(['orders', 'breacrumb'])
+  let totalProduct = cartItems.reduce(
+    (total, product) => total + product.quantity,
+    0
+  );
+  const { t } = useTranslation(["orders", "breacrumb"]);
+  const [productStock, setProductStock] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [alreadyGet, setAlreadyGet] = useState(false);
+  const fetchProducts = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/v1/products/paging?size=999&page=0`
+      );
+      setProducts(response.data.content);
+      setAlreadyGet(true);
+    } catch (error) {
+      return [];
+    }
+  };
 
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+  useEffect(() => {
+    if (alreadyGet) {
+      // Find the product in products array and set its stockQty to productStock
+      const result = products.some((item) =>
+        cartItems.some((cartItem) => cartItem.id === item.id)
+      )
+        ? products.find((item) =>
+            cartItems.some((cartItem) => cartItem.id === item.id)
+          ).stockQty
+        : null;
+
+      setProductStock(result);
+    }
+  }, [alreadyGet, cartItems, products]);
   return (
     <Fragment>
       <MetaTags>
-        <title>Floravibe | {t('beadcrumb:cart')}</title>
+        <title>Floravibe | {t("beadcrumb:cart")}</title>
         <meta name="Cart" content="Cart" />
       </MetaTags>
 
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('beadcrumb:home')}</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('beadcrumb:cart')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>
+        {t("beadcrumb:home")}
+      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
+        {t("beadcrumb:cart")}
+      </BreadcrumbsItem>
 
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
@@ -50,9 +87,9 @@ const Cart = ({
         {cartItems && cartItems.length >= 1 ? (
           <div className="container mt-5">
             <ul className="progressbar">
-              <li className="active">{t('cart.shopping-cart')}</li>
-              <li>{t('complete.checkout')}</li>
-              <li>{t('complete.order-complete')}</li>
+              <li className="active">{t("cart.shopping-cart")}</li>
+              <li>{t("complete.checkout")}</li>
+              <li>{t("complete.order-complete")}</li>
             </ul>
           </div>
         ) : (
@@ -63,18 +100,19 @@ const Cart = ({
           <div className="container">
             {cartItems && cartItems.length >= 1 ? (
               <Fragment>
-                <h3 className="cart-page-title">{t('cart.your-cart-item')}</h3>
+                <h3 className="cart-page-title">{t("cart.your-cart-item")}</h3>
                 <div className="row">
                   <div className="col-12">
                     <div className="table-content table-responsive cart-table-content">
                       <table>
                         <thead>
                           <tr>
-                            <th>{t('detail.img')}</th>
-                            <th>{t('detail.product-name')}</th>
-                            <th>{t('detail.unit-price')}</th>
-                            <th>{t('detail.qty')}</th>
-                            <th>{t('detail.subtotal')}</th>
+                            <th>{t("detail.img")}</th>
+                            <th>{t("detail.product-name")}</th>
+                            <th>{t("detail.unit-price")}</th>
+                            <th>{t("detail.qty")}</th>
+                            <th>{t("detail.stockQty")}</th>
+                            <th>{t("detail.subtotal")}</th>
                             <th></th>
                           </tr>
                         </thead>
@@ -173,10 +211,23 @@ const Cart = ({
                                           quantityCount
                                         );
                                       }}
+                                      disabled={
+                                        cartItem.quantity === productStock
+                                      }
                                     >
                                       +
                                     </button>
                                   </div>
+                                </td>
+                                <td className="product-subtotal">
+                                  {alreadyGet &&
+                                  products.some(
+                                    (item) => item.id === cartItem.id
+                                  )
+                                    ? products.find(
+                                        (item) => item.id === cartItem.id
+                                      ).stockQty
+                                    : null}
                                 </td>
                                 <td className="product-subtotal">
                                   {/* {discountedPrice !== null
@@ -187,8 +238,7 @@ const Cart = ({
                                     :  */}
                                   {(
                                     finalProductPrice * cartItem.quantity
-                                  ).toLocaleString("vi-VN") +
-                                    "₫"}
+                                  ).toLocaleString("vi-VN") + "₫"}
                                 </td>
 
                                 <td className="product-remove">
@@ -213,12 +263,12 @@ const Cart = ({
                     <div className="cart-shiping-update-wrapper">
                       <div className="cart-shiping-update">
                         <Link to={process.env.PUBLIC_URL + "/shop"}>
-                          {t('cart.continue-shopping')}
+                          {t("cart.continue-shopping")}
                         </Link>
                       </div>
                       <div className="cart-clear">
                         <button onClick={() => deleteAllFromCart(addToast)}>
-                          {t('cart.clear-shopping-cart')}
+                          {t("cart.clear-shopping-cart")}
                         </button>
                       </div>
                     </div>
@@ -230,29 +280,26 @@ const Cart = ({
                     <div className="grand-totall">
                       <div className="title-wrap">
                         <h4 className="cart-bottom-title section-bg-gary-cart">
-                          {t('cart.cart-total')}
+                          {t("cart.cart-total")}
                         </h4>
                       </div>
                       <h5>
-                        {t('cart.total-product')}
+                        {t("cart.total-product")}
                         <span>
-                          {
-                            totalProduct + " " + t('cart.item')
-                          }
+                          {totalProduct + " " + t("cart.item")}
                           {/* {cartTotalPrice.toLocaleString("vi-VN") +
                             currency.currencySymbol} */}
                         </span>
                       </h5>
 
                       <h4 className="grand-totall-title">
-                        {t('cart.grand-total')}
+                        {t("cart.grand-total")}
                         <span>
-                          {cartTotalPrice.toLocaleString("vi-VN") +
-                            "₫"}
+                          {cartTotalPrice.toLocaleString("vi-VN") + "₫"}
                         </span>
                       </h4>
                       <Link to={process.env.PUBLIC_URL + "/checkout"}>
-                        {t('cart.process-checkout')}
+                        {t("cart.process-checkout")}
                       </Link>
                     </div>
                   </div>
@@ -266,9 +313,9 @@ const Cart = ({
                       <i className="pe-7s-cart"></i>
                     </div>
                     <div className="item-empty-area__text">
-                      {t('cart.no-item')} <br />{" "}
+                      {t("cart.no-item")} <br />{" "}
                       <Link to={process.env.PUBLIC_URL + "/shop"}>
-                        {t('cart.shop-now')}
+                        {t("cart.shop-now")}
                       </Link>
                     </div>
                   </div>

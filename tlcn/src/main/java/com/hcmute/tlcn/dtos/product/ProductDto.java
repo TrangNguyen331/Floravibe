@@ -18,6 +18,7 @@ public class ProductDto {
     public String description;
     public String additionalInformation;
     public double price;
+    public int stockQty;
     public List<String> tags;
     public List<String> images;
     public List<String> collections;

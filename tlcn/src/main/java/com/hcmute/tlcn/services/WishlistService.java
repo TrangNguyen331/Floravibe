@@ -9,4 +9,5 @@ public interface WishlistService {
     Wishlist addNew(String user, String productId);
 
     Wishlist delete(String user, String productId);
+    Wishlist deleteAll(String user);
 }

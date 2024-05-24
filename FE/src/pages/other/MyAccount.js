@@ -156,17 +156,21 @@ const MyAccount = ({ location }) => {
     };
     setDataInit();
   }, []);
-  const {t} = useTranslation(['myacc','breadcrumb']);
+  const { t } = useTranslation(["myacc", "breadcrumb"]);
   return !token ? (
     <Redirect to={process.env.PUBLIC_URL + "/"}></Redirect>
   ) : (
     <Fragment>
       <MetaTags>
-        <title>Floravibe | {t('breadcrumb:my-account')}</title>
+        <title>Floravibe | {t("breadcrumb:my-account")}</title>
         <meta name="My Account" content="My Account" />
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('breadcrumb:home')}</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('breadcrumb:my-account')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>
+        {t("breadcrumb:home")}
+      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
+        {t("breadcrumb:my-account")}
+      </BreadcrumbsItem>
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb />
@@ -180,7 +184,7 @@ const MyAccount = ({ location }) => {
                       <Card.Header className="panel-heading">
                         <Accordion.Toggle variant="link" eventKey="0">
                           <h3 className="panel-title">
-                            <span>1 .</span> {t('edit-acc')}{" "}
+                            <span>1 .</span> {t("edit-acc")}{" "}
                           </h3>
                         </Accordion.Toggle>
                       </Card.Header>
@@ -188,13 +192,13 @@ const MyAccount = ({ location }) => {
                         <Card.Body>
                           <div className="myaccount-info-wrapper">
                             <div className="account-info-wrapper">
-                              <h4>{t('my-acc')}</h4>
-                              <h5>{t('per-detail')}</h5>
+                              <h4>{t("my-acc")}</h4>
+                              <h5>{t("per-detail")}</h5>
                             </div>
                             <div className="row">
                               <div className="col-lg-6 col-md-6">
                                 <div className="billing-info">
-                                  <label>{t('first-name')}</label>
+                                  <label>{t("first-name")}</label>
                                   <input
                                     type="text"
                                     name="firstName"
@@ -205,7 +209,7 @@ const MyAccount = ({ location }) => {
                               </div>
                               <div className="col-lg-6 col-md-6">
                                 <div className="billing-info">
-                                  <label>{t('last-name')}</label>
+                                  <label>{t("last-name")}</label>
                                   <input
                                     type="text"
                                     name="lastName"
@@ -216,7 +220,7 @@ const MyAccount = ({ location }) => {
                               </div>
                               <div className="col-lg-12 col-md-12">
                                 <div className="billing-info">
-                                  <label>{t('full-name')}</label>
+                                  <label>{t("full-name")}</label>
                                   <input
                                     type="text"
                                     name="fullName"
@@ -227,7 +231,7 @@ const MyAccount = ({ location }) => {
                               </div>
                               <div className="col-lg-12 col-md-12">
                                 <div className="billing-info">
-                                  <label>{t('avatar')}</label>
+                                  <label>{t("avatar")}</label>
                                   <input
                                     type="text"
                                     name="avatar"
@@ -239,7 +243,7 @@ const MyAccount = ({ location }) => {
                               </div>
                               <div className="col-lg-12 col-md-12">
                                 <div className="billing-info">
-                                  <label>{t('address')}</label>
+                                  <label>{t("address")}</label>
                                   <div>
                                     <select
                                       className="select-box form-select form-select-sm mb-3"
@@ -249,7 +253,7 @@ const MyAccount = ({ location }) => {
                                       aria-label=".form-select-sm"
                                     >
                                       <option value="" disabled>
-                                        {t('city')}
+                                        {t("city")}
                                       </option>
                                       {cities.map((city) => (
                                         <option key={city.Id} value={city.Name}>
@@ -262,16 +266,15 @@ const MyAccount = ({ location }) => {
                                       name="district"
                                       value={userInfo.district}
                                       onChange={handleInputChange}
-                                      // onChange={(e) => {
-                                      //   setSelectedDistrict(e.target.value);
-                                      //   setSelectedWard("");
-                                      // }}
                                       aria-label=".form-select-sm"
                                     >
                                       <option value="" disabled>
-                                        {t('district')}
+                                        {t("district")}
                                       </option>
                                       {userInfo.city &&
+                                        cities.some(
+                                          (city) => city.Name === userInfo.city
+                                        ) &&
                                         cities
                                           .find(
                                             (city) =>
@@ -286,7 +289,6 @@ const MyAccount = ({ location }) => {
                                             </option>
                                           ))}
                                     </select>
-
                                     <select
                                       className="select-box form-select form-select-sm"
                                       name="ward"
@@ -295,9 +297,12 @@ const MyAccount = ({ location }) => {
                                       aria-label=".form-select-sm"
                                     >
                                       <option value="" disabled>
-                                        {t('ward')}
+                                        {t("ward")}
                                       </option>
                                       {userInfo.district &&
+                                        cities.some(
+                                          (city) => city.Name === userInfo.city
+                                        ) &&
                                         cities
                                           .find(
                                             (city) =>
@@ -319,23 +324,18 @@ const MyAccount = ({ location }) => {
                                     </select>
                                     <input
                                       className="billing-address"
-                                      placeholder={t('detail-address')}
+                                      placeholder={t("detail-address")}
                                       type="text"
                                       name="houseNumber"
                                       value={userInfo.houseNumber}
                                       onChange={handleInputChange}
                                     />
                                   </div>
-
-                                  {/* <label>Address</label>
-                                    <input type="text" name="address"
-                                      value={userInfo.address}
-                                      onChange={handleInputChange} /> */}
                                 </div>
                               </div>
                               <div className="col-lg-6 col-md-6">
                                 <div className="billing-info">
-                                  <label>{t('phone')}</label>
+                                  <label>{t("phone")}</label>
                                   <input
                                     type="text"
                                     name="phone"
@@ -360,7 +360,7 @@ const MyAccount = ({ location }) => {
                             <div className="billing-back-btn">
                               <div className="billing-btn">
                                 <button type="submit" onClick={updateUserInfo}>
-                                  {t('update')}
+                                  {t("update")}
                                 </button>
                               </div>
                             </div>
@@ -372,7 +372,7 @@ const MyAccount = ({ location }) => {
                       <Card.Header className="panel-heading">
                         <Accordion.Toggle variant="link" eventKey="1">
                           <h3 className="panel-title">
-                            <span>2 .</span> {t('text-change-pasword')}
+                            <span>2 .</span> {t("text-change-pasword")}
                           </h3>
                         </Accordion.Toggle>
                       </Card.Header>
@@ -380,13 +380,13 @@ const MyAccount = ({ location }) => {
                         <Card.Body>
                           <div className="myaccount-info-wrapper">
                             <div className="account-info-wrapper">
-                              <h4>{t('change-password')}</h4>
-                              <h5>{t('your-pasword')}</h5>
+                              <h4>{t("change-password")}</h4>
+                              <h5>{t("your-pasword")}</h5>
                             </div>
                             <div className="row">
                               <div className="col-lg-12 col-md-12">
                                 <div className="billing-info">
-                                  <label>{t('pasword')}</label>
+                                  <label>{t("pasword")}</label>
                                   <input
                                     type="password"
                                     name="password"
@@ -397,7 +397,7 @@ const MyAccount = ({ location }) => {
                               </div>
                               <div className="col-lg-12 col-md-12">
                                 <div className="billing-info">
-                                  <label>{t('confirm')}</label>
+                                  <label>{t("confirm")}</label>
                                   <input
                                     type="password"
                                     name="confirmPassword"
@@ -410,7 +410,7 @@ const MyAccount = ({ location }) => {
                             <div className="billing-back-btn">
                               <div className="billing-btn">
                                 <button type="submit" onClick={updatePassword}>
-                                  {t('update')}
+                                  {t("update")}
                                 </button>
                               </div>
                             </div>

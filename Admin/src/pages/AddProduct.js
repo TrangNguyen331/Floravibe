@@ -5,6 +5,10 @@ import PageTitle from "../components/Typography/PageTitle";
 import { HomeIcon, AddIcon, PublishIcon, StoreIcon, DashboardIcon } from "../icons";
 import { TagsInput } from "react-tag-input-component";
 import axiosInstance from "../axiosInstance";
+import axiosImgBB from "../axiosImgBB";
+import { useToasts } from "react-toast-notifications";
+import { FaSpinner } from "react-icons/fa";
+import { FiUpload } from "react-icons/fi";
 import {
   Card,
   CardBody,
@@ -12,10 +16,10 @@ import {
   Input,
   Textarea,
   Button,
-  Select,
 } from "@windmill/react-ui";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import "../index.css";
 const FormTitle = ({ children }) => {
   return (
     <h2 className="mb-3 text-sm font-semibold text-gray-600 dark:text-gray-300">
@@ -25,12 +29,15 @@ const FormTitle = ({ children }) => {
 };
 
 const AddProduct = () => {
+  const [loadingImg, setLoadingImg] = useState(false);
+  const { addToast } = useToasts();
   const [selectedProduct, setSelectedProduct] = useState({
     id: "",
     name: "",
     description: "",
     additionalInformation: "",
     price: 0,
+    stockQty: 0,
     tags: [],
     images: [],
     collections: [],
@@ -50,24 +57,94 @@ const AddProduct = () => {
   const handleImageChange = (e) => {
     const files = e.target.files;
     const urls = [];
+    const formData = new FormData();
 
     for (let i = 0; i < files.length; i++) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        urls.push(event.target.result);
+      formData.append("files", files[i]);
+    }
+
+    axiosInstance
+      .post("/api/v1/files", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        // Handle success
+        console.log("Upload successful:", response);
+        response.data.forEach((item) => {
+          urls.push(
+            "http://localhost:8080/api/v1/files/viewfile/" + item.identifier
+          );
+        });
         if (urls.length === files.length) {
           handleProductChange("images", urls);
         }
-      };
-      reader.readAsDataURL(files[i]);
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error uploading:", error);
+        // You can show an error message to the user
+      });
+  };
+  const handleDeleteImage = (index) => {
+    const updatedImages = [...selectedProduct.images];
+    updatedImages.splice(index, 1);
+    handleProductChange("images", updatedImages);
+  };
+  const API_KEY = process.env.REACT_APP_IMAGE_HOSTING_KEY;
+  const handleImgChange = async (e) => {
+    setLoadingImg(true);
+    const files = e.target.files;
+    const imgUrls = [];
+    for (let i = 0; i < files.length; i++) {
+      const formData = new FormData();
+      formData.append("image", files[i]);
+      try {
+        await axiosImgBB
+          .post(`https://api.imgbb.com/1/upload?key=${API_KEY}`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            imgUrls.push(response.data.data.url);
+            if (imgUrls.length === files.length) {
+              handleProductChange("images", [
+                ...selectedProduct.images,
+                ...imgUrls,
+              ]);
+              setLoadingImg(false);
+            }
+          });
+        console.log(imgUrls);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
     }
   };
   const handleSave = async () => {
+    if (
+      !selectedProduct.name ||
+      !selectedProduct.description ||
+      selectedProduct.price < 0 ||
+      selectedProduct.stockQty < 0 ||
+      selectedProduct.tags.length === 0 ||
+      selectedProduct.images.length === 0 ||
+      selectedProduct.collections.length === 0
+    ) {
+      addToast("Please fill in all the required fields", {
+        appearance: "warning",
+        autoDismiss: true,
+      });
+      return;
+    }
     let body = {
       name: selectedProduct.name,
       description: selectedProduct.description,
       additionalInformation: selectedProduct.additionalInformation,
       price: selectedProduct.price,
+      stockQty: selectedProduct.stockQty,
       tags: selectedProduct.tags,
       images: selectedProduct.images,
       collections: selectedProduct.collections,
@@ -83,6 +160,7 @@ const AddProduct = () => {
       description: "",
       additionalInformation: "",
       price: 0,
+      stockQty: 0,
       tags: [],
       images: [],
       collections: [],
@@ -104,28 +182,9 @@ const AddProduct = () => {
         <p className="mx-2">Add new Product</p>
       </div>
 
-      <div className="w-full mt-8">
-        <Card className="row-span-2 md:col-span-2">
+      <div className="w-full mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="md:col-span-1">
           <CardBody>
-            <div>
-              <FormTitle>Product Image</FormTitle>
-              <input
-                type="file"
-                multiple
-                className="mb-4 text-gray-800 dark:text-gray-300"
-                onChange={handleImageChange}
-              />
-              <div className="flex items-center gap-3">
-                {selectedProduct.images.map((imageUrl, index) => (
-                  <img
-                    key={index}
-                    src={imageUrl}
-                    alt={`Image ${index}`}
-                    style={{ width: "100px", marginRight: "5px" }}
-                  />
-                ))}
-              </div>
-            </div>
             <div className="grid gap-4 mb-4 grid-cols-2">
               <div className="block text-sm font-medium text-gray-900 dark:text-white">
                 <FormTitle>Product Name</FormTitle>
@@ -161,7 +220,6 @@ const AddProduct = () => {
             <div className="grid gap-4 grid-cols-2">
               <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
                 <FormTitle>Product Collection</FormTitle>
-
                 <TagsInput
                   type="text"
                   className="mt-2 bg-transparent border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -174,7 +232,6 @@ const AddProduct = () => {
               </div>
               <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
                 <FormTitle>Product Tag</FormTitle>
-
                 <TagsInput
                   classNames="mt-2"
                   placeholder="Add tags (press Enter to add)"
@@ -188,7 +245,7 @@ const AddProduct = () => {
               <Label>
                 <Textarea
                   className="block p-2.5 mt-2 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 bg-transparent bg-opacity-0 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  rows="3"
+                  rows="2"
                   placeholder="Enter product short description here"
                   value={selectedProduct.description}
                   onChange={(e) =>
@@ -198,18 +255,25 @@ const AddProduct = () => {
               </Label>
             </div>
             <div className="mb-4">
-              <FormTitle>Stock Qunatity</FormTitle>
+              <FormTitle>Stock Quantity</FormTitle>
               <Label>
                 <Input
+                  type="number"
                   className="mt-2"
                   placeholder="Enter product stock quantity"
+                  value={selectedProduct.stockQty}
+                  onChange={(e) => {
+                    if (e.target.value >= 0) {
+                      handleProductChange("stockQty", e.target.value);
+                    }
+                  }}
                 />
               </Label>
             </div>
             <div className="block mt-2 mb-6 text-sm font-medium text-gray-900 dark:text-white">
               <FormTitle>Product Additional Information</FormTitle>
               <CKEditor
-                className="h-24"
+                className="h-32"
                 editor={ClassicEditor}
                 onChange={(event, editor) => {
                   handleAdditionalInfoChange(event, editor);
@@ -272,27 +336,46 @@ const AddProduct = () => {
           </CardBody>
         </Card>
 
-        {/* <Card className="h-48">
+        <Card className="h-2/3 md:col-span-1">
           <CardBody>
-            <div className="flex mb-8">
-              <Button layout="primary" className="mr-3" iconLeft={PublishIcon}>
-                Publish
-              </Button>
-              <Button layout="link" iconLeft={StoreIcon}>
-                Save as Draft
-              </Button>
+            <div className="flex justify-center">
+              <label className="upload-product-img">
+                <FiUpload />
+                Upload Product Image
+                <input
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={handleImgChange}
+                />
+              </label>
             </div>
-            <Label className="mt-4">
-              <FormTitle>Select Product Category</FormTitle>
-              <Select className="mt-1">
-                <option>Electronic</option>
-                <option>Fashion</option>
-                <option>Cosmatics</option>
-                <option>Food and Meal</option>
-              </Select>
-            </Label>
+            <div className="flex items-center gap-3">
+              {loadingImg ? (
+                <FaSpinner className="animate-spin text-gray-800 dark:text-gray-300" />
+              ) : (
+                <div className="image-container">
+                  {selectedProduct.images.map((imageUrl, index) => (
+                    <div className="image-preview" key={index}>
+                      <img
+                        src={imageUrl}
+                        alt="Preview"
+                        className="preview-image"
+                      />
+                      <div className="overlay">
+                        <Button
+                          icon={TrashIcon}
+                          onClick={() => handleDeleteImage(index)}
+                          className="delete-button"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </CardBody>
-        </Card> */}
+        </Card>
       </div>
     </div>
   );

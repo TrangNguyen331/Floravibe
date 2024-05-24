@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import { getDiscountPrice } from "../../helpers/product";
@@ -7,7 +7,7 @@ import ProductImageGallery from "../../components/product/ProductImageGallery";
 import ProductDescriptionInfo from "../../components/product/ProductDescriptionInfo";
 import ProductImageGallerySideThumb from "../../components/product/ProductImageGallerySideThumb";
 import ProductImageFixed from "../../components/product/ProductImageFixed";
-
+import axiosInstance from "../../axiosInstance";
 const ProductImageDescription = ({
   spaceTopClass,
   spaceBottomClass,
@@ -16,13 +16,34 @@ const ProductImageDescription = ({
   currency,
   cartItems,
   wishlistItems,
-  compareItems
+  compareItems,
 }) => {
+  // const [myWishlist, setWishlist] = useState([]);
+  // const [alreadyGet, setAlreadyGet] = useState(false);
+  // const [foundProduct, setFoundProduct] = useState();
+  // const getWishlistItems = async () => {
+  //   try {
+  //     const response = await axiosInstance.get(`/api/v1/wishlist`);
+  //     setWishlist(response.data);
+  //     setAlreadyGet(true);
+  //     console.log(response.data); // Log the wishlist data
+  //     const foundProduct = response.data.products.filter(
+  //       (item) => item.id === product.id
+  //     )[0];
+  //     console.log(foundProduct);
+  //     setFoundProduct(foundProduct);
+  //   } catch (error) {}
+  // };
+
+  // useEffect(() => {
+  //   getWishlistItems();
+  // }, []);
+
   const wishlistItem = wishlistItems.filter(
-    wishlistItem => wishlistItem.id === product.id
+    (wishlistItem) => wishlistItem.id === product.id
   )[0];
   const compareItem = compareItems.filter(
-    compareItem => compareItem.id === product.id
+    (compareItem) => compareItem.id === product.id
   )[0];
   const { addToast } = useToasts();
 
@@ -83,15 +104,15 @@ ProductImageDescription.propTypes = {
   product: PropTypes.object,
   spaceBottomClass: PropTypes.string,
   spaceTopClass: PropTypes.string,
-  wishlistItems: PropTypes.array
+  wishlistItems: PropTypes.array,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     currency: state.currencyData,
     cartItems: state.cartData,
     wishlistItems: state.wishlistData,
-    compareItems: state.compareData
+    compareItems: state.compareData,
   };
 };
 

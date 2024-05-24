@@ -26,11 +26,9 @@ const ShopGridStandard = ({ location }) => {
   const [sortedProducts, setSortedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
-  console.log(products.length);
   const pageLimit = 999;
   const { pathname } = location;
-  const {t} = useTranslation(['breadcrumb']);
-
+  const { t } = useTranslation(["breadcrumb"]);
   const fetchDataProduct = async (page, search) => {
     try {
       const response = await axiosInstance.get(
@@ -74,7 +72,8 @@ const ShopGridStandard = ({ location }) => {
             item.tags,
             item.images,
             item.reviews,
-            item.collections
+            item.collections,
+            item.stockQty
           )
       );
 
@@ -94,7 +93,6 @@ const ShopGridStandard = ({ location }) => {
       console.error("Error fetching data", error);
     }
   };
-  console.log("all products", products);
   useEffect(() => {
     fetchDataAndProcess(currentPage, search);
     // Dependencies for the effect: offset, sortType, sortValue, filterSortType, filterSortValue
@@ -118,8 +116,12 @@ const ShopGridStandard = ({ location }) => {
         />
       </MetaTags>
 
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('home')}</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('shop')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>
+        {t("home")}
+      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
+        {t("shop")}
+      </BreadcrumbsItem>
 
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}

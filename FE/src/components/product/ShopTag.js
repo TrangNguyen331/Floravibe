@@ -4,11 +4,10 @@ import { setActiveSort } from "../../helpers/product";
 import { useTranslation } from "react-i18next";
 
 const ShopTag = ({ tags, getSortParams }) => {
-  const {t} = useTranslation(['product']);
-  console.log("tags",tags)
+  const { t } = useTranslation(["product"]);
   return (
     <div className="sidebar-widget mt-50">
-      <h4 className="pro-sidebar-title">{t('sidebar.tag')} </h4>
+      <h4 className="pro-sidebar-title">{t("sidebar.tag")} </h4>
       <div className="sidebar-widget-tag mt-25">
         {tags ? (
           <ul>
@@ -16,7 +15,7 @@ const ShopTag = ({ tags, getSortParams }) => {
               return (
                 <li key={key}>
                   <button
-                    onClick={e => {
+                    onClick={(e) => {
                       getSortParams("tag", tag);
                       setActiveSort(e);
                     }}
@@ -28,7 +27,7 @@ const ShopTag = ({ tags, getSortParams }) => {
             })}
           </ul>
         ) : (
-          t('sidebar.no-tag')
+          t("sidebar.no-tag")
         )}
       </div>
     </div>
@@ -37,7 +36,7 @@ const ShopTag = ({ tags, getSortParams }) => {
 
 ShopTag.propTypes = {
   getSortParams: PropTypes.func,
-  tags: PropTypes.array
+  tags: PropTypes.array,
 };
 
 export default ShopTag;

@@ -109,7 +109,9 @@ const LoginRegister = ({ location }) => {
                               />
                               <div className="forgot-password-link">
                                 <Link
-                                  to={process.env.PUBLIC_URL + "/resetpassword"}
+                                  to={
+                                    process.env.PUBLIC_URL + "/forgot-password"
+                                  }
                                 >
                                   {t('forgot')}?
                                 </Link>

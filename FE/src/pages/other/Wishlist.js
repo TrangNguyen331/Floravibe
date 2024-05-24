@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import MetaTags from "react-meta-tags";
@@ -14,9 +14,9 @@ import {
 import { addToCart } from "../../redux/actions/cartActions";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-
+import axiosInstance from "../../axiosInstance";
+import { useSelector } from "react-redux";
 const Wishlist = ({
   location,
   cartItems,
@@ -28,24 +28,81 @@ const Wishlist = ({
 }) => {
   const { addToast } = useToasts();
   const { pathname } = location;
-  useEffect(() => {}, []);
-  const {t} = useTranslation(['wishlist', 'breadcrumb', 'home'])
+  const [products, setProducts] = useState([]);
+  const fetchProducts = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/v1/products/paging?size=999&page=0`
+      );
+      setProducts(response.data.content);
+    } catch (error) {
+      return [];
+    }
+  };
 
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+  console.log("all products", products);
+  const { t } = useTranslation(["wishlist", "breadcrumb", "home"]);
+  const token = useSelector((state) => state.auth.token);
+  const [myWishlist, setWishlist] = useState([]);
+  const [alreadyGet, setAlreadyGet] = useState(false);
+  const getWishlistItems = async () => {
+    try {
+      const response = await axiosInstance.get(`/api/v1/wishlist`);
+      setWishlist(response.data.products);
+      setAlreadyGet(true);
+    } catch (error) {}
+  };
+  useEffect(() => {
+    if (token && !alreadyGet) {
+      getWishlistItems();
+    }
+  }, [token, alreadyGet]);
+
+  const targetData = token && alreadyGet ? myWishlist : wishlistItems;
+
+  const handleDeleteFromWishlist = async (wishlistItem) => {
+    try {
+      if (token) {
+        await axiosInstance.delete(`/api/v1/wishlist/${wishlistItem.id}`);
+      }
+      deleteFromWishlist(wishlistItem, addToast);
+      // Re-fetch wishlist items after deletion
+      getWishlistItems();
+    } catch (error) {
+      console.error("Error deleting from wishlist:", error);
+    }
+  };
+  const handleDeleteAll = async () => {
+    try {
+      deleteAllFromWishlist(addToast);
+      if (token) {
+        await axiosInstance.delete(`/api/v1/wishlist/clear`);
+      }
+      getWishlistItems();
+    } catch (error) {}
+  };
   return (
     <Fragment>
       <MetaTags>
-        <title>Floravibe | {t('breadcrumb:wishlist')}</title>
+        <title>Floravibe | {t("breadcrumb:wishlist")}</title>
       </MetaTags>
 
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('breadcrumb:home')}</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('breadcrumb:wishlist')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>
+        {t("breadcrumb:home")}
+      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
+        {t("breadcrumb:wishlist")}
+      </BreadcrumbsItem>
 
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb />
         <div className="cart-main-area pt-90 pb-100">
           <div className="container">
-            {wishlistItems && wishlistItems.length >= 1 ? (
+            {targetData && targetData.length >= 1 ? (
               <Fragment>
                 <h3 className="cart-page-title">Your wishlist items</h3>
                 <div className="row">
@@ -58,11 +115,11 @@ const Wishlist = ({
                             <th>Product Name</th>
                             <th>Unit Price</th>
                             <th>Add To Cart</th>
-                            <th>  </th>
+                            <th> </th>
                           </tr>
                         </thead>
                         <tbody>
-                          {wishlistItems.map((wishlistItem, key) => {
+                          {targetData.map((wishlistItem, key) => {
                             // const discountedPrice = getDiscountPrice(
                             //   wishlistItem.price,
                             //   wishlistItem.discount
@@ -75,6 +132,13 @@ const Wishlist = ({
                             const cartItem = cartItems.filter(
                               (item) => item.id === wishlistItem.id
                             )[0];
+                            const productStock = products.some(
+                              (product) => product.id === wishlistItem.id
+                            )
+                              ? products.find(
+                                  (product) => product.id === wishlistItem.id
+                                )
+                              : null;
                             return (
                               <tr key={key}>
                                 <td className="product-thumbnail">
@@ -123,7 +187,7 @@ const Wishlist = ({
                                   ) : ( */}
                                   <span className="amount">
                                     {finalProductPrice.toLocaleString("vi-VN") +
-                                      "₫"}
+                                      "đ"}
                                   </span>
                                   {/* )} */}
                                 </td>
@@ -135,15 +199,18 @@ const Wishlist = ({
                                       rel="noopener noreferrer"
                                       target="_blank"
                                     >
-                                      {t('home:productgrid.buy-now')}
+                                      {t("home:productgrid.buy-now")}
                                     </a>
                                   ) : wishlistItem.variation &&
                                     wishlistItem.variation.length >= 1 ? (
                                     <Link
                                       to={`${process.env.PUBLIC_URL}/product/${wishlistItem.id}`}
                                     >
-                                      {t('home:productgrid.select-option')}
+                                      {t("home:productgrid.select-option")}
                                     </Link>
+                                  ) : productStock &&
+                                    productStock.stockQty <= 0 ? (
+                                    <button>out of stock</button>
                                   ) : (
                                     <button
                                       onClick={() => {
@@ -158,17 +225,23 @@ const Wishlist = ({
                                       disabled={
                                         cartItem !== undefined &&
                                         cartItem.quantity > 0
+                                        // (productStock &&
+                                        //   productStock.stockQty <= 0)
                                       }
                                       title={
                                         wishlistItem !== undefined
-                                          ? t('home:productgrid.tooltip-added-to-cart')
-                                          : t('home:productgrid.tooltip-add-to-cart')
+                                          ? t(
+                                              "home:productgrid.tooltip-added-to-cart"
+                                            )
+                                          : t(
+                                              "home:productgrid.tooltip-add-to-cart"
+                                            )
                                       }
                                     >
                                       {cartItem !== undefined &&
                                       cartItem.quantity > 0
-                                        ? t('home:productgrid.added')
-                                        : t('home:productgrid.add-to-cart')}
+                                        ? t("home:productgrid.added")
+                                        : t("home:productgrid.add-to-cart")}
                                     </button>
                                   )}
                                 </td>
@@ -176,10 +249,11 @@ const Wishlist = ({
                                 <td className="product-remove">
                                   <button
                                     onClick={() => {
-                                      deleteFromWishlist(
-                                        wishlistItem,
-                                        addToast
-                                      );
+                                      handleDeleteFromWishlist(wishlistItem);
+                                      // deleteFromWishlist(
+                                      //   wishlistItem,
+                                      //   addToast
+                                      // );
                                     }}
                                   >
                                     <i className="fa fa-times"></i>
@@ -199,16 +273,17 @@ const Wishlist = ({
                     <div className="cart-shiping-update-wrapper">
                       <div className="cart-shiping-update">
                         <Link to={process.env.PUBLIC_URL + "/shop"}>
-                          {t('continue-shopping')}
+                          {t("continue-shopping")}
                         </Link>
                       </div>
                       <div className="cart-clear">
                         <button
                           onClick={() => {
-                            deleteAllFromWishlist(addToast);
+                            handleDeleteAll();
+                            // deleteAllFromWishlist(addToast);
                           }}
                         >
-                          {t('clear-wishlist')}
+                          {t("clear-wishlist")}
                         </button>
                       </div>
                     </div>
@@ -223,9 +298,9 @@ const Wishlist = ({
                       <i className="pe-7s-like"></i>
                     </div>
                     <div className="item-empty-area__text">
-                      {t('no-item')} <br />{" "}
+                      {t("no-item")} <br />{" "}
                       <Link to={process.env.PUBLIC_URL + "/shop"}>
-                        {t('add-item')}
+                        {t("add-item")}
                       </Link>
                     </div>
                   </div>
