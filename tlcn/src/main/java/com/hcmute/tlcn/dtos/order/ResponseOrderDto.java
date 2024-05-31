@@ -27,6 +27,8 @@ public class ResponseOrderDto {
     private String methodPaid;
     private boolean isPaid =false;
 
+    private boolean isRated = false;
+
     @CreatedDate
     private LocalDateTime createdDate;
 }

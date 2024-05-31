@@ -22,9 +22,9 @@ public interface ProductService {
 
     Product delete(String id);
 
-    Product addReview(String id, ReviewDto reviewDto,String accountName);
+    Product addReview(String id, ReviewDto reviewDto,String accountName, String orderId);
 
-    Product updateReview(String id, String reviewId,ReviewDto reviewDto);
+    Product updateReview(String id, String reviewId,ReviewDto reviewDto,String orderId);
 
     Product deleteReview(String id, String reviewId);
 }

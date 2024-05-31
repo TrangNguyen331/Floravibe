@@ -84,7 +84,7 @@ const Checkout = ({ location, cartItems, currency }) => {
       const startTime1 = dayjs().set("hour", 7).set("minute", 0);
       const endTime1 = dayjs().set("hour", 12).set("minute", 0);
 
-      const startTime2 = dayjs().set("hour", 13).set("minute", 0);
+      const startTime2 = dayjs().set("hour", 12).set("minute", 0);
       const endTime2 = dayjs().set("hour", 21).set("minute", 0);
 
       if (currentTime.isAfter(startTime1) && currentTime.isBefore(endTime1)) {
@@ -464,7 +464,9 @@ const Checkout = ({ location, cartItems, currency }) => {
                         <label>{t("myacc:address")}</label>
                         <div>
                           <select
-                            className="select-box form-select form-select-sm mb-3"
+                            className={`select-box form-select form-select-sm mb-3 ${
+                              isError && !submitData.city ? "error" : ""
+                            }`}
                             name="city"
                             value={submitData.city}
                             onChange={handleInputChange}
@@ -480,7 +482,9 @@ const Checkout = ({ location, cartItems, currency }) => {
                             ))}
                           </select>
                           <select
-                            className="select-box form-select form-select-sm mb-3"
+                            className={`select-box form-select form-select-sm mb-3 ${
+                              isError && !submitData.district ? "error" : ""
+                            }`}
                             name="district"
                             value={submitData.district}
                             onChange={handleInputChange}
@@ -506,7 +510,9 @@ const Checkout = ({ location, cartItems, currency }) => {
                           </select>
 
                           <select
-                            className="select-box form-select form-select-sm"
+                            className={`select-box form-select form-select-sm ${
+                              isError && !submitData.ward ? "error" : ""
+                            }`}
                             name="ward"
                             value={submitData.ward}
                             onChange={handleInputChange}
@@ -516,7 +522,6 @@ const Checkout = ({ location, cartItems, currency }) => {
                               {t("myacc:ward")}
                             </option>
                             {submitData.district &&
-                              submitData.ward &&
                               cities.some(
                                 (city) => city.Name === submitData.city
                               ) &&

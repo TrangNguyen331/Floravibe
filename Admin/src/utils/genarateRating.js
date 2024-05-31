@@ -3,6 +3,164 @@ import Icon from "../components/Icon";
 
 import { StarIcon } from "../icons";
 
+export const onRating = (rating, iconSize) => {
+  if (rating === 5) {
+    return (
+      <div className="flex gap-2">
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+      </div>
+    );
+  }
+  if (rating === 4) {
+    return (
+      <div className="flex">
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+      </div>
+    );
+  }
+  if (rating === 3) {
+    return (
+      <div className="flex">
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+      </div>
+    );
+  }
+  if (rating === 2) {
+    return (
+      <div className="flex">
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+      </div>
+    );
+  }
+  if (rating === 1) {
+    return (
+      <div className="flex">
+        <Icon
+          className={`text-yellow-300 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+      </div>
+    );
+  }
+  if (rating === 0) {
+    return (
+      <div className="flex items-center">
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+        <Icon
+          className={`text-gray-600 w-${iconSize} h-${iconSize}`}
+          icon={StarIcon}
+        />
+      </div>
+    );
+  }
+};
 // generate rating
 export const genRating = (rating, reviewsCount, iconSize) => {
   // if (rating === 5) {

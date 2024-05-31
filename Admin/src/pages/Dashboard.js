@@ -5,7 +5,15 @@ import ChartCard from "../components/Chart/ChartCard";
 import { Doughnut, Line } from "react-chartjs-2";
 import ChartLegend from "../components/Chart/ChartLegend";
 import PageTitle from "../components/Typography/PageTitle";
-import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon, TruckIcon, CheckIcon, CancelIcon } from "../icons";
+import {
+  ChatIcon,
+  CartIcon,
+  MoneyIcon,
+  PeopleIcon,
+  TruckIcon,
+  CheckIcon,
+  CancelIcon,
+} from "../icons";
 import RoundIcon from "../components/RoundIcon";
 
 import {
@@ -17,6 +25,7 @@ import {
 import OrdersTable from "../components/OrdersTable";
 import axiosInstance from "../axiosInstance";
 import StatisticProduct from "../components/StatisticProduct";
+import TestStatstic from "../components/TestStatstic";
 
 function Dashboard() {
   const [dashboard, setDashBoard] = useState({
@@ -25,7 +34,7 @@ function Dashboard() {
     totalNewOrder: "",
     totalShippingOrder: "",
     totalCancelOrder: "",
-    totalCompleteOrder: ""
+    totalCompleteOrder: "",
   });
 
   useEffect(() => {
@@ -46,9 +55,7 @@ function Dashboard() {
       isMounted = false;
     };
   }, []);
-  const handleClickIcon = (filter_name) => {
-
-  }
+  const handleClickIcon = (filter_name) => {};
 
   return (
     <>
@@ -64,11 +71,14 @@ function Dashboard() {
             iconColorClass="text-orange-500 dark:text-orange-100"
             bgColorClass="bg-orange-100 dark:bg-orange-500"
             className="mr-4"
-            onClick={() => handleClickIcon('new')}
+            onClick={() => handleClickIcon("new")}
           />
         </InfoCard>
 
-        <InfoCard title="Shipping Orders" value={dashboard.totalShippingOrder || "0"}>
+        <InfoCard
+          title="Shipping Orders"
+          value={dashboard.totalShippingOrder || "0"}
+        >
           <RoundIcon
             icon={TruckIcon}
             iconColorClass="text-pink-500 dark:text-pink-100"
@@ -77,7 +87,10 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard title="Complete Orders" value={dashboard.totalCompleteOrder || "0"}>
+        <InfoCard
+          title="Complete Orders"
+          value={dashboard.totalCompleteOrder || "0"}
+        >
           <RoundIcon
             icon={CheckIcon}
             iconColorClass="text-green-500 dark:text-green-100"
@@ -86,7 +99,10 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard title="Cancel Orders" value={dashboard.totalCancelOrder || "0"}>
+        <InfoCard
+          title="Cancel Orders"
+          value={dashboard.totalCancelOrder || "0"}
+        >
           <RoundIcon
             icon={CancelIcon}
             iconColorClass="text-gray-500 dark:text-gray-100"
@@ -95,7 +111,10 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard title="Total Customers" value={dashboard.totalCustomer || "0"}>
+        <InfoCard
+          title="Total Customers"
+          value={dashboard.totalCustomer || "0"}
+        >
           <RoundIcon
             icon={PeopleIcon}
             iconColorClass="text-blue-500 dark:text-blue-100"
@@ -108,8 +127,7 @@ function Dashboard() {
           title="Total Income"
           value={
             (dashboard.totalIncome &&
-              dashboard.totalIncome.toLocaleString("vi-VN")) + " ₫" ||
-            ""
+              dashboard.totalIncome.toLocaleString("vi-VN")) + " ₫" || ""
           }
         >
           <RoundIcon
@@ -120,7 +138,7 @@ function Dashboard() {
           />
         </InfoCard>
       </div>
-      
+
       {/* <div className="grid gap-6 mb-8 md:grid-cols-2">
         <ChartCard title="User Analytics">
           <Line {...lineOptions} />
@@ -136,7 +154,7 @@ function Dashboard() {
       <OrdersTable resultsPerPage={5} filter={""} />
 
       <PageTitle>Statistic Product</PageTitle>
-      <StatisticProduct/>
+      <StatisticProduct />
     </>
   );
 }

@@ -29,6 +29,7 @@ public class Order {
     private String status;
     private String methodPaid;
     private boolean isPaid =false;
+    private boolean isRated = false;
 
     @CreatedDate
     private LocalDateTime createdDate;

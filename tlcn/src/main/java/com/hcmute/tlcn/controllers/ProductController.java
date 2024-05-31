@@ -2,7 +2,6 @@ package com.hcmute.tlcn.controllers;
 
 import com.hcmute.tlcn.dtos.product.ProductDto;
 import com.hcmute.tlcn.dtos.review.ReviewDto;
-import com.hcmute.tlcn.entities.Blog;
 import com.hcmute.tlcn.entities.Product;
 import com.hcmute.tlcn.services.ProductService;
 import com.hcmute.tlcn.utils.PageUtils;
@@ -72,16 +71,16 @@ public class ProductController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/review/{id}")
-    public ResponseEntity<Product> addNewReview(@PathVariable String id, @RequestBody ReviewDto dto, Principal principal) {
-        Product result = service.addReview(id,dto,principal.getName());
+    @PostMapping("/review/{id}/{orderId}")
+    public ResponseEntity<Product> addNewReview(@PathVariable String id, @RequestBody ReviewDto dto, Principal principal,@PathVariable String orderId) {
+        Product result = service.addReview(id,dto,principal.getName(),orderId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 
     @PutMapping("/review/{id}/{reviewId}")
-    public ResponseEntity<Product> updateNewReview(@PathVariable String id,@PathVariable String reviewId, @RequestBody ReviewDto dto, Principal principal) {
-        Product result = service.updateReview(id,reviewId, dto);
+    public ResponseEntity<Product> updateNewReview(@PathVariable String id,@PathVariable String reviewId, @RequestBody ReviewDto dto, Principal principal,@RequestParam String orderId) {
+        Product result = service.updateReview(id,reviewId,dto,orderId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

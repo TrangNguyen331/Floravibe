@@ -69,7 +69,7 @@ const Wishlist = ({
         await axiosInstance.delete(`/api/v1/wishlist/${wishlistItem.id}`);
       }
       deleteFromWishlist(wishlistItem, addToast);
-      // Re-fetch wishlist items after deletion
+
       getWishlistItems();
     } catch (error) {
       console.error("Error deleting from wishlist:", error);

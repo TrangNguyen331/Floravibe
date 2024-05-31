@@ -146,6 +146,27 @@
     .order-details-link {
       display: flex;
       justify-content: end;
+      gap: 30px;
+      a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+      }
+      button {
+        border: 1px solid #333;
+        border-radius: 5px;
+        color: #333;
+        font-weight: 500;
+        line-height: 1;
+        padding: 10px 26px;
+        transition: all 0.3s ease 0s;
+        &:hover {
+          background-color: $theme-color;
+          color: #fff;
+          border: 1px solid $theme-color;
+        }
+      }
     }
   }
 }
@@ -154,4 +175,84 @@ h3.order-page-title {
   font-size: 20px;
   font-weight: 500;
   margin: 0 0 15px;
+}
+.product-rating-review {
+  padding-bottom: 20px;
+  .product-thumbnail {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    .img-fluid {
+      width: 100px;
+      height: 127px;
+      border: 1px solid #ccc;
+    }
+  }
+  .rating-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .product-rating {
+      display: flex;
+      gap: 12px;
+      i {
+        font-size: 24px;
+        cursor: pointer;
+        &.yellow {
+          color: #ffa900;
+        }
+      }
+    }
+  }
+  .review-area {
+    .review-header,
+    .edit-review-btn {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .edit-review-btn {
+      gap: 8px;
+      .edit-save-btn {
+        padding: 4px 12px;
+      }
+      .loading-send {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+    }
+    textarea {
+      height: 140px;
+      margin-bottom: 20px;
+      padding: 20px 10px 2px 20px;
+      background-color: transparent;
+      &:focus {
+        border: 2px solid #eceff8;
+      }
+    }
+  }
+}
+.review-rating-btn,
+.edit-save-btn {
+  color: #fff;
+  border: 1px solid $theme-color;
+  background-color: $theme-color;
+  transition: all 0.3s ease 0s;
+  &:hover {
+    border: 1px solid #333;
+    background-color: #333;
+  }
+}
+.review-rating-btn {
+  .loading-send {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  font-weight: 500;
+  line-height: 1;
+  padding: 10px 26px;
 }

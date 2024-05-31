@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Icon from "../components/Icon";
 import PageTitle from "../components/Typography/PageTitle";
-import { HomeIcon, AddIcon, PublishIcon, StoreIcon, DashboardIcon } from "../icons";
+import {
+  AddIcon,
+  PublishIcon,
+  StoreIcon,
+  TrashIcon,
+  DashboardIcon,
+} from "../icons";
 import { TagsInput } from "react-tag-input-component";
 import axiosInstance from "../axiosInstance";
 import axiosImgBB from "../axiosImgBB";

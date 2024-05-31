@@ -7,7 +7,7 @@
   .panel-heading {
     padding: 0;
 
-    &>button {
+    & > button {
       background: none;
       border: none;
       width: 100%;
@@ -107,7 +107,8 @@
 
     .billing-info {
       margin-bottom: 20px;
-
+      display: flex;
+      flex-direction: column;
       label {
         color: #000;
         font-size: 14px;
@@ -121,6 +122,49 @@
         color: #000;
         height: 40px;
         padding: 0 15px;
+      }
+      .avatar-update-area {
+        position: relative;
+        display: inline-block;
+        .upload-input {
+          display: none;
+        }
+
+        .avatar-info {
+          position: relative;
+          cursor: pointer;
+          display: flex;
+          width: 100px;
+          height: 100px;
+          margin-top: 5px;
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+          .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            i {
+              font-size: 16px;
+            }
+            &:hover {
+              opacity: 1;
+            }
+          }
+        }
       }
     }
 
@@ -209,7 +253,6 @@
       }
 
       .entries-edit-delete {
-
         a,
         button {
           background: none;

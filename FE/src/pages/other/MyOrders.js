@@ -16,14 +16,19 @@ import {
 import { useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import Evaluate from "./Evaluate";
-import { Button } from "react-scroll";
+import EditReview from "./EditReview";
 
 const MyOrders = ({ location }) => {
   const token = useSelector((state) => state.auth.token);
   const [orders, setOrders] = useState([]);
+  const [orderId, setOrderId] = useState(null);
+  // const [order, setOrder] = useState(null);
+  const [loadingGet, setLoadingGet] = useState(false);
   const [currentFilterOrder, setCurrentOrderFilter] = useState([]);
   const [modalShow, setModalShow] = useState(false);
-
+  const [isEdit, setIsEdit] = useState(false);
+  const { t } = useTranslation(["orders", "breadcrumb"]);
+  const { pathname } = location;
   const filterOrder = (key) => {
     setCurrentOrderFilter(filterOrderByStatus(orders, key));
   };
@@ -35,38 +40,49 @@ const MyOrders = ({ location }) => {
       (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
     );
   };
+  const fetchData = async () => {
+    setLoadingGet(true);
+    try {
+      const response = await axiosInstance.get("/api/v1/orders");
+      setOrders(response.data);
+      setCurrentOrderFilter((prevFilter) =>
+        filterOrderByStatus(response.data, "All")
+      );
+      setLoadingGet(false);
+    } catch (error) {
+      console.log("Fail to load my orders");
+    }
+  };
+  const clickRating = async (orderId) => {
+    setOrderId(orderId);
+    setModalShow(true);
+  };
+  const clickRated = async (orderId) => {
+    setOrderId(orderId);
+    console.log(orderId);
+    setIsEdit(true);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get("/api/v1/orders");
-
-        setOrders((prevOrders) => response.data);
-        setCurrentOrderFilter((prevFilter) =>
-          filterOrderByStatus(response.data, "All")
-        );
-      } catch (error) {
-        console.log("Fail to load my orders");
-      }
-    };
-
     fetchData();
   }, []);
-  const {t} = useTranslation(['orders','breadcrumb'])
-  const { pathname } = location;
   return (
     <Fragment>
       <MetaTags>
-        <title>Floravibe | {t('breadcrumb:orders')}</title>
+        <title>Floravibe | {t("breadcrumb:orders")}</title>
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('breadcrumb:home')}</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('breadcrumb:orders')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>
+        {t("breadcrumb:home")}
+      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
+        {t("breadcrumb:orders")}
+      </BreadcrumbsItem>
 
       <LayoutOne headerTop="visible">
         <Breadcrumb />
         <div className="order-main-area pt-90 pb-100">
           <div className="container">
             <Fragment>
-              <h3 className="order-page-title">{t('list.history')}</h3>
+              <h3 className="order-page-title">{t("list.history")}</h3>
               <div className="row">
                 <div className="col-12">
                   <Tab.Container defaultActiveKey="all">
@@ -79,7 +95,7 @@ const MyOrders = ({ location }) => {
                           eventKey="all"
                           onSelect={() => filterOrder("All")}
                         >
-                          <h4>{t('list.all')}</h4>
+                          <h4>{t("list.all")}</h4>
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
@@ -87,7 +103,7 @@ const MyOrders = ({ location }) => {
                           eventKey="inRequest"
                           onSelect={() => filterOrder("InProgress")}
                         >
-                          <h4>{t('list.request')}</h4>
+                          <h4>{t("list.request")}</h4>
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
@@ -95,7 +111,7 @@ const MyOrders = ({ location }) => {
                           eventKey="processing"
                           onSelect={() => filterOrder("Processing")}
                         >
-                          <h4>{t('list.process')}</h4>
+                          <h4>{t("list.process")}</h4>
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
@@ -103,13 +119,19 @@ const MyOrders = ({ location }) => {
                           eventKey="completed"
                           onSelect={() => filterOrder("Completed")}
                         >
-                          <h4>{t('list.complete')}</h4>
+                          <h4>{t("list.complete")}</h4>
                         </Nav.Link>
                       </Nav.Item>
                     </Nav>
                     <Tab.Content>
                       <Tab.Pane eventKey="all">
-                        {currentFilterOrder.length > 0 ? (
+                        {loadingGet ? (
+                          <div className="d-flex justify-content-center">
+                            <div className="spinner-border" role="status">
+                              <span className="sr-only">Loading...</span>
+                            </div>
+                          </div>
+                        ) : currentFilterOrder.length > 0 ? (
                           getSortedOrder(currentFilterOrder).map((order) => (
                             <div className="row" key={order.id}>
                               <div className="col-lg-12">
@@ -119,9 +141,11 @@ const MyOrders = ({ location }) => {
                                       <ul>
                                         <li>
                                           <div className="order-id-date">
-                                            <p>{t('detail.id')} {order.id}</p>
+                                            <p>
+                                              {t("detail.id")} {order.id}
+                                            </p>
                                             <p className="order-datetime">
-                                              {t('detail.date')}{" "}
+                                              {t("detail.date")}{" "}
                                               {formatReadableDate(
                                                 order.createdDate
                                               )}
@@ -130,15 +154,12 @@ const MyOrders = ({ location }) => {
                                         </li>
                                         <li className="order-status">
                                           {/* {getStatus(order.status)} */}
-                                          {order.status === 'IN_REQUEST' && (
-                                            t('list.request')
-                                          )}
-                                          {order.status === 'IN_PROCESSING' && (
-                                            t('list.process')
-                                          )}
-                                          {order.status === 'COMPLETED' && (
-                                            t('list.complete')
-                                          )}
+                                          {order.status === "IN_REQUEST" &&
+                                            t("list.request")}
+                                          {order.status === "IN_PROCESSING" &&
+                                            t("list.process")}
+                                          {order.status === "COMPLETED" &&
+                                            t("list.complete")}
                                         </li>
                                       </ul>
                                     </div>
@@ -166,7 +187,9 @@ const MyOrders = ({ location }) => {
                                     </div>
                                     <div className="order-total-wrap">
                                       <ul>
-                                        <li className="order-total">{t('detail.total')}</li>
+                                        <li className="order-total">
+                                          {t("detail.total")}
+                                        </li>
                                         <li>
                                           {order.total.toLocaleString("vi-VN")}₫
                                         </li>
@@ -174,31 +197,29 @@ const MyOrders = ({ location }) => {
                                     </div>
                                   </div>
                                   <div className="order-details-link">
-                                    {order.status === 'COMPLETED' && (
-                                      <Link
-                                        onClick={() => setModalShow(true)}
-                                        style={{
-                                          marginRight: '30px',
-                                          border: '1px solid',
-                                          borderRadius: '5px',
-                                          padding: '3px 15px',
-                                        }}
+                                    {order.rated ? (
+                                      <button
+                                        onClick={() => clickRated(order.id)}
                                       >
-                                        Rating
-                                      </Link>
-                                      
+                                        Rated
+                                      </button>
+                                    ) : (
+                                      order.status === "COMPLETED" && (
+                                        <button
+                                          onClick={() => clickRating(order.id)}
+                                        >
+                                          Rating
+                                        </button>
+                                      )
                                     )}
                                     <Link
-                                      style={{  display: 'flex', 
-                                                alignItems: 'center', 
-                                                justifyContent: 'center' }}
                                       to={
                                         process.env.PUBLIC_URL +
                                         "/order/" +
                                         order.id
                                       }
                                     >
-                                      {t('list.view-details')}{" "}
+                                      {t("list.view-details")}{" "}
                                       <i className="fa fa-long-arrow-right"></i>
                                     </Link>
                                   </div>
@@ -216,7 +237,7 @@ const MyOrders = ({ location }) => {
                                   <i className="fa fa-file-text-o"></i>
                                 </div>
                                 <div className="item-empty-area__text">
-                                  {t('list.no-order')}
+                                  {t("list.no-order")}
                                   <br />
                                 </div>
                               </div>
@@ -235,9 +256,11 @@ const MyOrders = ({ location }) => {
                                       <ul>
                                         <li>
                                           <div className="order-id-date">
-                                            <p>{t('detail.id')} {order.id}</p>
+                                            <p>
+                                              {t("detail.id")} {order.id}
+                                            </p>
                                             <p className="order-datetime">
-                                              {t('detail.date')}{" "}
+                                              {t("detail.date")}{" "}
                                               {formatReadableDate(
                                                 order.createdDate
                                               )}
@@ -246,9 +269,8 @@ const MyOrders = ({ location }) => {
                                         </li>
                                         <li className="order-status">
                                           {/* {getStatus(order.status)} */}
-                                          {order.status === 'IN_REQUEST' && (
-                                            t('list.request')
-                                          )}
+                                          {order.status === "IN_REQUEST" &&
+                                            t("list.request")}
                                         </li>
                                       </ul>
                                     </div>
@@ -272,7 +294,9 @@ const MyOrders = ({ location }) => {
                                     </div>
                                     <div className="order-total-wrap">
                                       <ul>
-                                        <li className="order-total">{t('detail.total')}</li>
+                                        <li className="order-total">
+                                          {t("detail.total")}
+                                        </li>
                                         <li>
                                           {order.total.toLocaleString("vi-VN")}₫
                                         </li>
@@ -287,7 +311,7 @@ const MyOrders = ({ location }) => {
                                         order.id
                                       }
                                     >
-                                      {t('list.view-details')}{" "}
+                                      {t("list.view-details")}{" "}
                                       <i className="fa fa-long-arrow-right"></i>
                                     </Link>
                                   </div>
@@ -305,7 +329,7 @@ const MyOrders = ({ location }) => {
                                   <i className="fa fa-file-text-o"></i>
                                 </div>
                                 <div className="item-empty-area__text">
-                                  {t('list.no-order')}
+                                  {t("list.no-order")}
                                   <br />
                                 </div>
                               </div>
@@ -324,9 +348,11 @@ const MyOrders = ({ location }) => {
                                       <ul>
                                         <li>
                                           <div className="order-id-date">
-                                            <p>{t('detail.id')} {order.id}</p>
+                                            <p>
+                                              {t("detail.id")} {order.id}
+                                            </p>
                                             <p className="order-datetime">
-                                              {t('detail.date')}{" "}
+                                              {t("detail.date")}{" "}
                                               {formatReadableDate(
                                                 order.createdDate
                                               )}
@@ -335,9 +361,8 @@ const MyOrders = ({ location }) => {
                                         </li>
                                         <li className="order-status">
                                           {/* {getStatus(order.status)} */}
-                                          {order.status === 'IN_PROCESSING' && (
-                                            t('list.process')
-                                          )}
+                                          {order.status === "IN_PROCESSING" &&
+                                            t("list.process")}
                                         </li>
                                       </ul>
                                     </div>
@@ -361,7 +386,9 @@ const MyOrders = ({ location }) => {
                                     </div>
                                     <div className="order-total-wrap">
                                       <ul>
-                                        <li className="order-total">{t('detail.total')}</li>
+                                        <li className="order-total">
+                                          {t("detail.total")}
+                                        </li>
                                         <li>
                                           {order.total.toLocaleString("vi-VN")}₫
                                         </li>
@@ -376,11 +403,10 @@ const MyOrders = ({ location }) => {
                                         order.id
                                       }
                                     >
-                                      {t('list.view-details')}{" "}
+                                      {t("list.view-details")}{" "}
                                       <i className="fa fa-long-arrow-right"></i>
                                     </Link>
                                   </div>
-
                                   <div className="payment-method"></div>
                                 </div>
                               </div>
@@ -394,7 +420,7 @@ const MyOrders = ({ location }) => {
                                   <i className="fa fa-file-text-o"></i>
                                 </div>
                                 <div className="item-empty-area__text">
-                                  {t('list.no-order')}
+                                  {t("list.no-order")}
                                   <br />
                                 </div>
                               </div>
@@ -413,9 +439,11 @@ const MyOrders = ({ location }) => {
                                       <ul>
                                         <li>
                                           <div className="order-id-date">
-                                            <p>{t('detail.id')} {order.id}</p>
+                                            <p>
+                                              {t("detail.id")} {order.id}
+                                            </p>
                                             <p className="order-datetime">
-                                              {t('detail.date')}{" "}
+                                              {t("detail.date")}{" "}
                                               {formatReadableDate(
                                                 order.createdDate
                                               )}
@@ -424,9 +452,8 @@ const MyOrders = ({ location }) => {
                                         </li>
                                         <li className="order-status">
                                           {/* {getStatus(order.status)} */}
-                                          {order.status === 'COMPLETED' && (
-                                            t('list.complete')
-                                          )}
+                                          {order.status === "COMPLETED" &&
+                                            t("list.complete")}
                                         </li>
                                       </ul>
                                     </div>
@@ -450,7 +477,9 @@ const MyOrders = ({ location }) => {
                                     </div>
                                     <div className="order-total-wrap">
                                       <ul>
-                                        <li className="order-total">{t('detail.total')}</li>
+                                        <li className="order-total">
+                                          {t("detail.total")}
+                                        </li>
                                         <li>
                                           {order.total.toLocaleString("vi-VN")}₫
                                         </li>
@@ -458,27 +487,29 @@ const MyOrders = ({ location }) => {
                                     </div>
                                   </div>
                                   <div className="order-details-link">
-                                    <Link 
-                                      onClick={() => setModalShow(true)}
-                                      style={{  marginRight: '30px',
-                                                border: '1px solid',
-                                                borderRadius: '5px',
-                                                padding: '3px 15px'
-                                      }}
-                                    > Rating
-                                    </Link>
-
-                                    <Link 
-                                      style={{  display: 'flex', 
-                                                alignItems: 'center', 
-                                                justifyContent: 'center' }}
+                                    {order.rated ? (
+                                      <button
+                                        onClick={() => clickRated(order.id)}
+                                      >
+                                        Rated
+                                      </button>
+                                    ) : (
+                                      order.status === "COMPLETED" && (
+                                        <button
+                                          onClick={() => clickRating(order.id)}
+                                        >
+                                          Rating
+                                        </button>
+                                      )
+                                    )}
+                                    <Link
                                       to={
                                         process.env.PUBLIC_URL +
                                         "/order/" +
                                         order.id
                                       }
                                     >
-                                      {t('list.view-details')}{" "}
+                                      {t("list.view-details")}{" "}
                                       <i className="fa fa-long-arrow-right"></i>
                                     </Link>
                                   </div>
@@ -496,7 +527,7 @@ const MyOrders = ({ location }) => {
                                   <i className="fa fa-file-text-o"></i>
                                 </div>
                                 <div className="item-empty-area__text">
-                                  {t('list.no-order')}
+                                  {t("list.no-order")}
                                   <br />
                                 </div>
                               </div>
@@ -515,14 +546,12 @@ const MyOrders = ({ location }) => {
       <Evaluate
         show={modalShow}
         onHide={() => setModalShow(false)}
-        // product={product}
-        // currency={currency}
-        // finalproductprice={finalProductPrice}
-        // cartitem={cartItem}
-        // wishlistitem={wishlistItem}
-        // addtocart={addToCart}
-        // addtowishlist={addToWishlist}
-        // addtoast={addToast}
+        orderId={orderId}
+      />
+      <EditReview
+        show={isEdit}
+        onHide={() => setIsEdit(false)}
+        orderId={orderId}
       />
     </Fragment>
   );

@@ -190,9 +190,89 @@
   }
 }
 
+// .single-review {
+//   display: flex;
+//   margin: 0 0 50px;
+//   @media #{$xs-layout} {
+//     display: block;
+//   }
+//   @media #{$sm-layout} {
+//     display: flex;
+//   }
+//   .review-img {
+//     flex: 0 0 90px;
+//     height: 70px;
+//     width: 88px;
+//     margin: 0 15px 0 0;
+//     box-shadow: 0 2px 3px rgba(113, 135, 164, 0.12);
+//     img {
+//       width: 100%;
+//       height: 100%;
+//       object-fit: cover;
+//     }
+//     @media #{$xs-layout} {
+//       margin: 0 0 20px 0;
+//     }
+//     @media #{$sm-layout} {
+//       margin: 0 15px 0 0;
+//     }
+//   }
+//   .review-top-wrap {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+
+//     margin: 0 0 10px;
+//     .review-left {
+//       display: flex;
+//       .review-name {
+//         display: flex;
+//         justify-content: space-between;
+//         align-items: center;
+//         margin-right: 25px;
+//         gap: 12px;
+//         h4 {
+//           font-size: 18px;
+//           font-weight: 500;
+//           line-height: 1;
+//           margin: 0;
+//         }
+//         span {
+//           font-size: 13px;
+//           color: #afafaf;
+//           letter-spacing: 0.15em;
+//         }
+//       }
+//       .review-rating {
+//         line-height: 1;
+//         i {
+//           font-size: 12px;
+
+//           margin-right: 1px;
+
+//           color: #ffa900;
+//         }
+//       }
+//       & > button {
+//         border: none;
+//         background: none;
+//         &:hover {
+//           color: $theme-color;
+//         }
+//       }
+//     }
+//     .review-btn a {
+//       font-weight: 500;
+//       line-height: 1;
+//     }
+//   }
+//   .review-bottom p {
+//     width: 93%;
+//     margin: 0;
+//   }
+// }
 .single-review {
   display: flex;
-
   margin: 0 0 50px;
   @media #{$xs-layout} {
     display: block;
@@ -201,7 +281,8 @@
     display: flex;
   }
   .review-img {
-    flex: 0 0 90px;
+    margin-right: 20px;
+    flex: 0 0 80px;
     height: 70px;
     width: 88px;
     margin: 0 15px 0 0;
@@ -218,61 +299,61 @@
       margin: 0 15px 0 0;
     }
   }
-  .review-top-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 
-    margin: 0 0 10px;
-    .review-left {
+  .review-content {
+    flex-grow: 1;
+    .review-top-wrap {
       display: flex;
-      .review-name {
+      justify-content: space-between;
+      align-items: center;
+
+      .review-left {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-right: 25px;
-        gap: 12px;
-        h4 {
-          font-size: 18px;
-          font-weight: 500;
-          line-height: 1;
-          margin: 0;
+        flex-direction: column;
+        .review-name {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          h4 {
+            margin: 0;
+          }
+          span {
+            font-size: 0.875rem;
+            color: #afafaf;
+            letter-spacing: 0.15em;
+          }
         }
-        span {
-          font-size: 13px;
-          color: #afafaf;
-          letter-spacing: 0.15em;
+        & > button {
+          border: none;
+          background: none;
+          &:hover {
+            color: $theme-color;
+          }
         }
       }
-      .review-rating {
-        line-height: 1;
+      .product-rating {
+        display: flex;
+        gap: 6px;
         i {
-          font-size: 12px;
-
-          margin-right: 1px;
-
-          color: #ffa900;
+          font-size: 16px;
+          &.yellow {
+            color: #ffa900;
+          }
         }
       }
-      & > button {
-        border: none;
-        background: none;
-        &:hover {
-          color: $theme-color;
-        }
+      .review-btn a {
+        font-weight: 500;
+        line-height: 1;
       }
     }
-    .review-btn a {
-      font-weight: 500;
-      line-height: 1;
+    .review-bottom {
+      margin-top: 10px;
+      p {
+        margin: 0;
+      }
     }
-  }
-  .review-bottom p {
-    width: 93%;
-    margin: 0;
   }
 }
-
 .single-review.child-review {
   margin-bottom: 0;
   margin-left: 70px;

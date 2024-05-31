@@ -7,6 +7,7 @@ import axiosInstance from "../../axiosInstance";
 import { useParams, useHistory } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import { useTranslation } from "react-i18next";
+import ProductDescriptionRating from "../../components/product/sub-components/ProductDescriptionRating";
 
 const ProductDescriptionTab = ({ spaceBottomClass }) => {
   const { id } = useParams();
@@ -126,35 +127,36 @@ const ProductDescriptionTab = ({ spaceBottomClass }) => {
               </Tab.Pane>
               <Tab.Pane eventKey="productReviews">
                 <div className="row">
-                  <div className="col-lg-7">
+                  <div className="col-lg-12">
                     {getSortedReview(product ? product.reviews : []).map(
                       (review) => (
-                        <div className="review-wrapper" key={review.id}>
-                          <div className="single-review">
-                            <div className="review-img">
-                              <img src={review.account.avatar} alt="" />
-                            </div>
-                            <div className="review-content">
-                              <div className="review-top-wrap">
-                                <div className="review-left">
-                                  <div className="review-name">
-                                    <h4>{review.account.username}</h4>
-                                    <span>
-                                      {formatReadableDate(review.createDate)}
-                                    </span>
-                                  </div>
+                        <div className="single-review" key={review.id}>
+                          <div className="review-img">
+                            <img src={review.account.avatar} alt="" />
+                          </div>
+                          <div className="review-content">
+                            <div className="review-top-wrap">
+                              <div className="review-left">
+                                <div className="review-name">
+                                  <h4>{review.account.username}</h4>
+                                  <span>
+                                    {formatReadableDate(review.createDate)}
+                                  </span>
                                 </div>
                               </div>
-                              <div className="review-bottom">
-                                <p>{review.content}</p>
-                              </div>
+                              <ProductDescriptionRating
+                                ratingValue={review.ratingValue}
+                              />
+                            </div>
+                            <div className="review-bottom">
+                              <p>{review.content}</p>
                             </div>
                           </div>
                         </div>
                       )
                     )}
                   </div>
-                  <div className="col-lg-5">
+                  {/* <div className="col-lg-5">
                     <div className="rating-form-wrapper pl-50">
                       <h3>{t("detail.add-review")}</h3>
                       <div className="rating-form">
@@ -178,7 +180,7 @@ const ProductDescriptionTab = ({ spaceBottomClass }) => {
                         </form>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </Tab.Pane>
             </Tab.Content>

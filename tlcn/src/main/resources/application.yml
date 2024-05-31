@@ -18,7 +18,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 email:
-  reset-url: http://localhost:8080/forgot-password?userName=
+  reset-url: http://localhost:3000/resetpassword/change-password?userName=
 
 application:
   version: "v1"
