@@ -36,7 +36,7 @@ const Evaluate = (props) =>{
                 <Modal.Header closeButton></Modal.Header>
 
             </Modal>
-            <div className="modal-body">
+            {/* <div className="modal-body">
                 <div>
                 <div className="row mt-4">
                     <div className="col-lg-12">
@@ -84,7 +84,7 @@ const Evaluate = (props) =>{
                 </div>
             </div>
 
-            </div>
+            </div> */}
             
         </Fragment>
     )

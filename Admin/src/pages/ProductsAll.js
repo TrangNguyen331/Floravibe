@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext} from "react";
 import PageTitle from "../components/Typography/PageTitle";
 import { Link, NavLink } from "react-router-dom";
-import { EditIcon, HomeIcon, TrashIcon, DashboardIcon } from "../icons";
+import { EditIcon, TrashIcon, DashboardIcon, UpIcon, DownIcon, SortDefaultIcon, RefreshIcon, SearchIcon } from "../icons";
 import {
   Card,
   CardBody,
@@ -20,6 +20,8 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Label, 
+  Select
 } from "@windmill/react-ui";
 import Icon from "../components/Icon";
 import EditForm from "../components/EditForm";
@@ -27,13 +29,24 @@ import { AddIcon } from "../icons";
 import "../index.css";
 import axiosInstance from "../axiosInstance";
 import { fa, tr } from "faker/lib/locales";
-import AddForm from "../components/AddForm";
+import RoundIcon from "../components/RoundIcon";
 const ProductsAll = () => {
   // Table and grid data handlling
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
+  const [productsData, setProductsData] = useState([]);
+
+  const [sortName, setSortName] = useState("default");
+  const [sortPrice, setSortPrice] = useState("default");
+  const [sortQty, setSortQty] = useState("default");
+
+  const [searchType, setSearchType] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+
   // pagination setup
-  const [resultsPerPage, setResultsPerPage] = useState(4);
+  const [resultsPerPage, setResultsPerPage] = useState(8);
   const [totalPage, setTotalPage] = useState(0);
   const [totalResults, setTotalResult] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -55,16 +68,19 @@ const ProductsAll = () => {
     stockQty: 0,
   });
 
-  // on page change, load new sliced data
-  // here you would make another server request for new data
   const fetchData = async (page) => {
     try {
       console.log("page", page);
       const response = await axiosInstance.get(
         "/api/v1/products/paging?page=" + (page - 1) + "&size=" + resultsPerPage
       );
-      console.log("Response data", response.data);
-      setData(response.data.content);
+
+      const allProductsResponse = await axiosInstance.get('/api/v1/products/paging?page=0&size=999');
+      const sortedProducts = allProductsResponse.data.content.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate)); 
+      setProductsData(sortedProducts); 
+
+      const sortedData = response.data.content.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate)); 
+      setData(sortedData);
       setPage(page);
       setTotalPage(response.data.totalPages);
       setTotalResult(response.data.totalElements);
@@ -73,15 +89,149 @@ const ProductsAll = () => {
       console.log("Fetch data error", error);
     }
   };
+
   useEffect(() => {
     fetchData(1);
-    //setData(response.slice((page - 1) * resultsPerPage, page * resultsPerPage));
   }, []);
 
+  useEffect(() => {
+    setData(productsData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+  }, [productsData, page]);
+
   async function onPageChange(p) {
-    console.log("Trigger on page change");
-    await fetchData(p);
+    setPage(p);
+    setData(productsData.slice((p - 1) * resultsPerPage, p * resultsPerPage));
   }
+  const handleSortName = () => {
+    let newProduct, sortedProducts;
+    switch (sortName) {
+      case 'default':
+        newProduct = 'asc';
+        sortedProducts = [...productsData].sort((a, b) =>
+          a.name.localeCompare(b.name));
+        break;
+      case 'asc':
+        newProduct = 'desc';
+        sortedProducts = [...productsData].sort((a, b) =>
+          b.name.localeCompare(a.name));
+        break;
+      case 'desc':
+        newProduct = 'default';
+        sortedProducts = [...productsData].sort((a, b) =>
+          new Date(b.createdDate) - new Date(a.createdDate));
+        break;
+    }
+    setSortName(newProduct);
+    setProductsData(sortedProducts);
+    setData(sortedProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+  }
+  const handleSortPrice = () => {
+    let newProduct, sortedProducts;
+    switch (sortPrice) {
+      case 'default':
+        newProduct = 'asc';
+        sortedProducts = [...productsData].sort((a, b) => a.price - b.price);
+        break;
+      case 'asc':
+        newProduct = 'desc';
+        sortedProducts = [...productsData].sort((a, b) => b.price - a.price);
+        break;
+      case 'desc':
+        newProduct = 'default';
+        sortedProducts = [...productsData].sort((a, b) =>
+          new Date(b.createdDate) - new Date(a.createdDate));
+        break;
+    }
+    setSortPrice(newProduct);
+    setProductsData(sortedProducts);
+    setData(sortedProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+  }
+  const handleSortQty = () => {
+    let newProduct, sortedProducts;
+    switch (sortQty) {
+      case 'default':
+        newProduct = 'asc';
+        sortedProducts = [...productsData].sort((a, b) => a.stockQty - b.stockQty);
+        break;
+      case 'asc':
+        newProduct = 'desc';
+        sortedProducts = [...productsData].sort((a, b) => b.stockQty - a.stockQty);
+        break;
+      case 'desc':
+        newProduct = 'default';
+        sortedProducts = [...productsData].sort((a, b) =>
+          new Date(b.createdDate) - new Date(a.createdDate));
+        break;
+    }
+    setSortQty(newProduct);
+    setProductsData(sortedProducts);
+    setData(sortedProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+  }
+  
+  const handleSearch = () => {
+    let filterProducts;
+    console.log(searchValue);
+    switch (searchType) {
+      case 'Name Of Product':
+        filterProducts = productsData.filter(product =>
+          product.name.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        break;
+      case 'Price':
+        filterProducts = productsData.filter(product =>
+          product.price >= minPrice && product.price <= maxPrice
+        );
+        break;
+      case 'Collections':
+        filterProducts = productsData.filter(product =>
+          product.collections.some(collection => 
+              collection.toLowerCase().includes(searchValue.toLowerCase())
+          )
+        );
+        break;
+      case 'Tags':
+        filterProducts = productsData.filter(product =>
+          product.tags.some(tag =>
+              tag.toLowerCase().includes(searchValue.toLowerCase())
+          )
+        );
+        break;
+      case 'Quantity':
+        switch (searchValue) {
+          case 'Out of stock':
+            filterProducts = productsData.filter(product =>
+              product.stockQty === 0
+            );
+            break;
+          case 'From 10 to 50':
+            filterProducts = productsData.filter(product =>
+              product.stockQty >= 10 && product.stockQty <= 50
+            );
+            break;
+          case 'From 51 to 100':
+            filterProducts = productsData.filter(product =>
+              product.stockQty >= 51 && product.stockQty <= 100
+            );
+            break;
+          case 'More than 100':
+            filterProducts = productsData.filter(product =>
+              product.stockQty > 100
+            );
+            break;
+          default:
+            filterProducts = [...productsData];
+        }
+        break;
+      default:
+        filterProducts = [...productsData];
+    }
+    setTotalResult(filterProducts.length);
+    setData(filterProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+  }
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchType, searchValue, page]);
 
   function formatNumberWithDecimal(number) {
     // Convert the number to a string
@@ -196,7 +346,7 @@ const ProductsAll = () => {
       </div>
 
       {/* Sort */}
-      <Card className="mt-5 mb-5 shadow-md">
+      <Card className="mt-5 mb-5 pt-3 pb-3 shadow-md shadow-md flex justify-between items-center">
         <CardBody>
           <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -206,6 +356,89 @@ const ProductsAll = () => {
             </div>
           </div>
         </CardBody>
+        <Label className="mx-0 ml-auto">
+          <Select
+            className="py-3 rounded-r-none bg-purple-200"
+            onChange={(e) => {
+              setSearchType(e.target.value);
+              setSearchValue("");
+            }}
+          >
+                <option hidden>Choose to search</option>
+                <option>Name Of Product</option>
+                {/* <option>Price</option> */}
+                <option>Collections</option>
+                <option>Tags</option>
+                <option>Quantity</option>
+          </Select>
+        </Label>
+        
+        {
+          (searchType === "Price") ? (
+            <div className="flex space-x-2">
+              <Label className="w-32">
+                <input
+                  type="number"
+                  placeholder="Min price"
+                  className="form-input"
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
+                />
+              </Label>
+              <span className="self-center">-</span>
+              <Label className="w-32">
+                <input
+                  type="number"
+                  placeholder="Max price"
+                  className="form-input"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                />
+              </Label>
+            </div>
+          ) : 
+          (searchType === "Quantity") ? (
+            <Label className="mx-0 w-70">
+              <div className="relative text-gray-500 dark:focus-within:text-purple-400">
+                <Select
+                  className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-sm w-70"
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                >
+                  <option hidden>Select a Option</option>
+                  <option>Out of stock</option>
+                  <option>From 10 to 50</option>
+                  <option>From 51 to 100</option>
+                  <option>More than 100</option>
+                </Select>
+              </div>
+            </Label>
+          ) : (
+            <Label className="mx-0 w-70">
+              <div className="relative text-gray-500 dark:focus-within:text-purple-400">
+                <input
+                  type="text"
+                  className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
+                  placeholder="Search..."
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                />
+                <div className="absolute inset-y-0 right-0 flex items-center mr-3 cursor-pointer">
+                  <SearchIcon className="w-5 h-5 text-purple-500 hover:text-red-500 transition-colors duration-200" aria-hidden="true" />
+                </div>
+              </div>
+            </Label>
+          )
+        }
+        <RoundIcon
+          icon={RefreshIcon}
+          onClick={() => {
+            setSearchType("Choose to search");
+            setSearchValue("");
+            handleSearch();
+          }}
+          className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
+        />
       </Card>
 
       {/* Product modal */}
@@ -267,9 +500,64 @@ const ProductsAll = () => {
           <Table>
             <TableHeader>
               <tr>
-                <TableCell>Name</TableCell>
+                <TableCell>
+                  <div className="flex items-center"> 
+                    Name
+                    <div className="cursor-pointer">
+                      <Icon 
+                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500" 
+                        aria-hidden="true"
+                        onClick={handleSortName} 
+                        icon={
+                          sortName === 'asc'
+                            ? UpIcon
+                            : sortName === 'desc'
+                            ? DownIcon
+                            : SortDefaultIcon
+                        }
+                      />
+                    </div>
+                  </div>
+                </TableCell> 
                 <TableCell>Description</TableCell>
-                <TableCell>Price</TableCell>
+                <TableCell>
+                  <div className="flex items-center"> 
+                    Price
+                    <div className="cursor-pointer">
+                      <Icon 
+                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500" 
+                        aria-hidden="true"
+                        onClick={handleSortPrice} 
+                        icon={
+                          sortPrice === 'asc'
+                            ? UpIcon
+                            : sortPrice === 'desc'
+                            ? DownIcon
+                            : SortDefaultIcon
+                        }
+                      />
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center"> 
+                    Quantity
+                    <div className="cursor-pointer">
+                      <Icon 
+                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500" 
+                        aria-hidden="true"
+                        onClick={handleSortQty}
+                        icon={
+                          sortQty === 'asc'
+                            ? UpIcon
+                            : sortQty === 'desc'
+                            ? DownIcon
+                            : SortDefaultIcon
+                        }
+                      />
+                    </div>
+                  </div>
+                </TableCell>
                 <TableCell>Collections</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>Action</TableCell>
@@ -309,12 +597,15 @@ const ProductsAll = () => {
                   <TableCell className="text-sm">
                     {formatNumberWithDecimal(product.price)}₫
                   </TableCell>
+                  <TableCell className={`text-sm text-center ${product.stockQty === 0 ? 'text-red-500' : ''}`}>
+                    {product.stockQty}
+                  </TableCell>
                   <TableCell className="text-sm space-x-2">
                     {product &&
                     product.collections &&
                     product.collections.length > 0
                       ? product.collections.map((collection, index) => (
-                          <Badge type="success" key={index}>
+                          <Badge className="bg-purple-100 text-purple-700" type="success" key={index}>
                             {collection}
                           </Badge>
                         ))
@@ -326,7 +617,7 @@ const ProductsAll = () => {
                           <div key={index} className="flex">
                             <span
                               className="px-2 inline-flex text-xs leading-5
-                      font-semibold rounded-full bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100 mb-2 mt-2"
+                      font-semibold rounded-full bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-blue-100 mb-2 mt-2"
                             >
                               {tag}
                             </span>
@@ -354,6 +645,8 @@ const ProductsAll = () => {
                 </TableRow>
               ))}
             </TableBody>
+            {searchValue && data.length === 0 && 
+              <p className="text-center my-4 text-purple-500">No result match</p>}
           </Table>
           <TableFooter>
             {dataLoaded && (

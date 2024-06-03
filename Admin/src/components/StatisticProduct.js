@@ -28,41 +28,41 @@ const StatisticProduct = () => {
         await fetchData(p);
     }
 
-    const fetchCompletedOrders = async () => {
+    const fetchCompletedOrdersStatistic = async () => {
         try {
-        const response = await axiosInstance.get("/api/v1/orders");
-        const completed = response.data
-            .filter((order) => order.status === "COMPLETED")
-            .map((order) => order.details.map((detail) => detail.productId)) // lấy productId từ mỗi chi tiết đơn hàng
-            .flat();
-        console.log(completed); 
-        setCompletedOrders(completed);
-        } catch (error) {
-        console.error("Error fetching completed orders: ", error);
-        }
-    };
-    const fetchQuantityCompletedOrders = async () => {
-        try {
-            const response = await axiosInstance.get("/api/v1/orders");
-            const completed = response.data
-                .filter((order) => order.status === "COMPLETED");
-            var productCounts = {};
+            const response = await axiosInstance.get('/api/v1/orders/paging?page=0&size=999');
+            const completed = response.data.content
+                             .filter(order => order.status === 'COMPLETED');
+
+            let productOrderCounts = {};
+            let productQuantityCounts = {};
             completed.forEach(order => {
-                order.details.forEach(detail => {
-                    // Nếu chưa có productId này trong productCounts, khởi tạo bằng 0
-                    if(!productCounts[detail.productId]){
-                        productCounts[detail.productId] = 0;
-                    }
-                    // Cộng số lượng sản phẩm này vào tổng
-                    productCounts[detail.productId] += detail.quantity;
-                });
+            order.details.forEach(detail => {
+                if (!productOrderCounts[detail.productId]) {
+                productOrderCounts[detail.productId] = 0;
+                }
+                if (!productQuantityCounts[detail.productId]) {
+                productQuantityCounts[detail.productId] = 0;
+                }
+                productOrderCounts[detail.productId]++;
+                productQuantityCounts[detail.productId] += detail.quantity;
             });
-            console.log(productCounts);
-            setQuantityCompletedOrders(productCounts);
-        } catch (error) {
-            console.error("Error fetching completed orders: ", error);
-        }
+        });
+
+        setData(prevData => ({
+            ...prevData,
+            statisticOrder: productOrderCounts,
+            statisticProduct: productQuantityCounts,
+        }));
+    } catch (error) {
+        console.error('Error fetching completed orders statistic: ', error);
+    }
     };
+
+    useEffect(() => {
+        fetchData(1);
+        fetchCompletedOrdersStatistic();
+    }, []);
 
     const fetchData = async (page) => {
         try {
@@ -81,37 +81,6 @@ const StatisticProduct = () => {
         console.error("Error fetching data: ", error);
         }
     };
-
-    useEffect(() => {
-        fetchData(1);
-        fetchCompletedOrders();
-        fetchQuantityCompletedOrders();
-    }, []);
-
-    useEffect(() => {
-        if (completedOrders.length > 0) {
-            let productStatistics = {};
-            completedOrders.forEach((productId) => {
-                if (!productStatistics[productId]) {
-                    productStatistics[productId] = 0;
-                }
-                productStatistics[productId]++;
-            });
-            setData((prevData) => ({
-                ...prevData,
-                statisticOrder: productStatistics,
-            }));
-        }
-    }, [completedOrders]);
-
-    useEffect(() => {
-        if (Object.keys(quantityCompletedOrders).length > 0) {
-            setData((prevData) => ({
-                ...prevData,
-                statisticProduct: quantityCompletedOrders,
-            }));
-        }
-    }, [quantityCompletedOrders]);
 
     return(
         <div>

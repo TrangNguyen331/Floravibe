@@ -5,8 +5,9 @@ import ChartCard from "../components/Chart/ChartCard";
 import { Doughnut, Line } from "react-chartjs-2";
 import ChartLegend from "../components/Chart/ChartLegend";
 import PageTitle from "../components/Typography/PageTitle";
-import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon, TruckIcon, CheckIcon, CancelIcon } from "../icons";
+import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon, TruckIcon, CheckIcon, CancelIcon, RefreshIcon } from "../icons";
 import RoundIcon from "../components/RoundIcon";
+import { Card, CardBody, Label, Select } from "@windmill/react-ui";
 
 import {
   doughnutOptions,
@@ -46,9 +47,26 @@ function Dashboard() {
       isMounted = false;
     };
   }, []);
-  const handleClickIcon = (filter_name) => {
+  const [filter, setFilter] = useState("");
 
-  }
+  const handleFilter = (filter_name) => {
+    // console.log(filter_name);
+    if (filter_name === "All") {
+      setFilter("");
+    }
+    if (filter_name === "In-Request Orders") {
+      setFilter("IN_REQUEST");
+    }
+    if (filter_name === "In-Processing Orders") {
+      setFilter("IN_PROCESSING");
+    }
+    if (filter_name === "Cancel Orders") {
+      setFilter("CANCEL");
+    }
+    if (filter_name === "Completed Orders") {
+      setFilter("COMPLETED");
+    }
+  };
 
   return (
     <>
@@ -58,53 +76,53 @@ function Dashboard() {
 
       {/* <!-- Cards --> */}
       <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-        <InfoCard title="New Orders" value={dashboard.totalNewOrder || "0"}>
+        <InfoCard title="New Orders" onClick={() => setFilter("IN_REQUEST")} value={dashboard.totalNewOrder || "0"} >
           <RoundIcon
             icon={CartIcon}
             iconColorClass="text-orange-500 dark:text-orange-100"
             bgColorClass="bg-orange-100 dark:bg-orange-500"
-            className="mr-4"
-            onClick={() => handleClickIcon('new')}
+            className="mr-4 cursor-pointer"
           />
         </InfoCard>
 
-        <InfoCard title="Shipping Orders" value={dashboard.totalShippingOrder || "0"}>
+        <InfoCard title="Shipping Orders" onClick={() => setFilter("IN_PROCESSING")} value={dashboard.totalShippingOrder || "0"}>
           <RoundIcon
             icon={TruckIcon}
             iconColorClass="text-pink-500 dark:text-pink-100"
             bgColorClass="bg-pink-100 dark:bg-pink-500"
-            className="mr-4"
+            className="mr-4 cursor-pointer"
           />
         </InfoCard>
 
-        <InfoCard title="Complete Orders" value={dashboard.totalCompleteOrder || "0"}>
+        <InfoCard title="Completed Orders" onClick={() => setFilter("COMPLETED")}  value={dashboard.totalCompleteOrder || "0"}>
           <RoundIcon
             icon={CheckIcon}
             iconColorClass="text-green-500 dark:text-green-100"
             bgColorClass="bg-green-100 dark:bg-green-500"
-            className="mr-4"
+            className="mr-4 cursor-pointer"
           />
         </InfoCard>
 
-        <InfoCard title="Cancel Orders" value={dashboard.totalCancelOrder || "0"}>
+        <InfoCard title="Cancel Orders" onClick={() => setFilter("CANCEL")}  value={dashboard.totalCancelOrder || "0"}>
           <RoundIcon
             icon={CancelIcon}
             iconColorClass="text-gray-500 dark:text-gray-100"
             bgColorClass="bg-gray-100 dark:bg-gray-500"
-            className="mr-4"
+            className="mr-4 cursor-pointer"
           />
         </InfoCard>
 
-        <InfoCard title="Total Customers" value={dashboard.totalCustomer || "0"}>
+        <InfoCard disableHover title="Total Customers" value={dashboard.totalCustomer || "0"}>
           <RoundIcon
             icon={PeopleIcon}
             iconColorClass="text-blue-500 dark:text-blue-100"
             bgColorClass="bg-blue-100 dark:bg-blue-500"
-            className="mr-4"
+            className="totalCustomer mr-4"
           />
         </InfoCard>
 
         <InfoCard
+          disableHover
           title="Total Income"
           value={
             (dashboard.totalIncome &&
@@ -116,7 +134,7 @@ function Dashboard() {
             icon={MoneyIcon}
             iconColorClass="text-purple-500 dark:text-purple-100"
             bgColorClass="bg-purple-100 dark:bg-purple-500"
-            className="mr-4"
+            className="totalIncome mr-4"
           />
         </InfoCard>
       </div>
@@ -133,7 +151,34 @@ function Dashboard() {
         </ChartCard>
       </div> */}
       <PageTitle>Orders</PageTitle>
-      <OrdersTable resultsPerPage={5} filter={""} />
+      <Card className="mt-2 mb-5 shadow-md flex justify-between items-center">
+        <CardBody>
+          <div className="flex items-center">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Filter Orders
+            </p>
+
+            <Label className="mx-3">
+              <Select
+                className="py-3"
+                onChange={(e) => handleFilter(e.target.value)}
+              >
+                <option>All</option>
+                <option>In-Request Orders</option>
+                <option>In-Processing Orders</option>
+                <option>Cancel Orders</option>
+                <option>Completed Orders</option>
+              </Select>
+            </Label>
+          </div>
+        </CardBody>
+        <RoundIcon
+          icon={RefreshIcon}
+          onClick={() => setFilter("")}
+          className="pr-3 mr-6 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
+        />
+      </Card>
+      <OrdersTable resultsPerPage={5} filter={filter} />
 
       <PageTitle>Statistic Product</PageTitle>
       <StatisticProduct/>

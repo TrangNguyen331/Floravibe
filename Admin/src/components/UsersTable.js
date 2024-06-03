@@ -209,9 +209,22 @@ const UsersTable = () => {
                 <TableCell>
                   <span className="text-base">{user.email}</span>
                 </TableCell>
-                <TableCell className="space-x-2">
+                {/* <TableCell className="space-x-2">
                   {user.roles.map((role, index) => (
                     <Badge type="success" key={index}>
+                      {role}
+                    </Badge>
+                  ))}
+                </TableCell> */}
+                <TableCell className="space-x-2">
+                  {user.roles.map((role, index) => (
+                    <Badge
+                      className={role == 'ROLE_USER'
+                        ? 'bg-purple-100 text-purple-700'
+                        : role == 'ROLE_ADMIN'
+                        ? 'bg-pink-100 text-pink-700'
+                        : ''}
+                      key={index}>
                       {role}
                     </Badge>
                   ))}

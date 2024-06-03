@@ -43,6 +43,10 @@ import { ReactComponent as BlogIcon} from "./blog.svg";
 import { ReactComponent as CheckIcon} from "./check.svg";
 import { ReactComponent as CancelIcon} from "./cancel.svg";
 import { ReactComponent as DashboardIcon} from "./dashboard.svg";
+import { ReactComponent as RefreshIcon} from "./refresh.svg";
+import { ReactComponent as DownIcon} from "./arrow-down.svg";
+import { ReactComponent as UpIcon} from "./arrow-up.svg";
+import { ReactComponent as SortDefaultIcon} from "./sort-default.svg";
 export {
   GroupIcon,
   UserIcon,
@@ -89,4 +93,8 @@ export {
   OutlineCogIcon,
   OutlineLogoutIcon,
   VoucherICon,
+  RefreshIcon,
+  UpIcon,
+  DownIcon,
+  SortDefaultIcon
 };

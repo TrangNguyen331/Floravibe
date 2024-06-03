@@ -668,7 +668,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                             return (
                               <li key={key}>
                                 <span className="order-middle-left">
-                                  {cartItem.name} X {cartItem.quantity}
+                                  {cartItem.name} x {cartItem.quantity}
                                 </span>{" "}
                                 <span className="order-price">
                                   {/* {discountedPrice !== null

@@ -27,6 +27,7 @@
         "product-name":"Tên Sản Phẩm",
         "unit-price": "Đơn Giá",
         "qty": "Số Lượng",
+        "stockQty": "Số Lượng Trong Kho",
         "subtotal": "Tổng Cộng"
     },
     "complete": {

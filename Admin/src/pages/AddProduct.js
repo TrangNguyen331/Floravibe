@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Icon from "../components/Icon";
 import PageTitle from "../components/Typography/PageTitle";
-import { HomeIcon, AddIcon, PublishIcon, StoreIcon, DashboardIcon } from "../icons";
+import { HomeIcon, AddIcon, PublishIcon, StoreIcon, DashboardIcon, TrashIcon } from "../icons";
 import { TagsInput } from "react-tag-input-component";
 import axiosInstance from "../axiosInstance";
 import axiosImgBB from "../axiosImgBB";
@@ -179,7 +179,7 @@ const AddProduct = () => {
           </NavLink>
         </div>
         {">"}
-        <p className="mx-2">Add new Product</p>
+        <p className="mx-2">Add New Product</p>
       </div>
 
       <div className="w-full mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">

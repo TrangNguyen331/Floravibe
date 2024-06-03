@@ -1,9 +1,13 @@
 import React from 'react'
 import { Card, CardBody } from '@windmill/react-ui'
+import classNames from 'classnames';
 
-function InfoCard({ title, value, children: icon }) {
+function InfoCard({ title, value, onClick, disableHover, children: icon }) {
+  const cardClass = classNames({
+    'hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer': !disableHover
+  });
   return (
-    <Card>
+    <Card onClick={onClick} className={cardClass}>
       <CardBody className="flex items-center">
         {icon}
         <div>
