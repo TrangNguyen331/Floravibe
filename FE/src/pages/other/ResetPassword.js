@@ -141,7 +141,23 @@ const ResetPassword = ({ location }) => {
                       </span>
                     </div>
                     <div className="reset-btn">
-                      <button onClick={handleResetPassword}>Reset</button>
+                      <button
+                        onClick={handleResetPassword}
+                        disabled={isLoading}
+                      >
+                        {isLoading ? (
+                          <div className="loading-send">
+                            <span
+                              className="spinner-border spinner-border-sm"
+                              role="status"
+                              aria-hidden="true"
+                            ></span>
+                            Reset
+                          </div>
+                        ) : (
+                          "Reset"
+                        )}
+                      </button>
                     </div>
                   </div>
                 )}

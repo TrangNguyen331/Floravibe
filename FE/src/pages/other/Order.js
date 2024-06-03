@@ -79,6 +79,12 @@ const Order = ({ location, cartItems, currency }) => {
                                 {t("detail.date")}{" "}
                                 {formatReadableDate(order.createdDate)}
                               </p>
+                              {order.status === "CANCEL" && (
+                                <p className="order-datetime">
+                                  {t("detail.cancel-time")}{" "}
+                                  {formatReadableDate(order.cancelDate)}
+                                </p>
+                              )}
                             </div>
                           </li>
 
@@ -143,6 +149,12 @@ const Order = ({ location, cartItems, currency }) => {
                               Your delivery date
                             </span>
                             <span>{order.deliveryDate}</span>
+                          </li>
+                          <li>
+                            <span className="order-bottom-left">
+                              Your delivery time
+                            </span>
+                            <span>{order.deliveryTime}</span>
                           </li>
                         </ul>
                       </div>

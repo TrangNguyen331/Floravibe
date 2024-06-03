@@ -33,7 +33,7 @@ const ProductAverageRating = ({ product }) => {
   return (
     <div>
       <p>
-        {stars} {formattedAverageRating}
+        {stars} {formattedAverageRating} ({numberOfReviews} reviews)
       </p>
     </div>
   );

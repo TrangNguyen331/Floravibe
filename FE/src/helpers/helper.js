@@ -15,6 +15,10 @@ export const filterOrderByStatus = (orders, status) => {
         return [...orders]
           .filter((x) => x.status === "COMPLETED")
           .sort((a, b) => a.createdDate - b.createdDate);
+      case "Canceled":
+        return [...orders]
+          .filter((x) => x.status === "CANCEL")
+          .sort((a, b) => a.createdDate - b.createdDate);
       default:
         return [...orders].sort((a, b) => a.createdDate - b.createdDate);
     }
@@ -31,6 +35,8 @@ export const getStatus = (key) => {
       return "Processing";
     case "COMPLETED":
       return "COMPLETED";
+    case "CANCEL":
+      return "CANCELED";
     default:
       return "";
   }

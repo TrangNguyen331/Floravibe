@@ -69,7 +69,7 @@ const Evaluate = (props) => {
           body
         );
       }
-      fecthOrder();
+      props.fetchData();
       addToast("Post review success", {
         appearance: "success",
         autoDismiss: true,
@@ -182,6 +182,7 @@ Evaluate.propTypes = {
   onHide: PropTypes.func,
   show: PropTypes.bool,
   orderId: PropTypes.string,
+  fetchData: PropTypes.func,
   //   product: PropTypes.object,
 };
 export default Evaluate;

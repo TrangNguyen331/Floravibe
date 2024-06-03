@@ -13,7 +13,6 @@ import {
   formatReadableDate,
   getStatus,
 } from "../../helpers/helper";
-import { useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import Evaluate from "./Evaluate";
 import EditReview from "./EditReview";
@@ -22,7 +21,6 @@ const MyOrders = ({ location }) => {
   const token = useSelector((state) => state.auth.token);
   const [orders, setOrders] = useState([]);
   const [orderId, setOrderId] = useState(null);
-  // const [order, setOrder] = useState(null);
   const [loadingGet, setLoadingGet] = useState(false);
   const [currentFilterOrder, setCurrentOrderFilter] = useState([]);
   const [modalShow, setModalShow] = useState(false);
@@ -61,6 +59,12 @@ const MyOrders = ({ location }) => {
     setOrderId(orderId);
     console.log(orderId);
     setIsEdit(true);
+  };
+  const clickCancel = async (orderId) => {
+    try {
+      await axiosInstance.put(`api/v1/orders/${orderId}/cancel`);
+      fetchData();
+    } catch (error) {}
   };
   useEffect(() => {
     fetchData();
@@ -122,6 +126,14 @@ const MyOrders = ({ location }) => {
                           <h4>{t("list.complete")}</h4>
                         </Nav.Link>
                       </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link
+                          eventKey="canceled"
+                          onSelect={() => filterOrder("Canceled")}
+                        >
+                          <h4>{t("list.canceled")}</h4>
+                        </Nav.Link>
+                      </Nav.Item>
                     </Nav>
                     <Tab.Content>
                       <Tab.Pane eventKey="all">
@@ -160,6 +172,8 @@ const MyOrders = ({ location }) => {
                                             t("list.process")}
                                           {order.status === "COMPLETED" &&
                                             t("list.complete")}
+                                          {order.status === "CANCEL" &&
+                                            t("list.canceled")}
                                         </li>
                                       </ul>
                                     </div>
@@ -197,7 +211,13 @@ const MyOrders = ({ location }) => {
                                     </div>
                                   </div>
                                   <div className="order-details-link">
-                                    {order.rated ? (
+                                    {order.status === "IN_REQUEST" ? (
+                                      <button
+                                        onClick={() => clickCancel(order.id)}
+                                      >
+                                        Cancel
+                                      </button>
+                                    ) : order.rated ? (
                                       <button
                                         onClick={() => clickRated(order.id)}
                                       >
@@ -304,6 +324,13 @@ const MyOrders = ({ location }) => {
                                     </div>
                                   </div>
                                   <div className="order-details-link">
+                                    {order.status === "IN_REQUEST" && (
+                                      <button
+                                        onClick={() => clickCancel(order.id)}
+                                      >
+                                        Cancel
+                                      </button>
+                                    )}
                                     <Link
                                       to={
                                         process.env.PUBLIC_URL +
@@ -535,6 +562,97 @@ const MyOrders = ({ location }) => {
                           </div>
                         )}
                       </Tab.Pane>
+                      <Tab.Pane eventKey="canceled">
+                        {currentFilterOrder.length > 0 ? (
+                          getSortedOrder(currentFilterOrder).map((order) => (
+                            <div className="row" key={order.id}>
+                              <div className="col-lg-12">
+                                <div className="order-wrap">
+                                  <div className="order-product-info">
+                                    <div className="order-top">
+                                      <ul>
+                                        <li>
+                                          <div className="order-id-date">
+                                            <p>
+                                              {t("detail.id")} {order.id}
+                                            </p>
+                                            <p className="order-datetime">
+                                              {t("detail.date")}{" "}
+                                              {formatReadableDate(
+                                                order.createdDate
+                                              )}
+                                            </p>
+                                          </div>
+                                        </li>
+                                        <li className="order-status">
+                                          {/* {getStatus(order.status)} */}
+                                          {order.status === "CANCEL" &&
+                                            t("list.canceled")}
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    <div className="order-middle">
+                                      <ul>
+                                        {order.details.map((detail) => (
+                                          <li key={detail.productId}>
+                                            <span className="order-middle-left">
+                                              {detail.product.name} x{" "}
+                                              {detail.quantity}
+                                            </span>
+                                            <span className="order-price">
+                                              {detail.subtotal.toLocaleString(
+                                                "vi-VN"
+                                              )}
+                                              ₫
+                                            </span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                    <div className="order-total-wrap">
+                                      <ul>
+                                        <li className="order-total">
+                                          {t("detail.total")}
+                                        </li>
+                                        <li>
+                                          {order.total.toLocaleString("vi-VN")}₫
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                  <div className="order-details-link">
+                                    <Link
+                                      to={
+                                        process.env.PUBLIC_URL +
+                                        "/order/" +
+                                        order.id
+                                      }
+                                    >
+                                      {t("list.view-details")}{" "}
+                                      <i className="fa fa-long-arrow-right"></i>
+                                    </Link>
+                                  </div>
+                                  <div className="payment-method"></div>
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="row">
+                            <div className="col-lg-12">
+                              <div className="item-empty-area text-center">
+                                <div className="item-empty-area__icon mb-30">
+                                  <i className="fa fa-file-text-o"></i>
+                                </div>
+                                <div className="item-empty-area__text">
+                                  {t("list.no-order")}
+                                  <br />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </Tab.Pane>
                     </Tab.Content>
                   </Tab.Container>
                 </div>
@@ -547,6 +665,7 @@ const MyOrders = ({ location }) => {
         show={modalShow}
         onHide={() => setModalShow(false)}
         orderId={orderId}
+        fetchData={fetchData}
       />
       <EditReview
         show={isEdit}

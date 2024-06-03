@@ -17,9 +17,7 @@ public class Collection {
     @Id
     public String id;
     public String name;
-//    public String image;
-    public String title;
-    public String description;
+//    public String description;
 //    @DBRef
 //    public List<Product> products;
 }

@@ -30,6 +30,7 @@ const Checkout = ({ location, cartItems, currency }) => {
 
   const [voucherDiscount, setVoucherDiscount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingPlaceOrder, setIsLoadingPlaceOrder] = useState(false);
   const [isError, setIsError] = useState(false);
   const [submitData, setSubmitData] = useState({
     firstName: "",
@@ -157,6 +158,7 @@ const Checkout = ({ location, cartItems, currency }) => {
 
   const placeOrder = async () => {
     if (token) {
+      setIsLoadingPlaceOrder(true);
       const totalValue = cartItems.reduce(
         (sum, item) => sum + item.quantity * item.price,
         0
@@ -241,12 +243,13 @@ const Checkout = ({ location, cartItems, currency }) => {
             ? totalValue - firstDiscount - voucherDiscount
             : totalValue - voucherDiscount,
         status: "IN_REQUEST",
-        methodPaid: "CASH",
-        paid: false,
+        methodPaid: paymentMethod,
       };
 
       try {
-        await axiosInstance.post("/api/v1/orders", body);
+        // await axiosInstance.post("/api/v1/orders", body);
+        const response = await axiosInstance.post("/api/v1/orders", body);
+        console.log(response);
 
         if (selectedVoucher) {
           const quantity =
@@ -274,7 +277,13 @@ const Checkout = ({ location, cartItems, currency }) => {
         });
         getAllOrders();
         dispatch(deleteAllFromCart(addToast));
-        history.push(process.env.PUBLIC_URL + "/order-thankyou");
+        setIsLoadingPlaceOrder(false);
+        // Check if the payment method is VNPAY and if paymentLink is returned
+        if (paymentMethod === "VNPAY" && response.data.paymentLink) {
+          window.location.href = response.data.paymentLink;
+        } else {
+          history.push(process.env.PUBLIC_URL + "/order-thankyou");
+        }
       } catch (error) {
         addToast(t("notice.fail-create-order"), {
           appearance: "error",
@@ -752,7 +761,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                         />
                         <span>{t("form.cash")}</span>
                       </div>
-                      {/* <div>
+                      <div>
                         <input
                           type="radio"
                           value="VNPAY"
@@ -761,33 +770,32 @@ const Checkout = ({ location, cartItems, currency }) => {
                           className="radio-input"
                         />
                         <span>VNPay</span>
-                      </div> */}
+                      </div>
                     </div>
                   </div>
                   <div className="place-order mt-25">
                     <button
                       className="btn-hover"
                       onClick={() => clickPlaceOrder()}
+                      disabled={isLoadingPlaceOrder}
                     >
-                      {t("form.place-order")}
+                      {isLoading ? (
+                        <div className="loading-send">
+                          <span
+                            className="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                          {t("form.place-order")}
+                        </div>
+                      ) : (
+                        t("form.place-order")
+                      )}
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-            {/* <div className="row">
-              <div className="col-lg-12">
-                <div className="item-empty-area text-center">
-                  <div className="item-empty-area__icon mb-30">
-                    <i className="pe-7s-cash"></i>
-                  </div>
-                  <div className="item-empty-area__text">
-                    No items found in cart to checkout <br />
-                    <Link to={process.env.PUBLIC_URL + "/shop"}>Shop Now</Link>
-                  </div>
-                </div>
-              </div>
-            </div> */}
           </div>
         </div>
       </LayoutOne>

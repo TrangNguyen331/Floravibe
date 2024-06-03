@@ -60,7 +60,6 @@ const ShopGridStandard = ({ location }) => {
   const fetchDataAndProcess = async (page, search) => {
     try {
       const response = await fetchDataProduct(0, search);
-
       const products = response.content.map(
         (item) =>
           new ProductModel(

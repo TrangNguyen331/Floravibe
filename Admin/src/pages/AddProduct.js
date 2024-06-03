@@ -2,13 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Icon from "../components/Icon";
 import PageTitle from "../components/Typography/PageTitle";
-import {
-  AddIcon,
-  PublishIcon,
-  StoreIcon,
-  TrashIcon,
-  DashboardIcon,
-} from "../icons";
+import { AddIcon, TrashIcon, DashboardIcon } from "../icons";
 import { TagsInput } from "react-tag-input-component";
 import axiosInstance from "../axiosInstance";
 import axiosImgBB from "../axiosImgBB";
@@ -23,9 +17,11 @@ import {
   Textarea,
   Button,
 } from "@windmill/react-ui";
+import Select, { createFilter } from "react-select";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "../index.css";
+import CustomOption from "../components/CustomOption";
 const FormTitle = ({ children }) => {
   return (
     <h2 className="mb-3 text-sm font-semibold text-gray-600 dark:text-gray-300">
@@ -36,7 +32,11 @@ const FormTitle = ({ children }) => {
 
 const AddProduct = () => {
   const [loadingImg, setLoadingImg] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const { addToast } = useToasts();
+  const [collections, setCollections] = useState([]);
+  const [allTags, setAllTags] = useState([]);
+  const [tagLoaded, setTagLoaded] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState({
     id: "",
     name: "",
@@ -48,6 +48,24 @@ const AddProduct = () => {
     images: [],
     collections: [],
   });
+  const fetchCollections = async () => {
+    try {
+      const response = await axiosInstance.get("/api/v1/collections/all");
+      setCollections(response.data);
+      setDataLoaded(true);
+    } catch (error) {
+      console.log("Fetch data error", error);
+    }
+  };
+  const fetchTags = async () => {
+    try {
+      const response = await axiosInstance.get("/api/v1/tags/all");
+      setAllTags(response.data);
+      setTagLoaded(true);
+    } catch (error) {
+      console.log("Fetch data error", error);
+    }
+  };
   const handleProductChange = (property, value) => {
     setSelectedProduct((prevProduct) => ({
       ...prevProduct,
@@ -58,7 +76,6 @@ const AddProduct = () => {
   const handleAdditionalInfoChange = (e, editor) => {
     const data = editor.getData();
     handleProductChange("additionalInformation", data);
-    console.log(data);
   };
   const handleImageChange = (e) => {
     const files = e.target.files;
@@ -68,7 +85,6 @@ const AddProduct = () => {
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
     }
-
     axiosInstance
       .post("/api/v1/files", formData, {
         headers: {
@@ -123,7 +139,6 @@ const AddProduct = () => {
               setLoadingImg(false);
             }
           });
-        console.log(imgUrls);
       } catch (error) {
         console.error("Error uploading image:", error);
       }
@@ -151,9 +166,9 @@ const AddProduct = () => {
       additionalInformation: selectedProduct.additionalInformation,
       price: selectedProduct.price,
       stockQty: selectedProduct.stockQty,
-      tags: selectedProduct.tags,
+      tags: selectedProduct.tags.map((item) => item.value),
       images: selectedProduct.images,
-      collections: selectedProduct.collections,
+      collections: selectedProduct.collections.map((item) => item.value),
     };
     try {
       await axiosInstance.post("/api/v1/products", body);
@@ -172,6 +187,10 @@ const AddProduct = () => {
       collections: [],
     });
   };
+  useEffect(() => {
+    fetchCollections();
+    fetchTags();
+  }, []);
   return (
     <div>
       <PageTitle>Add New Product</PageTitle>
@@ -188,7 +207,7 @@ const AddProduct = () => {
         <p className="mx-2">Add new Product</p>
       </div>
 
-      <div className="w-full mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="w-full my-8 grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="md:col-span-1">
           <CardBody>
             <div className="grid gap-4 mb-4 grid-cols-2">
@@ -197,7 +216,7 @@ const AddProduct = () => {
                 <Label>
                   <Input
                     type="text"
-                    placeholder="Type product name here"
+                    placeholder="Enter product name"
                     className="mt-2 bg-transparent border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     value={selectedProduct.name}
                     onChange={(e) =>
@@ -223,28 +242,80 @@ const AddProduct = () => {
                 </Label>
               </div>
             </div>
-            <div className="grid gap-4 grid-cols-2">
-              <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
-                <FormTitle>Product Collection</FormTitle>
-                <TagsInput
-                  type="text"
-                  className="mt-2 bg-transparent border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder="Enter product collection"
-                  value={selectedProduct.collections || []}
-                  onChange={(value) =>
-                    handleProductChange("collections", value)
-                  }
-                />
-              </div>
-              <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
-                <FormTitle>Product Tag</FormTitle>
-                <TagsInput
-                  classNames="mt-2"
-                  placeholder="Add tags (press Enter to add)"
-                  value={selectedProduct.tags || []}
-                  onChange={(value) => handleProductChange("tags", value)}
-                />
-              </div>
+
+            <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
+              <FormTitle>Product Collection</FormTitle>
+              <Select
+                isMulti
+                className="custom-select"
+                components={{ Option: CustomOption }}
+                styles={{
+                  multiValue: (base) => ({
+                    ...base,
+                    backgroundColor: "rgba(126, 58, 242, 1)",
+                    color: "#ffffff",
+                  }),
+                  multiValueLabel: (base) => ({
+                    ...base,
+                    color: "#ffffff",
+                  }),
+                }}
+                placeholder="Enter product collection"
+                filterOption={createFilter({ ignoreAccents: false })}
+                closeMenuOnSelect={false}
+                options={
+                  dataLoaded && collections
+                    ? collections.map((collection) => ({
+                        value: collection.name,
+                        label: collection.name,
+                      }))
+                    : []
+                }
+                value={selectedProduct.collections}
+                onChange={(value) => handleProductChange("collections", value)}
+              />
+            </div>
+            <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
+              <FormTitle>Product Tag</FormTitle>
+              {/* <TagsInput
+                classNames="mt-2"
+                placeholder="Add tags (press Enter to add)"
+                value={selectedProduct.tags || []}
+                onChange={(value) => handleProductChange("tags", value)}
+              /> */}
+              <Select
+                isMulti
+                className="custom-select"
+                components={{ Option: CustomOption }}
+                styles={{
+                  menu: (base) => ({
+                    ...base,
+                    zIndex: 2,
+                  }),
+                  multiValue: (base) => ({
+                    ...base,
+                    backgroundColor: "rgba(126, 58, 242, 1)",
+                    color: "#ffffff",
+                  }),
+                  multiValueLabel: (base) => ({
+                    ...base,
+                    color: "#ffffff",
+                  }),
+                }}
+                placeholder="Enter product tag"
+                filterOption={createFilter({ ignoreAccents: false })}
+                closeMenuOnSelect={false}
+                options={
+                  tagLoaded && allTags
+                    ? allTags.map((tag) => ({
+                        value: tag.name,
+                        label: tag.name,
+                      }))
+                    : []
+                }
+                value={selectedProduct.tags}
+                onChange={(value) => handleProductChange("tags", value)}
+              />
             </div>
             <div className="mb-4">
               <FormTitle>Description</FormTitle>

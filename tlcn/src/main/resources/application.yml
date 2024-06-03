@@ -28,3 +28,13 @@ application:
       size: 20
 upload:
   directory: C:\Users\DELL\Practice\React\Floravibe\tlcn\src\main\resources\uploads
+
+vnpay:
+  vnp_TmnCode: U39O3AW8
+  vnp_HashSecret: VQ4QLLP1FBOFC2X70CQJ9FE4234WKJ9B
+  vnp_Url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html\
+  vnp_RetUrl: http://localhost:3000/vnpay-return
+
+logback:
+  access:
+    enabled: false
