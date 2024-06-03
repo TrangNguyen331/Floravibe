@@ -49,7 +49,7 @@ function SidebarContent() {
 
         <hr className="customeDivider mx-4 my-5" />
 
-        {routes.slice(-3).map((route) => (
+        {routes.slice(-4).map((route) => (
           <li className="relative px-6 py-3" key={route.name}>
             <NavLink
               exact

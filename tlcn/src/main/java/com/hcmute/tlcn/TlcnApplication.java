@@ -2,8 +2,12 @@ package com.hcmute.tlcn;
 
 import com.hcmute.tlcn.config.FileStorageProperties;
 import com.hcmute.tlcn.entities.Account;
+import com.hcmute.tlcn.entities.Collection;
+import com.hcmute.tlcn.entities.Tag;
 import com.hcmute.tlcn.entities.Voucher;
 import com.hcmute.tlcn.repositories.AccountRepository;
+import com.hcmute.tlcn.repositories.CollectionRepository;
+import com.hcmute.tlcn.repositories.TagRepository;
 import com.hcmute.tlcn.repositories.VoucherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -37,6 +41,10 @@ public class TlcnApplication implements CommandLineRunner {
     private AccountRepository repository;
     @Autowired
     private VoucherRepository voucherRepository;
+    @Autowired
+    private CollectionRepository collectionRepository;
+    @Autowired
+    private TagRepository tagRepository;
     @Override
     public void run(String... args) throws Exception {
         Optional<Account> newAccount= repository.findByUsername("hanhnguyen237");
@@ -79,6 +87,14 @@ public class TlcnApplication implements CommandLineRunner {
 
             voucherRepository.saveAll(Arrays.asList(voucher1, voucher2));
         }
+
+
+//            Tag tag = new Tag();
+//            tag.setName("Purple");
+//            tagRepository.save(tag);
+
+
+
     }
 
 

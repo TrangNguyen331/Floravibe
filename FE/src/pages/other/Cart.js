@@ -35,7 +35,7 @@ const Cart = ({
     0
   );
   const { t } = useTranslation(["orders", "breacrumb"]);
-  const [productStock, setProductStock] = useState(null);
+  const [productStock, setProductStock] = useState({});
   const [products, setProducts] = useState([]);
   const [alreadyGet, setAlreadyGet] = useState(false);
   const fetchProducts = async () => {
@@ -55,16 +55,14 @@ const Cart = ({
   }, []);
   useEffect(() => {
     if (alreadyGet) {
-      // Find the product in products array and set its stockQty to productStock
-      const result = products.some((item) =>
-        cartItems.some((cartItem) => cartItem.id === item.id)
-      )
-        ? products.find((item) =>
-            cartItems.some((cartItem) => cartItem.id === item.id)
-          ).stockQty
-        : null;
-
-      setProductStock(result);
+      const stockInfo = {};
+      cartItems.forEach((cartItem) => {
+        const product = products.find((item) => item.id === cartItem.id);
+        if (product) {
+          stockInfo[cartItem.id] = product.stockQty;
+        }
+      });
+      setProductStock(stockInfo);
     }
   }, [alreadyGet, cartItems, products]);
   return (
@@ -205,6 +203,10 @@ const Cart = ({
                                     <button
                                       className="inc qtybutton"
                                       onClick={() => {
+                                        console.log(
+                                          "stock",
+                                          productStock[cartItem.id]
+                                        );
                                         addToCart(
                                           cartItem,
                                           addToast,
@@ -212,7 +214,8 @@ const Cart = ({
                                         );
                                       }}
                                       disabled={
-                                        cartItem.quantity === productStock
+                                        cartItem.quantity ===
+                                        productStock[cartItem.id]
                                       }
                                     >
                                       +

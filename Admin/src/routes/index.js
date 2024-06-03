@@ -14,6 +14,7 @@ const SingleBlog = lazy(() => import("../pages/SingleBlog"));
 const Page404 = lazy(() => import("../pages/404"));
 const Blank = lazy(() => import("../pages/Blank"));
 const Vouchers = lazy(() => import("../pages/Vouchers"));
+const Collection = lazy(() => import("../pages/Collection"));
 
 /**
  * ⚠ These are internal routes!
@@ -53,6 +54,10 @@ const routes = [
   {
     path: "/vouchers",
     component: Vouchers,
+  },
+  {
+    path: "/collections/all",
+    component: Collection,
   },
   {
     path: "/chats",

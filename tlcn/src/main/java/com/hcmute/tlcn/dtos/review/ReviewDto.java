@@ -14,4 +14,5 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReviewDto {
     public String content;
+    public int ratingValue;
 }

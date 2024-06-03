@@ -14,7 +14,6 @@ const Order = ({ location, cartItems, currency }) => {
   const [order, setOrder] = useState(null);
   const [orders, setOrders] = useState([]);
   const { id } = useParams();
-  console.log(id);
   let cartTotalPrice = 0;
 
   useEffect(() => {
@@ -44,17 +43,21 @@ const Order = ({ location, cartItems, currency }) => {
     }
   };
   const isFirstOrder = orders.length > 0 && orders[0].id === order.id;
-  const {t} = useTranslation(['orders','breadcrumb']);
+  const { t } = useTranslation(["orders", "breadcrumb"]);
 
   return !order ? (
     ""
   ) : (
     <Fragment>
       <MetaTags>
-        <title>Floravibe | {t('breadcrumb:order-details')}</title>
+        <title>Floravibe | {t("breadcrumb:order-details")}</title>
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/my-order"}>{t('breadcrumb:back')}</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('breadcrumb:order-details')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/my-order"}>
+        {t("breadcrumb:back")}
+      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
+        {t("breadcrumb:order-details")}
+      </BreadcrumbsItem>
 
       <LayoutOne headerTop="visible">
         <Breadcrumb />
@@ -69,11 +72,19 @@ const Order = ({ location, cartItems, currency }) => {
                         <ul>
                           <li>
                             <div className="order-id-date">
-                              <p>{t('detail.id')} {order.id} </p>
+                              <p>
+                                {t("detail.id")} {order.id}{" "}
+                              </p>
                               <p className="order-datetime">
-                                {t('detail.date')}{" "}
+                                {t("detail.date")}{" "}
                                 {formatReadableDate(order.createdDate)}
                               </p>
+                              {order.status === "CANCEL" && (
+                                <p className="order-datetime">
+                                  {t("detail.cancel-time")}{" "}
+                                  {formatReadableDate(order.cancelDate)}
+                                </p>
+                              )}
                             </div>
                           </li>
 
@@ -82,7 +93,9 @@ const Order = ({ location, cartItems, currency }) => {
                               <p className="order-status">
                                 {getStatus(order.status)}
                               </p>
-                              <p>{order.details.length} {t('detail.products')}</p>
+                              <p>
+                                {order.details.length} {t("detail.products")}
+                              </p>
                             </div>
                           </li>
                         </ul>
@@ -90,13 +103,15 @@ const Order = ({ location, cartItems, currency }) => {
                       <div className="order-bottom">
                         <ul>
                           <li>
-                            <span className="order-bottom-left">{t('detail.shipping')}</span>
-                            <span>{t('detail.free')}</span>
+                            <span className="order-bottom-left">
+                              {t("detail.shipping")}
+                            </span>
+                            <span>{t("detail.free")}</span>
                           </li>
                           {isFirstOrder && (
                             <li className="mt-3">
                               <span className="order-bottom-left">
-                                {t('detail.first-order')}
+                                {t("detail.first-order")}
                               </span>
                               {order.details.forEach((detail) => {
                                 cartTotalPrice += detail.subtotal;
@@ -121,7 +136,7 @@ const Order = ({ location, cartItems, currency }) => {
 
                           <li>
                             <span className="order-bottom-left">
-                              {t('detail.pay-method')}
+                              {t("detail.pay-method")}
                             </span>
                             <span>{order.methodPaid}</span>
                           </li>
@@ -135,11 +150,17 @@ const Order = ({ location, cartItems, currency }) => {
                             </span>
                             <span>{order.deliveryDate}</span>
                           </li>
+                          <li>
+                            <span className="order-bottom-left">
+                              Your delivery time
+                            </span>
+                            <span>{order.deliveryTime}</span>
+                          </li>
                         </ul>
                       </div>
                       <div className="order-total-wrap">
                         <ul>
-                          <li className="order-total">{t('detail.total')}</li>
+                          <li className="order-total">{t("detail.total")}</li>
                           <li>{order.total.toLocaleString("vi-VN")}₫</li>
                         </ul>
                       </div>
@@ -152,16 +173,16 @@ const Order = ({ location, cartItems, currency }) => {
                   <div className="order-wrap">
                     <div className="order-product-info">
                       <div className="order-top">
-                        <h4>{t('detail.shipping-address')}</h4>
+                        <h4>{t("detail.shipping-address")}</h4>
                       </div>
                       <div className="order-details-middle">
                         <ul>
                           <li>
-                            <span>{t('detail.full-name')}</span>{" "}
+                            <span>{t("detail.full-name")}</span>{" "}
                             {order.additionalOrder.fullName}
                           </li>
                           <li>
-                            <span>{t('detail.address')}</span>
+                            <span>{t("detail.address")}</span>
                           </li>
                           <li>
                             <p>
@@ -172,7 +193,8 @@ const Order = ({ location, cartItems, currency }) => {
                             </p>
                           </li>
                           <li>
-                            <span>{t('detail.phone')}</span> {order.additionalOrder.phone}
+                            <span>{t("detail.phone")}</span>{" "}
+                            {order.additionalOrder.phone}
                           </li>
                           <li>
                             <span>Email:</span> {order.additionalOrder.email}
@@ -181,7 +203,7 @@ const Order = ({ location, cartItems, currency }) => {
                       </div>
                       <div className="order-bottom">
                         <ul>
-                          <h4>{t('detail.order-note')}</h4>
+                          <h4>{t("detail.order-note")}</h4>
                           <li>
                             <p>{order.additionalOrder.additionalInformation}</p>
                           </li>
@@ -197,11 +219,11 @@ const Order = ({ location, cartItems, currency }) => {
                     <table>
                       <thead>
                         <tr>
-                          <th>{t('detail.img')}</th>
-                          <th>{t('detail.product-name')}</th>
-                          <th>{t('detail.unit-price')}</th>
-                          <th>{t('detail.qty')}</th>
-                          <th>{t('detail.subtotal')}</th>
+                          <th>{t("detail.img")}</th>
+                          <th>{t("detail.product-name")}</th>
+                          <th>{t("detail.unit-price")}</th>
+                          <th>{t("detail.qty")}</th>
+                          <th>{t("detail.subtotal")}</th>
                         </tr>
                       </thead>
                       <tbody>

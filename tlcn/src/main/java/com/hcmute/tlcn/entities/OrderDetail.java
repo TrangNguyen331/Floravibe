@@ -13,4 +13,5 @@ public class OrderDetail {
     private String productId;
     private int quantity;
     private double subtotal;
+
 }

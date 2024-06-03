@@ -57,8 +57,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(new MessageDto(HttpStatus.OK.value(), result));
     }
 
-    @PostMapping("/forgot-password/change-password")
-    public ResponseEntity<Account> updatePassword(@PathVariable String userName, @RequestBody UpdatePasswordDto dto){
+    @PostMapping("/resetpassword/change-password/{userName}")
+    public ResponseEntity<Account> updatePassword(@PathVariable("userName") String userName, @RequestBody UpdatePasswordDto dto){
         Account account = accountService.updatePassword(userName,dto);
         return ResponseEntity.ok(account);
     }

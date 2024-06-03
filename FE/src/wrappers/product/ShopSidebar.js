@@ -4,26 +4,30 @@ import {
   getIndividualCategories,
   getIndividualTags,
   getIndividualColors,
-  getProductsIndividualSizes
+  getProductsIndividualSizes,
 } from "../../helpers/product";
 import ShopSearch from "../../components/product/ShopSearch";
 import ShopCategories from "../../components/product/ShopCategories";
 import ShopTag from "../../components/product/ShopTag";
 
-const ShopSidebar = ({ products, getSortParams, sideSpaceClass, searchHandler }) => {
+const ShopSidebar = ({
+  products,
+  getSortParams,
+  sideSpaceClass,
+  searchHandler,
+}) => {
   console.log("ShopSidebar", products);
-  const handleSearch = (search)=>{
-      searchHandler(search)
-  }
+
+  const handleSearch = (search) => {
+    searchHandler(search);
+  };
   const uniqueCategories = getIndividualCategories(products);
   const uniqueTags = getIndividualTags(products);
 
   return (
     <div className={`sidebar-style ${sideSpaceClass ? sideSpaceClass : ""}`}>
       {/* shop search */}
-      <ShopSearch
-        searchHandle={handleSearch}
-      />
+      <ShopSearch searchHandle={handleSearch} />
 
       {/* filter by categories */}
       <ShopCategories
@@ -38,10 +42,10 @@ const ShopSidebar = ({ products, getSortParams, sideSpaceClass, searchHandler })
 };
 
 ShopSidebar.propTypes = {
-    getSortParams: PropTypes.func,
-    products: PropTypes.array,
-    sideSpaceClass: PropTypes.string,
-    searchHandler: PropTypes.func
+  getSortParams: PropTypes.func,
+  products: PropTypes.array,
+  sideSpaceClass: PropTypes.string,
+  searchHandler: PropTypes.func,
 };
 
 export default ShopSidebar;

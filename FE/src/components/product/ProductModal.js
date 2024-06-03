@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
+import ProductAverageRating from "../product/sub-components/ProductAverageRating";
 function ProductModal(props) {
   const { product } = props;
   const { currency } = props;
@@ -157,15 +157,11 @@ function ProductModal(props) {
                   </span>
                   {/* )} */}
                 </div>
-                {product.rating && product.rating > 0 ? (
-                  <div className="pro-details-rating-wrap">
-                    <div className="pro-details-rating">
-                      <Rating ratingValue={product.rating} />
-                    </div>
+                <div className="pro-details-rating-wrap">
+                  <div className="pro-details-rating">
+                    <ProductAverageRating product={product} />
                   </div>
-                ) : (
-                  ""
-                )}
+                </div>
                 <div className="pro-details-list">
                   <p>{product.description}</p>
                 </div>

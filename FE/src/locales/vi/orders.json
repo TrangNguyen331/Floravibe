@@ -5,6 +5,8 @@
         "request": "Chờ Duyệt",
         "process": "Đang Vận Chuyển",
         "complete": "Hoàn Thành",
+        "cancel": "Hủy",
+        "canceled": "Đã hủy",
         "view-details": "Xem Chi Tiết",
         "no-order": "Chưa Có Đơn Hàng Nào"
 
@@ -12,6 +14,7 @@
     "detail": {
         "id": "Mã Đơn Hàng:",
         "date": "Thời Gian Đặt Hàng:",
+        "cancel-time": "Thời gian hủy",
         "shipping": "Phí Vận Chuyển",
         "products": "Sản Phẩm",
         "free": "Miễn Phí",

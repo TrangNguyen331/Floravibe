@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axiosInstance from "../../axiosInstance";
+import ProductAverageRating from "./sub-components/ProductAverageRating";
 const ProductGridListSingle = ({
   product,
   currency,
@@ -37,6 +38,9 @@ const ProductGridListSingle = ({
         autoDismiss: true,
       });
     }
+  };
+  const truncateContent = (content) => {
+    return content.length > 180 ? content.substr(0, 180) + "..." : content;
   };
   return (
     <Fragment>
@@ -193,16 +197,18 @@ const ProductGridListSingle = ({
                 <div className="product-list-price">
                   <span>{finalProductPrice.toLocaleString("vi-VN") + "₫"}</span>
                 </div>
-                {product.rating && product.rating > 0 ? (
-                  <div className="rating-review">
-                    <div className="product-list-rating">
-                      <Rating ratingValue={product.rating} />
-                    </div>
+
+                <div className="rating-review">
+                  <div className="product-list-rating">
+                    <ProductAverageRating product={product} />
                   </div>
+                </div>
+
+                {product.description ? (
+                  <p>{truncateContent(product.description)}</p>
                 ) : (
                   ""
                 )}
-                {product.description ? <p>{product.description}</p> : ""}
 
                 <div className="shop-list-actions d-flex align-items-center">
                   <div className="shop-list-btn btn-hover">

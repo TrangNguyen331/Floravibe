@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext} from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 import PageTitle from "../components/Typography/PageTitle";
 import { Link, NavLink } from "react-router-dom";
 import { EditIcon, TrashIcon, DashboardIcon, UpIcon, DownIcon, SortDefaultIcon, RefreshIcon, SearchIcon } from "../icons";
@@ -34,6 +34,9 @@ const ProductsAll = () => {
   // Table and grid data handlling
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
+  const [collections, setCollections] = useState([]);
+  const [allTags, setAllTags] = useState([]);
+  const [collectionLoaded, setCollectionLoaded] = useState(false);
   const [productsData, setProductsData] = useState([]);
 
   const [sortName, setSortName] = useState("default");
@@ -70,11 +73,9 @@ const ProductsAll = () => {
 
   const fetchData = async (page) => {
     try {
-      console.log("page", page);
       const response = await axiosInstance.get(
         "/api/v1/products/paging?page=" + (page - 1) + "&size=" + resultsPerPage
       );
-
       const allProductsResponse = await axiosInstance.get('/api/v1/products/paging?page=0&size=999');
       const sortedProducts = allProductsResponse.data.content.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate)); 
       setProductsData(sortedProducts); 
@@ -89,9 +90,28 @@ const ProductsAll = () => {
       console.log("Fetch data error", error);
     }
   };
-
+   const fetchCollections = async () => {
+    try {
+      const response = await axiosInstance.get("/api/v1/collections/all");
+      setCollections(response.data);
+      setCollectionLoaded(true);
+    } catch (error) {
+      console.log("Fetch data error", error);
+    }
+  };
+  const fetchTags = async () => {
+    try {
+      const response = await axiosInstance.get("/api/v1/tags/all");
+      setAllTags(response.data);
+    } catch (error) {
+      console.log("Fetch data error", error);
+    }
+  };
   useEffect(() => {
     fetchData(1);
+    fetchCollections();
+    fetchTags();
+    //setData(response.slice((page - 1) * resultsPerPage, page * resultsPerPage));
   }, []);
 
   useEffect(() => {
@@ -249,17 +269,22 @@ const ProductsAll = () => {
     console.log("Product", productId);
     if (mode === "edit" || mode === "delete") {
       let product = await data.filter((product) => product.id === productId)[0];
-      setSelectedProduct(product);
-    } else {
       setSelectedProduct({
-        id: "",
-        name: "",
-        description: "",
-        additionalInformation: "",
-        price: 0,
-        tags: [],
-        images: [],
-        collections: [],
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        additionalInformation: product.additionalInformation,
+        price: product.price,
+        tags: product.tags.map((tag) => ({
+          value: tag,
+          label: tag,
+        })),
+        images: product.images,
+        collections: product.collections.map((collection) => ({
+          value: collection,
+          label: collection,
+        })),
+        stockQty: product.stockQty,
       });
     }
     setMode(mode);
@@ -297,11 +322,12 @@ const ProductsAll = () => {
           description: selectedProduct.description,
           additionalInformation: selectedProduct.additionalInformation,
           price: selectedProduct.price,
-          tags: selectedProduct.tags,
+          tags: selectedProduct.tags.map((item) => item.value),
           images: selectedProduct.images,
-          collections: selectedProduct.collections,
+          collections: selectedProduct.collections.map((item) => item.value),
           stockQty: selectedProduct.stockQty,
         };
+        console.log(body);
         try {
           await axiosInstance.put(
             "/api/v1/products/" + selectedProduct.id,
@@ -442,7 +468,6 @@ const ProductsAll = () => {
       </Card>
 
       {/* Product modal */}
-
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -456,22 +481,17 @@ const ProductsAll = () => {
           {mode === "edit" ? (
             <EditForm
               data={selectedProduct}
+              collectionData={collections}
+              tagData={allTags}
               onSave={handleSave}
               onCancel={closeModal}
               onProductChange={handleProductChange}
             />
-          ) : mode === "delete" ? (
+          ) : (
             <p>
               Make sure you want to delete product{" "}
               {selectedProduct && `"${selectedProduct.name}"`}
             </p>
-          ) : (
-            <EditForm
-              data={selectedProduct}
-              onSave={handleSave}
-              onCancel={closeModal}
-              onProductChange={handleProductChange}
-            />
           )}
         </ModalBody>
         <ModalFooter className="modal-footer">

@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface OrderService {
     List<ResponseOrderDto> getOrderByUser(String user);
-
     Page<ResponseOrderDto> getPaging(String search, Pageable pageable);
     Order addNew(OrderDto dto);
     Order updateOrder (String id,OrderDto dto);
+    Order cancelOrder (String id);
     ResponseOrderDto getById(String id);
 }

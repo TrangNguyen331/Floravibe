@@ -6,10 +6,12 @@ import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
 import com.hcmute.tlcn.dtos.voucher.VoucherDto;
 import com.hcmute.tlcn.entities.Account;
 import com.hcmute.tlcn.entities.Order;
+import com.hcmute.tlcn.entities.Payments;
 import com.hcmute.tlcn.entities.Product;
 import com.hcmute.tlcn.exceptions.NotFoundException;
 import com.hcmute.tlcn.repositories.AccountRepository;
 import com.hcmute.tlcn.repositories.OrderRepository;
+import com.hcmute.tlcn.repositories.PaymentRepos;
 import com.hcmute.tlcn.repositories.ProductRepository;
 import com.hcmute.tlcn.services.OrderService;
 import org.modelmapper.ModelMapper;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +30,14 @@ public class OrderServiceImpl implements OrderService {
     private final AccountRepository accountRepository;
     private final OrderRepository repository;
     private final ProductRepository productRepository;
+    private final PaymentRepos paymentRepository;
     ModelMapper modelMapper = new ModelMapper();
 
-    public OrderServiceImpl(AccountRepository accountRepository, OrderRepository repository, ProductRepository productRepository) {
+    public OrderServiceImpl(AccountRepository accountRepository, OrderRepository repository, ProductRepository productRepository,PaymentRepos paymentRepository) {
         this.accountRepository = accountRepository;
         this.repository = repository;
         this.productRepository = productRepository;
+        this.paymentRepository = paymentRepository;
     }
 
     @Override
@@ -83,6 +88,7 @@ public class OrderServiceImpl implements OrderService {
         voucherDto.setQuantity(dto.getVoucherDetail().getQuantity());
         voucherDto.setUsedVoucher(dto.getVoucherDetail().getUsedVoucher());
         order.setVoucherDetail(voucherDto);
+        order.setCancelDate(null);
         repository.save(order);
 
         ResponseOrderDto orderDto = modelMapper.map(order, ResponseOrderDto.class);
@@ -101,6 +107,22 @@ public class OrderServiceImpl implements OrderService {
     public Order updateOrder(String id, OrderDto dto) {
         Order order= repository.findById(id).orElseThrow(()-> new NotFoundException("Order not found!"));
         modelMapper.map(dto,order);
+        if ("COMPLETED".equals(order.getStatus())) {
+            Payments payment = paymentRepository.findByOrderId(id)
+                    .orElseThrow(() -> new NotFoundException("Payment not found for order"));
+
+            payment.setPaid(true);
+            paymentRepository.save(payment);
+        }
+        repository.save(order);
+        return order;
+    }
+
+    @Override
+    public Order cancelOrder(String id) {
+        Order order= repository.findById(id).orElseThrow(()-> new NotFoundException("Order not found!"));
+        order.setStatus("CANCEL");
+        order.setCancelDate(LocalDateTime.now());
         repository.save(order);
         return order;
     }
@@ -113,7 +135,6 @@ public class OrderServiceImpl implements OrderService {
                 orderDto.getDetails() ) {
             detailDto.setProduct(productRepository.findById(detailDto.getProductId()).orElse(null));
         }
-//        orderDto.setVoucherDetail(order.getVoucherDetail());
         return orderDto;
     }
 }

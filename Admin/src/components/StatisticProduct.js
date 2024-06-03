@@ -1,32 +1,35 @@
 import React, { useState, useEffect } from "react";
 import {
-    TableContainer, 
-    Table, 
-    TableHeader, 
-    TableCell,
-    TableBody,
-    TableRow,
-    TableFooter,
-    Pagination,
-    Avatar
+  TableContainer,
+  Table,
+  TableHeader,
+  TableCell,
+  TableBody,
+  TableRow,
+  TableFooter,
+  Pagination,
+  Avatar,
 } from "@windmill/react-ui";
 import axiosInstance from "../axiosInstance";
 
-
 const StatisticProduct = () => {
-    const [page, setPage] = useState(1);
-    const [data, setData] = useState({ products: [], statisticOrder: {}, statisticProduct: {}});
-    const [completedOrders, setCompletedOrders] = useState([]);
-    const [quantityCompletedOrders, setQuantityCompletedOrders] = useState([]);
-    const [totalPage, setTotalPage] = useState(0);
-    const [resultsPerPage, setResultsPerPage] = useState(5);
-    const [totalResults, setTotalResult] = useState(0);
-    const [dataLoaded, setDataLoaded] = useState(false);
+  const [page, setPage] = useState(1);
+  const [data, setData] = useState({
+    products: [],
+    statisticOrder: {},
+    statisticProduct: {},
+  });
 
-     async function onPageChange(p) {
-        console.log("Trigger on page change");
-        await fetchData(p);
-    }
+  const [completedOrders, setCompletedOrders] = useState([]);
+  const [quantityCompletedOrders, setQuantityCompletedOrders] = useState([]);
+  const [totalPage, setTotalPage] = useState(0);
+  const [resultsPerPage, setResultsPerPage] = useState(5);
+  const [totalResults, setTotalResult] = useState(0);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  async function onPageChange(p) {
+    console.log("Trigger on page change");
+    await fetchData(p);
+  }
 
     const fetchCompletedOrdersStatistic = async () => {
         try {
@@ -82,65 +85,62 @@ const StatisticProduct = () => {
         }
     };
 
-    return(
-        <div>
-            <TableContainer className="mb-8">
-                <Table>
-                    <TableHeader className="text-center">
-                        <tr>
-                            <TableCell>Product Name</TableCell>
-                            <TableCell>Order Number For Product</TableCell>
-                            <TableCell>Number Of Bouquets Sold</TableCell>
-                        </tr>
-                    </TableHeader>
-                    <TableBody className="text-center">
-                        {data.products.map((product) => (
-                            <TableRow 
-                                key={product.id}
-                                className="transition-colors duration-200"
-                            >
-                                <TableCell>
-                                    <div className="flex items-center text-sm">
-                                        <Avatar
-                                            className="hidden mr-4 md:block"
-                                            src={
-                                            product &&
-                                            product.images &&
-                                            product.images.length > 0
-                                                ? product.images[0]
-                                                : ""
-                                            }
-                                            alt="Product image"
-                                        />
-                                        <div>
-                                            <p className="font-semibold">{product.name}</p>
-                                        </div>
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-sm">
-                                    {data.statisticOrder[product.id] || 0}
-                                </TableCell>
-                                <TableCell className="text-sm">
-                                    {data.statisticProduct[product.id] || 0}
-                                </TableCell>
-
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-                <TableFooter>
-                    {dataLoaded && (
-                    <Pagination
-                        totalResults={totalResults}
-                        resultsPerPage={resultsPerPage}
-                        label="Table navigation"
-                        onChange={(page) => onPageChange(page)}
+  return (
+    <div>
+      <TableContainer className="mb-8">
+        <Table>
+          <TableHeader className="text-center">
+            <tr>
+              <TableCell>Product Name</TableCell>
+              <TableCell>Order Number For Product</TableCell>
+              <TableCell>Number Of Bouquets Sold</TableCell>
+            </tr>
+          </TableHeader>
+          <TableBody className="text-center">
+            {data.products.map((product) => (
+              <TableRow
+                key={product.id}
+                className="transition-colors duration-200"
+              >
+                <TableCell>
+                  <div className="flex items-center text-sm">
+                    <Avatar
+                      className="hidden mr-4 md:block"
+                      src={
+                        product && product.images && product.images.length > 0
+                          ? product.images[0]
+                          : ""
+                      }
+                      alt="Product image"
                     />
-                    )}
-                </TableFooter>
-            </TableContainer>
-        </div>
-    )
-}
+                    <div>
+                      <p className="font-semibold">{product.name}</p>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="text-sm">
+                  {data.statisticOrder[product.id] || 0}
+                </TableCell>
+                <TableCell className="text-sm">
+                  {data.statisticProduct[product.id] || 0}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <TableFooter>
+          {dataLoaded && (
+            <Pagination
+              totalResults={totalResults}
+              resultsPerPage={resultsPerPage}
+              label="Table navigation"
+              onChange={(page) => onPageChange(page)}
+            />
+          )}
+        </TableFooter>
+      </TableContainer>
+    </div>
+  );
+};
 
 export default StatisticProduct;

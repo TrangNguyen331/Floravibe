@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import axiosInstance from "../../axiosInstance";
+import ProductAverageRating from "./sub-components/ProductAverageRating";
 
 const ProductDescriptionInfo = ({
   product,
@@ -74,15 +75,13 @@ const ProductDescriptionInfo = ({
         <span>{finalProductPrice.toLocaleString("vi-VN") + "₫"} </span>
         {/* )} */}
       </div>
-      {product.rating && product.rating > 0 ? (
-        <div className="pro-details-rating-wrap">
-          <div className="pro-details-rating">
-            <Rating ratingValue={product.rating} />
-          </div>
+
+      <div className="pro-details-rating-wrap">
+        <div className="pro-details-rating">
+          <ProductAverageRating product={product} />
         </div>
-      ) : (
-        ""
-      )}
+      </div>
+
       <div className="pro-details-list">
         <p>{product.description}</p>
       </div>
@@ -172,7 +171,10 @@ const ProductDescriptionInfo = ({
         <div className="pro-details-quality">
           <div
             className={`cart-plus-minus ${
-              quantityCount > product.stockQty ? "warning" : ""
+              quantityCount > product.stockQty ||
+              productCartQty + quantityCount > product.stockQty
+                ? "warning"
+                : ""
             }`}
           >
             <button
@@ -215,7 +217,8 @@ const ProductDescriptionInfo = ({
                 disabled={
                   productCartQty >= product.stockQty ||
                   product.stockQty <= 0 ||
-                  quantityCount > product.stockQty
+                  quantityCount > product.stockQty ||
+                  productCartQty + quantityCount > product.stockQty
                 }
               >
                 {t("home:productgrid.add-to-cart")}

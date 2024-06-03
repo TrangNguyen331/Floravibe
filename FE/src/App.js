@@ -11,6 +11,7 @@ import { BreadcrumbsProvider } from "react-breadcrumbs-dynamic";
 const MyOrders = lazy(() => import("./pages/other/MyOrders"));
 const Order = lazy(() => import("./pages/other/Order"));
 const OrderSuccess = lazy(() => import("./pages/other/OrderSuccess"));
+const PaymentSuccess = lazy(() => import("./pages/other/PaymentSuccess"));
 const HomePlants = lazy(() => import("./pages/home/HomePlants"));
 const ShopGridStandard = lazy(() => import("./pages/shop/ShopGridStandard"));
 const BlogRightSidebar = lazy(() => import("./pages/blog/BlogRightSidebar"));
@@ -98,6 +99,10 @@ const App = () => {
                 <Route
                   path={process.env.PUBLIC_URL + "/order-thankyou"}
                   component={OrderSuccess}
+                />
+                <Route
+                  path={process.env.PUBLIC_URL + "/vnpay-return"}
+                  component={PaymentSuccess}
                 />
                 <Route
                   path={process.env.PUBLIC_URL + "/login-register"}

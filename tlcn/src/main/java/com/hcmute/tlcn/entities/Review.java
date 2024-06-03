@@ -13,8 +13,11 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Review {
     public String id = UUID.randomUUID().toString();
+    private String orderId;
+
     public String accountName;
     public Account account;
     public String content;
+    public int ratingValue;
     public LocalDateTime createDate=LocalDateTime.now();
 }

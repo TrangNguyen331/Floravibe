@@ -1,13 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPEhtml>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Forgot password</title>
+    <style>
+        .email-area{
+            background-color:#fafafa;
+            margin:0;
+            padding: 32px 0;
+            width: 800px;
+        }
+        .email-container{
+            font-family:Arial,sans-serif;
+            color:#333;
+            line-height:1.6;
+            padding: 31px 32px 20px;
+            margin: 0 auto;
+            width: 600px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.02);
+            text-align: center;
+        }
+        .subtitle{
+            margin-bottom: 5px;
+        }
+        .email-content {
+            color: #666666;
+            line-height: 24px;
+            padding: 10px 40px;
+            font-size: 16px;
+        }
+        .spacer{
+            width:14%;
+            border:1px solid #a749ff;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
-<h1>Hello, [[name]]!</h1>
-<p>This is a forgot email template.</p>
-<p>Please click <a href="[[resetlink]]">here</a> to reset your password</p>
+<div class="email-area">
+    <div class="email-container">
+        <h2>FLORAVIBE</h2>
+        <div class="spacer"></div>
+        <h2 class=subtitle>Forgot your password?</h2>
+        <p class="email-content">We’ve received a request to reset the password for the account associated with this email.<br> <br>
+            You can reset your password by clicking the link below:</p>
+        <button style="border-color: #a749ff; background: #ffffff; display: inline-block;
+    border-radius: 10px; margin-bottom:20px;"><a th:href="@{${resetlink}}" style="text-decoration:none;color: #a749ff; padding: 15px 20px; display: inline-block; font-weight: bold;">RESET PASSWORD</a></button>
+        <div class="spacer"></div>
+        <p style="font-size:13px; margin-top:20px; color:#666666">Didn't ask for a new password? Please ignore this message.</p>
+    </div>
+</div>
 </body>
 </html>

@@ -9,8 +9,18 @@ import axiosImgBB from "../axiosImgBB";
 import { TrashIcon } from "../icons";
 import { FaSpinner } from "react-icons/fa";
 import { FiUpload } from "react-icons/fi";
-const EditForm = ({ data, onSave, onCancel, onProductChange }) => {
+import CustomOption from "./CustomOption";
+import Select, { createFilter } from "react-select";
+const EditForm = ({
+  data,
+  collectionData,
+  tagData,
+  onSave,
+  onCancel,
+  onProductChange,
+}) => {
   const [loadingImg, setLoadingImg] = useState(false);
+
   const handleCollectionsChange = (collections) => {
     onProductChange("collections", collections);
   };
@@ -86,6 +96,7 @@ const EditForm = ({ data, onSave, onCancel, onProductChange }) => {
     const data = editor.getData();
     onProductChange("additionalInformation", data);
   };
+  console.log(data);
   return (
     <form action="#">
       <div className="grid grid-cols-2 gap-8">
@@ -114,26 +125,75 @@ const EditForm = ({ data, onSave, onCancel, onProductChange }) => {
               />
             </div>
           </div>
-          <div className="grid gap-4 grid-cols-2">
-            <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-              <strong>Product Collection</strong>
-              <TagsInput
+
+          <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
+            <strong>Product Collection</strong>
+            {/* <TagsInput
                 type="text"
                 className="mt-2 bg-transparent border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 placeholder=""
                 onChange={handleCollectionsChange}
                 value={(data && data.collections) || []}
-              />
-            </div>
-            <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-              <strong>Product Tag</strong>
-              <TagsInput
+              /> */}
+            <Select
+              isMulti
+              className="custom-select"
+              components={{ Option: CustomOption }}
+              styles={{
+                multiValue: (base) => ({
+                  ...base,
+                  backgroundColor: "rgba(126, 58, 242, 1)",
+                  color: "#ffffff",
+                }),
+                multiValueLabel: (base) => ({
+                  ...base,
+                  color: "#ffffff",
+                }),
+              }}
+              placeholder="Enter product collection"
+              filterOption={createFilter({ ignoreAccents: false })}
+              closeMenuOnSelect={false}
+              options={collectionData.map((collection) => ({
+                value: collection.name,
+                label: collection.name,
+              }))}
+              value={data && data.collections}
+              onChange={handleCollectionsChange}
+            />
+          </div>
+          <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
+            <strong>Product Tag</strong>
+            {/* <TagsInput
                 classNames="mt-2"
                 onChange={handleTagsChange}
                 placeholder="Add tags (press Enter to add)"
                 value={(data && data.tags) || []}
-              />
-            </div>
+              /> */}
+            <Select
+              isMulti
+              className="custom-select"
+              components={{ Option: CustomOption }}
+              styles={{
+                multiValue: (base) => ({
+                  ...base,
+                  backgroundColor: "rgba(126, 58, 242, 1)",
+                  color: "#ffffff",
+                }),
+                multiValueLabel: (base) => ({
+                  ...base,
+                  color: "#ffffff",
+                }),
+              }}
+              placeholder="Enter product tag"
+              filterOption={createFilter({ ignoreAccents: false })}
+              closeMenuOnSelect={false}
+              options={tagData.map((tag) => ({
+                value: tag.name,
+                label: tag.name,
+              }))}
+              value={data && data.tags}
+              onChange={handleTagsChange}
+            />
           </div>
 
           <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">

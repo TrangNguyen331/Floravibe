@@ -29,7 +29,7 @@ public class EmailServiceImpl implements EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message);
         try {
             helper.setTo(account.getEmail());
-            helper.setSubject("Sample Email with Template");
+            helper.setSubject("Floravibe - Reset Password");
 
             // Load the HTML email template
             Context context = new Context();

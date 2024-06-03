@@ -18,6 +18,7 @@ import {
 import OrdersTable from "../components/OrdersTable";
 import axiosInstance from "../axiosInstance";
 import StatisticProduct from "../components/StatisticProduct";
+import TestStatstic from "../components/TestStatstic";
 
 function Dashboard() {
   const [dashboard, setDashBoard] = useState({
@@ -26,7 +27,7 @@ function Dashboard() {
     totalNewOrder: "",
     totalShippingOrder: "",
     totalCancelOrder: "",
-    totalCompleteOrder: ""
+    totalCompleteOrder: "",
   });
 
   useEffect(() => {
@@ -47,26 +48,26 @@ function Dashboard() {
       isMounted = false;
     };
   }, []);
-  const [filter, setFilter] = useState("");
+    const [filter, setFilter] = useState("");
 
-  const handleFilter = (filter_name) => {
-    // console.log(filter_name);
-    if (filter_name === "All") {
-      setFilter("");
-    }
-    if (filter_name === "In-Request Orders") {
-      setFilter("IN_REQUEST");
-    }
-    if (filter_name === "In-Processing Orders") {
-      setFilter("IN_PROCESSING");
-    }
-    if (filter_name === "Cancel Orders") {
-      setFilter("CANCEL");
-    }
-    if (filter_name === "Completed Orders") {
-      setFilter("COMPLETED");
-    }
-  };
+    const handleFilter = (filter_name) => {
+      // console.log(filter_name);
+      if (filter_name === "All") {
+        setFilter("");
+      }
+      if (filter_name === "In-Request Orders") {
+        setFilter("IN_REQUEST");
+      }
+      if (filter_name === "In-Processing Orders") {
+        setFilter("IN_PROCESSING");
+      }
+      if (filter_name === "Cancel Orders") {
+        setFilter("CANCEL");
+      }
+      if (filter_name === "Completed Orders") {
+        setFilter("COMPLETED");
+      }
+    };
 
   return (
     <>
@@ -82,10 +83,15 @@ function Dashboard() {
             iconColorClass="text-orange-500 dark:text-orange-100"
             bgColorClass="bg-orange-100 dark:bg-orange-500"
             className="mr-4 cursor-pointer"
+            onClick={() => handleClickIcon('new')}
           />
         </InfoCard>
 
-        <InfoCard title="Shipping Orders" onClick={() => setFilter("IN_PROCESSING")} value={dashboard.totalShippingOrder || "0"}>
+        <InfoCard 
+          title="Shipping Orders"  
+          onClick={() => setFilter("IN_PROCESSING")} 
+          value={dashboard.totalShippingOrder || "0"}
+        >
           <RoundIcon
             icon={TruckIcon}
             iconColorClass="text-pink-500 dark:text-pink-100"
@@ -94,7 +100,11 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard title="Completed Orders" onClick={() => setFilter("COMPLETED")}  value={dashboard.totalCompleteOrder || "0"}>
+        <InfoCard 
+          title="Complete Orders" 
+          value={dashboard.totalCompleteOrder || "0"}
+          onClick={() => setFilter("COMPLETED")}  
+        >
           <RoundIcon
             icon={CheckIcon}
             iconColorClass="text-green-500 dark:text-green-100"
@@ -103,7 +113,10 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard title="Cancel Orders" onClick={() => setFilter("CANCEL")}  value={dashboard.totalCancelOrder || "0"}>
+        <InfoCard 
+          title="Cancel Orders"
+          onClick={() => setFilter("CANCEL")} 
+          value={dashboard.totalCancelOrder || "0"}>
           <RoundIcon
             icon={CancelIcon}
             iconColorClass="text-gray-500 dark:text-gray-100"
@@ -112,7 +125,11 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard disableHover title="Total Customers" value={dashboard.totalCustomer || "0"}>
+        <InfoCard 
+          disableHover 
+          title="Total Customers"
+          value={dashboard.totalCustomer || "0"}
+        >
           <RoundIcon
             icon={PeopleIcon}
             iconColorClass="text-blue-500 dark:text-blue-100"
@@ -126,8 +143,7 @@ function Dashboard() {
           title="Total Income"
           value={
             (dashboard.totalIncome &&
-              dashboard.totalIncome.toLocaleString("vi-VN")) + " ₫" ||
-            ""
+              dashboard.totalIncome.toLocaleString("vi-VN")) + " ₫" || ""
           }
         >
           <RoundIcon
@@ -138,7 +154,7 @@ function Dashboard() {
           />
         </InfoCard>
       </div>
-      
+
       {/* <div className="grid gap-6 mb-8 md:grid-cols-2">
         <ChartCard title="User Analytics">
           <Line {...lineOptions} />
@@ -181,7 +197,7 @@ function Dashboard() {
       <OrdersTable resultsPerPage={5} filter={filter} />
 
       <PageTitle>Statistic Product</PageTitle>
-      <StatisticProduct/>
+      <StatisticProduct />
     </>
   );
 }

@@ -26,7 +26,7 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     public List<Collection> getAll() {
-        return null;
+        return repository.findAll();
     }
 
     @Override

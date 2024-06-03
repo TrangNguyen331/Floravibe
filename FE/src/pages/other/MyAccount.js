@@ -9,6 +9,7 @@ import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import { useToasts } from "react-toast-notifications";
 import axiosInstance from "../../axiosInstance";
+import axiosImgBB from "../../axiosImgBB";
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
@@ -29,9 +30,7 @@ const MyAccount = ({ location }) => {
     avatar: "",
   });
   const token = useSelector((state) => state.auth.token);
-
   const [cities, setCities] = useState([]);
-
   const [passWord, setPassword] = useState({
     password: "",
     confirmPassword: "",
@@ -45,46 +44,77 @@ const MyAccount = ({ location }) => {
     });
   };
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setUserInfo({
-      ...userInfo,
-      [name]: value,
-    });
+  const handleInputChange = (property, value) => {
+    setUserInfo((prevInfo) => ({
+      ...prevInfo,
+      [property]: value,
+    }));
+    console.log(property, value);
+  };
+  const API_KEY = process.env.REACT_APP_IMAGE_HOSTING_KEY;
+  const handleImgChange = async (e) => {
+    const file = e.target.files[0];
+    handleInputChange("avatar", file);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await axiosImgBB.post(
+        `https://api.imgbb.com/1/upload?key=${API_KEY}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      handleInputChange("avatar", response.data.data.url);
+      console.log(formData);
+      console.log(response.data.data.url);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
   };
   const updateUserInfo = async () => {
-    let selectedCityName = "";
-    let selectedDistrictName = "";
-    let selectedWardName = "";
+    let selectedCityName = userInfo.city || "";
+    let selectedDistrictName = userInfo.district || "";
+    let selectedWardName = userInfo.ward || ""; // Default to empty string if ward is not selected
 
-    if (userInfo.city && userInfo.district && userInfo.ward) {
-      const selectedCityData = cities.find(
-        (city) => city.Name === userInfo.city
+    const selectedCityData = cities.find(
+      (city) => city.Name === selectedCityName
+    );
+
+    if (!selectedCityData) {
+      selectedCityName = "";
+      selectedDistrictName = ""; // Reset district if city is not found
+    } else {
+      const selectedDistrictData = selectedCityData.Districts.find(
+        (district) => district.Name === selectedDistrictName
       );
-      if (selectedCityData) {
-        selectedCityName = selectedCityData.Name;
-        const selectedDistrictData = selectedCityData.Districts.find(
-          (district) => district.Name === userInfo.district
+
+      if (!selectedDistrictData) {
+        selectedDistrictName = ""; // Reset district if not found within the city
+      } else if (selectedWardName) {
+        const selectedWardData = selectedDistrictData.Wards.find(
+          (ward) => ward.Name === selectedWardName
         );
-        if (selectedDistrictData) {
-          selectedDistrictName = selectedDistrictData.Name;
-          const selectedWardData = selectedDistrictData.Wards.find(
-            (ward) => ward.Name === userInfo.ward
-          );
-          if (selectedWardData) {
-            selectedWardName = selectedWardData.Name;
-          }
+
+        if (!selectedWardData) {
+          selectedWardName = ""; // Reset ward if not found within the district
         }
       }
     }
 
+    const payload = {
+      ...userInfo,
+      city: selectedCityName,
+      district: selectedDistrictName,
+      ward: selectedWardName, // Include the ward in the payload
+    };
+
     await axiosInstance
-      .post("/api/v1/auth/info", {
-        ...userInfo,
-        ward: selectedWardName,
-        district: selectedDistrictName,
-        city: selectedCityName,
-      })
+      .post("/api/v1/auth/info", payload)
       .then(() => {
         addToast("Update info success!", {
           appearance: "success",
@@ -97,7 +127,6 @@ const MyAccount = ({ location }) => {
           autoDismiss: true,
         });
       });
-    console.log("userInfo", userInfo);
   };
   const updatePassword = async () => {
     await axiosInstance
@@ -141,16 +170,16 @@ const MyAccount = ({ location }) => {
         const response = await axiosInstance.get("/api/v1/auth/identity");
         setUserInfo({
           ...userInfo,
-          firstName: response.data.firstName || "",
-          lastName: response.data.lastName || "",
-          fullName: response.data.fullName || "",
-          ward: response.data.ward || "",
-          district: response.data.district || "",
-          city: response.data.city || "",
-          houseNumber: response.data.houseNumber || "",
-          phone: response.data.phone || "",
-          email: response.data.email || "",
-          avatar: response.data.avatar || "",
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          fullName: response.data.fullName,
+          ward: response.data.ward,
+          district: response.data.district,
+          city: response.data.city,
+          houseNumber: response.data.houseNumber,
+          phone: response.data.phone,
+          email: response.data.email,
+          avatar: response.data.avatar,
         });
       }
     };
@@ -201,9 +230,13 @@ const MyAccount = ({ location }) => {
                                   <label>{t("first-name")}</label>
                                   <input
                                     type="text"
-                                    name="firstName"
                                     value={userInfo.firstName}
-                                    onChange={handleInputChange}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        "firstName",
+                                        e.target.value
+                                      )
+                                    }
                                   />
                                 </div>
                               </div>
@@ -212,9 +245,13 @@ const MyAccount = ({ location }) => {
                                   <label>{t("last-name")}</label>
                                   <input
                                     type="text"
-                                    name="lastName"
                                     value={userInfo.lastName}
-                                    onChange={handleInputChange}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        "lastName",
+                                        e.target.value
+                                      )
+                                    }
                                   />
                                 </div>
                               </div>
@@ -223,22 +260,45 @@ const MyAccount = ({ location }) => {
                                   <label>{t("full-name")}</label>
                                   <input
                                     type="text"
-                                    name="fullName"
                                     value={userInfo.fullName}
-                                    onChange={handleInputChange}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        "fullName",
+                                        e.target.value
+                                      )
+                                    }
                                   />
                                 </div>
                               </div>
                               <div className="col-lg-12 col-md-12">
                                 <div className="billing-info">
                                   <label>{t("avatar")}</label>
-                                  <input
-                                    type="text"
-                                    name="avatar"
-                                    value={userInfo.avatar}
-                                    placeholder="Avatar url"
-                                    onChange={handleInputChange}
-                                  />
+                                  <label className="avatar-update-area">
+                                    <input
+                                      type="file"
+                                      placeholder="Avatar url"
+                                      className="upload-input"
+                                      onChange={handleImgChange}
+                                    />
+                                    <div className="avatar-info">
+                                      {userInfo && userInfo.avatar ? (
+                                        <img
+                                          src={userInfo.avatar}
+                                          alt={`avatar image`}
+                                          className="avatar-image"
+                                        />
+                                      ) : (
+                                        <img
+                                          src="https://i.pinimg.com/564x/93/4e/37/934e37c613b24b4c7aa236644dd46fdc.jpg"
+                                          alt="default"
+                                          className="avatar-image"
+                                        />
+                                      )}
+                                      <div className="overlay">
+                                        <i className="fa fa-camera" />
+                                      </div>
+                                    </div>
+                                  </label>
                                 </div>
                               </div>
                               <div className="col-lg-12 col-md-12">
@@ -249,7 +309,12 @@ const MyAccount = ({ location }) => {
                                       className="select-box form-select form-select-sm mb-3"
                                       name="city"
                                       value={userInfo.city}
-                                      onChange={handleInputChange}
+                                      onChange={(e) =>
+                                        handleInputChange(
+                                          "city",
+                                          e.target.value
+                                        )
+                                      }
                                       aria-label=".form-select-sm"
                                     >
                                       <option value="" disabled>
@@ -265,7 +330,12 @@ const MyAccount = ({ location }) => {
                                       className="select-box form-select form-select-sm mb-3"
                                       name="district"
                                       value={userInfo.district}
-                                      onChange={handleInputChange}
+                                      onChange={(e) =>
+                                        handleInputChange(
+                                          "district",
+                                          e.target.value
+                                        )
+                                      }
                                       aria-label=".form-select-sm"
                                     >
                                       <option value="" disabled>
@@ -293,7 +363,12 @@ const MyAccount = ({ location }) => {
                                       className="select-box form-select form-select-sm"
                                       name="ward"
                                       value={userInfo.ward}
-                                      onChange={handleInputChange}
+                                      onChange={(e) =>
+                                        handleInputChange(
+                                          "ward",
+                                          e.target.value
+                                        )
+                                      }
                                       aria-label=".form-select-sm"
                                     >
                                       <option value="" disabled>
@@ -328,7 +403,12 @@ const MyAccount = ({ location }) => {
                                       type="text"
                                       name="houseNumber"
                                       value={userInfo.houseNumber}
-                                      onChange={handleInputChange}
+                                      onChange={(e) =>
+                                        handleInputChange(
+                                          "houseNumber",
+                                          e.target.value
+                                        )
+                                      }
                                     />
                                   </div>
                                 </div>
@@ -340,7 +420,9 @@ const MyAccount = ({ location }) => {
                                     type="text"
                                     name="phone"
                                     value={userInfo.phone}
-                                    onChange={handleInputChange}
+                                    onChange={(e) =>
+                                      handleInputChange("phone", e.target.value)
+                                    }
                                   />
                                 </div>
                               </div>
@@ -351,7 +433,9 @@ const MyAccount = ({ location }) => {
                                     type="email"
                                     name="email"
                                     value={userInfo.email}
-                                    onChange={handleInputChange}
+                                    onChange={(e) =>
+                                      handleInputChange("email", e.target.value)
+                                    }
                                     readOnly
                                   />
                                 </div>
