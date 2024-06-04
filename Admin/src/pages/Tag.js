@@ -17,7 +17,7 @@ import { NavLink } from "react-router-dom";
 import { AddIcon, EditIcon, DashboardIcon } from "../icons";
 import axiosInstance from "../axiosInstance";
 import { useToasts } from "react-toast-notifications";
-import CollectionForm from "../components/CollectionForm";
+import TagForm from "../components/TagForm";
 import { FaSpinner } from "react-icons/fa";
 import ".././assets/css/customLoading.css";
 function Icon({ icon, ...props }) {
@@ -25,14 +25,14 @@ function Icon({ icon, ...props }) {
   return <Icon {...props} />;
 }
 
-const Collection = () => {
+const Tag = () => {
   const [data, setData] = useState([]);
   const [dataLoaded, setDataLoaded] = useState(false);
   const { addToast } = useToasts();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
   const [mode, setMode] = useState("add"); // 'add', 'edit'
-  const [collectionData, setCollectionData] = useState({
+  const [tagData, setTagData] = useState({
     id: null,
     name: null,
   });
@@ -42,12 +42,12 @@ const Collection = () => {
     setIsModalOpen(false);
   };
 
-  const openModal = async (mode, collectionId) => {
+  const openModal = async (mode, tagId) => {
     if (mode === "edit") {
-      let result = await data.find((item) => item.id === collectionId);
-      setCollectionData(result);
+      let result = await data.find((item) => item.id === tagId);
+      setTagData(result);
     } else {
-      setCollectionData({
+      setTagData({
         id: null,
         name: null,
       });
@@ -58,7 +58,7 @@ const Collection = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axiosInstance.get("/api/v1/collections/all");
+      const response = await axiosInstance.get("/api/v1/tags/all");
       setData(response.data);
       setDataLoaded(true);
     } catch (error) {
@@ -71,7 +71,7 @@ const Collection = () => {
   }, []);
 
   const handleSave = async (mode) => {
-    if (!collectionData.name) {
+    if (!tagData.name) {
       addToast("Please fill in all the required fields", {
         appearance: "warning",
         autoDismiss: true,
@@ -81,25 +81,20 @@ const Collection = () => {
     setLoadingSave(true);
     try {
       let body = {
-        name: collectionData.name,
+        name: tagData.name,
       };
       if (mode === "add") {
-        await axiosInstance.post("/api/v1/collections", body);
+        await axiosInstance.post("/api/v1/tags", body);
         closeModal();
         addToast("Added new tag successfully", {
           appearance: "success",
           autoDismiss: true,
         });
       } else if (mode === "edit") {
-        await axiosInstance.put(
-          `/api/v1/collections/${collectionData.id}`,
-          body
-        );
+        await axiosInstance.put(`/api/v1/tags/${tagData.id}`, body);
         setData((prevData) =>
           prevData.map((item) =>
-            item.id === collectionData.id
-              ? { ...item, ...collectionData }
-              : item
+            item.id === tagData.id ? { ...item, ...tagData } : item
           )
         );
         closeModal();
@@ -108,7 +103,7 @@ const Collection = () => {
           autoDismiss: true,
         });
       }
-      setCollectionData({
+      setTagData({
         id: null,
         name: null,
       });
@@ -124,7 +119,7 @@ const Collection = () => {
   };
 
   const handleInputChange = (key, value) => {
-    setCollectionData((prevData) => ({
+    setTagData((prevData) => ({
       ...prevData,
       [key]: value,
     }));
@@ -132,7 +127,7 @@ const Collection = () => {
 
   return (
     <div>
-      <PageTitle>Product Collections</PageTitle>
+      <PageTitle>Product Tags</PageTitle>
       {/* Breadcrumb */}
       <div className="flex text-gray-800 dark:text-gray-300">
         <div className="flex items-center text-purple-600">
@@ -142,7 +137,7 @@ const Collection = () => {
           </NavLink>
         </div>
         {">"}
-        <p className="mx-2">Collections</p>
+        <p className="mx-2">Tags</p>
       </div>
 
       {/* Add */}
@@ -154,7 +149,7 @@ const Collection = () => {
             className="mx-3"
             onClick={() => openModal("add", null)}
           >
-            Add collection
+            Add tag
           </Button>
         </div>
       </div>
@@ -163,13 +158,10 @@ const Collection = () => {
       <div>
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <ModalHeader className="flex items-center text-2xl">
-            {mode === "add" ? "Add New Collection" : "Edit Collection"}
+            {mode === "add" ? "Add New Tag" : "Edit Tag"}
           </ModalHeader>
           <ModalBody>
-            <CollectionForm
-              data={collectionData}
-              handleInputChange={handleInputChange}
-            />
+            <TagForm data={tagData} handleInputChange={handleInputChange} />
           </ModalBody>
           <ModalFooter>
             <div className="hidden sm:block">
@@ -203,16 +195,16 @@ const Collection = () => {
           </TableHeader>
           <TableBody>
             {dataLoaded &&
-              data.map((collection, i) => (
+              data.map((tag, i) => (
                 <TableRow key={i}>
-                  <TableCell className="text-base">{collection.name}</TableCell>
+                  <TableCell className="text-base">{tag.name}</TableCell>
                   <TableCell>
                     <Button
                       icon={EditIcon}
                       className="mr-3"
                       layout="outline"
                       aria-label="Edit"
-                      onClick={() => openModal("edit", collection.id)}
+                      onClick={() => openModal("edit", tag.id)}
                     />
                   </TableCell>
                 </TableRow>
@@ -224,4 +216,4 @@ const Collection = () => {
   );
 };
 
-export default Collection;
+export default Tag;

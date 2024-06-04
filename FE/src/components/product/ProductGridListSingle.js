@@ -3,7 +3,6 @@ import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 // import { getDiscountPrice } from "../../helpers/product";
-import Rating from "./sub-components/ProductRating";
 import ProductModal from "./ProductModal";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -26,19 +25,19 @@ const ProductGridListSingle = ({
   const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
   const token = useSelector((state) => state.auth.token);
   const history = useHistory();
-  const handleAddToWishList = async () => {
-    try {
-      if (token) {
-        await axiosInstance.post(`/api/v1/wishlist/${product.id}`);
-      }
-      addToWishlist(product, addToast);
-    } catch (err) {
-      addToast("failed", {
-        appearance: "error",
-        autoDismiss: true,
-      });
-    }
-  };
+  // const handleAddToWishList = async () => {
+  //   try {
+  //     if (token) {
+  //       await axiosInstance.post(`/api/v1/wishlist/${product.id}`);
+  //     }
+  //     addToWishlist(product, addToast);
+  //   } catch (err) {
+  //     addToast("failed", {
+  //       appearance: "error",
+  //       autoDismiss: true,
+  //     });
+  //   }
+  // };
   const truncateContent = (content) => {
     return content.length > 180 ? content.substr(0, 180) + "..." : content;
   };
@@ -74,8 +73,8 @@ const ProductGridListSingle = ({
                   }
                   onClick={() => {
                     if (token) {
-                      // addToWishlist(product, addToast);
-                      handleAddToWishList();
+                      addToWishlist(product, addToast);
+                      // handleAddToWishList();
                     } else {
                       history.push("/login-register");
                     }

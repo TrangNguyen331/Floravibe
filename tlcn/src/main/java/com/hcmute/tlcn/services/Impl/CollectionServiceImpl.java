@@ -41,9 +41,22 @@ public class CollectionServiceImpl implements CollectionService {
     public Collection update(String id, CollectionDto dto) {
         Collection collection = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Collection not found"));
+
         modelMapper.map(dto,collection);
         repository.save(collection);
+        updateCollectionNameInProduct(id, dto.getName());
         return collection;
+    }
+    private void updateCollectionNameInProduct(String collectionId, String newName) {
+        List<Product> products = productRepository.findByCollections_Id(collectionId);
+        for (Product product : products) {
+            for (Collection col : product.getCollections()) {
+                if (col.getId().equals(collectionId)) {
+                    col.setName(newName);
+                }
+            }
+            productRepository.save(product);
+        }
     }
 
     @Override

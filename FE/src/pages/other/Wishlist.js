@@ -46,44 +46,44 @@ const Wishlist = ({
   console.log("all products", products);
   const { t } = useTranslation(["wishlist", "breadcrumb", "home"]);
   const token = useSelector((state) => state.auth.token);
-  const [myWishlist, setWishlist] = useState([]);
+  // const [myWishlist, setWishlist] = useState([]);
   const [alreadyGet, setAlreadyGet] = useState(false);
-  const getWishlistItems = async () => {
-    try {
-      const response = await axiosInstance.get(`/api/v1/wishlist`);
-      setWishlist(response.data.products);
-      setAlreadyGet(true);
-    } catch (error) {}
-  };
-  useEffect(() => {
-    if (token && !alreadyGet) {
-      getWishlistItems();
-    }
-  }, [token, alreadyGet]);
+  // const getWishlistItems = async () => {
+  //   try {
+  //     const response = await axiosInstance.get(`/api/v1/wishlist`);
+  //     setWishlist(response.data.products);
+  //     setAlreadyGet(true);
+  //   } catch (error) {}
+  // };
+  // useEffect(() => {
+  //   if (token && !alreadyGet) {
+  //     getWishlistItems();
+  //   }
+  // }, [token, alreadyGet]);
 
-  const targetData = token && alreadyGet ? myWishlist : wishlistItems;
+  // const targetData = token && alreadyGet ? myWishlist : wishlistItems;
 
-  const handleDeleteFromWishlist = async (wishlistItem) => {
-    try {
-      if (token) {
-        await axiosInstance.delete(`/api/v1/wishlist/${wishlistItem.id}`);
-      }
-      deleteFromWishlist(wishlistItem, addToast);
+  // const handleDeleteFromWishlist = async (wishlistItem) => {
+  //   try {
+  //     if (token) {
+  //       await axiosInstance.delete(`/api/v1/wishlist/${wishlistItem.id}`);
+  //     }
+  //     deleteFromWishlist(wishlistItem, addToast);
 
-      getWishlistItems();
-    } catch (error) {
-      console.error("Error deleting from wishlist:", error);
-    }
-  };
-  const handleDeleteAll = async () => {
-    try {
-      deleteAllFromWishlist(addToast);
-      if (token) {
-        await axiosInstance.delete(`/api/v1/wishlist/clear`);
-      }
-      getWishlistItems();
-    } catch (error) {}
-  };
+  //     getWishlistItems();
+  //   } catch (error) {
+  //     console.error("Error deleting from wishlist:", error);
+  //   }
+  // };
+  // const handleDeleteAll = async () => {
+  //   try {
+  //     deleteAllFromWishlist(addToast);
+  //     if (token) {
+  //       await axiosInstance.delete(`/api/v1/wishlist/clear`);
+  //     }
+  //     getWishlistItems();
+  //   } catch (error) {}
+  // };
   return (
     <Fragment>
       <MetaTags>
@@ -102,7 +102,7 @@ const Wishlist = ({
         <Breadcrumb />
         <div className="cart-main-area pt-90 pb-100">
           <div className="container">
-            {targetData && targetData.length >= 1 ? (
+            {wishlistItems && wishlistItems.length >= 1 ? (
               <Fragment>
                 <h3 className="cart-page-title">Your wishlist items</h3>
                 <div className="row">
@@ -119,7 +119,7 @@ const Wishlist = ({
                           </tr>
                         </thead>
                         <tbody>
-                          {targetData.map((wishlistItem, key) => {
+                          {wishlistItems.map((wishlistItem, key) => {
                             // const discountedPrice = getDiscountPrice(
                             //   wishlistItem.price,
                             //   wishlistItem.discount
@@ -249,11 +249,11 @@ const Wishlist = ({
                                 <td className="product-remove">
                                   <button
                                     onClick={() => {
-                                      handleDeleteFromWishlist(wishlistItem);
-                                      // deleteFromWishlist(
-                                      //   wishlistItem,
-                                      //   addToast
-                                      // );
+                                      // handleDeleteFromWishlist(wishlistItem);
+                                      deleteFromWishlist(
+                                        wishlistItem,
+                                        addToast
+                                      );
                                     }}
                                   >
                                     <i className="fa fa-times"></i>
@@ -279,8 +279,8 @@ const Wishlist = ({
                       <div className="cart-clear">
                         <button
                           onClick={() => {
-                            handleDeleteAll();
-                            // deleteAllFromWishlist(addToast);
+                            // handleDeleteAll();
+                            deleteAllFromWishlist(addToast);
                           }}
                         >
                           {t("clear-wishlist")}

@@ -11,7 +11,7 @@ function Icon({ icon, ...props }) {
 }
 
 const Orders = () => {
-  console.log("Order Page")
+  console.log("Order Page");
   // pagination setup
   const [resultsPerPage, setResultPerPage] = useState(10);
   const [filter, setFilter] = useState("");
@@ -55,7 +55,7 @@ const Orders = () => {
       </div>
 
       {/* Sort */}
-      <Card className="mt-5 mb-5 shadow-md shadow-md flex justify-between items-center">
+      <Card className="mt-5 mb-5 shadow-md flex justify-between items-center">
         <CardBody>
           <div className="flex items-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -89,7 +89,6 @@ const Orders = () => {
                 </div>
               </div>
             </Label>
-     
           </div>
         </CardBody>
         <Label className="mx-0 ml-auto">
@@ -100,25 +99,28 @@ const Orders = () => {
               setSearchValue("");
             }}
           >
-                <option hidden>Choose to search</option>
-                <option>Client</option>
-                <option>Order ID</option>
-                <option>Name Of Product</option>
-                {/* <option>Price</option> */}
-                <option>Date</option>
+            <option hidden>Choose to search</option>
+            <option>Client</option>
+            <option>Order ID</option>
+            <option>Name Of Product</option>
+            {/* <option>Price</option> */}
+            <option>Date</option>
           </Select>
         </Label>
         <Label className="mx-0 w-70">
           <div className="relative text-gray-500 dark:focus-within:text-purple-400">
             <input
-              type={searchType === 'Date' ? 'date' : 'text'}
+              type={searchType === "Date" ? "date" : "text"}
               className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
               placeholder="Search..."
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
             <div className="absolute inset-y-0 right-0 flex items-center mr-3 cursor-pointer">
-              <SearchIcon className="w-5 h-5 text-purple-500 hover:text-red-500 transition-colors duration-200" aria-hidden="true" />
+              <SearchIcon
+                className="w-5 h-5 text-purple-500 hover:text-red-500 transition-colors duration-200"
+                aria-hidden="true"
+              />
             </div>
           </div>
         </Label>
@@ -135,12 +137,12 @@ const Orders = () => {
       </Card>
 
       {/* Table */}
-      <OrdersTable 
+      <OrdersTable
         resultsPerPage={resultsPerPage}
         filter={filter}
         searchType={searchType}
         searchValue={searchValue}
-        refresh={refresh} 
+        refresh={refresh}
       />
     </div>
   );

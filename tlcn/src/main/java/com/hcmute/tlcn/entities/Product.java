@@ -23,10 +23,10 @@ public class Product {
     public String additionalInformation;
     public double price;
     public int stockQty;
-    public List<String> tags=new ArrayList<>();
+    public List<Tag> tags=new ArrayList<>();
     public List<String> images=new ArrayList<>();
     public List<Review> reviews=new ArrayList<>();
-    public List<String> collections=new ArrayList<>();
+    public List<Collection> collections=new ArrayList<>();
     public boolean isActive=true;
     @CreatedDate
     private LocalDateTime createdDate;

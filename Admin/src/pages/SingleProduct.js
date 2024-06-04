@@ -50,7 +50,11 @@ const SingleProduct = () => {
           {/* Breadcum */}
           <div className="flex text-gray-800 dark:text-gray-300">
             <div className="flex items-center text-purple-600">
-              <Icon className="w-5 h-5" aria-hidden="true" icon={DashboardIcon} />
+              <Icon
+                className="w-5 h-5"
+                aria-hidden="true"
+                icon={DashboardIcon}
+              />
               <NavLink exact to="/app/dashboard" className="mx-2">
                 Dashboard
               </NavLink>
@@ -87,8 +91,12 @@ const SingleProduct = () => {
                     product.collections &&
                     product.collections.length > 0
                       ? product.collections.map((collection, index) => (
-                          <Badge type="success" key={index} className="mr-3">
-                            {collection}
+                          <Badge
+                            type="success"
+                            key={collection.id}
+                            className="mr-3"
+                          >
+                            {collection.name}
                           </Badge>
                         ))
                       : ""}
@@ -102,10 +110,10 @@ const SingleProduct = () => {
                     {product && product.tags && product.tags.length > 0
                       ? product.tags.map((tag, index) => (
                           <span
-                            key={index}
+                            key={tag.id}
                             className="mx-2 inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10"
                           >
-                            {tag}
+                            {tag.name}
                           </span>
                         ))
                       : ""}

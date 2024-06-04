@@ -15,6 +15,8 @@ const Page404 = lazy(() => import("../pages/404"));
 const Blank = lazy(() => import("../pages/Blank"));
 const Vouchers = lazy(() => import("../pages/Vouchers"));
 const Collection = lazy(() => import("../pages/Collection"));
+const Tag = lazy(() => import("../pages/Tag"));
+const SingleOrder = lazy(() => import("../pages/SingleOrder"));
 
 /**
  * ⚠ These are internal routes!
@@ -34,6 +36,10 @@ const routes = [
   {
     path: "/orders",
     component: Orders,
+  },
+  {
+    path: "/order/:id",
+    component: SingleOrder,
   },
   {
     path: "/all-products",
@@ -58,6 +64,10 @@ const routes = [
   {
     path: "/collections/all",
     component: Collection,
+  },
+  {
+    path: "/tags/all",
+    component: Tag,
   },
   {
     path: "/chats",

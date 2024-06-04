@@ -15,5 +15,5 @@ import java.util.List;
 @AllArgsConstructor
 public class CollectionDto {
     public String name;
-//    public String description;
+
 }

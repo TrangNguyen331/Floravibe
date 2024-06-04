@@ -29,19 +29,19 @@ const ProductGridSingle = ({
   // const finalDiscountedPrice = +(
   //   discountedPrice * currency.currencyRate
   // ).toFixed(2);
-  const handleAddToWishList = async () => {
-    try {
-      if (token) {
-        await axiosInstance.post(`/api/v1/wishlist/${product.id}`);
-      }
-      addToWishlist(product, addToast);
-    } catch (err) {
-      addToast("failed", {
-        appearance: "error",
-        autoDismiss: true,
-      });
-    }
-  };
+  // const handleAddToWishList = async () => {
+  //   try {
+  //     if (token) {
+  //       await axiosInstance.post(`/api/v1/wishlist/${product.id}`);
+  //     }
+  //     addToWishlist(product, addToast);
+  //   } catch (err) {
+  //     addToast("failed", {
+  //       appearance: "error",
+  //       autoDismiss: true,
+  //     });
+  //   }
+  // };
   return (
     <Fragment>
       <div
@@ -106,8 +106,8 @@ const ProductGridSingle = ({
                   }
                   onClick={() => {
                     if (token) {
-                      // addToWishlist(product, addToast);
-                      handleAddToWishList();
+                      addToWishlist(product, addToast);
+                      // handleAddToWishList();
                     } else {
                       history.push("/login-register");
                     }

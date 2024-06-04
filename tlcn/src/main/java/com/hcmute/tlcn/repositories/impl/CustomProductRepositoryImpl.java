@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -29,8 +30,10 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
         Criteria criteria=new Criteria();
         if(StringUtils.hasText(search)) {
             Criteria criteriaKey=Criteria.where("name").regex(".*"+search+".*","i");
-            Criteria criteriaTags = Criteria.where("tags").in(search);
-            Criteria criteriaCollection = Criteria.where("collections").in(search);
+//            Criteria criteriaTags = Criteria.where("tags").in(search);
+//            Criteria criteriaCollection = Criteria.where("collections").in(search);
+            Criteria criteriaTags = Criteria.where("tags.name").regex(".*" + search + ".*", "i");
+           Criteria criteriaCollection = Criteria.where("collections.name").regex(".*" + search + ".*", "i");
             criteria = criteria.orOperator(criteriaKey,criteriaTags,criteriaCollection);
         }
         Criteria isActive= Criteria.where("isActive").is(true);
@@ -38,4 +41,5 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
         List<Product> products = mongoTemplate.find(query, Product.class);
         return convertListToPage(products,pageable);
     }
+
 }

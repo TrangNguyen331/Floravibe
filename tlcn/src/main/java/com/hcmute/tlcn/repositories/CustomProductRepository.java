@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface CustomProductRepository {
     Page<Product> getPaging(String search, Pageable pageable);
+
 }

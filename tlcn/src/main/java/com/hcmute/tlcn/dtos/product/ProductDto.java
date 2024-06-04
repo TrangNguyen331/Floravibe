@@ -1,7 +1,9 @@
 package com.hcmute.tlcn.dtos.product;
 
 import com.hcmute.tlcn.dtos.review.ReviewDto;
+import com.hcmute.tlcn.entities.Collection;
 import com.hcmute.tlcn.entities.Review;
+import com.hcmute.tlcn.entities.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +21,7 @@ public class ProductDto {
     public String additionalInformation;
     public double price;
     public int stockQty;
-    public List<String> tags;
+    public List<Tag> tags;
     public List<String> images;
-    public List<String> collections;
+    public List<Collection> collections;
 }

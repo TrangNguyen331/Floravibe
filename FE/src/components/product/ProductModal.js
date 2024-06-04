@@ -256,7 +256,14 @@ function ProductModal(props) {
                   </div>
                 ) : (
                   <div className="pro-details-quality">
-                    <div className="cart-plus-minus">
+                    <div
+                      className={`cart-plus-minus ${
+                        quantityCount > product.stockQty ||
+                        productCartQty + quantityCount > product.stockQty
+                          ? "warning"
+                          : ""
+                      }`}
+                    >
                       <button
                         onClick={() =>
                           setQuantityCount(
@@ -296,6 +303,12 @@ function ProductModal(props) {
                               history.push("/login-register");
                             }
                           }}
+                          disabled={
+                            productCartQty >= product.stockQty ||
+                            product.stockQty <= 0 ||
+                            quantityCount > product.stockQty ||
+                            productCartQty + quantityCount > product.stockQty
+                          }
                         >
                           {" "}
                           {t("productgrid.add-to-cart")}{" "}
@@ -331,6 +344,13 @@ function ProductModal(props) {
                     </div>
                   </div>
                 )}
+                <div
+                  className={`pro-details-stock ${
+                    product.stockQty === 0 ? "out-of-stock" : ""
+                  }`}
+                >
+                  Current stock: {product.stockQty}
+                </div>
               </div>
             </div>
           </div>

@@ -58,6 +58,11 @@ const routes = [
     name: "Collections",
   },
   {
+    path: "/app/tags/all",
+    icon: "VoucherICon",
+    name: "Tags",
+  },
+  {
     path: "/app/log-out",
     icon: "OutlineLogoutIcon",
     name: "Logout",

@@ -6,7 +6,6 @@ import { getProductCartQuantity } from "../../helpers/product";
 import { addToCart } from "../../redux/actions/cartActions";
 import { addToWishlist } from "../../redux/actions/wishlistActions";
 import { addToCompare } from "../../redux/actions/compareActions";
-import Rating from "./sub-components/ProductRating";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -46,19 +45,19 @@ const ProductDescriptionInfo = ({
   const history = useHistory();
   const { t } = useTranslation(["product", "home"]);
 
-  const handleAddToWishList = async () => {
-    try {
-      if (token) {
-        await axiosInstance.post(`/api/v1/wishlist/${product.id}`);
-      }
-      addToWishlist(product, addToast);
-    } catch (err) {
-      addToast("failed", {
-        appearance: "error",
-        autoDismiss: true,
-      });
-    }
-  };
+  // const handleAddToWishList = async () => {
+  //   try {
+  //     if (token) {
+  //       await axiosInstance.post(`/api/v1/wishlist/${product.id}`);
+  //     }
+  //     addToWishlist(product, addToast);
+  //   } catch (err) {
+  //     addToast("failed", {
+  //       appearance: "error",
+  //       autoDismiss: true,
+  //     });
+  //   }
+  // };
 
   return (
     <div className="product-details-content ml-70">
@@ -236,8 +235,8 @@ const ProductDescriptionInfo = ({
               }
               onClick={() => {
                 if (token) {
-                  // addToWishlist(product, addToast);
-                  handleAddToWishList();
+                  addToWishlist(product, addToast);
+                  // handleAddToWishList();
                 } else {
                   history.push("/login-register");
                 }
@@ -264,7 +263,7 @@ const ProductDescriptionInfo = ({
           <span>{t("detail.categories")}:</span>
           <ul>
             {product.collections.map((single, key) => {
-              return <li key={key}>{single}</li>;
+              return <li key={single.id}>{single.name}</li>;
             })}
           </ul>
         </div>
@@ -276,7 +275,7 @@ const ProductDescriptionInfo = ({
           <span>{t("sidebar.tag")}:</span>
           <ul>
             {product.tags.map((single, key) => {
-              return <li key={key}>{single}</li>;
+              return <li key={key}>{single.name}</li>;
             })}
           </ul>
         </div>

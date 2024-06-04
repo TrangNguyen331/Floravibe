@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Icon from "../components/Icon";
 import PageTitle from "../components/Typography/PageTitle";
-import { AddIcon, TrashIcon, PublishIcon, StoreIcon, DashboardIcon } from "../icons";
+import {
+  AddIcon,
+  TrashIcon,
+  PublishIcon,
+  StoreIcon,
+  DashboardIcon,
+} from "../icons";
 import { TagsInput } from "react-tag-input-component";
 import axiosInstance from "../axiosInstance";
 import axiosImgBB from "../axiosImgBB";
@@ -37,6 +43,7 @@ const AddProduct = () => {
   const [collections, setCollections] = useState([]);
   const [allTags, setAllTags] = useState([]);
   const [tagLoaded, setTagLoaded] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState({
     id: "",
     name: "",
@@ -160,32 +167,38 @@ const AddProduct = () => {
       });
       return;
     }
+    setLoadingSave(true);
     let body = {
       name: selectedProduct.name,
       description: selectedProduct.description,
       additionalInformation: selectedProduct.additionalInformation,
       price: selectedProduct.price,
       stockQty: selectedProduct.stockQty,
-      tags: selectedProduct.tags.map((item) => item.value),
+      tags: selectedProduct.tags,
       images: selectedProduct.images,
-      collections: selectedProduct.collections.map((item) => item.value),
+      collections: selectedProduct.collections,
     };
     try {
       await axiosInstance.post("/api/v1/products", body);
+      addToast("Added new product successfully", {
+        appearance: "success",
+        autoDismiss: true,
+      });
+      setSelectedProduct({
+        id: "",
+        name: "",
+        description: "",
+        additionalInformation: "",
+        price: 0,
+        stockQty: 0,
+        tags: [],
+        images: [],
+        collections: [],
+      });
+      setLoadingSave(false);
     } catch (error) {
       console.log("Error", error);
     }
-    setSelectedProduct({
-      id: "",
-      name: "",
-      description: "",
-      additionalInformation: "",
-      price: 0,
-      stockQty: 0,
-      tags: [],
-      images: [],
-      collections: [],
-    });
   };
   useEffect(() => {
     fetchCollections();
@@ -207,7 +220,7 @@ const AddProduct = () => {
         <p className="mx-2">Add New Product</p>
       </div>
 
-      <div className="w-full my-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="w-full my-10 grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="md:col-span-1">
           <CardBody>
             <div className="grid gap-4 mb-4 grid-cols-2">
@@ -266,13 +279,21 @@ const AddProduct = () => {
                 options={
                   dataLoaded && collections
                     ? collections.map((collection) => ({
-                        value: collection.name,
+                        value: collection.id,
                         label: collection.name,
                       }))
                     : []
                 }
-                value={selectedProduct.collections}
-                onChange={(value) => handleProductChange("collections", value)}
+                value={selectedProduct.collections.map((collection) => ({
+                  value: collection.id,
+                  label: collection.name,
+                }))}
+                onChange={(value) =>
+                  handleProductChange(
+                    "collections",
+                    value.map((item) => ({ id: item.value, name: item.label }))
+                  )
+                }
               />
             </div>
             <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
@@ -308,13 +329,21 @@ const AddProduct = () => {
                 options={
                   tagLoaded && allTags
                     ? allTags.map((tag) => ({
-                        value: tag.name,
+                        value: tag.id,
                         label: tag.name,
                       }))
                     : []
                 }
-                value={selectedProduct.tags}
-                onChange={(value) => handleProductChange("tags", value)}
+                value={selectedProduct.tags.map((collection) => ({
+                  value: collection.id,
+                  label: collection.name,
+                }))}
+                onChange={(value) =>
+                  handleProductChange(
+                    "tags",
+                    value.map((item) => ({ id: item.value, name: item.label }))
+                  )
+                }
               />
             </div>
             <div className="mb-4">
@@ -406,8 +435,13 @@ const AddProduct = () => {
               />
             </div>
             <div className="flex justify-end">
-              <Button iconLeft={AddIcon} onClick={handleSave}>
-                Add Product
+              <Button
+                onClick={handleSave}
+                disabled={loadingSave}
+                className="gap-2 items-center"
+              >
+                {loadingSave ? <FaSpinner className="animate-spin" /> : null}
+                Save
               </Button>
             </div>
           </CardBody>

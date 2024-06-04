@@ -5,7 +5,16 @@ import ChartCard from "../components/Chart/ChartCard";
 import { Doughnut, Line } from "react-chartjs-2";
 import ChartLegend from "../components/Chart/ChartLegend";
 import PageTitle from "../components/Typography/PageTitle";
-import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon, TruckIcon, CheckIcon, CancelIcon, RefreshIcon } from "../icons";
+import {
+  ChatIcon,
+  CartIcon,
+  MoneyIcon,
+  PeopleIcon,
+  TruckIcon,
+  CheckIcon,
+  CancelIcon,
+  RefreshIcon,
+} from "../icons";
 import RoundIcon from "../components/RoundIcon";
 import { Card, CardBody, Label, Select } from "@windmill/react-ui";
 
@@ -48,26 +57,26 @@ function Dashboard() {
       isMounted = false;
     };
   }, []);
-    const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState("");
 
-    const handleFilter = (filter_name) => {
-      // console.log(filter_name);
-      if (filter_name === "All") {
-        setFilter("");
-      }
-      if (filter_name === "In-Request Orders") {
-        setFilter("IN_REQUEST");
-      }
-      if (filter_name === "In-Processing Orders") {
-        setFilter("IN_PROCESSING");
-      }
-      if (filter_name === "Cancel Orders") {
-        setFilter("CANCEL");
-      }
-      if (filter_name === "Completed Orders") {
-        setFilter("COMPLETED");
-      }
-    };
+  const handleFilter = (filter_name) => {
+    // console.log(filter_name);
+    if (filter_name === "All") {
+      setFilter("");
+    }
+    if (filter_name === "In-Request Orders") {
+      setFilter("IN_REQUEST");
+    }
+    if (filter_name === "In-Processing Orders") {
+      setFilter("IN_PROCESSING");
+    }
+    if (filter_name === "Cancel Orders") {
+      setFilter("CANCEL");
+    }
+    if (filter_name === "Completed Orders") {
+      setFilter("COMPLETED");
+    }
+  };
 
   return (
     <>
@@ -77,19 +86,22 @@ function Dashboard() {
 
       {/* <!-- Cards --> */}
       <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-        <InfoCard title="New Orders" onClick={() => setFilter("IN_REQUEST")} value={dashboard.totalNewOrder || "0"} >
+        <InfoCard
+          title="New Orders"
+          onClick={() => setFilter("IN_REQUEST")}
+          value={dashboard.totalNewOrder || "0"}
+        >
           <RoundIcon
             icon={CartIcon}
             iconColorClass="text-orange-500 dark:text-orange-100"
             bgColorClass="bg-orange-100 dark:bg-orange-500"
             className="mr-4 cursor-pointer"
-            onClick={() => handleClickIcon('new')}
           />
         </InfoCard>
 
-        <InfoCard 
-          title="Shipping Orders"  
-          onClick={() => setFilter("IN_PROCESSING")} 
+        <InfoCard
+          title="Shipping Orders"
+          onClick={() => setFilter("IN_PROCESSING")}
           value={dashboard.totalShippingOrder || "0"}
         >
           <RoundIcon
@@ -100,10 +112,10 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard 
-          title="Complete Orders" 
+        <InfoCard
+          title="Complete Orders"
           value={dashboard.totalCompleteOrder || "0"}
-          onClick={() => setFilter("COMPLETED")}  
+          onClick={() => setFilter("COMPLETED")}
         >
           <RoundIcon
             icon={CheckIcon}
@@ -113,10 +125,11 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard 
+        <InfoCard
           title="Cancel Orders"
-          onClick={() => setFilter("CANCEL")} 
-          value={dashboard.totalCancelOrder || "0"}>
+          onClick={() => setFilter("CANCEL")}
+          value={dashboard.totalCancelOrder || "0"}
+        >
           <RoundIcon
             icon={CancelIcon}
             iconColorClass="text-gray-500 dark:text-gray-100"
@@ -125,8 +138,8 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard 
-          disableHover 
+        <InfoCard
+          disableHover
           title="Total Customers"
           value={dashboard.totalCustomer || "0"}
         >

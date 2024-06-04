@@ -236,9 +236,9 @@ const ProductDescriptionInfoSlider = ({
           <ul>
             {product.category.map((single, key) => {
               return (
-                <li key={key}>
+                <li key={single.id}>
                   <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
-                    {single}
+                    {single.name}
                   </Link>
                 </li>
               );

@@ -154,11 +154,21 @@ const EditForm = ({
               filterOption={createFilter({ ignoreAccents: false })}
               closeMenuOnSelect={false}
               options={collectionData.map((collection) => ({
-                value: collection.name,
+                value: collection.id,
                 label: collection.name,
               }))}
-              value={data && data.collections}
-              onChange={handleCollectionsChange}
+              value={
+                data &&
+                data.collections.map((collection) => ({
+                  value: collection.id,
+                  label: collection.name,
+                }))
+              }
+              onChange={(value) =>
+                handleCollectionsChange(
+                  value.map((item) => ({ id: item.value, name: item.label }))
+                )
+              }
             />
           </div>
           <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">

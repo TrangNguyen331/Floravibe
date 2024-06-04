@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   TableBody,
   TableContainer,
@@ -7,23 +8,26 @@ import {
   TableCell,
   TableRow,
   TableFooter,
-  Avatar,
-  Badge,
   Pagination,
-  Dropdown,
-  Select,
+  Button,
 } from "@windmill/react-ui";
 import response from "../utils/demo/ordersData";
 import axiosInstance from "../axiosInstance";
-import { DownIcon, SortDefaultIcon, UpIcon } from "../icons";
-import moment from 'moment';
+import { DownIcon, SortDefaultIcon, UpIcon, EyeIcon } from "../icons";
+import moment from "moment";
 
 function Icon({ icon, ...props }) {
   const Icon = icon;
   return <Icon {...props} />;
 }
 
-const OrdersTable = ({ resultsPerPage, filter, searchType, searchValue, refresh}) => {
+const OrdersTable = ({
+  resultsPerPage,
+  filter,
+  searchType,
+  searchValue,
+  refresh,
+}) => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
   const [ordersData, setOrdersData] = useState([]);
@@ -36,16 +40,36 @@ const OrdersTable = ({ resultsPerPage, filter, searchType, searchValue, refresh}
   const [sortDateType, setSortDateType] = useState("default");
 
   const statusOptions = [
-    { value: "IN_REQUEST", label: "In Request", color: "p-2 rounded-md bg-orange-100 text-orange-700 dark:bg-orange-700 dark:text-orange-100 mb-2 mt-2"},
-    { value: "IN_PROCESSING", label: "In Processing", color: "p-2 rounded-md bg-pink-100 text-pink-700 dark:bg-pink-700 dark:text-pink-100 mb-2 mt-2" },
-    { value: "CANCEL", label: "Cancel", color: "p-2 rounded-md bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-100 mb-2 mt-2" },
-    { value: "COMPLETED", label: "Completed", color: "p-2 rounded-md bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100 mb-2 mt-2" },
+    {
+      value: "IN_REQUEST",
+      label: "In Request",
+      color:
+        "p-2 rounded-md bg-orange-100 text-orange-700 dark:bg-orange-700 dark:text-orange-100 mb-2 mt-2",
+    },
+    {
+      value: "IN_PROCESSING",
+      label: "In Processing",
+      color:
+        "p-2 rounded-md bg-pink-100 text-pink-700 dark:bg-pink-700 dark:text-pink-100 mb-2 mt-2",
+    },
+    {
+      value: "CANCEL",
+      label: "Cancel",
+      color:
+        "p-2 rounded-md bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-100 mb-2 mt-2",
+    },
+    {
+      value: "COMPLETED",
+      label: "Completed",
+      color:
+        "p-2 rounded-md bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100 mb-2 mt-2",
+    },
   ];
   // pagination change control
   // async function onPageChange(p) {
   //   await fetchData(p, filter, resultsPerPage);
   // }
-  
+
   async function onPageChange(p) {
     setPage(p);
     setData(ordersData.slice((p - 1) * resultsPerPage, p * resultsPerPage));
@@ -83,122 +107,154 @@ const OrdersTable = ({ resultsPerPage, filter, searchType, searchValue, refresh}
   };
   const fetchAllOrdersData = async () => {
     try {
-      const response = await axiosInstance.get('/api/v1/orders/paging?page=0&size=999');
-      const sortedOrdersData = response.data.content.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
-      setOrdersData(sortedOrdersData); // You might want to save this data elsewhere or process it as needed.
+      const response = await axiosInstance.get(
+        "/api/v1/orders/paging?page=0&size=999"
+      );
+      const sortedOrdersData = response.data.content.sort(
+        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+      );
+      setOrdersData(sortedOrdersData);
       setDataLoaded(true);
     } catch (error) {
       console.log("Fetch data error", error);
     }
   };
-
+  useEffect(() => {
+    fetchAllOrdersData();
+  }, []);
   useEffect(() => {
     fetchData(1, filter, resultsPerPage);
-    fetchAllOrdersData();
   }, [resultsPerPage, filter]);
 
   useEffect(() => {
-    setData(ordersData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
-  }, [ordersData, page, resultsPerPage]); 
+    setData(
+      ordersData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
+    );
+  }, [ordersData, page, resultsPerPage]);
 
   //Sort Client
   const handleSort = () => {
     let sortedData = [...ordersData];
     if (sortType === "default") {
-      sortedData.sort((a, b) => a.additionalOrder.fullName.localeCompare(b.additionalOrder.fullName));
-      setSortType('asc');
-    } else if (sortType === 'asc') {
-      sortedData.sort((a, b) => b.additionalOrder.fullName.localeCompare(a.additionalOrder.fullName));
-      setSortType('desc');
-    } else if (sortType === 'desc') {
+      sortedData.sort((a, b) =>
+        a.additionalOrder.fullName.localeCompare(b.additionalOrder.fullName)
+      );
+      setSortType("asc");
+    } else if (sortType === "asc") {
+      sortedData.sort((a, b) =>
+        b.additionalOrder.fullName.localeCompare(a.additionalOrder.fullName)
+      );
+      setSortType("desc");
+    } else if (sortType === "desc") {
       // fetchData(page, filter, resultsPerPage);
       fetchAllOrdersData();
-      setSortType('default');
+      setSortType("default");
     }
     setOrdersData(sortedData);
-    let displayedData = sortedData.slice((page-1)*resultsPerPage, page*resultsPerPage);
+    let displayedData = sortedData.slice(
+      (page - 1) * resultsPerPage,
+      page * resultsPerPage
+    );
     setData(displayedData);
-  }
+  };
 
   // Sort Total
   const handleSortTotal = () => {
     let sortedData = [...ordersData];
-    if (sortTotalType === 'default') {
-        sortedData.sort((a, b) => a.total - b.total);
-        setSortTotalType('asc');
-    } else if (sortTotalType === 'asc') {
-        sortedData.sort((a, b) => b.total - a.total);
-        setSortTotalType('desc');
-    } else if (sortTotalType === 'desc') {
-        fetchAllOrdersData();
-        setSortTotalType('default');
+    if (sortTotalType === "default") {
+      sortedData.sort((a, b) => a.total - b.total);
+      setSortTotalType("asc");
+    } else if (sortTotalType === "asc") {
+      sortedData.sort((a, b) => b.total - a.total);
+      setSortTotalType("desc");
+    } else if (sortTotalType === "desc") {
+      fetchAllOrdersData();
+      setSortTotalType("default");
     }
     setOrdersData(sortedData);
-    let displayedData = sortedData.slice((page - 1) * resultsPerPage, page * resultsPerPage);
+    let displayedData = sortedData.slice(
+      (page - 1) * resultsPerPage,
+      page * resultsPerPage
+    );
     setData(displayedData);
-  }
-  
+  };
 
   const handleSortStatus = () => {
     let sortedData = [...ordersData];
-    if (sortStatusType === 'default') {
+    if (sortStatusType === "default") {
       sortedData.sort((a, b) => a.status.localeCompare(b.status));
-      setSortStatusType('asc');
-    } else if (sortStatusType === 'asc') {
+      setSortStatusType("asc");
+    } else if (sortStatusType === "asc") {
       sortedData.sort((a, b) => b.status.localeCompare(a.status));
-      setSortStatusType('desc');
-    } else if (sortStatusType === 'desc') {
+      setSortStatusType("desc");
+    } else if (sortStatusType === "desc") {
       fetchAllOrdersData();
-      setSortStatusType('default');
+      setSortStatusType("default");
     }
     setOrdersData(sortedData);
-    let displayedData = sortedData.slice((page - 1) * resultsPerPage, page * resultsPerPage);
+    let displayedData = sortedData.slice(
+      (page - 1) * resultsPerPage,
+      page * resultsPerPage
+    );
     setData(displayedData);
-  }
+  };
 
   const handleSortDate = () => {
     let sortedData = [...ordersData];
-    if (sortDateType === 'default') {
-      sortedData.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
-      setSortDateType('asc');
-    } else if (sortDateType === 'asc') {
-      sortedData.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
-      setSortDateType('desc');
-    } else if (sortDateType === 'desc') {
+    if (sortDateType === "default") {
+      sortedData.sort(
+        (a, b) => new Date(a.createdDate) - new Date(b.createdDate)
+      );
+      setSortDateType("asc");
+    } else if (sortDateType === "asc") {
+      sortedData.sort(
+        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+      );
+      setSortDateType("desc");
+    } else if (sortDateType === "desc") {
       fetchAllOrdersData();
-      setSortDateType('default');
+      setSortDateType("default");
     }
     setOrdersData(sortedData);
-    let displayedData = sortedData.slice((page - 1) * resultsPerPage, page * resultsPerPage);
+    let displayedData = sortedData.slice(
+      (page - 1) * resultsPerPage,
+      page * resultsPerPage
+    );
     setData(displayedData);
-  }
+  };
   useEffect(() => {
     let filteredData = [...ordersData];
     switch (searchType) {
-      case 'Client':
-        filteredData = ordersData.filter(order => 
-          order.additionalOrder.fullName.toLowerCase().includes(searchValue.toLowerCase())
+      case "Client":
+        filteredData = ordersData.filter((order) =>
+          order.additionalOrder.fullName
+            .toLowerCase()
+            .includes(searchValue.toLowerCase())
         );
         break;
-      case 'Order ID':
-        filteredData = ordersData.filter(order => 
+      case "Order ID":
+        filteredData = ordersData.filter((order) =>
           order.id.includes(searchValue)
         );
         break;
-      case 'Name Of Product':
-        filteredData = ordersData.filter(order => 
-          order.details && order.details.some(detail => 
-            detail.product.name.toLowerCase().includes(searchValue.toLowerCase())
-          )
+      case "Name Of Product":
+        filteredData = ordersData.filter(
+          (order) =>
+            order.details &&
+            order.details.some((detail) =>
+              detail.product.name
+                .toLowerCase()
+                .includes(searchValue.toLowerCase())
+            )
         );
         break;
-      case 'Price':
-        filteredData = ordersData.filter(order =>
-          order.total === Number(searchValue)
+      case "Price":
+        filteredData = ordersData.filter(
+          (order) => order.total === Number(searchValue)
         );
         break;
-      case 'Date':
-        filteredData = ordersData.filter(order => {
+      case "Date":
+        filteredData = ordersData.filter((order) => {
           const inputDate = new Date(searchValue);
           inputDate.setHours(0, 0, 0, 0);
           const orderDate = new Date(order.createdDate);
@@ -210,7 +266,9 @@ const OrdersTable = ({ resultsPerPage, filter, searchType, searchValue, refresh}
         filteredData = [...ordersData];
     }
     setTotalResult(filteredData.length);
-    setData(filteredData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+    setData(
+      filteredData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
+    );
   }, [searchType, searchValue, page, refresh]);
 
   return (
@@ -221,36 +279,36 @@ const OrdersTable = ({ resultsPerPage, filter, searchType, searchValue, refresh}
           <TableHeader>
             <tr>
               <TableCell>
-                <div className="flex items-center"> 
+                <div className="flex items-center">
                   Client
                   <div onClick={handleSort} className="cursor-pointer">
-                    <Icon 
-                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500" 
-                      aria-hidden="true" 
+                    <Icon
+                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                      aria-hidden="true"
                       icon={
-                        sortType === 'asc'
+                        sortType === "asc"
                           ? UpIcon
-                          : sortType === 'desc'
+                          : sortType === "desc"
                           ? DownIcon
                           : SortDefaultIcon
                       }
                     />
                   </div>
                 </div>
-              </TableCell> 
+              </TableCell>
               <TableCell>Order ID</TableCell>
               <TableCell>Items</TableCell>
               <TableCell>
-                <div className="flex items-center"> 
+                <div className="flex items-center">
                   Total
                   <div onClick={handleSortTotal} className="cursor-pointer">
-                    <Icon 
-                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500" 
-                      aria-hidden="true" 
+                    <Icon
+                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                      aria-hidden="true"
                       icon={
-                        sortTotalType === 'asc'
+                        sortTotalType === "asc"
                           ? UpIcon
-                          : sortTotalType === 'desc'
+                          : sortTotalType === "desc"
                           ? DownIcon
                           : SortDefaultIcon
                       }
@@ -259,16 +317,16 @@ const OrdersTable = ({ resultsPerPage, filter, searchType, searchValue, refresh}
                 </div>
               </TableCell>
               <TableCell>
-                <div className="flex items-center"> 
+                <div className="flex items-center">
                   Status
                   <div onClick={handleSortStatus} className="cursor-pointer">
-                    <Icon 
-                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500" 
-                      aria-hidden="true" 
+                    <Icon
+                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                      aria-hidden="true"
                       icon={
-                        sortStatusType === 'asc'
+                        sortStatusType === "asc"
                           ? UpIcon
-                          : sortStatusType === 'desc'
+                          : sortStatusType === "desc"
                           ? DownIcon
                           : SortDefaultIcon
                       }
@@ -277,16 +335,16 @@ const OrdersTable = ({ resultsPerPage, filter, searchType, searchValue, refresh}
                 </div>
               </TableCell>
               <TableCell>
-                <div className="flex items-center"> 
+                <div className="flex items-center">
                   Date
                   <div onClick={handleSortDate} className="cursor-pointer">
-                    <Icon 
-                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500" 
-                      aria-hidden="true" 
+                    <Icon
+                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                      aria-hidden="true"
                       icon={
-                        sortDateType === 'asc'
+                        sortDateType === "asc"
                           ? UpIcon
-                          : sortDateType === 'desc'
+                          : sortDateType === "desc"
                           ? DownIcon
                           : SortDefaultIcon
                       }
@@ -332,9 +390,11 @@ const OrdersTable = ({ resultsPerPage, filter, searchType, searchValue, refresh}
                 </TableCell>
                 <TableCell>
                   <select
-                    className={`form-control ${statusOptions.find(
-                      (option) => option.value === order.status
-                    ).color}`}
+                    className={`form-control ${
+                      statusOptions.find(
+                        (option) => option.value === order.status
+                      ).color
+                    }`}
                     value={order.status}
                     onChange={(e) =>
                       handleStatusChange(e.target.value, order.id)
@@ -356,14 +416,22 @@ const OrdersTable = ({ resultsPerPage, filter, searchType, searchValue, refresh}
                     {new Date(order.createdDate).toLocaleDateString()}
                   </span>
                 </TableCell>
+                <TableCell>
+                  <Link to={`/app/order/${order.id}`}>
+                    <Button icon={EyeIcon} layout="outline" />
+                  </Link>
+                </TableCell>
               </TableRow>
             ))}
-            {searchValue && data.length === 0 && 
-              <p className="text-center my-4 text-purple-500">No result match</p>}
+            {searchValue && data.length === 0 && (
+              <p className="text-center my-4 text-purple-500">
+                No result match
+              </p>
+            )}
           </TableBody>
         </Table>
         <TableFooter>
-          {dataLoaded &&  (
+          {dataLoaded && (
             <Pagination
               totalResults={totalResults}
               resultsPerPage={resultsPerPage}

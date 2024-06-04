@@ -1,7 +1,16 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import PageTitle from "../components/Typography/PageTitle";
 import { Link, NavLink } from "react-router-dom";
-import { EditIcon, TrashIcon, DashboardIcon, UpIcon, DownIcon, SortDefaultIcon, RefreshIcon, SearchIcon } from "../icons";
+import {
+  EditIcon,
+  TrashIcon,
+  DashboardIcon,
+  UpIcon,
+  DownIcon,
+  SortDefaultIcon,
+  RefreshIcon,
+  SearchIcon,
+} from "../icons";
 import {
   Card,
   CardBody,
@@ -20,8 +29,8 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Label, 
-  Select
+  Label,
+  Select,
 } from "@windmill/react-ui";
 import Icon from "../components/Icon";
 import EditForm from "../components/EditForm";
@@ -76,11 +85,18 @@ const ProductsAll = () => {
       const response = await axiosInstance.get(
         "/api/v1/products/paging?page=" + (page - 1) + "&size=" + resultsPerPage
       );
-      const allProductsResponse = await axiosInstance.get('/api/v1/products/paging?page=0&size=999');
-      const sortedProducts = allProductsResponse.data.content.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate)); 
-      setProductsData(sortedProducts); 
+      const allProductsResponse = await axiosInstance.get(
+        "/api/v1/products/paging?page=0&size=999"
+      );
 
-      const sortedData = response.data.content.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate)); 
+      const sortedProducts = allProductsResponse.data.content.sort(
+        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+      );
+      setProductsData(sortedProducts);
+
+      const sortedData = response.data.content.sort(
+        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+      );
       setData(sortedData);
       setPage(page);
       setTotalPage(response.data.totalPages);
@@ -90,7 +106,7 @@ const ProductsAll = () => {
       console.log("Fetch data error", error);
     }
   };
-   const fetchCollections = async () => {
+  const fetchCollections = async () => {
     try {
       const response = await axiosInstance.get("/api/v1/collections/all");
       setCollections(response.data);
@@ -115,7 +131,9 @@ const ProductsAll = () => {
   }, []);
 
   useEffect(() => {
-    setData(productsData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+    setData(
+      productsData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
+    );
   }, [productsData, page]);
 
   async function onPageChange(p) {
@@ -125,117 +143,132 @@ const ProductsAll = () => {
   const handleSortName = () => {
     let newProduct, sortedProducts;
     switch (sortName) {
-      case 'default':
-        newProduct = 'asc';
+      case "default":
+        newProduct = "asc";
         sortedProducts = [...productsData].sort((a, b) =>
-          a.name.localeCompare(b.name));
+          a.name.localeCompare(b.name)
+        );
         break;
-      case 'asc':
-        newProduct = 'desc';
+      case "asc":
+        newProduct = "desc";
         sortedProducts = [...productsData].sort((a, b) =>
-          b.name.localeCompare(a.name));
+          b.name.localeCompare(a.name)
+        );
         break;
-      case 'desc':
-        newProduct = 'default';
-        sortedProducts = [...productsData].sort((a, b) =>
-          new Date(b.createdDate) - new Date(a.createdDate));
+      case "desc":
+        newProduct = "default";
+        sortedProducts = [...productsData].sort(
+          (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+        );
         break;
     }
     setSortName(newProduct);
     setProductsData(sortedProducts);
-    setData(sortedProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage));
-  }
+    setData(
+      sortedProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage)
+    );
+  };
   const handleSortPrice = () => {
     let newProduct, sortedProducts;
     switch (sortPrice) {
-      case 'default':
-        newProduct = 'asc';
+      case "default":
+        newProduct = "asc";
         sortedProducts = [...productsData].sort((a, b) => a.price - b.price);
         break;
-      case 'asc':
-        newProduct = 'desc';
+      case "asc":
+        newProduct = "desc";
         sortedProducts = [...productsData].sort((a, b) => b.price - a.price);
         break;
-      case 'desc':
-        newProduct = 'default';
-        sortedProducts = [...productsData].sort((a, b) =>
-          new Date(b.createdDate) - new Date(a.createdDate));
+      case "desc":
+        newProduct = "default";
+        sortedProducts = [...productsData].sort(
+          (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+        );
         break;
     }
     setSortPrice(newProduct);
     setProductsData(sortedProducts);
-    setData(sortedProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage));
-  }
+    setData(
+      sortedProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage)
+    );
+  };
   const handleSortQty = () => {
     let newProduct, sortedProducts;
     switch (sortQty) {
-      case 'default':
-        newProduct = 'asc';
-        sortedProducts = [...productsData].sort((a, b) => a.stockQty - b.stockQty);
+      case "default":
+        newProduct = "asc";
+        sortedProducts = [...productsData].sort(
+          (a, b) => a.stockQty - b.stockQty
+        );
         break;
-      case 'asc':
-        newProduct = 'desc';
-        sortedProducts = [...productsData].sort((a, b) => b.stockQty - a.stockQty);
+      case "asc":
+        newProduct = "desc";
+        sortedProducts = [...productsData].sort(
+          (a, b) => b.stockQty - a.stockQty
+        );
         break;
-      case 'desc':
-        newProduct = 'default';
-        sortedProducts = [...productsData].sort((a, b) =>
-          new Date(b.createdDate) - new Date(a.createdDate));
+      case "desc":
+        newProduct = "default";
+        sortedProducts = [...productsData].sort(
+          (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+        );
         break;
     }
     setSortQty(newProduct);
     setProductsData(sortedProducts);
-    setData(sortedProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage));
-  }
-  
+    setData(
+      sortedProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage)
+    );
+  };
+
   const handleSearch = () => {
     let filterProducts;
     console.log(searchValue);
     switch (searchType) {
-      case 'Name Of Product':
-        filterProducts = productsData.filter(product =>
+      case "Name Of Product":
+        filterProducts = productsData.filter((product) =>
           product.name.toLowerCase().includes(searchValue.toLowerCase())
         );
         break;
-      case 'Price':
-        filterProducts = productsData.filter(product =>
-          product.price >= minPrice && product.price <= maxPrice
+      case "Price":
+        filterProducts = productsData.filter(
+          (product) => product.price >= minPrice && product.price <= maxPrice
         );
         break;
-      case 'Collections':
-        filterProducts = productsData.filter(product =>
-          product.collections.some(collection => 
-              collection.toLowerCase().includes(searchValue.toLowerCase())
+      case "Collections":
+        filterProducts = productsData.filter((product) =>
+          product.collections.some((collection) =>
+            collection.name.toLowerCase().includes(searchValue.toLowerCase())
           )
         );
         break;
-      case 'Tags':
-        filterProducts = productsData.filter(product =>
-          product.tags.some(tag =>
-              tag.toLowerCase().includes(searchValue.toLowerCase())
+      case "Tags":
+        filterProducts = productsData.filter((product) =>
+          product.tags.some((tag) =>
+            tag.toLowerCase().includes(searchValue.toLowerCase())
           )
         );
         break;
-      case 'Quantity':
+      case "Quantity":
         switch (searchValue) {
-          case 'Out of stock':
-            filterProducts = productsData.filter(product =>
-              product.stockQty === 0
+          case "Out of stock":
+            filterProducts = productsData.filter(
+              (product) => product.stockQty === 0
             );
             break;
-          case 'From 10 to 50':
-            filterProducts = productsData.filter(product =>
-              product.stockQty >= 10 && product.stockQty <= 50
+          case "From 10 to 50":
+            filterProducts = productsData.filter(
+              (product) => product.stockQty >= 10 && product.stockQty <= 50
             );
             break;
-          case 'From 51 to 100':
-            filterProducts = productsData.filter(product =>
-              product.stockQty >= 51 && product.stockQty <= 100
+          case "From 51 to 100":
+            filterProducts = productsData.filter(
+              (product) => product.stockQty >= 51 && product.stockQty <= 100
             );
             break;
-          case 'More than 100':
-            filterProducts = productsData.filter(product =>
-              product.stockQty > 100
+          case "More than 100":
+            filterProducts = productsData.filter(
+              (product) => product.stockQty > 100
             );
             break;
           default:
@@ -246,8 +279,10 @@ const ProductsAll = () => {
         filterProducts = [...productsData];
     }
     setTotalResult(filterProducts.length);
-    setData(filterProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage));
-  }
+    setData(
+      filterProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage)
+    );
+  };
 
   useEffect(() => {
     handleSearch();
@@ -275,15 +310,17 @@ const ProductsAll = () => {
         description: product.description,
         additionalInformation: product.additionalInformation,
         price: product.price,
-        tags: product.tags.map((tag) => ({
-          value: tag,
-          label: tag,
-        })),
+        tags: product.tags,
+        // tags: product.tags.map((tag) => ({
+        //   value: tag,
+        //   label: tag,
+        // })),
         images: product.images,
-        collections: product.collections.map((collection) => ({
-          value: collection,
-          label: collection,
-        })),
+        // collections: product.collections.map((collection) => ({
+        //   value: collection,
+        //   label: collection,
+        // })),
+        collections: product.collections,
         stockQty: product.stockQty,
       });
     }
@@ -322,9 +359,9 @@ const ProductsAll = () => {
           description: selectedProduct.description,
           additionalInformation: selectedProduct.additionalInformation,
           price: selectedProduct.price,
-          tags: selectedProduct.tags.map((item) => item.value),
+          tags: selectedProduct.tags,
           images: selectedProduct.images,
-          collections: selectedProduct.collections.map((item) => item.value),
+          collections: selectedProduct.collections,
           stockQty: selectedProduct.stockQty,
         };
         console.log(body);
@@ -372,7 +409,7 @@ const ProductsAll = () => {
       </div>
 
       {/* Sort */}
-      <Card className="mt-5 mb-5 pt-3 pb-3 shadow-md shadow-md flex justify-between items-center">
+      <Card className="mt-5 mb-5 pt-3 pb-3 shadow-md flex justify-between items-center">
         <CardBody>
           <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -390,72 +427,72 @@ const ProductsAll = () => {
               setSearchValue("");
             }}
           >
-                <option hidden>Choose to search</option>
-                <option>Name Of Product</option>
-                {/* <option>Price</option> */}
-                <option>Collections</option>
-                <option>Tags</option>
-                <option>Quantity</option>
+            <option hidden>Choose to search</option>
+            <option>Name Of Product</option>
+            {/* <option>Price</option> */}
+            <option>Collections</option>
+            <option>Tags</option>
+            <option>Quantity</option>
           </Select>
         </Label>
-        
-        {
-          (searchType === "Price") ? (
-            <div className="flex space-x-2">
-              <Label className="w-32">
-                <input
-                  type="number"
-                  placeholder="Min price"
-                  className="form-input"
-                  value={minPrice}
-                  onChange={(e) => setMinPrice(e.target.value)}
-                />
-              </Label>
-              <span className="self-center">-</span>
-              <Label className="w-32">
-                <input
-                  type="number"
-                  placeholder="Max price"
-                  className="form-input"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(e.target.value)}
-                />
-              </Label>
+
+        {searchType === "Price" ? (
+          <div className="flex space-x-2">
+            <Label className="w-32">
+              <input
+                type="number"
+                placeholder="Min price"
+                className="form-input"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+              />
+            </Label>
+            <span className="self-center">-</span>
+            <Label className="w-32">
+              <input
+                type="number"
+                placeholder="Max price"
+                className="form-input"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+              />
+            </Label>
+          </div>
+        ) : searchType === "Quantity" ? (
+          <Label className="mx-0 w-70">
+            <div className="relative text-gray-500 dark:focus-within:text-purple-400">
+              <Select
+                className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-sm w-70"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              >
+                <option hidden>Select a Option</option>
+                <option>Out of stock</option>
+                <option>From 10 to 50</option>
+                <option>From 51 to 100</option>
+                <option>More than 100</option>
+              </Select>
             </div>
-          ) : 
-          (searchType === "Quantity") ? (
-            <Label className="mx-0 w-70">
-              <div className="relative text-gray-500 dark:focus-within:text-purple-400">
-                <Select
-                  className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-sm w-70"
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                >
-                  <option hidden>Select a Option</option>
-                  <option>Out of stock</option>
-                  <option>From 10 to 50</option>
-                  <option>From 51 to 100</option>
-                  <option>More than 100</option>
-                </Select>
-              </div>
-            </Label>
-          ) : (
-            <Label className="mx-0 w-70">
-              <div className="relative text-gray-500 dark:focus-within:text-purple-400">
-                <input
-                  type="text"
-                  className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
-                  placeholder="Search..."
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
+          </Label>
+        ) : (
+          <Label className="mx-0 w-70">
+            <div className="relative text-gray-500 dark:focus-within:text-purple-400">
+              <input
+                type="text"
+                className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
+                placeholder="Search..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center mr-3 cursor-pointer">
+                <SearchIcon
+                  className="w-5 h-5 text-purple-500 hover:text-red-500 transition-colors duration-200"
+                  aria-hidden="true"
                 />
-                <div className="absolute inset-y-0 right-0 flex items-center mr-3 cursor-pointer">
-                  <SearchIcon className="w-5 h-5 text-purple-500 hover:text-red-500 transition-colors duration-200" aria-hidden="true" />
-                </div>
               </div>
-            </Label>
-          )
-        }
+            </div>
+          </Label>
+        )}
         <RoundIcon
           icon={RefreshIcon}
           onClick={() => {
@@ -467,7 +504,7 @@ const ProductsAll = () => {
         />
       </Card>
 
-      {/* Product modal */}
+      {/* Product modal  */}
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -515,160 +552,168 @@ const ProductsAll = () => {
       </Modal>
 
       {/* Product Views */}
-      <>
-        <TableContainer className="mb-8">
-          <Table>
-            <TableHeader>
-              <tr>
-                <TableCell>
-                  <div className="flex items-center"> 
-                    Name
-                    <div className="cursor-pointer">
-                      <Icon 
-                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500" 
-                        aria-hidden="true"
-                        onClick={handleSortName} 
-                        icon={
-                          sortName === 'asc'
-                            ? UpIcon
-                            : sortName === 'desc'
-                            ? DownIcon
-                            : SortDefaultIcon
-                        }
-                      />
-                    </div>
+      <TableContainer className="mb-8">
+        <Table>
+          <TableHeader>
+            <tr>
+              <TableCell>
+                <div className="flex items-center">
+                  Name
+                  <div className="cursor-pointer">
+                    <Icon
+                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                      aria-hidden="true"
+                      onClick={handleSortName}
+                      icon={
+                        sortName === "asc"
+                          ? UpIcon
+                          : sortName === "desc"
+                          ? DownIcon
+                          : SortDefaultIcon
+                      }
+                    />
                   </div>
-                </TableCell> 
-                <TableCell>Description</TableCell>
-                <TableCell>
-                  <div className="flex items-center"> 
-                    Price
-                    <div className="cursor-pointer">
-                      <Icon 
-                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500" 
-                        aria-hidden="true"
-                        onClick={handleSortPrice} 
-                        icon={
-                          sortPrice === 'asc'
-                            ? UpIcon
-                            : sortPrice === 'desc'
-                            ? DownIcon
-                            : SortDefaultIcon
-                        }
-                      />
-                    </div>
+                </div>
+              </TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  Price
+                  <div className="cursor-pointer">
+                    <Icon
+                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                      aria-hidden="true"
+                      onClick={handleSortPrice}
+                      icon={
+                        sortPrice === "asc"
+                          ? UpIcon
+                          : sortPrice === "desc"
+                          ? DownIcon
+                          : SortDefaultIcon
+                      }
+                    />
                   </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center"> 
-                    Quantity
-                    <div className="cursor-pointer">
-                      <Icon 
-                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500" 
-                        aria-hidden="true"
-                        onClick={handleSortQty}
-                        icon={
-                          sortQty === 'asc'
-                            ? UpIcon
-                            : sortQty === 'desc'
-                            ? DownIcon
-                            : SortDefaultIcon
-                        }
-                      />
-                    </div>
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  Quantity
+                  <div className="cursor-pointer">
+                    <Icon
+                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                      aria-hidden="true"
+                      onClick={handleSortQty}
+                      icon={
+                        sortQty === "asc"
+                          ? UpIcon
+                          : sortQty === "desc"
+                          ? DownIcon
+                          : SortDefaultIcon
+                      }
+                    />
                   </div>
-                </TableCell>
-                <TableCell>Collections</TableCell>
-                <TableCell>Tags</TableCell>
-                <TableCell>Action</TableCell>
-              </tr>
-            </TableHeader>
-            <TableBody>
-              {data.map((product) => (
-                <TableRow
-                  key={product.id}
-                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <TableCell>
-                    <div className="flex items-center text-sm">
+                </div>
+              </TableCell>
+              <TableCell>Collections</TableCell>
+              <TableCell>Tags</TableCell>
+              <TableCell>Action</TableCell>
+            </tr>
+          </TableHeader>
+          <TableBody>
+            {data.map((product) => (
+              <TableRow
+                key={product.id}
+                className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+              >
+                <TableCell>
+                  <div className="flex items-center text-sm">
+                    <Link to={`/app/product/${product.id}`}>
+                      <Avatar
+                        className="hidden mr-4 md:block"
+                        src={
+                          product && product.images && product.images.length > 0
+                            ? product.images[0]
+                            : ""
+                        }
+                        alt="Product image"
+                      />
+                    </Link>
+                    <div>
                       <Link to={`/app/product/${product.id}`}>
-                        <Avatar
-                          className="hidden mr-4 md:block"
-                          src={
-                            product &&
-                            product.images &&
-                            product.images.length > 0
-                              ? product.images[0]
-                              : ""
-                          }
-                          alt="Product image"
-                        />
+                        <p className="font-semibold">{product.name}</p>
                       </Link>
-                      <div>
-                        <Link to={`/app/product/${product.id}`}>
-                          <p className="font-semibold">{product.name}</p>
-                        </Link>
-                      </div>
                     </div>
-                  </TableCell>
-                  <TableCell className="whitespace-normal break-words">
-                    {truncateContent(product.description)}
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {formatNumberWithDecimal(product.price)}₫
-                  </TableCell>
-                  <TableCell className={`text-sm text-center ${product.stockQty === 0 ? 'text-red-500' : ''}`}>
-                    {product.stockQty}
-                  </TableCell>
-                  <TableCell className="text-sm space-x-2">
-                    {product &&
-                    product.collections &&
-                    product.collections.length > 0
-                      ? product.collections.map((collection, index) => (
-                          <Badge className="bg-purple-100 text-purple-700" type="success" key={index}>
-                            {collection}
-                          </Badge>
-                        ))
-                      : ""}
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {product && product.tags && product.tags.length > 0
-                      ? product.tags.map((tag, index) => (
-                          <div key={index} className="flex">
-                            <span
-                              className="px-2 inline-flex text-xs leading-5
+                  </div>
+                </TableCell>
+                <TableCell className="whitespace-normal break-words">
+                  {truncateContent(product.description)}
+                </TableCell>
+                <TableCell className="text-sm">
+                  {formatNumberWithDecimal(product.price)}₫
+                </TableCell>
+                <TableCell
+                  className={`text-sm text-center ${
+                    product.stockQty === 0 ? "text-red-500" : ""
+                  }`}
+                >
+                  {product.stockQty}
+                </TableCell>
+                <TableCell className="text-sm space-x-2">
+                  {product &&
+                  product.collections &&
+                  product.collections.length > 0
+                    ? product.collections.map((collection) => (
+                        <Badge
+                          className="bg-purple-100 text-purple-700"
+                          type="success"
+                          key={collection.id}
+                        >
+                          {collection.name}
+                        </Badge>
+                      ))
+                    : null}
+                </TableCell>
+                <TableCell className="text-sm">
+                  {product && product.tags && product.tags.length > 0
+                    ? product.tags.map((tag) => (
+                        <div key={tag.id} className="flex">
+                          <span
+                            className="px-2 inline-flex text-xs leading-5
                       font-semibold rounded-full bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-blue-100 mb-2 mt-2"
-                            >
-                              {tag}
-                            </span>
-                          </div>
-                        ))
-                      : ""}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex">
-                      <Button
-                        icon={EditIcon}
-                        className="mr-3"
-                        layout="outline"
-                        aria-label="Edit"
-                        onClick={() => openModal("edit", product.id)}
-                      />
-                      <Button
-                        icon={TrashIcon}
-                        layout="outline"
-                        aria-label="Delete"
-                        onClick={() => openModal("delete", product.id)}
-                      />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-            {searchValue && data.length === 0 && 
-              <p className="text-center my-4 text-purple-500">No result match</p>}
-          </Table>
+                          >
+                            {tag.name}
+                          </span>
+                        </div>
+                      ))
+                    : null}
+                </TableCell>
+                <TableCell>
+                  <div className="flex">
+                    <Button
+                      icon={EditIcon}
+                      className="mr-3"
+                      layout="outline"
+                      aria-label="Edit"
+                      onClick={() => openModal("edit", product.id)}
+                    />
+                    <Button
+                      icon={TrashIcon}
+                      layout="outline"
+                      aria-label="Delete"
+                      onClick={() => openModal("delete", product.id)}
+                    />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+
           <TableFooter>
+            {searchValue && data.length === 0 && (
+              <p className="text-center my-4 text-purple-500">
+                No result match
+              </p>
+            )}
             {dataLoaded && (
               <Pagination
                 totalResults={totalResults}
@@ -678,8 +723,8 @@ const ProductsAll = () => {
               />
             )}
           </TableFooter>
-        </TableContainer>
-      </>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

@@ -15,12 +15,14 @@
 // };
 export const getProducts = (products, category, type, limit) => {
   const finalProducts = category
-    ? products.filter((product) => product.collections.includes(category))
+    ? products.filter((product) =>
+        product.collections.some((col) => col.name.includes(category))
+      )
     : products;
 
   if (type && type === "new") {
     const newProducts = finalProducts.filter((single) =>
-      single.collections.includes("Summer")
+      single.collections.some((col) => col.name.includes("Summer"))
     );
     return newProducts.slice(0, limit || newProducts.length);
   }
@@ -64,12 +66,13 @@ export const getSortedProducts = (products, sortType, sortValue) => {
     if (sortType === "category") {
       return products.filter(
         (product) =>
-          product.collections.filter((single) => single === sortValue)[0]
+          product.collections.filter((single) => single.name === sortValue)[0]
       );
     }
     if (sortType === "tag") {
       return products.filter(
-        (product) => product.tags.filter((single) => single === sortValue)[0]
+        (product) =>
+          product.tags.filter((single) => single.name === sortValue)[0]
       );
     }
     if (sortType === "filterSort") {
@@ -102,32 +105,30 @@ const getIndividualItemArray = (array) => {
 
 // get individual categories
 export const getIndividualCategories = (products) => {
-  let productCategories = [];
-  products &&
-    products.map((product) => {
-      return (
-        product.collections &&
-        product.collections.map((single) => {
-          return productCategories.push(single);
-        })
-      );
-    });
+  let productCategories = products.reduce((acc, product) => {
+    if (product.collections) {
+      product.collections.forEach((single) => {
+        acc.push(single.name);
+      });
+    }
+    return acc;
+  }, []);
+
   const individualProductCategories = getIndividualItemArray(productCategories);
   return individualProductCategories;
 };
 
 // get individual tags
 export const getIndividualTags = (products) => {
-  let productTags = [];
-  products &&
-    products.map((product) => {
-      return (
-        product.tags &&
-        product.tags.map((single) => {
-          return productTags.push(single);
-        })
-      );
-    });
+  let productTags = products.reduce((acc, product) => {
+    if (product.tags) {
+      product.tags.forEach((single) => {
+        acc.push(single.name);
+      });
+    }
+    return acc;
+  }, []);
+
   const individualProductTags = getIndividualItemArray(productTags);
   return individualProductTags;
 };

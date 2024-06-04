@@ -84,7 +84,11 @@ const Product = ({ location }) => {
         {/* related product slider */}
         <RelatedProductSlider
           spaceBottomClass="pb-95"
-          category={product.collections ? product.collections[0] : ""}
+          category={
+            product.collections && product.collections[0]
+              ? product.collections[0].name
+              : ""
+          }
         />
         {/* banner slider */}
         <VoucherSlider spaceBottomClass="pb-95" />

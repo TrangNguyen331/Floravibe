@@ -34,6 +34,7 @@ const ShopGridStandard = ({ location }) => {
       const response = await axiosInstance.get(
         `/api/v1/products/paging?size=${pageLimit}&search=${search}&page=${page}`
       );
+      console.log(response);
       return response.data;
     } catch (error) {
       return [];
@@ -49,6 +50,7 @@ const ShopGridStandard = ({ location }) => {
   };
 
   const getSortParams = (sortType, sortValue) => {
+    console.log(sortType, sortValue);
     setSortType(sortType);
     setSortValue(sortValue);
   };

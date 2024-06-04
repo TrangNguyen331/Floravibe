@@ -10,4 +10,7 @@ import java.util.List;
 public interface ProductRepository extends MongoRepository<Product,String>, CustomProductRepository {
 
     List<Product> findAllByActiveIsTrue();
+    List<Product> findByCollections_Id(String collectionId);
+    List<Product> findByTags_Id(String tagId);
+
 }
