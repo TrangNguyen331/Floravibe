@@ -1,14 +1,23 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { setSelectedCategory } from "../../redux/actions/categoryActions";
 
 const BannerFourSingle = ({ data, spaceBottomClass }) => {
+  const dispatch = useDispatch();
+
+  const handleBannerClick = (category) => {
+    dispatch(setSelectedCategory(category));
+    // Redirect to ShopGridStandard or perform any other action here
+  };
   return (
     <div className="col-lg-4 col-md-4">
       <div
         className={`single-banner banner-shape banner-green-color ${
           spaceBottomClass ? spaceBottomClass : ""
         }`}
+        onClick={() => handleBannerClick(data.title)}
       >
         <Link to={process.env.PUBLIC_URL + data.link}>
           <img src={process.env.PUBLIC_URL + data.image} alt="" />

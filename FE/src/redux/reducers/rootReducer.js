@@ -6,8 +6,7 @@ import compareReducer from "./compareReducer";
 import { combineReducers } from "redux";
 import { createMultilanguageReducer } from "redux-multilanguage";
 import authReducer from "./authReducer.js";
-
-
+import categoryReducer from "./categoryReducer.js";
 
 const rootReducer = combineReducers({
   multilanguage: createMultilanguageReducer({ currentLanguageCode: "en" }),
@@ -16,7 +15,8 @@ const rootReducer = combineReducers({
   cartData: cartReducer,
   wishlistData: wishlistReducer,
   compareData: compareReducer,
-  auth: authReducer
+  auth: authReducer,
+  bannerCategory: categoryReducer,
 });
 
 export default rootReducer;

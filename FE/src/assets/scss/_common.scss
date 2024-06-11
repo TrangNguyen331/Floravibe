@@ -1677,7 +1677,8 @@ textarea:focus {
 
 .scroll-top {
   position: fixed;
-  z-index: 9811 !important;
+  z-index: 100 !important;
+  // z-index: 9811 !important;
   right: 20px;
   bottom: 87px;
   visibility: hidden;
