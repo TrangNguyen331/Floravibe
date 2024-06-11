@@ -26,7 +26,6 @@ const RelatedProductSlider = ({ spaceBottomClass, category }) => {
     },
   };
   const { t } = useTranslation(["product"]);
-  console.log(category);
   return (
     <div
       className={`related-product-area ${

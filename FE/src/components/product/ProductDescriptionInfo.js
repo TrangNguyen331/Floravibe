@@ -20,9 +20,11 @@ const ProductDescriptionInfo = ({
   finalProductPrice,
   cartItems,
   wishlistItem,
+  compareItem,
   addToast,
   addToCart,
   addToWishlist,
+  addToCompare,
 }) => {
   const [selectedProductColor, setSelectedProductColor] = useState(
     product.variation ? product.variation[0].color : ""
@@ -71,13 +73,14 @@ const ProductDescriptionInfo = ({
             </span>
           </Fragment>
         ) : ( */}
-        <span>{finalProductPrice.toLocaleString("vi-VN") + "₫"} </span>
+        <span>{finalProductPrice.toLocaleString("vi-VN") + "đ"}</span>
         {/* )} */}
       </div>
 
       <div className="pro-details-rating-wrap">
         <div className="pro-details-rating">
-          <ProductAverageRating product={product} />
+          <ProductAverageRating product={product} /> ({product.reviews.length}{" "}
+          reviews)
         </div>
       </div>
 
@@ -226,7 +229,6 @@ const ProductDescriptionInfo = ({
           </div>
           <div className="pro-details-wishlist">
             <button
-              // className={wishlistItem !== undefined ? "active" : ""}
               disabled={wishlistItem !== undefined}
               title={
                 wishlistItem
@@ -247,6 +249,20 @@ const ProductDescriptionInfo = ({
               ) : (
                 <i className="fa fa-heart-o" />
               )}
+            </button>
+          </div>
+          <div className="pro-details-compare">
+            <button
+              className={compareItem !== undefined ? "active" : ""}
+              disabled={compareItem !== undefined}
+              title={
+                compareItem !== undefined
+                  ? "Added to compare"
+                  : "Add to compare"
+              }
+              onClick={() => addToCompare(product, addToast)}
+            >
+              <i className="pe-7s-shuffle" />
             </button>
           </div>
         </div>
@@ -322,7 +338,7 @@ ProductDescriptionInfo.propTypes = {
   addToWishlist: PropTypes.func,
   addToast: PropTypes.func,
   cartItems: PropTypes.array,
-  compareItem: PropTypes.array,
+  compareItem: PropTypes.object,
   currency: PropTypes.object,
   discountedPrice: PropTypes.number,
   finalDiscountedPrice: PropTypes.number,

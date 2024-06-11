@@ -3,7 +3,19 @@ import { NavLink, useParams } from "react-router-dom";
 import Icon from "../components/Icon";
 import PageTitle from "../components/Typography/PageTitle";
 import { DashboardIcon } from "../icons";
-import { Card, CardBody, Badge, Button, Avatar } from "@windmill/react-ui";
+import {
+  Card,
+  CardBody,
+  Badge,
+  TableBody,
+  TableContainer,
+  Table,
+  TableHeader,
+  TableCell,
+  TableRow,
+  Button,
+  Avatar,
+} from "@windmill/react-ui";
 import { genRating } from "../utils/genarateRating";
 import axiosInstance from "../axiosInstance";
 const SingleOrder = () => {
@@ -35,7 +47,7 @@ const SingleOrder = () => {
   console.log("order", order);
   return (
     <div>
-      <PageTitle>Product Details</PageTitle>
+      <PageTitle>Order Details</PageTitle>
       {order ? (
         <div>
           {/* Breadcum */}
@@ -51,11 +63,7 @@ const SingleOrder = () => {
               </NavLink>
             </div>
             {">"}
-            <NavLink
-              exact
-              to="/app/all-products"
-              className="mx-2 text-purple-600"
-            >
+            <NavLink exact to="/app/orders" className="mx-2 text-purple-600">
               All Orders
             </NavLink>
             {">"}
@@ -63,17 +71,119 @@ const SingleOrder = () => {
           </div>
 
           <Card className="my-8 shadow-md">
-            <CardBody></CardBody>
-          </Card>
-          {/* Product Reviews and Description */}
-          <Card className="my-8 shadow-md">
             <CardBody>
-              {/* Divider */}
-              <hr className="mx-3 my-2 customeDivider" />
-
-              {/* Component area */}
+              <div className="p-4">
+                <div className="flex items-center justify-between py-5">
+                  <h3>Order {order.id}</h3>
+                  <Badge className="py-1 px-2" type="success">
+                    {order.status}
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge className="py-1 px-2 gap-2 text-sm" type="neutral">
+                    Order time:
+                    <span className="font-normal">
+                      {new Date(order.createdDate).toLocaleString("vi-VN")}
+                    </span>
+                  </Badge>
+                  {order.status === "CANCEL" && (
+                    <Badge className="py-1 px-2 gap-2 text-sm" type="neutral">
+                      Cancel time:
+                      <span className="font-normal">
+                        {new Date(order.cancelDate).toLocaleString("vi-VN")}
+                      </span>
+                    </Badge>
+                  )}
+                </div>
+              </div>
             </CardBody>
           </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+            <Card className="shadow-md md:col-span-1">
+              <CardBody>
+                {/* Divider */}
+                {/* <hr className="mx-3 my-2 customeDivider" /> */}
+                <div className="p-4">
+                  <h2 className="mb-4">Customer & Order</h2>
+                  <ul>
+                    <li className="mb-2 flex justify-between">
+                      <span>Name:</span>
+                      <span>{order.additionalOrder.fullName}</span>
+                    </li>
+                    <li className="mb-2 flex justify-between">
+                      <span>Email:</span>
+                      <span>{order.additionalOrder.email}</span>
+                    </li>
+                    <li className="mb-2 flex justify-between">
+                      <span>Phone:</span>
+                      <span>{order.additionalOrder.phone}</span>
+                    </li>
+                    <li className="mb-2 flex justify-between">
+                      <span>Delivery date:</span>
+                      <span>{order.deliveryDate}</span>
+                    </li>
+                    <li className="mb-2 flex justify-between">
+                      <span>Delivery time:</span>
+                      <span>{order.deliveryTime}</span>
+                    </li>
+                    <li className="mb-2 flex justify-between">
+                      <span>Payment method:</span>
+                      <span>{order.methodPaid}</span>
+                    </li>
+                  </ul>
+                </div>
+              </CardBody>
+            </Card>
+            <Card className="shadow-md md:col-span-1">
+              <CardBody>
+                {/* Divider */}
+                {/* <hr className="mx-3 my-2 customeDivider" /> */}
+                <div className="p-4">
+                  <h2 className="mb-4">Shipping Address</h2>
+                  <div>
+                    {order.additionalOrder.houseNumber},{" "}
+                    {order.additionalOrder.ward},{" "}
+                    {order.additionalOrder.district},{" "}
+                    {order.additionalOrder.city}
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+          </div>
+          <div>
+            <Card>
+              <CardBody>
+                <div className="p-4">
+                  <h2 className="mb-4">Products ordered</h2>
+                  <TableContainer>
+                    <Table>
+                      <TableHeader>
+                        <tr>
+                          <TableCell>PRODUCT NAME</TableCell>
+                          <TableCell>UNIT PRICE</TableCell>
+                          <TableCell>QUANTITY</TableCell>
+                          <TableCell>SUBTOTAL</TableCell>
+                        </tr>
+                      </TableHeader>
+                      <TableBody>
+                        {order.details.map((detail, index) => (
+                          <TableRow
+                            key={index}
+                            className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                          >
+                            <TableCell>{detail.product.name}</TableCell>
+                            <TableCell>{detail.product.price}</TableCell>
+                            <TableCell>{detail.quantity}</TableCell>
+                            <TableCell>{detail.subtotal}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
+              </CardBody>
+            </Card>
+          </div>
         </div>
       ) : (
         ""

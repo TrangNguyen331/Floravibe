@@ -201,8 +201,18 @@ const EditForm = ({
                 value: tag.name,
                 label: tag.name,
               }))}
-              value={data && data.tags}
-              onChange={handleTagsChange}
+              value={
+                data &&
+                data.tags.map((tag) => ({
+                  value: tag.id,
+                  label: tag.name,
+                }))
+              }
+              onChange={(value) =>
+                handleCollectionsChange(
+                  value.map((item) => ({ id: item.value, name: item.label }))
+                )
+              }
             />
           </div>
 

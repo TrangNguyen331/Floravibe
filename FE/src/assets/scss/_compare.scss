@@ -15,10 +15,10 @@
             padding: 10px 30px;
             border: none;
             @media #{$md-layout} {
-              min-width: 200px;
+              min-width: 230px;
             }
             @media #{$xs-layout} {
-              min-width: 150px;
+              min-width: 180px;
               padding: 10px 20px;
             }
           }
@@ -65,8 +65,13 @@
               width: 100%;
               margin: 14px 0 7px;
               display: block;
+              display: grid;
+              place-items: center;
               img {
-                width: auto;
+                max-width: 100%;
+                height: auto;
+                max-height: 150px; /* Đảm bảo chiều cao tối đa */
+                object-fit: cover; /* Giữ nguyên tỷ lệ và cắt bớt nếu cần */
               }
             }
             & .category {

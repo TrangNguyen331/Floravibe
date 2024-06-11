@@ -88,6 +88,9 @@ public class TlcnApplication implements CommandLineRunner {
             voucherRepository.saveAll(Arrays.asList(voucher1, voucher2));
         }
 
+//        Collection col1 = new Collection();
+//        col1.setName("Birthday");
+//        collectionRepository.save(col1);
 
 //            Tag tag = new Tag();
 //            tag.setName("Purple");

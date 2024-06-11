@@ -13,7 +13,6 @@ import ShopProducts from "../../wrappers/product/ShopProducts";
 import axiosInstance from "../../axiosInstance";
 import ProductModel from "../../model/productmodel";
 import { useTranslation } from "react-i18next";
-
 const ShopGridStandard = ({ location }) => {
   const [layout, setLayout] = useState("grid three-column");
   const [sortType, setSortType] = useState("");
@@ -25,22 +24,26 @@ const ShopGridStandard = ({ location }) => {
   const [currentData, setCurrentData] = useState([]);
   const [sortedProducts, setSortedProducts] = useState([]);
   const [products, setProducts] = useState([]);
+  const [visible, setVisible] = useState(6);
   const [search, setSearch] = useState("");
   const pageLimit = 999;
   const { pathname } = location;
   const { t } = useTranslation(["breadcrumb"]);
+
   const fetchDataProduct = async (page, search) => {
     try {
       const response = await axiosInstance.get(
         `/api/v1/products/paging?size=${pageLimit}&search=${search}&page=${page}`
       );
-      console.log(response);
+      console.log(response.data.content);
       return response.data;
     } catch (error) {
       return [];
     }
   };
-
+  const handleShowMore = () => {
+    setVisible((prevCount) => prevCount + 6);
+  };
   const handleSearch = (search) => {
     setSearch(search);
     fetchDataAndProcess(0, search);
@@ -150,22 +153,17 @@ const ShopGridStandard = ({ location }) => {
                 />
 
                 {/* shop page content default */}
-                <ShopProducts layout={layout} products={currentData} />
+                <ShopProducts
+                  layout={layout}
+                  products={currentData.slice(0, visible)}
+                />
 
-                {/* shop product pagination */}
-                {/*<div className="pro-pagination-style text-center mt-30">*/}
-                {/*  <Paginator*/}
-                {/*      totalRecords={sortedProducts.length}*/}
-                {/*      pageLimit={pageLimit}*/}
-                {/*      pageNeighbours={2}*/}
-                {/*      setOffset={setOffset}*/}
-                {/*      currentPage={currentPage}*/}
-                {/*      setCurrentPage={setCurrentPage}*/}
-                {/*      pageContainerClass="mb-0 mt-0"*/}
-                {/*      pagePrevText="«"*/}
-                {/*      pageNextText="»"*/}
-                {/*  />*/}
-                {/*</div>*/}
+                {/* shop product showmore */}
+                {visible < currentData.length && (
+                  <div className="text-center mt-4 more-btn">
+                    <button onClick={handleShowMore}>Show more</button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

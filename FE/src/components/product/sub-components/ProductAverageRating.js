@@ -31,11 +31,9 @@ const ProductAverageRating = ({ product }) => {
   }
 
   return (
-    <div>
-      <p>
-        {stars} {formattedAverageRating} ({numberOfReviews} reviews)
-      </p>
-    </div>
+    <span>
+      {stars} {formattedAverageRating}
+    </span>
   );
 };
 

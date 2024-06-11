@@ -409,6 +409,18 @@
 }
 
 .shop-area {
+  .more-btn > button {
+    letter-spacing: 1px;
+    background-color: #333;
+    color: #fff;
+    font-weight: 500;
+    line-height: 1;
+    padding: 10px 15px;
+    border: none;
+    &:hover {
+      background-color: $theme-color;
+    }
+  }
   .container-fluid {
     padding: 0 70px;
     @media #{$xl-layout} {

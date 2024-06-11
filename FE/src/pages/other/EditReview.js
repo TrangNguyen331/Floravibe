@@ -88,10 +88,10 @@ const EditReview = (props) => {
     setShowEdit(false);
   };
   useEffect(() => {
-    if (props.orderId) {
+    if (props.orderId && props.show) {
       fecthOrder();
     }
-  }, [props.orderId]);
+  }, [props.orderId, props.show]);
   useEffect(() => {
     if (!props.show && showEdit) {
       setShowEdit(false);

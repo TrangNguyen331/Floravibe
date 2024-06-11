@@ -8,12 +8,12 @@ import { connect } from "react-redux";
 import ProductRating from "../../components/product/sub-components/ProductRating";
 
 const Evaluate = (props) => {
-  const { t } = useTranslation(['product', 'orders','breadcrumb']);
+  const { t } = useTranslation(["product", "orders", "breadcrumb"]);
   const { addToast } = useToasts();
   const [submitData, setSubmitData] = useState([]);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [order, setOrder] = useState(null);
-  const fecthOrder = async () => {
+  const fecthOrderDetail = async () => {
     try {
       const response = await axiosInstance.get(
         "/api/v1/orders/" + props.orderId
@@ -26,10 +26,10 @@ const Evaluate = (props) => {
     }
   };
   useEffect(() => {
-    if (props.orderId) {
-      fecthOrder();
+    if (props.orderId && props.show) {
+      fecthOrderDetail();
     }
-  }, [props.orderId]);
+  }, [props.orderId, props.show]);
 
   const handleOnChange = (productId, value, type) => {
     setSubmitData((prevData) => {

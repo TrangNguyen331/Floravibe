@@ -2,9 +2,9 @@
   "sidebar": {
     "search": "Search",
     "search-here": "Search here...",
-    "categories": "Categories",
-    "all-categories": "All Categories",
-    "no-product": "No Categories Found",
+    "categories": "Collections",
+    "all-categories": "All Collections",
+    "no-product": "No Collections Found",
     "tag": "Tag",
     "no-tag": "No Tags Found"
   },
@@ -27,7 +27,7 @@
     "color": "Color",
     "size": "Size",
     "buy-now": "Buy Now",
-    "categories": "Categories",
+    "categories": "Collections",
     "related": "Related Products"
   }
 }
