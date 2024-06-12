@@ -258,7 +258,7 @@ const ProductsAll = () => {
             (product) => product.price >= minPrice && product.price <= maxPrice
           );
           break;
-        case "Collections":
+        case "Category":
           filterProducts = productsData.filter((product) =>
             product.collections && product.collections.some((collection) =>
               collection.name && collection.name.toLowerCase().includes(searchValue.toLowerCase())
@@ -475,7 +475,7 @@ const ProductsAll = () => {
             <option hidden>Choose to search</option>
             <option>Name Of Product</option>
             {/* <option>Price</option> */}
-            <option>Collections</option>
+            <option>Category</option>
             <option>Tags</option>
             <option>Quantity</option>
           </Select>
@@ -668,7 +668,7 @@ const ProductsAll = () => {
                   </div>
                 </div>
               </TableCell>
-              <TableCell>Collections</TableCell>
+              <TableCell>Categories</TableCell>
               <TableCell>Tags</TableCell>
               <TableCell>Action</TableCell>
             </tr>

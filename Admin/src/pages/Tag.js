@@ -114,15 +114,7 @@ const Tag = () => {
         });
       } else if (mode === "delete") {
         try {
-          await axiosInstance.delete(`/api/v1/tags/${tagData.id}`, body);
-          setData((prevData) =>
-            prevData.map((item) =>
-              item.id === tagData.id ? { ...item, ...tagData } : item
-            )
-          );
-          // setData((prevData) =>
-          //   prevData.filter((item) => item.id !== tagData.id)
-          // );
+          await axiosInstance.delete(`/api/v1/tags/`+ tagData.id);
           closeModal();
           addToast("Tag deleted successfully", {
             appearance: "success",
@@ -157,6 +149,7 @@ const Tag = () => {
       [key]: value,
     }));
   };
+  
   const handleSortName = () => { 
     try {
       let newSort, sortedData;
@@ -279,7 +272,12 @@ const Tag = () => {
             {mode === "add" ? "Add New Tag" : mode === "edit" ? "Edit Tag" : "Delete Tag"}
           </ModalHeader>
           <ModalBody>
-            {mode === "edit" ? (
+            {mode === "add" ? (
+              <TagForm
+                data={tagData}
+                handleInputChange={handleInputChange}
+              />
+            ) : mode === "edit" ? (
               <TagForm data={tagData} handleInputChange={handleInputChange} />
             ) : (
               <p>
@@ -296,7 +294,7 @@ const Tag = () => {
               </Button>
             </div>
             <div className="hidden sm:block">
-              {mode === "edit" ? (
+              {/* {mode === "edit" ? (
               <Button
                 onClick={() => handleSave("edit")}
                 disabled={loadingSave}
@@ -309,15 +307,15 @@ const Tag = () => {
               <Button block onClick={() => handleSave("delete")}>
                 Delete
               </Button>
-            )}
-              {/* <Button
+            )} */}
+              <Button
                 onClick={() => handleSave(mode)}
                 disabled={loadingSave}
                 className="gap-2 items-center"
               >
                 {loadingSave ? <FaSpinner className="animate-spin" /> : null}
                 Save
-              </Button> */}
+              </Button>
             </div>
           </ModalFooter>
         </Modal>

@@ -156,33 +156,41 @@ const Collection = () => {
   };
 
   const handleSortName = () => {
-    let newSort, sortedData;
-    switch (sortName) {
-      case "default":
-        newSort = "asc";
-        sortedData = [...data].sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "asc":
-        newSort = "desc";
-        sortedData = [...data].sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      case "desc":
-        newSort = "default";
-        sortedData = [...dataOrg];
-        break;
+    try {
+      let newSort, sortedData;
+      switch (sortName) {
+        case "default":
+          newSort = "asc";
+          sortedData = [...data].sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case "asc":
+          newSort = "desc";
+          sortedData = [...data].sort((a, b) => b.name.localeCompare(a.name));
+          break;
+        case "desc":
+          newSort = "default";
+          sortedData = [...dataOrg];
+          break;
+      }
+      setSortName(newSort);
+      setData(sortedData);
+    } catch (error) {
+      console.error("An error occurred during sorting by name: ", error.message);
     }
-    setSortName(newSort);
-    setData(sortedData);
   };
 
   const handleSearch = () => {
-    if (searchValue === "") {
-      setData(dataOrg);
-    } else {
-      const filteredData = dataOrg.filter((collection) =>
-        collection.name.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setData(filteredData);
+    try {
+      if (searchValue === "") {
+        setData(dataOrg);
+      } else {
+        const filteredData = dataOrg.filter((collection) =>
+          collection.name.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        setData(filteredData);
+      }
+    } catch (error) {
+      console.error("An error occurred during search", error.message);
     }
   };
   useEffect(() => {
@@ -191,7 +199,7 @@ const Collection = () => {
 
   return (
     <div>
-      <PageTitle>Product Collections</PageTitle>
+      <PageTitle>Product Categories</PageTitle>
       {/* Breadcrumb */}
       <div className="flex text-gray-800 dark:text-gray-300">
         <div className="flex items-center text-purple-600">
@@ -201,7 +209,7 @@ const Collection = () => {
           </NavLink>
         </div>
         {">"}
-        <p className="mx-2">Collections</p>
+        <p className="mx-2">Categories</p>
       </div>
 
       {/* Add */}
@@ -213,7 +221,7 @@ const Collection = () => {
             className="mx-3"
             onClick={() => openModal("add", null)}
           >
-            Add collection
+            Add Category
           </Button>
         </div>
       </div>
@@ -224,7 +232,7 @@ const Collection = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                All Collections
+                All Categories
               </p>
             </div>
           </div>
@@ -262,9 +270,9 @@ const Collection = () => {
       <div>
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <ModalHeader className="flex items-center text-2xl">
-            {mode === "add" && "Add New Collection"}
-            {mode === "edit" && "Edit Collection"}
-            {mode === "delete" && "Delete Collection"}
+            {mode === "add" && "Add New Category"}
+            {mode === "edit" && "Edit Category"}
+            {mode === "delete" && "Delete Category"}
           </ModalHeader>
           <ModalBody>
             {mode === "add" ? (
