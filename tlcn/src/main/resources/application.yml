@@ -27,7 +27,7 @@ application:
       page: 0
       size: 20
 upload:
-  directory: C:\Users\DELL\Practice\React\Floravibe\tlcn\src\main\resources\uploads
+  directory: D:\HKII_23-24\KLTN\Img
 vnpay:
   vnp_TmnCode: U39O3AW8
   vnp_HashSecret: VQ4QLLP1FBOFC2X70CQJ9FE4234WKJ9B

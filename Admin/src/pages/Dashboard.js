@@ -27,7 +27,6 @@ import {
 import OrdersTable from "../components/OrdersTable";
 import axiosInstance from "../axiosInstance";
 import StatisticProduct from "../components/StatisticProduct";
-import TestStatstic from "../components/TestStatstic";
 
 function Dashboard() {
   const [dashboard, setDashBoard] = useState({
@@ -58,11 +57,12 @@ function Dashboard() {
     };
   }, []);
   const [filter, setFilter] = useState("");
+  const [refresh, setRefresh] = useState(false);
 
   const handleFilter = (filter_name) => {
     // console.log(filter_name);
     if (filter_name === "All") {
-      setFilter("");
+      setRefresh(!refresh);
     }
     if (filter_name === "In-Request Orders") {
       setFilter("IN_REQUEST");
@@ -203,11 +203,17 @@ function Dashboard() {
         </CardBody>
         <RoundIcon
           icon={RefreshIcon}
-          onClick={() => setFilter("")}
+          onClick={() => {
+            setRefresh(!refresh)
+          }}
           className="pr-3 mr-6 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
         />
       </Card>
-      <OrdersTable resultsPerPage={5} filter={filter} />
+      <OrdersTable 
+        resultsPerPage={5} 
+        filter={filter}
+        refresh={refresh}
+      />
 
       <PageTitle>Statistic Product</PageTitle>
       <StatisticProduct />

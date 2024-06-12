@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
+  Card,
+  CardBody,
+  Label,
   Button,
   TableBody,
   TableContainer,
@@ -14,7 +17,12 @@ import {
 } from "@windmill/react-ui";
 import PageTitle from "../components/Typography/PageTitle";
 import { NavLink } from "react-router-dom";
+<<<<<<< Updated upstream
 import { AddIcon, EditIcon, TrashIcon, DashboardIcon } from "../icons";
+=======
+import { AddIcon, EditIcon, DashboardIcon, SearchIcon, RefreshIcon, UpIcon, DownIcon, SortDefaultIcon } from "../icons";
+import RoundIcon from "../components/RoundIcon";
+>>>>>>> Stashed changes
 import axiosInstance from "../axiosInstance";
 import { useToasts } from "react-toast-notifications";
 import CollectionForm from "../components/CollectionForm";
@@ -28,6 +36,9 @@ function Icon({ icon, ...props }) {
 const Collection = () => {
   const [data, setData] = useState([]);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [sortName, setSortName] = useState("default");
+  const [dataOrg, setDataOrg] = useState([]);
   const { addToast } = useToasts();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
@@ -60,6 +71,7 @@ const Collection = () => {
     try {
       const response = await axiosInstance.get("/api/v1/collections/all");
       setData(response.data);
+      setDataOrg(response.data);
       setDataLoaded(true);
     } catch (error) {
       console.log("Fetch data error", error);
@@ -137,6 +149,44 @@ const Collection = () => {
     }));
   };
 
+  const handleSortName = () => {
+    let newSort, sortedData;
+    switch (sortName) {   
+      case "default":
+        newSort = "asc"; 
+        sortedData = [...data].sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        break;
+      case "asc":
+        newSort = "desc"; 
+        sortedData= [...data].sort((a, b) =>
+          b.name.localeCompare(a.name)
+        );
+        break;
+      case "desc":
+        newSort = "default"; 
+        sortedData = [...dataOrg];
+        break;
+    }
+    setSortName(newSort);
+    setData(sortedData);
+  };
+
+  const handleSearch = () => {
+    if (searchValue === "") {
+      setData(dataOrg);
+    } else {
+      const filteredData = dataOrg.filter(collection =>
+        collection.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setData(filteredData);
+    }
+  };
+  useEffect(() => {
+      handleSearch();
+  }, [searchValue]);
+
   return (
     <div>
       <PageTitle>Product Collections</PageTitle>
@@ -165,6 +215,46 @@ const Collection = () => {
           </Button>
         </div>
       </div>
+
+      {/* Search */}
+      <Card className="mt-5 mb-5 pt-3 pb-3 shadow-md flex justify-between items-center">
+        <CardBody>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                All Collections
+              </p>
+            </div>
+          </div>
+        </CardBody>
+        <div className="flex items-center">
+          <Label className="mx-0 w-70">
+            <div className="relative text-gray-500 dark:focus-within:text-purple-400 w-90">
+              <div className="absolute inset-y-0 left-0 flex items-center ml-3">
+                <SearchIcon
+                  className="w-5 h-5 text-purple-500 transition-colors duration-200"
+                  aria-hidden="true"
+                />
+              </div>
+              <input
+                type="text"
+                className="py-3 pl-10 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-full w-90"
+                placeholder="Search..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+            </div>
+          </Label>
+          <RoundIcon
+            icon={RefreshIcon}
+            onClick={() => {
+              setSearchValue("");
+              handleSearch();
+            }}
+            className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
+          />
+        </div>    
+      </Card>
 
       {/* Modal */}
       <div>
@@ -200,7 +290,6 @@ const Collection = () => {
             </div>
             <div className="hidden sm:block">
               <Button
-                size="large"
                 onClick={() => handleSave(mode)}
                 disabled={loadingSave}
                 className="gap-2 items-center"
@@ -218,7 +307,25 @@ const Collection = () => {
         <Table>
           <TableHeader>
             <tr>
-              <TableCell>Name</TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  Name
+                  <div className="cursor-pointer">
+                    <Icon
+                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                      aria-hidden="true"
+                      onClick={handleSortName}
+                      icon={
+                        sortName === "asc"
+                          ? UpIcon
+                          : sortName === "desc"
+                          ? DownIcon
+                          : SortDefaultIcon
+                      }
+                    />
+                  </div>
+                </div>
+              </TableCell>
               <TableCell>Actions</TableCell>
             </tr>
           </TableHeader>

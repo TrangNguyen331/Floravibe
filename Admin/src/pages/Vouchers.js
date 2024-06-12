@@ -215,11 +215,11 @@ const Vouchers = () => {
             </div>
             <div className="hidden sm:block">
               {mode === "edit" ? (
-                <Button block size="large" onClick={() => handleSave("edit")}>
+                <Button block onClick={() => handleSave("edit")}>
                   Save
                 </Button>
               ) : (
-                <Button block size="large" onClick={() => handleSave("add")}>
+                <Button block onClick={() => handleSave("add")}>
                   Add
                 </Button>
               )}
@@ -255,10 +255,10 @@ const Vouchers = () => {
                 <TableCell className="text-base">
                   {voucher.voucherValue}
                 </TableCell>
-                <TableCell className="text-base">
+                <TableCell className={new Date(voucher.effectiveDate) < new Date() ? "text-base text-green-400" : "text-base"}>
                   {new Date(voucher.effectiveDate).toLocaleDateString()}
                 </TableCell>
-                <TableCell className="text-base">
+                <TableCell className={new Date(voucher.validUntil) < new Date() ? "text-base text-red-600" : "text-base"}>
                   {new Date(voucher.validUntil).toLocaleDateString()}
                 </TableCell>
                 <TableCell className="text-base">{voucher.quantity}</TableCell>

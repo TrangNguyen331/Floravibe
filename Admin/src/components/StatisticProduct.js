@@ -7,10 +7,10 @@ import {
   TableBody,
   TableRow,
   TableFooter,
-  Pagination,
   Avatar,
 } from "@windmill/react-ui";
 import axiosInstance from "../axiosInstance";
+import Paginate from "./Pagination/Paginate";
 
 const StatisticProduct = () => {
   const [page, setPage] = useState(1);
@@ -22,11 +22,11 @@ const StatisticProduct = () => {
 
   const [completedOrders, setCompletedOrders] = useState([]);
   const [quantityCompletedOrders, setQuantityCompletedOrders] = useState([]);
-  const [totalPage, setTotalPage] = useState(0);
+  const [totalPages, setTotalPage] = useState(0);
   const [resultsPerPage, setResultsPerPage] = useState(5);
   const [totalResults, setTotalResult] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
-  async function onPageChange(p) {
+  async function onPageChange(e, p) {
     console.log("Trigger on page change");
     await fetchData(p);
   }
@@ -130,12 +130,19 @@ const StatisticProduct = () => {
         </Table>
         <TableFooter>
           {dataLoaded && (
-            <Pagination
-              totalResults={totalResults}
-              resultsPerPage={resultsPerPage}
-              label="Table navigation"
-              onChange={(page) => onPageChange(page)}
-            />
+              <Paginate
+                  totalPages={totalPages}
+                  totalResults={totalResults}
+                  page={page}
+                  onPageChange={onPageChange}
+                />
+            
+            // <Pagination
+            //   totalResults={totalResults}
+            //   resultsPerPage={resultsPerPage}
+            //   label="Table navigation"
+            //   onChange={(page) => onPageChange(page)}
+            // />
           )}
         </TableFooter>
       </TableContainer>

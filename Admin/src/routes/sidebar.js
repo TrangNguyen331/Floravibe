@@ -54,12 +54,12 @@ const routes = [
   },
   {
     path: "/app/collections/all",
-    icon: "VoucherICon",
+    icon: "CollectionIcon",
     name: "Collections",
   },
   {
     path: "/app/tags/all",
-    icon: "VoucherICon",
+    icon: "TagIcon",
     name: "Tags",
   },
   {

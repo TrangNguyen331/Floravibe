@@ -23,13 +23,13 @@ import {
   TableCell,
   TableRow,
   TableFooter,
-  Pagination,
   Modal,
   ModalHeader,
   ModalBody,
   ModalFooter,
   Badge,
 } from "@windmill/react-ui";
+import { Grid, Typography, Pagination } from '@mui/material';
 import { useToasts } from "react-toast-notifications";
 const Blogs = () => {
   const [page, setPage] = useState(1);
@@ -37,7 +37,7 @@ const Blogs = () => {
   const { addToast } = useToasts();
   // pagination setup
   const [resultsPerPage, setResultsPerPage] = useState(4);
-  const [totalPage, setTotalPage] = useState(0);
+  const [totalPages, setTotalPage] = useState(0);
   const [totalResults, setTotalResult] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
   //const totalResults = response.length;
@@ -156,7 +156,7 @@ const Blogs = () => {
     setMode(mode);
     setIsModalOpen(true);
   };
-  const onPageChange = async (p) => {
+  const onPageChange = async (e, p) => {
     await fetchData(p);
   };
   const fetchData = async (page) => {
@@ -258,11 +258,11 @@ const Blogs = () => {
             </div>
             <div className="hidden sm:block">
               {mode === "edit" ? (
-                <Button block size="large" onClick={() => handleSave("edit")}>
+                <Button block onClick={() => handleSave("edit")}>
                   Save
                 </Button>
               ) : mode === "delete" ? (
-                <Button block size="large" onClick={() => handleSave("delete")}>
+                <Button block onClick={() => handleSave("delete")}>
                   Delete
                 </Button>
               ) : (
@@ -353,12 +353,31 @@ const Blogs = () => {
         </Table>
         <TableFooter>
           {dataLoaded && (
-            <Pagination
-              totalResults={totalResults}
-              resultsPerPage={resultsPerPage}
-              label="Table navigation"
-              onChange={(page) => onPageChange(page)}
-            />
+              <Grid container justifyContent="space-between" alignItems="center" spacing={3}>
+                <Grid item>
+                  <Typography component="span" sx={{ fontSize: 14 }}>Total Page:</Typography>
+                  <Typography component="span" sx={{ fontSize: 14, fontWeight: 'bold', pr: 2}}> {totalPages} </Typography>
+                  <Typography component="span" sx={{ fontSize: 15 }}>|</Typography>
+                  <Typography component="span" sx={{ fontSize: 14, pl: 2 }}>Total Items:</Typography>
+                  <Typography component="span" sx={{ fontSize: 14, fontWeight: 'bold' }}> {totalResults}</Typography>
+                </Grid>
+                <Grid item>
+                  <Pagination 
+                    count={totalPages} 
+                    page={page} 
+                    onChange={onPageChange} 
+                    sx={{
+                          '& .MuiPaginationItem-page.Mui-selected': {
+                            backgroundColor: '#7e3af2',
+                            color: '#fff',
+                            border: 0,
+                          },
+                        }}
+                    showFirstButton
+                    showLastButton
+                  />
+                </Grid>
+              </Grid>
           )}
         </TableFooter>
       </TableContainer>

@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
+  Card,
+  CardBody,
+  Label,
+  Select,
   TableBody,
   TableContainer,
   Table,
@@ -9,7 +13,6 @@ import {
   TableFooter,
   Avatar,
   Badge,
-  Pagination,
   Input,
   Button,
   Modal,
@@ -17,20 +20,29 @@ import {
   ModalBody,
   ModalFooter,
 } from "@windmill/react-ui";
-import { AddIcon } from "../icons";
+import { NavLink } from "react-router-dom";
+import Icon from "../components/Icon";
+import Paginate from "./Pagination/Paginate";
+import { AddIcon, DashboardIcon, RefreshIcon, SearchIcon, UpIcon, DownIcon, SortDefaultIcon } from "../icons";
+import RoundIcon from "./RoundIcon";
 import axiosInstance from "../axiosInstance";
 import { AccountForm } from "./AccountForm";
 import { useToasts } from "react-toast-notifications";
 const UsersTable = () => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
-  const [resultsPerPage, setResultsPerPage] = useState(10);
-  const [totalPage, setTotalPage] = useState(0);
+  const [resultsPerPage, setResultPerPage] = useState(10);
+  const [totalPages, setTotalPage] = useState(0);
   const [totalResults, setTotalResult] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
+
+  const [searchType, setSearchType] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+
+
   const { addToast } = useToasts();
   // pagination change control
-  async function onPageChange(p) {
+  async function onPageChange(e, p) {
     console.log(p);
     await fetchData(p);
   }
@@ -133,6 +145,19 @@ const UsersTable = () => {
   };
   return (
     <div>
+
+      {/* Breadcum */}
+      <div className="flex text-gray-800 dark:text-gray-300">
+        <div className="flex items-center text-purple-600">
+          <Icon className="w-5 h-5" aria-hidden="true" icon={DashboardIcon} />
+          <NavLink exact to="/app/dashboard" className="mx-2">
+            Dashboard
+          </NavLink>
+        </div>
+        {">"}
+        <p className="mx-2">All Users</p>
+      </div>
+
       {/* Add */}
       <div className="flex items-center justify-end mt-5 mb-5">
         <div className="flex">
@@ -171,12 +196,67 @@ const UsersTable = () => {
           </ModalFooter>
         </Modal>
       </div>
+      
+
+      {/* Search */}
+      <Card className="mt-5 mb-5 pt-3 pb-3 shadow-md flex justify-between items-center">
+        <CardBody>
+          <div className="flex items-center">
+            <p className="text-md text-gray-600 dark:text-gray-400">
+              All Users
+            </p>
+          </div>
+        </CardBody>
+        <Label className="mx-0 ml-auto">
+          <Select
+            className="py-3 rounded-r-none bg-purple-200"
+            onChange={(e) => {
+              setSearchType(e.target.value);
+              setSearchValue("");
+            }}
+          >
+            <option hidden>Choose to search</option>
+            <option>First Name</option>
+            <option>Last Name</option>
+            <option>Email</option>
+            <option>Role</option>
+          </Select>
+        </Label>
+        <Label className="mx-0 w-70">
+          <div className="relative text-gray-500 dark:focus-within:text-purple-400">
+            <input
+              type={searchType === "Date" ? "date" : "text"}
+              className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
+              placeholder="Search..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+            <div className="absolute inset-y-0 right-0 flex items-center mr-3 cursor-pointer">
+              <SearchIcon
+                className="w-5 h-5 text-purple-500 transition-colors duration-200"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+        </Label>
+        <RoundIcon
+          icon={RefreshIcon}
+          onClick={() => {
+            // setSearchType("");
+            // setSearchValue("");
+            // setRefresh(!refresh);
+            // setResultPerPage(resultsPerPage);
+          }}
+          className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
+        />
+      </Card>
 
       {/* Table */}
       <TableContainer className="mb-8">
         <Table>
           <TableHeader>
             <tr>
+              <TableCell>User Name</TableCell>
               <TableCell>First Name</TableCell>
               <TableCell>Last Name</TableCell>
               <TableCell>Email</TableCell>
@@ -189,22 +269,36 @@ const UsersTable = () => {
               <TableRow key={i}>
                 <TableCell>
                   <div className="flex items-center text-base">
+                    
                     <Avatar
                       className="hidden mr-3 md:block"
                       src={
                         user.avatar
                           ? user.avatar
-                          : "https://i.pinimg.com/564x/93/4e/37/934e37c613b24b4c7aa236644dd46fdc.jpg"
+                          // : "https://i.pinimg.com/564x/93/4e/37/934e37c613b24b4c7aa236644dd46fdc.jpg"
+                          // : "https://i.pinimg.com/originals/c5/0e/50/c50e501274761567685ebb90fdea4460.jpg"
+                          : "https://i.pinimg.com/originals/90/48/9f/90489fda05254bb2fef245248e9befb1.jpg"                         
+
+
                       }
                       alt="User image"
                     />
                     <div>
-                      <p className="font-semibold">{user.firstName}</p>
+                      <p className="font-semibold">
+                        {user.username}
+                      </p>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <span className="text-base">{user.lastName}</span>
+                  <span className="text-base">
+                    {user.firstName ? user.firstName : "Unknown"}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span className="text-base">
+                    {user.lastName ? user.lastName : "Unknown"}
+                  </span>
                 </TableCell>
                 <TableCell>
                   <span className="text-base">{user.email}</span>
@@ -242,12 +336,18 @@ const UsersTable = () => {
         </Table>
         <TableFooter>
           {dataLoaded && (
-            <Pagination
-              totalResults={totalResults}
-              resultsPerPage={resultsPerPage}
-              label="Table navigation"
-              onChange={(page) => onPageChange(page)}
-            />
+              <Paginate
+                  totalPages={totalPages}
+                  totalResults={totalResults}
+                  page={page}
+                  onPageChange={onPageChange}
+                />
+            // <Pagination
+            //   totalResults={totalResults}
+            //   resultsPerPage={resultsPerPage}
+            //   label="Table navigation"
+            //   onChange={(page) => onPageChange(page)}
+            // />
           )}
         </TableFooter>
       </TableContainer>

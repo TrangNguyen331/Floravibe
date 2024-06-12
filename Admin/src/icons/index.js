@@ -47,6 +47,8 @@ import { ReactComponent as RefreshIcon} from "./refresh.svg";
 import { ReactComponent as DownIcon} from "./arrow-down.svg";
 import { ReactComponent as UpIcon} from "./arrow-up.svg";
 import { ReactComponent as SortDefaultIcon} from "./sort-default.svg";
+import { ReactComponent as TagIcon} from "./tag.svg";
+import { ReactComponent as CollectionIcon} from "./collection.svg";
 export {
   GroupIcon,
   UserIcon,
@@ -96,5 +98,7 @@ export {
   RefreshIcon,
   UpIcon,
   DownIcon,
-  SortDefaultIcon
+  SortDefaultIcon,
+  TagIcon,
+  CollectionIcon
 };

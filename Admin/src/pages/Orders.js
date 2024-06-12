@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import PageTitle from "../components/Typography/PageTitle";
 import { NavLink } from "react-router-dom";
 import { DashboardIcon, RefreshIcon, SearchIcon } from "../icons";
@@ -14,6 +14,7 @@ const Orders = () => {
   console.log("Order Page");
   // pagination setup
   const [resultsPerPage, setResultPerPage] = useState(10);
+  // filter/search
   const [filter, setFilter] = useState("");
   const [searchType, setSearchType] = useState("");
   const [searchValue, setSearchValue] = useState("");
@@ -22,7 +23,10 @@ const Orders = () => {
   const handleFilter = (filter_name) => {
     // console.log(filter_name);
     if (filter_name === "All") {
-      setFilter("");
+      setRefresh(!refresh);
+      setSearchType("");
+      setSearchValue("");
+      setResultPerPage(resultsPerPage);
     }
     if (filter_name === "In-Request Orders") {
       setFilter("IN_REQUEST");
@@ -116,9 +120,9 @@ const Orders = () => {
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
-            <div className="absolute inset-y-0 right-0 flex items-center mr-3 cursor-pointer">
+            <div className="absolute inset-y-0 right-0 flex items-center mr-3">
               <SearchIcon
-                className="w-5 h-5 text-purple-500 hover:text-red-500 transition-colors duration-200"
+                className="w-5 h-5 text-purple-500 transition-colors duration-200"
                 aria-hidden="true"
               />
             </div>
@@ -127,10 +131,10 @@ const Orders = () => {
         <RoundIcon
           icon={RefreshIcon}
           onClick={() => {
-            setFilter("");
             setSearchType("");
             setSearchValue("");
             setRefresh(!refresh);
+            setResultPerPage(resultsPerPage);
           }}
           className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
         />

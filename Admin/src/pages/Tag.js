@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
+  Card,
+  CardBody,
+  Label,
   Button,
   TableBody,
   TableContainer,
@@ -14,12 +17,15 @@ import {
 } from "@windmill/react-ui";
 import PageTitle from "../components/Typography/PageTitle";
 import { NavLink } from "react-router-dom";
-import { AddIcon, EditIcon, DashboardIcon } from "../icons";
+import { AddIcon, EditIcon, DashboardIcon, UpIcon, DownIcon, SortDefaultIcon } from "../icons";
 import axiosInstance from "../axiosInstance";
 import { useToasts } from "react-toast-notifications";
 import TagForm from "../components/TagForm";
 import { FaSpinner } from "react-icons/fa";
 import ".././assets/css/customLoading.css";
+import { RefreshIcon, SearchIcon, TrashIcon } from "../icons";
+import RoundIcon from "../components/RoundIcon";
+
 function Icon({ icon, ...props }) {
   const Icon = icon;
   return <Icon {...props} />;
@@ -27,6 +33,9 @@ function Icon({ icon, ...props }) {
 
 const Tag = () => {
   const [data, setData] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [sortName, setSortName] = useState("default");
+  const [dataOrg, setDataOrg] = useState([]);
   const [dataLoaded, setDataLoaded] = useState(false);
   const { addToast } = useToasts();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,7 +52,7 @@ const Tag = () => {
   };
 
   const openModal = async (mode, tagId) => {
-    if (mode === "edit") {
+    if (mode === "edit" || mode === "delete") {
       let result = await data.find((item) => item.id === tagId);
       setTagData(result);
     } else {
@@ -60,6 +69,7 @@ const Tag = () => {
     try {
       const response = await axiosInstance.get("/api/v1/tags/all");
       setData(response.data);
+      setDataOrg(response.data);
       setDataLoaded(true);
     } catch (error) {
       console.log("Fetch data error", error);
@@ -102,6 +112,29 @@ const Tag = () => {
           appearance: "success",
           autoDismiss: true,
         });
+      } else if (mode === "delete") {
+        try {
+          await axiosInstance.delete(`/api/v1/tags/${tagData.id}`, body);
+          setData((prevData) =>
+            prevData.map((item) =>
+              item.id === tagData.id ? { ...item, ...tagData } : item
+            )
+          );
+          // setData((prevData) =>
+          //   prevData.filter((item) => item.id !== tagData.id)
+          // );
+          closeModal();
+          addToast("Tag deleted successfully", {
+            appearance: "success",
+            autoDismiss: true,
+          });
+        } catch (error) {
+          console.log("Error", error);
+          addToast("Error occurred while trying to delete tag", {
+            appearance: "error",
+            autoDismiss: true,
+          });
+        }
       }
       setTagData({
         id: null,
@@ -124,6 +157,51 @@ const Tag = () => {
       [key]: value,
     }));
   };
+  const handleSortName = () => { 
+    try {
+      let newSort, sortedData;
+      switch (sortName) {   
+        case "default":
+          newSort = "asc"; 
+          sortedData = [...data].sort((a, b) =>
+            a.name.localeCompare(b.name)
+          );
+          break;
+        case "asc":
+          newSort = "desc"; 
+          sortedData= [...data].sort((a, b) =>
+            b.name.localeCompare(a.name)
+          );
+          break;
+        case "desc":
+          newSort = "default"; 
+          sortedData = [...dataOrg];
+          break;
+      }
+      setSortName(newSort);
+      setData(sortedData);
+    } catch (error) {
+      console.error("An error occurred during sorting by name: ", error.message);
+    }
+  };
+
+  const handleSearch = () => {
+    try {
+      if (searchValue === "") {
+        setData(dataOrg);
+      } else {
+        const filteredData = dataOrg.filter(tag =>
+          tag.name.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        setData(filteredData);
+      }
+    } catch (error) {
+      console.error("An error occurred during search", error.message);
+    }
+  };
+  useEffect(() => {
+      handleSearch();
+  }, [searchValue]);
 
   return (
     <div>
@@ -154,14 +232,62 @@ const Tag = () => {
         </div>
       </div>
 
+      {/* Search */}
+      <Card className="mt-5 mb-5 pt-3 pb-3 shadow-md flex justify-between items-center">
+        <CardBody>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                All Tags
+              </p>
+            </div>
+          </div>
+        </CardBody>
+        <div className="flex items-center">
+          <Label className="mx-0 w-70">
+            <div className="relative text-gray-500 dark:focus-within:text-purple-400 w-90">
+              <div className="absolute inset-y-0 left-0 flex items-center ml-3">
+                <SearchIcon
+                  className="w-5 h-5 text-purple-500 transition-colors duration-200"
+                  aria-hidden="true"
+                />
+              </div>
+              <input
+                type="text"
+                className="py-3 pl-10 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-full w-90"
+                placeholder="Search..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+            </div>
+          </Label>
+          <RoundIcon
+            icon={RefreshIcon}
+            onClick={() => {
+              setSearchValue("");
+              handleSearch();
+            }}
+            className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
+          />
+        </div>    
+      </Card>
+
       {/* Modal */}
       <div>
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <ModalHeader className="flex items-center text-2xl">
-            {mode === "add" ? "Add New Tag" : "Edit Tag"}
+            {mode === "add" ? "Add New Tag" : mode === "edit" ? "Edit Tag" : "Delete Tag"}
           </ModalHeader>
           <ModalBody>
-            <TagForm data={tagData} handleInputChange={handleInputChange} />
+            {mode === "edit" ? (
+              <TagForm data={tagData} handleInputChange={handleInputChange} />
+            ) : (
+              <p>
+                Make sure you want to delete tag{" "}
+                {tagData && `"${tagData.name}"`}
+              </p>
+            )}
+            {/* <TagForm data={tagData} handleInputChange={handleInputChange} /> */}
           </ModalBody>
           <ModalFooter>
             <div className="hidden sm:block">
@@ -170,15 +296,28 @@ const Tag = () => {
               </Button>
             </div>
             <div className="hidden sm:block">
+              {mode === "edit" ? (
               <Button
-                size="large"
-                onClick={() => handleSave(mode)}
+                onClick={() => handleSave("edit")}
                 disabled={loadingSave}
                 className="gap-2 items-center"
               >
                 {loadingSave ? <FaSpinner className="animate-spin" /> : null}
                 Save
               </Button>
+            ) : (
+              <Button block onClick={() => handleSave("delete")}>
+                Delete
+              </Button>
+            )}
+              {/* <Button
+                onClick={() => handleSave(mode)}
+                disabled={loadingSave}
+                className="gap-2 items-center"
+              >
+                {loadingSave ? <FaSpinner className="animate-spin" /> : null}
+                Save
+              </Button> */}
             </div>
           </ModalFooter>
         </Modal>
@@ -189,7 +328,25 @@ const Tag = () => {
         <Table>
           <TableHeader>
             <tr>
-              <TableCell>Name</TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  Name
+                  <div className="cursor-pointer">
+                    <Icon
+                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                      aria-hidden="true"
+                      onClick={handleSortName}
+                      icon={
+                        sortName === "asc"
+                          ? UpIcon
+                          : sortName === "desc"
+                          ? DownIcon
+                          : SortDefaultIcon
+                      }
+                    />
+                  </div>
+                </div>
+              </TableCell>
               <TableCell>Actions</TableCell>
             </tr>
           </TableHeader>
@@ -205,6 +362,12 @@ const Tag = () => {
                       layout="outline"
                       aria-label="Edit"
                       onClick={() => openModal("edit", tag.id)}
+                    />
+                    <Button
+                      icon={TrashIcon}
+                      layout="outline"
+                      aria-label="Delete"
+                      onClick={() => openModal("delete", tag.id)}
                     />
                   </TableCell>
                 </TableRow>

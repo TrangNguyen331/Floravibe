@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import {
   TableBody,
@@ -8,13 +8,12 @@ import {
   TableCell,
   TableRow,
   TableFooter,
-  Pagination,
-  Button,
+  Button
 } from "@windmill/react-ui";
 import response from "../utils/demo/ordersData";
 import axiosInstance from "../axiosInstance";
 import { DownIcon, SortDefaultIcon, UpIcon, EyeIcon } from "../icons";
-import moment from "moment";
+import Paginate from "./Pagination/Paginate";
 
 function Icon({ icon, ...props }) {
   const Icon = icon;
@@ -26,19 +25,22 @@ const OrdersTable = ({
   filter,
   searchType,
   searchValue,
-  refresh,
+  refresh
 }) => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
   const [ordersData, setOrdersData] = useState([]);
-  const [totalPage, setTotalPage] = useState(0);
+  const [allOrdersData, setAllOrdersData] = useState([]);
+
+  const [totalPages, setTotalPage] = useState(0);
   const [totalResults, setTotalResult] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
+
   const [sortType, setSortType] = useState("default");
   const [sortTotalType, setSortTotalType] = useState("default");
   const [sortStatusType, setSortStatusType] = useState("default");
   const [sortDateType, setSortDateType] = useState("default");
-
+ 
   const statusOptions = [
     {
       value: "IN_REQUEST",
@@ -69,10 +71,10 @@ const OrdersTable = ({
   // async function onPageChange(p) {
   //   await fetchData(p, filter, resultsPerPage);
   // }
-
-  async function onPageChange(p) {
+  async function onPageChange(e, p) {
     setPage(p);
     setData(ordersData.slice((p - 1) * resultsPerPage, p * resultsPerPage));
+    setTotalPage(Math.ceil(ordersData.length / resultsPerPage));
   }
 
   const handleStatusChange = async (status, orderId) => {
@@ -96,15 +98,26 @@ const OrdersTable = ({
       const sortedData = response.data.content.sort(
         (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
       );
-      setData(sortedData);
+      const filteredData = allOrdersData.filter(order => order.status === filter);
+
+      if (filter) { 
+        setOrdersData(filteredData);
+        setData(filteredData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+        setTotalPage(Math.ceil(filteredData.length / resultsPerPage));
+        setTotalResult(filteredData.length);
+      } else { 
+        // setOrdersData(sortedData);
+        // setData(sortedData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+        setTotalPage(response.data.totalPages);
+        setTotalResult(response.data.totalElements);
+      }
       setPage(page);
-      setTotalPage(response.data.totalPages);
-      setTotalResult(response.data.totalElements);
       setDataLoaded(true);
     } catch (error) {
       console.log("Fetch data error", error);
     }
   };
+
   const fetchAllOrdersData = async () => {
     try {
       const response = await axiosInstance.get(
@@ -113,18 +126,36 @@ const OrdersTable = ({
       const sortedOrdersData = response.data.content.sort(
         (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
       );
+      setAllOrdersData(sortedOrdersData);
       setOrdersData(sortedOrdersData);
+      setTotalPage(Math.ceil(sortedOrdersData.length / resultsPerPage));// dòng này sử dụng cho @mui
+      setTotalResult(sortedOrdersData.length);
       setDataLoaded(true);
+      console.log(totalPages);
     } catch (error) {
       console.log("Fetch data error", error);
     }
   };
+
+  const resetData = async () => {
+      await fetchAllOrdersData();
+      setPage(1);
+      // setTotalPage(Math.ceil(allOrdersData.length / resultsPerPage));
+      // setTotalResult(ordersData.length);
+  };
   useEffect(() => {
-    fetchAllOrdersData();
-  }, []);
+    resetData();
+  }, [refresh]);
+
   useEffect(() => {
+    setPage(1);
     fetchData(1, filter, resultsPerPage);
   }, [resultsPerPage, filter]);
+
+  useEffect(() => {
+    setPage(1);
+    fetchAllOrdersData();
+  }, []);
 
   useEffect(() => {
     setData(
@@ -222,6 +253,7 @@ const OrdersTable = ({
     );
     setData(displayedData);
   };
+
   useEffect(() => {
     let filteredData = [...ordersData];
     switch (searchType) {
@@ -269,8 +301,15 @@ const OrdersTable = ({
     setData(
       filteredData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
     );
+    setTotalPage(Math.ceil(filteredData.length / resultsPerPage)); 
   }, [searchType, searchValue, page, refresh]);
 
+  // useEffect(() => {
+  //   let filteredData = [...ordersData];
+  //   setData(
+  //     filteredData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
+  //   );
+  // }, [page]);
   return (
     <div>
       {/* Table */}
@@ -430,16 +469,16 @@ const OrdersTable = ({
             )}
           </TableBody>
         </Table>
-        <TableFooter>
-          {dataLoaded && (
-            <Pagination
-              totalResults={totalResults}
-              resultsPerPage={resultsPerPage}
-              label="Table navigation"
-              onChange={onPageChange}
-            />
-          )}
-        </TableFooter>
+          <TableFooter>
+              {dataLoaded && (
+                <Paginate
+                  totalPages={totalPages}
+                  totalResults={totalResults}
+                  page={page}
+                  onPageChange={onPageChange}
+                />
+              )}
+          </TableFooter>
       </TableContainer>
     </div>
   );

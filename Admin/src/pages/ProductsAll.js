@@ -24,7 +24,6 @@ import {
   TableFooter,
   Avatar,
   Badge,
-  Pagination,
   Modal,
   ModalHeader,
   ModalBody,
@@ -39,6 +38,10 @@ import "../index.css";
 import axiosInstance from "../axiosInstance";
 import { fa, tr } from "faker/lib/locales";
 import RoundIcon from "../components/RoundIcon";
+import Paginate from "../components/Pagination/Paginate";
+import { useToasts } from "react-toast-notifications";
+// import { Grid, Typography, Pagination } from '@mui/material';
+
 const ProductsAll = () => {
   // Table and grid data handlling
   const [page, setPage] = useState(1);
@@ -47,6 +50,7 @@ const ProductsAll = () => {
   const [allTags, setAllTags] = useState([]);
   const [collectionLoaded, setCollectionLoaded] = useState(false);
   const [productsData, setProductsData] = useState([]);
+  const [allProductsData, setAllProductsData] = useState([]);
 
   const [sortName, setSortName] = useState("default");
   const [sortPrice, setSortPrice] = useState("default");
@@ -59,10 +63,11 @@ const ProductsAll = () => {
 
   // pagination setup
   const [resultsPerPage, setResultsPerPage] = useState(8);
-  const [totalPage, setTotalPage] = useState(0);
+  const [totalPages, setTotalPage] = useState(0);
   const [totalResults, setTotalResult] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
-  //const totalResults = response.length;
+  
+  const { addToast } = useToasts();
 
   // pagination change control
 
@@ -93,13 +98,26 @@ const ProductsAll = () => {
         (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
       );
       setProductsData(sortedProducts);
+      // // setTotalPage(Math.ceil(sortedProducts.length / resultsPerPage));
 
-      const sortedData = response.data.content.sort(
-        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
-      );
-      setData(sortedData);
+      // const sortedData = response.data.content.sort(
+      //   (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+      // );
+      // setData(sortedData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+      // setPage(page);
+      // setTotalPage(response.data.totalPages);
+      // setTotalResult(response.data.totalElements);
+      // setDataLoaded(true);
+      const totalPageFromAllProducts = Math.ceil(sortedProducts.length / resultsPerPage);
+
+      const sortedData = response.data.content.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      setData(sortedData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
       setPage(page);
-      setTotalPage(response.data.totalPages);
+
+      const totalPageFromResponse = response.data.totalPages;
+      const finalTotalPages = totalPageFromAllProducts > totalPageFromResponse ? totalPageFromAllProducts : totalPageFromResponse;
+      setTotalPage(finalTotalPages);
+
       setTotalResult(response.data.totalElements);
       setDataLoaded(true);
     } catch (error) {
@@ -124,6 +142,7 @@ const ProductsAll = () => {
     }
   };
   useEffect(() => {
+    setPage(1);
     fetchData(1);
     fetchCollections();
     fetchTags();
@@ -134,12 +153,16 @@ const ProductsAll = () => {
     setData(
       productsData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
     );
-  }, [productsData, page]);
+  }, [productsData, page, resultsPerPage]);
 
-  async function onPageChange(p) {
+  async function onPageChange(e, p) {
     setPage(p);
     setData(productsData.slice((p - 1) * resultsPerPage, p * resultsPerPage));
+    setTotalPage(Math.ceil(productsData.length / resultsPerPage));
   }
+  // async function onPageChange(p) {
+  //   await fetchData(p);
+  // }
   const handleSortName = () => {
     let newProduct, sortedProducts;
     switch (sortName) {
@@ -222,71 +245,84 @@ const ProductsAll = () => {
   };
 
   const handleSearch = () => {
-    let filterProducts;
-    console.log(searchValue);
-    switch (searchType) {
-      case "Name Of Product":
-        filterProducts = productsData.filter((product) =>
-          product.name.toLowerCase().includes(searchValue.toLowerCase())
-        );
-        break;
-      case "Price":
-        filterProducts = productsData.filter(
-          (product) => product.price >= minPrice && product.price <= maxPrice
-        );
-        break;
-      case "Collections":
-        filterProducts = productsData.filter((product) =>
-          product.collections.some((collection) =>
-            collection.name.toLowerCase().includes(searchValue.toLowerCase())
-          )
-        );
-        break;
-      case "Tags":
-        filterProducts = productsData.filter((product) =>
-          product.tags.some((tag) =>
-            tag.toLowerCase().includes(searchValue.toLowerCase())
-          )
-        );
-        break;
-      case "Quantity":
-        switch (searchValue) {
-          case "Out of stock":
-            filterProducts = productsData.filter(
-              (product) => product.stockQty === 0
-            );
-            break;
-          case "From 10 to 50":
-            filterProducts = productsData.filter(
-              (product) => product.stockQty >= 10 && product.stockQty <= 50
-            );
-            break;
-          case "From 51 to 100":
-            filterProducts = productsData.filter(
-              (product) => product.stockQty >= 51 && product.stockQty <= 100
-            );
-            break;
-          case "More than 100":
-            filterProducts = productsData.filter(
-              (product) => product.stockQty > 100
-            );
-            break;
-          default:
-            filterProducts = [...productsData];
-        }
-        break;
-      default:
-        filterProducts = [...productsData];
+    try {
+      let filterProducts;
+      switch (searchType) {
+        case "Name Of Product":
+          filterProducts = productsData.filter((product) =>
+            product.name.toLowerCase().includes(searchValue.toLowerCase())
+          );
+          break;
+        case "Price":
+          filterProducts = productsData.filter(
+            (product) => product.price >= minPrice && product.price <= maxPrice
+          );
+          break;
+        case "Collections":
+          filterProducts = productsData.filter((product) =>
+            product.collections && product.collections.some((collection) =>
+              collection.name && collection.name.toLowerCase().includes(searchValue.toLowerCase())
+            )
+          );
+          break;
+        case "Tags":
+          filterProducts = productsData.filter((product) =>
+            product.tags && product.tags.some((tag) =>
+              tag.name && tag.name.toLowerCase().includes(searchValue.toLowerCase())
+            )
+          );
+          break;
+        case "Quantity":
+          switch (searchValue) {
+            case "Out of stock":
+              filterProducts = productsData.filter(
+                (product) => product.stockQty === 0
+              );
+              break;
+            case "From 10 to 50":
+              filterProducts = productsData.filter(
+                (product) => product.stockQty >= 10 && product.stockQty <= 50
+              );
+              break;
+            case "From 51 to 100":
+              filterProducts = productsData.filter(
+                (product) => product.stockQty >= 51 && product.stockQty <= 100
+              );
+              break;
+            case "More than 100":
+              filterProducts = productsData.filter(
+                (product) => product.stockQty > 100
+              );
+              break;
+            default:
+              filterProducts = [...productsData];
+          }
+          break;
+        default:
+          filterProducts = [...productsData];
+      }
+      setTotalResult(filterProducts.length);
+      setData(
+        filterProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage)
+      );
+      setTotalPage(Math.ceil(filterProducts.length / resultsPerPage)); 
+    } catch (error) {
+      console.log("Error occurred while handling search", error.message);
+      setTotalResult(productsData.length);
+      setData(productsData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+      setTotalPage(Math.ceil(productsData.length / resultsPerPage));       
     }
-    setTotalResult(filterProducts.length);
-    setData(
-      filterProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage)
-    );
   };
 
   useEffect(() => {
     handleSearch();
   }, [searchType, searchValue, page]);
+
+
+  const resetData = async () => {
+      await fetchData();
+      setPage(1);
+  };
 
   function formatNumberWithDecimal(number) {
     // Convert the number to a string
@@ -349,8 +385,16 @@ const ProductsAll = () => {
       if (mode === "delete") {
         try {
           await axiosInstance.delete("/api/v1/products/" + selectedProduct.id);
+          addToast("Delete product successfully", {
+            appearance: "success",
+            autoDismiss: true,
+          });
         } catch (error) {
           console.log("Error", error);
+          addToast("Error occurred while trying to delete product", {
+            appearance: "error",
+            autoDismiss: true,
+          });
         }
       }
       if (mode === "edit") {
@@ -413,7 +457,7 @@ const ProductsAll = () => {
         <CardBody>
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-md text-gray-600 dark:text-gray-400">
                 All Products
               </p>
             </div>
@@ -425,6 +469,7 @@ const ProductsAll = () => {
             onChange={(e) => {
               setSearchType(e.target.value);
               setSearchValue("");
+              setPage(1);
             }}
           >
             <option hidden>Choose to search</option>
@@ -464,7 +509,10 @@ const ProductsAll = () => {
               <Select
                 className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-sm w-70"
                 value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={(e) => {
+                  setPage(1);
+                  setSearchValue(e.target.value);
+                }}
               >
                 <option hidden>Select a Option</option>
                 <option>Out of stock</option>
@@ -477,19 +525,22 @@ const ProductsAll = () => {
         ) : (
           <Label className="mx-0 w-70">
             <div className="relative text-gray-500 dark:focus-within:text-purple-400">
-              <input
-                type="text"
-                className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
-                placeholder="Search..."
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-              />
-              <div className="absolute inset-y-0 right-0 flex items-center mr-3 cursor-pointer">
+              <div className="absolute inset-y-0 right-0 flex items-center mr-3">
                 <SearchIcon
-                  className="w-5 h-5 text-purple-500 hover:text-red-500 transition-colors duration-200"
+                  className="w-5 h-5 text-purple-500 transition-colors duration-200"
                   aria-hidden="true"
                 />
               </div>
+              <input
+                type="text"
+                className="py-3 pl-10 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
+                placeholder="Search..."
+                value={searchValue}
+                onChange={(e) => {
+                  setPage(1);
+                  setSearchValue(e.target.value);
+                }}
+              />
             </div>
           </Label>
         )}
@@ -498,6 +549,8 @@ const ProductsAll = () => {
           onClick={() => {
             setSearchType("Choose to search");
             setSearchValue("");
+            setPage(1);
+            setResultsPerPage(resultsPerPage);
             handleSearch();
           }}
           className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
@@ -509,6 +562,7 @@ const ProductsAll = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
         className="fullscreen-modal"
+        // className={mode === "edit" ? "fullscreen-modal" : ""}
       >
         <ModalHeader className="flex items-center text-2xl mb-4">
           {mode === "edit" && "Edit Product"}
@@ -539,11 +593,11 @@ const ProductsAll = () => {
           </div>
           <div className="hidden sm:block">
             {mode === "edit" ? (
-              <Button block size="large" onClick={() => handleSave("edit")}>
+              <Button block onClick={() => handleSave("edit")}>
                 Save
               </Button>
             ) : (
-              <Button block size="large" onClick={() => handleSave("delete")}>
+              <Button block onClick={() => handleSave("delete")}>
                 Delete
               </Button>
             )}
@@ -706,24 +760,29 @@ const ProductsAll = () => {
                 </TableCell>
               </TableRow>
             ))}
-          </TableBody>
-
-          <TableFooter>
             {searchValue && data.length === 0 && (
               <p className="text-center my-4 text-purple-500">
                 No result match
               </p>
             )}
+          </TableBody>
+        </Table>
+          <TableFooter>
             {dataLoaded && (
-              <Pagination
-                totalResults={totalResults}
-                resultsPerPage={resultsPerPage}
-                label="Table navigation"
-                onChange={(page) => onPageChange(page)}
-              />
+              <Paginate
+                  totalPages={totalPages}
+                  totalResults={totalResults}
+                  page={page}
+                  onPageChange={onPageChange}
+                />
+              // <Pagination
+              //   totalResults={totalResults}
+              //   resultsPerPage={resultsPerPage}
+              //   label="Table navigation"
+              //   onChange={(page) => onPageChange(page)}
+              // />
             )}
           </TableFooter>
-        </Table>
       </TableContainer>
     </div>
   );
