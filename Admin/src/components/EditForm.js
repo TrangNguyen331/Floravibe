@@ -225,7 +225,19 @@ const EditForm = ({
                 value={(data && data.description) || ""}
               />
             </div>
-
+            <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
+              <strong>Stock Quantity</strong>
+              <Input
+                type="number"
+                className="block p-2.5 mt-2 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 bg-transparent bg-opacity-0 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                value={(data && data.stockQty) || ""}
+                onChange={(e) => {
+                  if (e.target.value >= 0) {
+                    onProductChange("stockQty", e.target.value);
+                  }
+                }}
+              />
+            </div>
             <div className="block mt-2 text-base font-medium text-gray-900 dark:text-white">
               <div className="mb-2">
                 <strong>Product Additional Information</strong>
