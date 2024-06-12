@@ -91,7 +91,7 @@ const Product = ({ location }) => {
           }
         />
         {/* banner slider */}
-        <VoucherSlider spaceBottomClass="pb-95" />
+        <VoucherSlider spaceBottomClass="pb-70" />
       </LayoutOne>
     </Fragment>
   ) : (

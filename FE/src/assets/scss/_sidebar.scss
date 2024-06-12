@@ -213,7 +213,23 @@
     }
   }
 }
-
+.sidebar-widget-price {
+  .price-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .minmax-price {
+      display: flex;
+      gap: 5px;
+    }
+    .filter-price-btn {
+      button {
+        text-align: center;
+        letter-spacing: 1px;
+      }
+    }
+  }
+}
 .pro-sidebar-search {
   .pro-sidebar-search-form {
     position: relative;

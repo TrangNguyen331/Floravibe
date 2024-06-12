@@ -10,6 +10,7 @@ const RelatedProductSlider = ({ spaceBottomClass, category }) => {
     loop: false,
     slidesPerView: 4,
     grabCursor: true,
+    spaceBetween: 10,
     breakpoints: {
       1024: {
         slidesPerView: 4,

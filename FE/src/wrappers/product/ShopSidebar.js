@@ -9,11 +9,14 @@ import {
 import ShopSearch from "../../components/product/ShopSearch";
 import ShopCategories from "../../components/product/ShopCategories";
 import ShopTag from "../../components/product/ShopTag";
+import ShopPriceFilter from "./ShopPriceFilter";
+
 const ShopSidebar = ({
   products,
   getSortParams,
   sideSpaceClass,
   searchHandler,
+  bannerCategory,
 }) => {
   const handleSearch = (search) => {
     searchHandler(search);
@@ -29,8 +32,10 @@ const ShopSidebar = ({
       <ShopCategories
         categories={uniqueCategories}
         getSortParams={getSortParams}
+        bannerCategory={bannerCategory}
       />
-
+      {/* filter by price */}
+      <ShopPriceFilter />
       {/* filter by tag */}
       <ShopTag tags={uniqueTags} getSortParams={getSortParams} />
     </div>
@@ -42,6 +47,7 @@ ShopSidebar.propTypes = {
   products: PropTypes.array,
   sideSpaceClass: PropTypes.string,
   searchHandler: PropTypes.func,
+  bannerCategory: PropTypes.string,
 };
 
 export default ShopSidebar;

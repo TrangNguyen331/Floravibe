@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import PageTitle from "../components/Typography/PageTitle";
 import { Link, NavLink } from "react-router-dom";
-import { EditIcon, HomeIcon, TrashIcon, AddIcon, DashboardIcon } from "../icons";
+import {
+  EditIcon,
+  HomeIcon,
+  TrashIcon,
+  AddIcon,
+  DashboardIcon,
+} from "../icons";
 import Icon from "../components/Icon";
 import "../index.css";
 import axiosInstance from "../axiosInstance";
@@ -158,12 +164,12 @@ const Blogs = () => {
       const response = await axiosInstance.get(
         "/api/v1/blogs/paging?page=" + (page - 1) + "&size=" + resultsPerPage
       );
-      console.log("Response data", response.data);
+      console.log("Response data", response.data.content);
 
-      const sortedData = response.data.content.sort(
-        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
-      );
-      setData(sortedData);
+      // const sortedData = response.data.content.sort(
+      //   (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+      // );
+      setData(response.data.content);
       setPage(page);
       setTotalPage(response.data.totalPages);
       setTotalResult(response.data.totalElements);

@@ -14,7 +14,7 @@ import {
 } from "@windmill/react-ui";
 import PageTitle from "../components/Typography/PageTitle";
 import { NavLink } from "react-router-dom";
-import { AddIcon, EditIcon, DashboardIcon } from "../icons";
+import { AddIcon, EditIcon, TrashIcon, DashboardIcon } from "../icons";
 import axiosInstance from "../axiosInstance";
 import { useToasts } from "react-toast-notifications";
 import CollectionForm from "../components/CollectionForm";
@@ -31,7 +31,7 @@ const Collection = () => {
   const { addToast } = useToasts();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
-  const [mode, setMode] = useState("add"); // 'add', 'edit'
+  const [mode, setMode] = useState("add"); // 'add', 'edit', 'delete'
   const [collectionData, setCollectionData] = useState({
     id: null,
     name: null,
@@ -43,7 +43,7 @@ const Collection = () => {
   };
 
   const openModal = async (mode, collectionId) => {
-    if (mode === "edit") {
+    if (mode === "edit" || mode === "delete") {
       let result = await data.find((item) => item.id === collectionId);
       setCollectionData(result);
     } else {
@@ -107,6 +107,13 @@ const Collection = () => {
           appearance: "success",
           autoDismiss: true,
         });
+      } else if (mode === "delete") {
+        await axiosInstance.delete("/api/v1/collections/" + collectionData.id);
+        closeModal();
+        addToast("Delete successfully", {
+          appearance: "success",
+          autoDismiss: true,
+        });
       }
       setCollectionData({
         id: null,
@@ -163,13 +170,27 @@ const Collection = () => {
       <div>
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <ModalHeader className="flex items-center text-2xl">
-            {mode === "add" ? "Add New Collection" : "Edit Collection"}
+            {mode === "add" && "Add New Collection"}
+            {mode === "edit" && "Edit Collection"}
+            {mode === "delete" && "Delete Collection"}
           </ModalHeader>
           <ModalBody>
-            <CollectionForm
-              data={collectionData}
-              handleInputChange={handleInputChange}
-            />
+            {mode === "add" ? (
+              <CollectionForm
+                data={collectionData}
+                handleInputChange={handleInputChange}
+              />
+            ) : mode === "edit" ? (
+              <CollectionForm
+                data={collectionData}
+                handleInputChange={handleInputChange}
+              />
+            ) : (
+              <p>
+                Are you sure to delete collection{" "}
+                {collectionData && `"${collectionData.name}"`}
+              </p>
+            )}
           </ModalBody>
           <ModalFooter>
             <div className="hidden sm:block">
@@ -207,13 +228,21 @@ const Collection = () => {
                 <TableRow key={i}>
                   <TableCell className="text-base">{collection.name}</TableCell>
                   <TableCell>
-                    <Button
-                      icon={EditIcon}
-                      className="mr-3"
-                      layout="outline"
-                      aria-label="Edit"
-                      onClick={() => openModal("edit", collection.id)}
-                    />
+                    <div className="flex">
+                      <Button
+                        icon={EditIcon}
+                        className="mr-3"
+                        layout="outline"
+                        aria-label="Edit"
+                        onClick={() => openModal("edit", collection.id)}
+                      />
+                      <Button
+                        icon={TrashIcon}
+                        layout="outline"
+                        aria-label="Delete"
+                        onClick={() => openModal("delete", collection.id)}
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

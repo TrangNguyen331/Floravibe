@@ -3,9 +3,8 @@ import React from "react";
 import { setActiveSort } from "../../helpers/product";
 import { useTranslation } from "react-i18next";
 
-const ShopCategories = ({ categories, getSortParams }) => {
+const ShopCategories = ({ categories, getSortParams, bannerCategory }) => {
   const { t } = useTranslation(["product"]);
-
   return (
     <div className="sidebar-widget">
       <h4 className="pro-sidebar-title">{t("sidebar.categories")}</h4>
@@ -30,6 +29,7 @@ const ShopCategories = ({ categories, getSortParams }) => {
                 <li key={key}>
                   <div className="sidebar-widget-list-left">
                     <button
+                      className={bannerCategory === category ? "active" : ""}
                       onClick={(e) => {
                         getSortParams("category", category);
                         setActiveSort(e);
@@ -54,6 +54,7 @@ const ShopCategories = ({ categories, getSortParams }) => {
 ShopCategories.propTypes = {
   categories: PropTypes.array,
   getSortParams: PropTypes.func,
+  bannerCategory: PropTypes.string,
 };
 
 export default ShopCategories;

@@ -59,7 +59,16 @@ public class TagServiceImpl implements TagService {
     public Tag delete(String id) {
         Tag tag = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Tag not found"));
+        deleteTagNameInProduct(id);
         repository.delete(tag);
         return tag;
+    }
+
+    private void deleteTagNameInProduct(String tagId) {
+        List<Product> products = productRepository.findByTags_Id(tagId);
+        for (Product product : products) {
+            product.getTags().removeIf(tag -> tag.getId().equals(tagId));
+            productRepository.save(product);
+        }
     }
 }

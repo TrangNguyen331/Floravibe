@@ -89,9 +89,9 @@ const ShopGridStandard = ({ location }) => {
 
       setProducts(products);
 
-      // const originData = getSortedProducts(products, "", "");
-      // console.log("origin", originData);
-      let sortedProducts = getSortedProducts(products, sortType, sortValue);
+      const originData = getSortedProducts(products, "", "");
+      console.log("origin", originData);
+      let sortedProducts = getSortedProducts(originData, sortType, sortValue);
       const filterSortedProducts = getSortedProducts(
         sortedProducts,
         filterSortType,
@@ -110,6 +110,7 @@ const ShopGridStandard = ({ location }) => {
     if (bannerCategory) {
       setSortType("category");
       setSortValue(bannerCategory);
+      setSelectedCategory(bannerCategory);
     }
     fetchDataAndProcess(currentPage, search);
     // Dependencies for the effect: offset, sortType, sortValue, filterSortType, filterSortValue
@@ -121,6 +122,7 @@ const ShopGridStandard = ({ location }) => {
     filterSortValue,
     search,
     currentPage,
+    bannerCategory,
   ]);
   useEffect(() => {
     dispatch(clearSelectedCategory());
@@ -156,6 +158,7 @@ const ShopGridStandard = ({ location }) => {
                   getSortParams={getSortParams}
                   searchHandler={handleSearch}
                   sideSpaceClass="mr-30"
+                  bannerCategory={selectedCategory}
                 />
               </div>
               <div className="col-lg-9 order-1 order-lg-2">

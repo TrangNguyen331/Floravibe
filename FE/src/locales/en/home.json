@@ -1,22 +1,22 @@
 {
-    "heroslide":{
-        "shop-now": "SHOP NOW"
-    },
-    "tabproduct":{
-        "new-items": "NEW ITEMS!",
-        "new-arrivals": "New Arrivals",
-        "best-sellers": "Best Sellers"
-    },
-    "productgrid":{
-        "new": "New",
-        "add-to-wishlist": "Add To Wishlist",
-        "added-to-wishlist": "Added To Wishlist",
-        "select-option": "Select Option",
-        "buy-now": "Buy Now",
-        "tooltip-add-to-cart": "Add To Cart",
-        "tooltip-added-to-cart": "Added To Cart",
-        "add-to-cart": "Add To Cart",
-        "added": "Added",
-        "quick-view": "Quick View"
-    }
+  "heroslide": {
+    "shop-now": "SHOP NOW"
+  },
+  "tabproduct": {
+    "new-items": "New Items!",
+    "new-arrivals": "New Arrivals",
+    "best-sellers": "Best Sellers"
+  },
+  "productgrid": {
+    "new": "New",
+    "add-to-wishlist": "Add To Wishlist",
+    "added-to-wishlist": "Added To Wishlist",
+    "select-option": "Select Option",
+    "buy-now": "Buy Now",
+    "tooltip-add-to-cart": "Add To Cart",
+    "tooltip-added-to-cart": "Added To Cart",
+    "add-to-cart": "Add To Cart",
+    "added": "Added",
+    "quick-view": "Quick View"
+  }
 }

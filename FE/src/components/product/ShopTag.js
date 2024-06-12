@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 const ShopTag = ({ tags, getSortParams }) => {
   const { t } = useTranslation(["product"]);
+
   return (
     <div className="sidebar-widget mt-50">
       <h4 className="pro-sidebar-title">{t("sidebar.tag")} </h4>

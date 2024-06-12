@@ -63,8 +63,16 @@ public class CollectionServiceImpl implements CollectionService {
     public Collection delete(String id) {
         Collection collection = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Collection not found"));
+        deleteCollectionNameInProduct(id);
         repository.delete(collection);
         return collection;
+    }
+    private void deleteCollectionNameInProduct(String collectionId) {
+        List<Product> products = productRepository.findByCollections_Id(collectionId);
+        for (Product product : products) {
+            product.getCollections().removeIf(collection -> collection.getId().equals(collectionId));
+            productRepository.save(product);
+        }
     }
 
 //    @Override
