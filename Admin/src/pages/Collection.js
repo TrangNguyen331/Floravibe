@@ -17,12 +17,8 @@ import {
 } from "@windmill/react-ui";
 import PageTitle from "../components/Typography/PageTitle";
 import { NavLink } from "react-router-dom";
-<<<<<<< Updated upstream
-import { AddIcon, EditIcon, TrashIcon, DashboardIcon } from "../icons";
-=======
-import { AddIcon, EditIcon, DashboardIcon, SearchIcon, RefreshIcon, UpIcon, DownIcon, SortDefaultIcon } from "../icons";
+import { AddIcon, EditIcon, DashboardIcon, SearchIcon, RefreshIcon, UpIcon, DownIcon, SortDefaultIcon, TrashIcon } from "../icons";
 import RoundIcon from "../components/RoundIcon";
->>>>>>> Stashed changes
 import axiosInstance from "../axiosInstance";
 import { useToasts } from "react-toast-notifications";
 import CollectionForm from "../components/CollectionForm";

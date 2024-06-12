@@ -157,7 +157,6 @@ const EditForm = ({
                 options={collectionData.map((collection) => ({
                   value: collection.id,
                   label: collection.name,
-<<<<<<< Updated upstream
                 }))
               }
               onChange={(value) =>
@@ -234,21 +233,7 @@ const EditForm = ({
               onChange={(e) => {
                 if (e.target.value >= 0) {
                   onProductChange("stockQty", e.target.value);
-=======
-                }))}
-                value={
-                  data &&
-                  data.collections.map((collection) => ({
-                    value: collection.id,
-                    label: collection.name,
-                  }))
-                }
-                onChange={(value) =>
-                  handleCollectionsChange(
-                    value.map((item) => ({ id: item.value, name: item.label }))
-                  )
->>>>>>> Stashed changes
-                }
+                }}}
               />
             </div>
             <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
