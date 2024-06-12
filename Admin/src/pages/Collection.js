@@ -17,12 +17,18 @@ import {
 } from "@windmill/react-ui";
 import PageTitle from "../components/Typography/PageTitle";
 import { NavLink } from "react-router-dom";
-<<<<<<< Updated upstream
-import { AddIcon, EditIcon, TrashIcon, DashboardIcon } from "../icons";
-=======
-import { AddIcon, EditIcon, DashboardIcon, SearchIcon, RefreshIcon, UpIcon, DownIcon, SortDefaultIcon } from "../icons";
+import {
+  AddIcon,
+  EditIcon,
+  DashboardIcon,
+  SearchIcon,
+  RefreshIcon,
+  UpIcon,
+  DownIcon,
+  SortDefaultIcon,
+  TrashIcon,
+} from "../icons";
 import RoundIcon from "../components/RoundIcon";
->>>>>>> Stashed changes
 import axiosInstance from "../axiosInstance";
 import { useToasts } from "react-toast-notifications";
 import CollectionForm from "../components/CollectionForm";
@@ -151,21 +157,17 @@ const Collection = () => {
 
   const handleSortName = () => {
     let newSort, sortedData;
-    switch (sortName) {   
+    switch (sortName) {
       case "default":
-        newSort = "asc"; 
-        sortedData = [...data].sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
+        newSort = "asc";
+        sortedData = [...data].sort((a, b) => a.name.localeCompare(b.name));
         break;
       case "asc":
-        newSort = "desc"; 
-        sortedData= [...data].sort((a, b) =>
-          b.name.localeCompare(a.name)
-        );
+        newSort = "desc";
+        sortedData = [...data].sort((a, b) => b.name.localeCompare(a.name));
         break;
       case "desc":
-        newSort = "default"; 
+        newSort = "default";
         sortedData = [...dataOrg];
         break;
     }
@@ -177,14 +179,14 @@ const Collection = () => {
     if (searchValue === "") {
       setData(dataOrg);
     } else {
-      const filteredData = dataOrg.filter(collection =>
+      const filteredData = dataOrg.filter((collection) =>
         collection.name.toLowerCase().includes(searchValue.toLowerCase())
       );
       setData(filteredData);
     }
   };
   useEffect(() => {
-      handleSearch();
+    handleSearch();
   }, [searchValue]);
 
   return (
@@ -253,7 +255,7 @@ const Collection = () => {
             }}
             className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
           />
-        </div>    
+        </div>
       </Card>
 
       {/* Modal */}

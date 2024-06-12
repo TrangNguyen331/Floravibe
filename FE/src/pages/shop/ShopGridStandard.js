@@ -27,11 +27,9 @@ const ShopGridStandard = ({ location }) => {
   const [sortedProducts, setSortedProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [products, setProducts] = useState([]);
-<<<<<<< Updated upstream
+
   const [visible, setVisible] = useState(6);
-=======
-  const [originalProducts, setOriginalProducts] = useState([]);
->>>>>>> Stashed changes
+
   const [search, setSearch] = useState("");
   const pageLimit = 999;
   const { pathname } = location;
@@ -44,7 +42,7 @@ const ShopGridStandard = ({ location }) => {
       const response = await axiosInstance.get(
         `/api/v1/products/paging?size=${pageLimit}&search=${search}&page=${page}`
       );
-      console.log(response.data.content);
+
       return response.data;
     } catch (error) {
       return [];
@@ -95,28 +93,14 @@ const ShopGridStandard = ({ location }) => {
 
       setProducts(products);
 
-<<<<<<< Updated upstream
-      const originData = getSortedProducts(products, "", "");
-      console.log("origin", originData);
-      let sortedProducts = getSortedProducts(originData, sortType, sortValue);
-=======
+      // const originData = getSortedProducts(products, "", "");
+      // console.log("origin", originData);
       let sortedProducts = getSortedProducts(products, sortType, sortValue);
-      // console.log("test1");
-      console.log(sortedProducts);
-      // let sortedProducts1 = getSortedProducts(products, "", "");
-      // console.log(sortedProducts1);
-
->>>>>>> Stashed changes
       const filterSortedProducts = getSortedProducts(
         sortedProducts,
         filterSortType,
         filterSortValue
       );
-      console.log(filterSortType);
-      console.log(filterSortValue);
-      
-      console.log(filterSortedProducts);
-
       sortedProducts = filterSortedProducts;
 
       setSortedProducts(sortedProducts);

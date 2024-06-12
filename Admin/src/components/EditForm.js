@@ -109,7 +109,9 @@ const EditForm = ({
                   type="text"
                   placeholder="Type product name here"
                   className="mt-2 bg-transparent border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  onChange={(e) => onProductChange("name", e.target?.value || "")}
+                  onChange={(e) =>
+                    onProductChange("name", e.target?.value || "")
+                  }
                   value={(data && data.name) || ""}
                 />
               </div>
@@ -157,108 +159,22 @@ const EditForm = ({
                 options={collectionData.map((collection) => ({
                   value: collection.id,
                   label: collection.name,
-<<<<<<< Updated upstream
-                }))
-              }
-              onChange={(value) =>
-                handleCollectionsChange(
-                  value.map((item) => ({ id: item.value, name: item.label }))
-                )
-              }
-            />
-          </div>
-          <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-            <strong>Product Tag</strong>
-            {/* <TagsInput
-                classNames="mt-2"
-                onChange={handleTagsChange}
-                placeholder="Add tags (press Enter to add)"
-                value={(data && data.tags) || []}
-              /> */}
-            <Select
-              isMulti
-              className="custom-select"
-              components={{ Option: CustomOption }}
-              styles={{
-                multiValue: (base) => ({
-                  ...base,
-                  backgroundColor: "rgba(126, 58, 242, 1)",
-                  color: "#ffffff",
-                }),
-                multiValueLabel: (base) => ({
-                  ...base,
-                  color: "#ffffff",
-                }),
-              }}
-              placeholder="Enter product tag"
-              filterOption={createFilter({ ignoreAccents: false })}
-              closeMenuOnSelect={false}
-              options={tagData.map((tag) => ({
-                value: tag.name,
-                label: tag.name,
-              }))}
-              value={
-                data &&
-                data.tags.map((tag) => ({
-                  value: tag.id,
-                  label: tag.name,
-                }))
-              }
-              onChange={(value) =>
-                handleTagsChange(
-                  value.map((item) => ({ id: item.value, name: item.label }))
-                )
-              }
-            />
-          </div>
-
-          <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-            <strong>Product Description</strong>
-            <Textarea
-              id="description"
-              rows="5"
-              className="block p-2.5 mt-2 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 bg-transparent bg-opacity-0 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-              placeholder="Write a description..."
-              onChange={(e) =>
-                onProductChange("description", e.target?.value || "")
-              }
-              value={(data && data.description) || ""}
-            />
-          </div>
-          <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-            <strong>Stock Quantity</strong>
-            <Input
-              type="number"
-              className="block p-2.5 mt-2 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 bg-transparent bg-opacity-0 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-              value={(data && data.stockQty) || ""}
-              onChange={(e) => {
-                if (e.target.value >= 0) {
-                  onProductChange("stockQty", e.target.value);
-=======
                 }))}
-                value={
-                  data &&
-                  data.collections.map((collection) => ({
-                    value: collection.id,
-                    label: collection.name,
-                  }))
-                }
                 onChange={(value) =>
                   handleCollectionsChange(
                     value.map((item) => ({ id: item.value, name: item.label }))
                   )
->>>>>>> Stashed changes
                 }
               />
             </div>
             <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
               <strong>Product Tag</strong>
               {/* <TagsInput
-                  classNames="mt-2"
-                  onChange={handleTagsChange}
-                  placeholder="Add tags (press Enter to add)"
-                  value={(data && data.tags) || []}
-                /> */}
+                classNames="mt-2"
+                onChange={handleTagsChange}
+                placeholder="Add tags (press Enter to add)"
+                value={(data && data.tags) || []}
+              /> */}
               <Select
                 isMulti
                 className="custom-select"
@@ -281,8 +197,18 @@ const EditForm = ({
                   value: tag.name,
                   label: tag.name,
                 }))}
-                value={data && data.tags}
-                onChange={handleTagsChange}
+                value={
+                  data &&
+                  data.tags.map((tag) => ({
+                    value: tag.id,
+                    label: tag.name,
+                  }))
+                }
+                onChange={(value) =>
+                  handleTagsChange(
+                    value.map((item) => ({ id: item.value, name: item.label }))
+                  )
+                }
               />
             </div>
 
@@ -299,19 +225,7 @@ const EditForm = ({
                 value={(data && data.description) || ""}
               />
             </div>
-            <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-              <strong>Stock Quantity</strong>
-              <Input
-                type="number"
-                className="block p-2.5 mt-2 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 bg-transparent bg-opacity-0 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                value={(data && data.stockQty) || ""}
-                onChange={(e) => {
-                  if (e.target.value >= 0) {
-                    onProductChange("stockQty", e.target.value);
-                  }
-                }}
-              />
-            </div>
+
             <div className="block mt-2 text-base font-medium text-gray-900 dark:text-white">
               <div className="mb-2">
                 <strong>Product Additional Information</strong>
