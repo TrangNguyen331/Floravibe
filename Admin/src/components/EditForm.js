@@ -160,6 +160,13 @@ const EditForm = ({
                   value: collection.id,
                   label: collection.name,
                 }))}
+                value={
+                  data &&
+                  data.collections.map((collection) => ({
+                    value: collection.id,
+                    label: collection.name,
+                  }))
+                }
                 onChange={(value) =>
                   handleCollectionsChange(
                     value.map((item) => ({ id: item.value, name: item.label }))
@@ -194,7 +201,7 @@ const EditForm = ({
                 filterOption={createFilter({ ignoreAccents: false })}
                 closeMenuOnSelect={false}
                 options={tagData.map((tag) => ({
-                  value: tag.name,
+                  value: tag.id,
                   label: tag.name,
                 }))}
                 value={
@@ -238,6 +245,7 @@ const EditForm = ({
                 }}
               />
             </div>
+
             <div className="block mt-2 text-base font-medium text-gray-900 dark:text-white">
               <div className="mb-2">
                 <strong>Product Additional Information</strong>
