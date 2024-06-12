@@ -52,6 +52,7 @@ const ShopGridStandard = ({ location }) => {
     setVisible((prevCount) => prevCount + 6);
   };
   const handleSearch = (search) => {
+    console.log("handle search");
     setSearch(search);
     fetchDataAndProcess(0, search);
   };
@@ -115,8 +116,9 @@ const ShopGridStandard = ({ location }) => {
       setSortType("category");
       setSortValue(bannerCategory);
       setSelectedCategory(bannerCategory);
+    } else {
+      fetchDataAndProcess(currentPage, search);
     }
-    fetchDataAndProcess(currentPage, search);
     // Dependencies for the effect: offset, sortType, sortValue, filterSortType, filterSortValue
   }, [
     offset,
