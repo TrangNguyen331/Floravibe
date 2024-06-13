@@ -34,4 +34,5 @@ public class Order {
     @CreatedDate
     private LocalDateTime createdDate;
     private LocalDateTime cancelDate;
+    private LocalDateTime completedDate;
 }

@@ -1,10 +1,7 @@
 package com.hcmute.tlcn.services;
 
-import com.hcmute.tlcn.dtos.collection.CollectionDto;
 import com.hcmute.tlcn.dtos.product.ProductDto;
 import com.hcmute.tlcn.dtos.review.ReviewDto;
-import com.hcmute.tlcn.entities.Blog;
-import com.hcmute.tlcn.entities.Collection;
 import com.hcmute.tlcn.entities.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,4 +24,5 @@ public interface ProductService {
     Product updateReview(String id, String reviewId,ReviewDto reviewDto,String orderId);
 
     Product deleteReview(String id, String reviewId);
+    List<Product> getAllProducts();
 }

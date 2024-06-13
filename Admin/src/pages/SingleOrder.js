@@ -172,7 +172,7 @@ const SingleOrder = () => {
                             className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                           >
                             <TableCell>{detail.product.name}</TableCell>
-                            <TableCell>{detail.product.price}</TableCell>
+                            <TableCell>{detail.unitPrice}</TableCell>
                             <TableCell>{detail.quantity}</TableCell>
                             <TableCell>{detail.subtotal}</TableCell>
                           </TableRow>

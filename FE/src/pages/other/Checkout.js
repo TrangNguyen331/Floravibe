@@ -200,6 +200,7 @@ const Checkout = ({ location, cartItems, currency }) => {
       const body = {
         details: cartItems.map((item) => ({
           productId: item.id,
+          unitPrice: item.price,
           quantity: item.quantity,
           subtotal: item.price * item.quantity,
         })),

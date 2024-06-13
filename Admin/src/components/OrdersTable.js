@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   TableBody,
@@ -8,9 +8,8 @@ import {
   TableCell,
   TableRow,
   TableFooter,
-  Button
+  Button,
 } from "@windmill/react-ui";
-import response from "../utils/demo/ordersData";
 import axiosInstance from "../axiosInstance";
 import { DownIcon, SortDefaultIcon, UpIcon, EyeIcon } from "../icons";
 import Paginate from "./Pagination/Paginate";
@@ -25,7 +24,7 @@ const OrdersTable = ({
   filter,
   searchType,
   searchValue,
-  refresh
+  refresh,
 }) => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
@@ -40,7 +39,7 @@ const OrdersTable = ({
   const [sortTotalType, setSortTotalType] = useState("default");
   const [sortStatusType, setSortStatusType] = useState("default");
   const [sortDateType, setSortDateType] = useState("default");
- 
+
   const statusOptions = [
     {
       value: "IN_REQUEST",
@@ -98,14 +97,18 @@ const OrdersTable = ({
       const sortedData = response.data.content.sort(
         (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
       );
-      const filteredData = allOrdersData.filter(order => order.status === filter);
+      const filteredData = allOrdersData.filter(
+        (order) => order.status === filter
+      );
 
-      if (filter) { 
+      if (filter) {
         setOrdersData(filteredData);
-        setData(filteredData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+        setData(
+          filteredData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
+        );
         setTotalPage(Math.ceil(filteredData.length / resultsPerPage));
         setTotalResult(filteredData.length);
-      } else { 
+      } else {
         // setOrdersData(sortedData);
         // setData(sortedData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
         setTotalPage(response.data.totalPages);
@@ -121,27 +124,26 @@ const OrdersTable = ({
   const fetchAllOrdersData = async () => {
     try {
       const response = await axiosInstance.get(
-        "/api/v1/orders/paging?page=0&size=999"
+        "/api/v1/orders/paging?page=0&size=99"
       );
       const sortedOrdersData = response.data.content.sort(
         (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
       );
       setAllOrdersData(sortedOrdersData);
       setOrdersData(sortedOrdersData);
-      setTotalPage(Math.ceil(sortedOrdersData.length / resultsPerPage));// dòng này sử dụng cho @mui
+      setTotalPage(Math.ceil(sortedOrdersData.length / resultsPerPage)); // dòng này sử dụng cho @mui
       setTotalResult(sortedOrdersData.length);
       setDataLoaded(true);
-      console.log(totalPages);
     } catch (error) {
       console.log("Fetch data error", error);
     }
   };
 
   const resetData = async () => {
-      await fetchAllOrdersData();
-      setPage(1);
-      // setTotalPage(Math.ceil(allOrdersData.length / resultsPerPage));
-      // setTotalResult(ordersData.length);
+    await fetchAllOrdersData();
+    setPage(1);
+    // setTotalPage(Math.ceil(allOrdersData.length / resultsPerPage));
+    // setTotalResult(ordersData.length);
   };
   useEffect(() => {
     resetData();
@@ -301,7 +303,7 @@ const OrdersTable = ({
     setData(
       filteredData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
     );
-    setTotalPage(Math.ceil(filteredData.length / resultsPerPage)); 
+    setTotalPage(Math.ceil(filteredData.length / resultsPerPage));
   }, [searchType, searchValue, page, refresh]);
 
   // useEffect(() => {
@@ -469,16 +471,16 @@ const OrdersTable = ({
             )}
           </TableBody>
         </Table>
-          <TableFooter>
-              {dataLoaded && (
-                <Paginate
-                  totalPages={totalPages}
-                  totalResults={totalResults}
-                  page={page}
-                  onPageChange={onPageChange}
-                />
-              )}
-          </TableFooter>
+        <TableFooter>
+          {dataLoaded && (
+            <Paginate
+              totalPages={totalPages}
+              totalResults={totalResults}
+              page={page}
+              onPageChange={onPageChange}
+            />
+          )}
+        </TableFooter>
       </TableContainer>
     </div>
   );

@@ -23,11 +23,9 @@ const ProductGrid = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get(
-          `/api/v1/products/paging?size=${8}`
-        );
+        const response = await axiosInstance.get(`/api/v1/products/all`);
 
-        dispatch(updateProducts(response.data.content));
+        dispatch(updateProducts(response.data));
       } catch (error) {
         console.error("Error fetching products:", error);
       }

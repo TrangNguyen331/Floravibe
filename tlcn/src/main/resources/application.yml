@@ -18,7 +18,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 email:
-  reset-url: http://localhost:3000/resetpassword/change-password?userName=
+  reset-url: http://localhost:5000/resetpassword/change-password?userName=
 
 application:
   version: "v1"
@@ -32,7 +32,7 @@ vnpay:
   vnp_TmnCode: U39O3AW8
   vnp_HashSecret: VQ4QLLP1FBOFC2X70CQJ9FE4234WKJ9B
   vnp_Url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html\
-  vnp_RetUrl: http://localhost:3000/vnpay-return
+  vnp_RetUrl: http://localhost:5000/vnpay-return
 
 logback:
   access:

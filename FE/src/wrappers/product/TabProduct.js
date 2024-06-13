@@ -12,7 +12,7 @@ const TabProduct = ({
   bgColorClass,
   category,
 }) => {
-  const {t} = useTranslation(['home']);
+  const { t } = useTranslation(["home"]);
   console.log("TabProduct");
   return (
     <div
@@ -21,7 +21,10 @@ const TabProduct = ({
       } ${bgColorClass ? bgColorClass : ""}`}
     >
       <div className="container">
-        <SectionTitle titleText={t('tabproduct.new-items')} positionClass="text-center" />
+        <SectionTitle
+          titleText={t("tabproduct.new-items")}
+          positionClass="text-center"
+        />
         <Tab.Container defaultActiveKey="bestSeller">
           <Nav
             variant="pills"
@@ -29,12 +32,12 @@ const TabProduct = ({
           >
             <Nav.Item>
               <Nav.Link eventKey="newArrival">
-                <h4>{t('tabproduct.new-arrivals')}</h4>
+                <h4>{t("tabproduct.new-arrivals")}</h4>
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
               <Nav.Link eventKey="bestSeller">
-                <h4>{t('tabproduct.best-sellers')}</h4>
+                <h4>{t("tabproduct.best-sellers")}</h4>
               </Nav.Link>
             </Nav.Item>
           </Nav>

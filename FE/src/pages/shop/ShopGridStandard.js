@@ -74,8 +74,6 @@ const ShopGridStandard = ({ location }) => {
   const fetchDataAndProcess = async (page, search) => {
     try {
       const response = await fetchDataProduct(0, search);
-      console.log("Chou test");
-      console.log(response);
       const products = response.content.map(
         (item) =>
           new ProductModel(
@@ -179,15 +177,16 @@ const ShopGridStandard = ({ location }) => {
                 {/* shop page content default */}
                 <ShopProducts
                   layout={layout}
-                  products={currentData.slice(0, visible)}
+                  products={currentData}
+                  // products={currentData.slice(0, visible)}
                 />
 
                 {/* shop product showmore */}
-                {visible < currentData.length && (
+                {/* {visible < currentData.length && (
                   <div className="text-center mt-4 more-btn">
                     <button onClick={handleShowMore}>Show more</button>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>

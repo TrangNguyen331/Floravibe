@@ -4,10 +4,7 @@ import com.hcmute.tlcn.dtos.order.OrderDetailDto;
 import com.hcmute.tlcn.dtos.order.OrderDto;
 import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
 import com.hcmute.tlcn.dtos.voucher.VoucherDto;
-import com.hcmute.tlcn.entities.Account;
-import com.hcmute.tlcn.entities.Order;
-import com.hcmute.tlcn.entities.Payments;
-import com.hcmute.tlcn.entities.Product;
+import com.hcmute.tlcn.entities.*;
 import com.hcmute.tlcn.exceptions.NotFoundException;
 import com.hcmute.tlcn.repositories.AccountRepository;
 import com.hcmute.tlcn.repositories.OrderRepository;
@@ -113,6 +110,10 @@ public class OrderServiceImpl implements OrderService {
 
             payment.setPaid(true);
             paymentRepository.save(payment);
+            order.setCompletedDate(LocalDateTime.now());
+        }
+        else if("CANCEL".equals(order.getStatus())){
+            order.setCancelDate(LocalDateTime.now());
         }
         repository.save(order);
         return order;
@@ -136,5 +137,9 @@ public class OrderServiceImpl implements OrderService {
             detailDto.setProduct(productRepository.findById(detailDto.getProductId()).orElse(null));
         }
         return orderDto;
+    }
+    @Override
+    public List<Order> getAllOrders() {
+        return repository.findAll();
     }
 }

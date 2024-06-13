@@ -1,28 +1,24 @@
 // get products
-// export const getProducts = (products, category, type, limit) => {
-//   // const finalProducts = products;
-//   const finalProducts = category
-//     ? products.filter(
-//         (product) =>
-//           product.collections.filter((single) => single === category)[0]
-//       )
-//     : products;
-//   if (type && type === "new") {
-//     const newProducts = finalProducts.filter((single) => single.new);
-//     return newProducts.slice(0, limit ? limit : newProducts.length);
-//   }
-//   return finalProducts.slice(0, limit ? limit : finalProducts.length);
-// };
 export const getProducts = (products, category, type, limit) => {
   const finalProducts = category
     ? products.filter((product) =>
-        product.collections.some((col) => col.name.includes(category))
+        product.collections.some((col) =>
+          col.name
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .includes(category.normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
+        )
       )
     : products;
-
   if (type && type === "new") {
     const newProducts = finalProducts.filter((single) =>
-      single.collections.some((col) => col.name.includes("Summer"))
+      single.collections.some((col) => col.name.includes("14/02"))
+    );
+    return newProducts.slice(0, limit || newProducts.length);
+  }
+  if (type && type === "bestSeller") {
+    const newProducts = finalProducts.filter((single) =>
+      single.collections.some((col) => col.name.includes("Chúc Mừng"))
     );
     return newProducts.slice(0, limit || newProducts.length);
   }

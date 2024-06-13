@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OrderDetail {
     private String productId;
+    private double unitPrice;
     private int quantity;
     private double subtotal;
 

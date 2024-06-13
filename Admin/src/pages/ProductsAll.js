@@ -66,7 +66,7 @@ const ProductsAll = () => {
   const [totalPages, setTotalPage] = useState(0);
   const [totalResults, setTotalResult] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
-  
+
   const { addToast } = useToasts();
 
   // pagination change control
@@ -108,14 +108,23 @@ const ProductsAll = () => {
       // setTotalPage(response.data.totalPages);
       // setTotalResult(response.data.totalElements);
       // setDataLoaded(true);
-      const totalPageFromAllProducts = Math.ceil(sortedProducts.length / resultsPerPage);
+      const totalPageFromAllProducts = Math.ceil(
+        sortedProducts.length / resultsPerPage
+      );
 
-      const sortedData = response.data.content.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
-      setData(sortedData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+      const sortedData = response.data.content.sort(
+        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+      );
+      setData(
+        sortedData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
+      );
       setPage(page);
 
       const totalPageFromResponse = response.data.totalPages;
-      const finalTotalPages = totalPageFromAllProducts > totalPageFromResponse ? totalPageFromAllProducts : totalPageFromResponse;
+      const finalTotalPages =
+        totalPageFromAllProducts > totalPageFromResponse
+          ? totalPageFromAllProducts
+          : totalPageFromResponse;
       setTotalPage(finalTotalPages);
 
       setTotalResult(response.data.totalElements);
@@ -250,7 +259,16 @@ const ProductsAll = () => {
       switch (searchType) {
         case "Name Of Product":
           filterProducts = productsData.filter((product) =>
-            product.name.toLowerCase().includes(searchValue.toLowerCase())
+            product.name
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .includes(
+                searchValue
+                  .toLowerCase()
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "")
+              )
           );
           break;
         case "Price":
@@ -259,17 +277,43 @@ const ProductsAll = () => {
           );
           break;
         case "Category":
-          filterProducts = productsData.filter((product) =>
-            product.collections && product.collections.some((collection) =>
-              collection.name && collection.name.toLowerCase().includes(searchValue.toLowerCase())
-            )
+          filterProducts = productsData.filter(
+            (product) =>
+              product.collections &&
+              product.collections.some(
+                (collection) =>
+                  collection.name &&
+                  collection.name
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .includes(
+                      searchValue
+                        .toLowerCase()
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                    )
+              )
           );
           break;
         case "Tags":
-          filterProducts = productsData.filter((product) =>
-            product.tags && product.tags.some((tag) =>
-              tag.name && tag.name.toLowerCase().includes(searchValue.toLowerCase())
-            )
+          filterProducts = productsData.filter(
+            (product) =>
+              product.tags &&
+              product.tags.some(
+                (tag) =>
+                  tag.name &&
+                  tag.name
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .includes(
+                      searchValue
+                        .toLowerCase()
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                    )
+              )
           );
           break;
         case "Quantity":
@@ -305,12 +349,14 @@ const ProductsAll = () => {
       setData(
         filterProducts.slice((page - 1) * resultsPerPage, page * resultsPerPage)
       );
-      setTotalPage(Math.ceil(filterProducts.length / resultsPerPage)); 
+      setTotalPage(Math.ceil(filterProducts.length / resultsPerPage));
     } catch (error) {
       console.log("Error occurred while handling search", error.message);
       setTotalResult(productsData.length);
-      setData(productsData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
-      setTotalPage(Math.ceil(productsData.length / resultsPerPage));       
+      setData(
+        productsData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
+      );
+      setTotalPage(Math.ceil(productsData.length / resultsPerPage));
     }
   };
 
@@ -318,10 +364,9 @@ const ProductsAll = () => {
     handleSearch();
   }, [searchType, searchValue, page]);
 
-
   const resetData = async () => {
-      await fetchData();
-      setPage(1);
+    await fetchData();
+    setPage(1);
   };
 
   function formatNumberWithDecimal(number) {
@@ -767,22 +812,22 @@ const ProductsAll = () => {
             )}
           </TableBody>
         </Table>
-          <TableFooter>
-            {dataLoaded && (
-              <Paginate
-                  totalPages={totalPages}
-                  totalResults={totalResults}
-                  page={page}
-                  onPageChange={onPageChange}
-                />
-              // <Pagination
-              //   totalResults={totalResults}
-              //   resultsPerPage={resultsPerPage}
-              //   label="Table navigation"
-              //   onChange={(page) => onPageChange(page)}
-              // />
-            )}
-          </TableFooter>
+        <TableFooter>
+          {dataLoaded && (
+            <Paginate
+              totalPages={totalPages}
+              totalResults={totalResults}
+              page={page}
+              onPageChange={onPageChange}
+            />
+            // <Pagination
+            //   totalResults={totalResults}
+            //   resultsPerPage={resultsPerPage}
+            //   label="Table navigation"
+            //   onChange={(page) => onPageChange(page)}
+            // />
+          )}
+        </TableFooter>
       </TableContainer>
     </div>
   );

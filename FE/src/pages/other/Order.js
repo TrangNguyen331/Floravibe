@@ -241,7 +241,7 @@ const Order = ({ location, cartItems, currency }) => {
                             </td>
                             <td className="product-price-cart">
                               <span className="amount">
-                                {detail.product.price.toLocaleString("vi-VN")}₫
+                                {detail.unitPrice.toLocaleString("vi-VN")}₫
                               </span>
                             </td>
                             <td className="product-quantity text-center">

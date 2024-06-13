@@ -7,6 +7,7 @@ import com.hcmute.tlcn.dtos.payment.PaymentDTO;
 import com.hcmute.tlcn.dtos.payment.UpdatePaymentStatusRequest;
 import com.hcmute.tlcn.entities.Order;
 import com.hcmute.tlcn.entities.Product;
+import com.hcmute.tlcn.entities.Voucher;
 import com.hcmute.tlcn.services.OrderService;
 import com.hcmute.tlcn.services.PaymentService;
 import com.hcmute.tlcn.utils.PageUtils;
@@ -100,5 +101,11 @@ public class OrderController {
     public ResponseEntity<Order> cancelOrder(@PathVariable String id){
         Order result = service.cancelOrder(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Order>> getAllOrders() {
+        List<Order> orders = service.getAllOrders();
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 }

@@ -214,19 +214,24 @@
   }
 }
 .sidebar-widget-price {
-  .price-bottom {
+  .minmax-price {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .minmax-price {
-      display: flex;
-      gap: 5px;
+  }
+  .filter-price-btn {
+    button {
+      display: block;
+      padding: 6px 15px;
+      text-align: center;
+      letter-spacing: 1px;
+      width: 100%;
+      border: none;
+      background-color: $theme-color;
+      color: #fff;
     }
-    .filter-price-btn {
-      button {
-        text-align: center;
-        letter-spacing: 1px;
-      }
+    &:hover {
+      background-color: #333;
     }
   }
 }

@@ -2,6 +2,7 @@ package com.hcmute.tlcn.controllers;
 
 import com.hcmute.tlcn.dtos.product.ProductDto;
 import com.hcmute.tlcn.dtos.review.ReviewDto;
+import com.hcmute.tlcn.entities.Order;
 import com.hcmute.tlcn.entities.Product;
 import com.hcmute.tlcn.services.ProductService;
 import com.hcmute.tlcn.utils.PageUtils;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/${application.version}/products")
@@ -89,4 +91,10 @@ public class ProductController {
         Product result = service.deleteReview(id,reviewId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    @GetMapping("/all")
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = service.getAllProducts();
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
 }

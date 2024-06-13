@@ -94,7 +94,6 @@ public class ProductServiceImpl  implements ProductService {
                 .orElseThrow(() -> new NotFoundException("Order not found"));
         order.setRated(true);
         orderRepository.save(order);
-//
         return product;
     }
 
@@ -143,5 +142,9 @@ public class ProductServiceImpl  implements ProductService {
         product.getReviews().removeIf(x->x.getId().equals(reviewId));
         repository.save(product);
         return null;
+    }
+    @Override
+    public List<Product> getAllProducts() {
+        return repository.findAll();
     }
 }
