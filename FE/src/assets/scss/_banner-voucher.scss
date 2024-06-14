@@ -67,6 +67,7 @@
           font-size: 15px;
           margin-top: 10px;
           color: #666;
+          text-align: center;
         }
         .first-content {
           display: flex;
@@ -74,7 +75,7 @@
           justify-content: center;
           align-items: center;
           height: 100%;
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 400;
           margin-top: 5px;
           font-family: "Sniglet", system-ui;
@@ -113,6 +114,7 @@
           border: 3px solid;
           border-image: linear-gradient(to bottom, red, rgba(0, 0, 0, 0)) 1 100%;
           padding: 4px;
+          margin-bottom: 8px;
         }
 
         .quantity {

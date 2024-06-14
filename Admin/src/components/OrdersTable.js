@@ -81,7 +81,7 @@ const OrdersTable = ({
       let item = data.filter((x) => x.id === orderId)[0];
       item.status = status;
       await axiosInstance.put(`/api/v1/orders/${item.id}`, item);
-      await fetchData(page, filter, resultsPerPage);
+      fetchData(page, filter, resultsPerPage);
     } catch (error) {
       console.log("Update status fail");
     }
@@ -263,7 +263,14 @@ const OrdersTable = ({
         filteredData = ordersData.filter((order) =>
           order.additionalOrder.fullName
             .toLowerCase()
-            .includes(searchValue.toLowerCase())
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .includes(
+              searchValue
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+            )
         );
         break;
       case "Order ID":
@@ -278,7 +285,14 @@ const OrdersTable = ({
             order.details.some((detail) =>
               detail.product.name
                 .toLowerCase()
-                .includes(searchValue.toLowerCase())
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .includes(
+                  searchValue
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                )
             )
         );
         break;

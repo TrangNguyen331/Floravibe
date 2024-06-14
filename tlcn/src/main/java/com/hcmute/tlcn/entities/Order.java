@@ -28,9 +28,8 @@ public class Order {
     private double total;
     private String status;
     private String methodPaid;
-//    private boolean isPaid =false;
     private boolean isRated = false;
-
+    private double firstDiscount;
     @CreatedDate
     private LocalDateTime createdDate;
     private LocalDateTime cancelDate;

@@ -972,17 +972,21 @@
     .pro-details-compare {
       a,
       button {
-        font-size: 18px;
-
-        margin-left: 25px;
-
+        font-size: 22px;
+        margin-left: 15px;
         color: #000;
         border: none;
         background: none;
+        transition: all 0.3s ease;
+        i {
+          font-weight: 600;
+        }
         @media #{$xs-layout} {
           margin-left: 10px;
         }
-        &:hover,
+        &:hover {
+          transform: scale(1.1);
+        }
         &.active {
           color: $theme-color;
         }

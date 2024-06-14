@@ -16,6 +16,7 @@ import {
 import { useTranslation } from "react-i18next";
 import Evaluate from "./Evaluate";
 import EditReview from "./EditReview";
+import CancelVnpay from "./CancelVnpay";
 
 const MyOrders = ({ location }) => {
   const token = useSelector((state) => state.auth.token);
@@ -25,6 +26,7 @@ const MyOrders = ({ location }) => {
   const [currentFilterOrder, setCurrentOrderFilter] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [isCancelShow, setCancelShow] = useState(false);
   const { t } = useTranslation(["orders", "breadcrumb"]);
   const { pathname } = location;
   const filterOrder = (key) => {
@@ -57,13 +59,15 @@ const MyOrders = ({ location }) => {
   };
   const clickRated = async (orderId) => {
     setOrderId(orderId);
-    console.log(orderId);
     setIsEdit(true);
   };
-  const clickCancel = async (orderId) => {
+  const clickCancel = async (orderId, methodPaid) => {
     try {
       await axiosInstance.put(`api/v1/orders/${orderId}/cancel`);
-      fetchData();
+      await fetchData();
+      if (methodPaid === "VNPAY") {
+        setCancelShow(true);
+      }
     } catch (error) {}
   };
   useEffect(() => {
@@ -199,13 +203,23 @@ const MyOrders = ({ location }) => {
                                         )}
                                       </ul>
                                     </div>
+
                                     <div className="order-total-wrap">
                                       <ul>
-                                        <li className="order-total">
-                                          {t("detail.total")}
+                                        <li>
+                                          <span>Payment method</span>
+                                          <span>{order.methodPaid}</span>
                                         </li>
                                         <li>
-                                          {order.total.toLocaleString("vi-VN")}₫
+                                          <span className="order-total">
+                                            {t("detail.total")}
+                                          </span>
+                                          <span className="order-total-price">
+                                            {order.total.toLocaleString(
+                                              "vi-VN"
+                                            )}
+                                            ₫
+                                          </span>
                                         </li>
                                       </ul>
                                     </div>
@@ -213,7 +227,12 @@ const MyOrders = ({ location }) => {
                                   <div className="order-details-link">
                                     {order.status === "IN_REQUEST" ? (
                                       <button
-                                        onClick={() => clickCancel(order.id)}
+                                        onClick={() =>
+                                          clickCancel(
+                                            order.id,
+                                            order.methodPaid
+                                          )
+                                        }
                                       >
                                         Cancel
                                       </button>
@@ -243,8 +262,6 @@ const MyOrders = ({ location }) => {
                                       <i className="fa fa-long-arrow-right"></i>
                                     </Link>
                                   </div>
-
-                                  <div className="payment-method"></div>
                                 </div>
                               </div>
                             </div>
@@ -314,11 +331,20 @@ const MyOrders = ({ location }) => {
                                     </div>
                                     <div className="order-total-wrap">
                                       <ul>
-                                        <li className="order-total">
-                                          {t("detail.total")}
+                                        <li>
+                                          <span>Payment method</span>
+                                          <span>{order.methodPaid}</span>
                                         </li>
                                         <li>
-                                          {order.total.toLocaleString("vi-VN")}₫
+                                          <span className="order-total">
+                                            {t("detail.total")}
+                                          </span>
+                                          <span className="order-total-price">
+                                            {order.total.toLocaleString(
+                                              "vi-VN"
+                                            )}
+                                            ₫
+                                          </span>
                                         </li>
                                       </ul>
                                     </div>
@@ -326,7 +352,12 @@ const MyOrders = ({ location }) => {
                                   <div className="order-details-link">
                                     {order.status === "IN_REQUEST" && (
                                       <button
-                                        onClick={() => clickCancel(order.id)}
+                                        onClick={() =>
+                                          clickCancel(
+                                            order.id,
+                                            order.methodPaid
+                                          )
+                                        }
                                       >
                                         Cancel
                                       </button>
@@ -342,8 +373,6 @@ const MyOrders = ({ location }) => {
                                       <i className="fa fa-long-arrow-right"></i>
                                     </Link>
                                   </div>
-
-                                  <div className="payment-method"></div>
                                 </div>
                               </div>
                             </div>
@@ -413,11 +442,20 @@ const MyOrders = ({ location }) => {
                                     </div>
                                     <div className="order-total-wrap">
                                       <ul>
-                                        <li className="order-total">
-                                          {t("detail.total")}
+                                        <li>
+                                          <span>Payment method</span>
+                                          <span>{order.methodPaid}</span>
                                         </li>
                                         <li>
-                                          {order.total.toLocaleString("vi-VN")}₫
+                                          <span className="order-total">
+                                            {t("detail.total")}
+                                          </span>
+                                          <span className="order-total-price">
+                                            {order.total.toLocaleString(
+                                              "vi-VN"
+                                            )}
+                                            ₫
+                                          </span>
                                         </li>
                                       </ul>
                                     </div>
@@ -434,7 +472,6 @@ const MyOrders = ({ location }) => {
                                       <i className="fa fa-long-arrow-right"></i>
                                     </Link>
                                   </div>
-                                  <div className="payment-method"></div>
                                 </div>
                               </div>
                             </div>
@@ -504,11 +541,20 @@ const MyOrders = ({ location }) => {
                                     </div>
                                     <div className="order-total-wrap">
                                       <ul>
-                                        <li className="order-total">
-                                          {t("detail.total")}
+                                        <li>
+                                          <span>Payment method</span>
+                                          <span>{order.methodPaid}</span>
                                         </li>
                                         <li>
-                                          {order.total.toLocaleString("vi-VN")}₫
+                                          <span className="order-total">
+                                            {t("detail.total")}
+                                          </span>
+                                          <span className="order-total-price">
+                                            {order.total.toLocaleString(
+                                              "vi-VN"
+                                            )}
+                                            ₫
+                                          </span>
                                         </li>
                                       </ul>
                                     </div>
@@ -540,8 +586,6 @@ const MyOrders = ({ location }) => {
                                       <i className="fa fa-long-arrow-right"></i>
                                     </Link>
                                   </div>
-
-                                  <div className="payment-method"></div>
                                 </div>
                               </div>
                             </div>
@@ -611,11 +655,20 @@ const MyOrders = ({ location }) => {
                                     </div>
                                     <div className="order-total-wrap">
                                       <ul>
-                                        <li className="order-total">
-                                          {t("detail.total")}
+                                        <li>
+                                          <span>Payment method</span>
+                                          <span>{order.methodPaid}</span>
                                         </li>
                                         <li>
-                                          {order.total.toLocaleString("vi-VN")}₫
+                                          <span className="order-total">
+                                            {t("detail.total")}
+                                          </span>
+                                          <span className="order-total-price">
+                                            {order.total.toLocaleString(
+                                              "vi-VN"
+                                            )}
+                                            ₫
+                                          </span>
                                         </li>
                                       </ul>
                                     </div>
@@ -632,7 +685,6 @@ const MyOrders = ({ location }) => {
                                       <i className="fa fa-long-arrow-right"></i>
                                     </Link>
                                   </div>
-                                  <div className="payment-method"></div>
                                 </div>
                               </div>
                             </div>
@@ -672,6 +724,7 @@ const MyOrders = ({ location }) => {
         onHide={() => setIsEdit(false)}
         orderId={orderId}
       />
+      <CancelVnpay show={isCancelShow} onHide={() => setCancelShow(false)} />
     </Fragment>
   );
 };

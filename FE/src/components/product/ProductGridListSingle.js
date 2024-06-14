@@ -14,8 +14,10 @@ const ProductGridListSingle = ({
   currency,
   addToCart,
   addToWishlist,
+  addToCompare,
   cartItem,
   wishlistItem,
+  compareItem,
   sliderClassName,
   spaceBottomClass,
 }) => {
@@ -273,6 +275,20 @@ const ProductGridListSingle = ({
                       )}
                     </button>
                   </div>
+                  <div className="shop-list-compare ml-10">
+                    <button
+                      className={compareItem !== undefined ? "active" : ""}
+                      disabled={compareItem !== undefined}
+                      title={
+                        compareItem !== undefined
+                          ? "Added to compare"
+                          : "Add to compare"
+                      }
+                      onClick={() => addToCompare(product, addToast)}
+                    >
+                      <i className="pe-7s-shuffle" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -299,7 +315,9 @@ const ProductGridListSingle = ({
 ProductGridListSingle.propTypes = {
   addToCart: PropTypes.func,
   addToWishlist: PropTypes.func,
+  addToCompare: PropTypes.func,
   cartItem: PropTypes.object,
+  compareItem: PropTypes.object,
   currency: PropTypes.object,
   product: PropTypes.object,
   sliderClassName: PropTypes.string,

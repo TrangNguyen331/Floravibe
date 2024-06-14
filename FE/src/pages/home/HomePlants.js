@@ -6,6 +6,11 @@ import BannerFour from "../../wrappers/banner/BannerFour";
 import TabProduct from "../../wrappers/product/TabProduct";
 import FeatureIconThree from "../../wrappers/feature-icon/FeatureIconThree";
 import VoucherSlider from "../../wrappers/voucher-banner/VoucherSlider";
+import BannerEight from "../../wrappers/banner/BannerEight";
+import BannerThree from "../../wrappers/banner/BannerThree";
+import BannerOne from "../../wrappers/banner/BannerOne";
+import BannerFive from "../../wrappers/banner/BannerFive";
+import BannerEighteen from "../../wrappers/banner/BannerEighteen";
 // import Newsletter from "../../wrappers/newsletter/Newsletter";
 
 const HomePlants = () => {

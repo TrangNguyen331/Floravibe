@@ -20,7 +20,7 @@ const Order = ({ location, cartItems, currency }) => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get("/api/v1/orders/" + id);
-        console.log("response", response);
+        console.log("order", response.data);
         setOrder((prevOrders) => response.data);
       } catch (error) {
         console.log("Fail to load Order");
@@ -30,9 +30,8 @@ const Order = ({ location, cartItems, currency }) => {
     fetchData();
     getAllOrders();
   }, []);
-  console.log(order);
-  const { pathname } = location;
 
+  const { pathname } = location;
   const getAllOrders = async () => {
     try {
       const response = await axiosInstance.get("/api/v1/orders");
@@ -117,11 +116,7 @@ const Order = ({ location, cartItems, currency }) => {
                                 cartTotalPrice += detail.subtotal;
                               })}
                               <span>
-                                {"-" +
-                                  (cartTotalPrice * 0.1).toLocaleString(
-                                    "vi-VN"
-                                  ) +
-                                  "₫"}
+                                {"-" + (50000).toLocaleString("vi-VN") + "₫"}
                               </span>
                             </li>
                           )}
@@ -160,13 +155,19 @@ const Order = ({ location, cartItems, currency }) => {
                       </div>
                       <div className="order-total-wrap">
                         <ul>
-                          <li className="order-total">{t("detail.total")}</li>
-                          <li>{order.total.toLocaleString("vi-VN")}₫</li>
+                          {/* <li className="order-total">{t("detail.total")}</li>
+                          <li>{order.total.toLocaleString("vi-VN")}₫</li> */}
+                          <li>
+                            <span className="order-total">
+                              {t("detail.total")}
+                            </span>
+                            <span className="order-total-price">
+                              {order.total.toLocaleString("vi-VN")}₫
+                            </span>
+                          </li>
                         </ul>
                       </div>
                     </div>
-
-                    <div className="payment-method"></div>
                   </div>
                 </div>
                 <div className="col-lg-5 col-md-4">

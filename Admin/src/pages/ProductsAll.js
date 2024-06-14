@@ -91,10 +91,10 @@ const ProductsAll = () => {
         "/api/v1/products/paging?page=" + (page - 1) + "&size=" + resultsPerPage
       );
       const allProductsResponse = await axiosInstance.get(
-        "/api/v1/products/paging?page=0&size=999"
+        "/api/v1/products/all"
       );
 
-      const sortedProducts = allProductsResponse.data.content.sort(
+      const sortedProducts = allProductsResponse.data.sort(
         (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
       );
       setProductsData(sortedProducts);

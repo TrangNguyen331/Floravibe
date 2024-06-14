@@ -48,7 +48,7 @@ const Checkout = ({ location, cartItems, currency }) => {
     deliveryTime: "",
   });
   let cartTotalPrice = 0;
-
+  const firstDiscount = 50000;
   const [appliedVoucherName, setAppliedVoucherName] = useState("");
   const [vouchers, setVouchers] = useState([]);
 
@@ -163,7 +163,6 @@ const Checkout = ({ location, cartItems, currency }) => {
         (sum, item) => sum + item.quantity * item.price,
         0
       );
-      const firstDiscount = totalValue * 0.1;
       const selectedVoucher = vouchers
         .filter((voucher) => voucher.isActive === true)
         .find((voucher) => voucher.voucherName === appliedVoucherName);
@@ -245,6 +244,7 @@ const Checkout = ({ location, cartItems, currency }) => {
             : totalValue - voucherDiscount,
         status: "IN_REQUEST",
         methodPaid: paymentMethod,
+        firstDiscount: orders.length === 0 ? firstDiscount : 0,
       };
 
       try {
@@ -714,7 +714,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                             <li className="your-order-shipping">First order</li>
                             <li>
                               {"-" +
-                                (cartTotalPrice * 0.1).toLocaleString("vi-VN") +
+                                firstDiscount.toLocaleString("vi-VN") +
                                 "₫"}
                             </li>
                           </ul>
@@ -741,7 +741,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                             {orders.length === 0
                               ? (
                                   cartTotalPrice -
-                                  cartTotalPrice * 0.1 -
+                                  firstDiscount -
                                   voucherDiscount
                                 ).toLocaleString("vi-VN") + "₫"
                               : (

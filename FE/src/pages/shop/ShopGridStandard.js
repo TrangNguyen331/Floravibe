@@ -67,6 +67,7 @@ const ShopGridStandard = ({ location }) => {
   };
 
   const getFilterSortParams = (sortType, sortValue) => {
+    console.log(sortType, sortValue);
     setFilterSortType(sortType);
     setFilterSortValue(sortValue);
   };

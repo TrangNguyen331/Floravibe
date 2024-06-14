@@ -62,7 +62,11 @@ export const getSortedProducts = (products, sortType, sortValue) => {
     if (sortType === "category") {
       return products.filter(
         (product) =>
-          product.collections.filter((single) => single.name === sortValue)[0]
+          product.collections.filter(
+            (single) =>
+              single.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ===
+              sortValue.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          )[0]
       );
     }
     if (sortType === "tag") {

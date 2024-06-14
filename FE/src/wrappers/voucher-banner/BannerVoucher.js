@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import "../../assets/scss/_banner-voucher.scss";
 import { Col, Row } from "reactstrap";
 import PropTypes from "prop-types";
-const BannerVoucher = ({ data, sliderClass }) => {
+const BannerVoucher = ({ data }) => {
   const formatReadableDate = (dateValue) => {
     const date = new Date(dateValue);
     const day = date.getDate().toString().padStart(2, "0");
@@ -22,7 +22,8 @@ const BannerVoucher = ({ data, sliderClass }) => {
               <span className="currency">VND</span>
             </div>
             <div className="due-date">
-              {formatReadableDate(data.effectiveDate)} -{" "}
+              {formatReadableDate(data.effectiveDate)}
+              <br />-<br />
               {formatReadableDate(data.validUntil)}
             </div>
             <div className="first-content">{data.description}</div>
@@ -42,6 +43,5 @@ const BannerVoucher = ({ data, sliderClass }) => {
 };
 BannerVoucher.propTypes = {
   data: PropTypes.object,
-  sliderClass: PropTypes.string,
 };
 export default BannerVoucher;

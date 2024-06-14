@@ -118,6 +118,16 @@ const SingleOrder = () => {
                       <span>Phone:</span>
                       <span>{order.additionalOrder.phone}</span>
                     </li>
+
+                    {order.firstDiscount && order.firstDiscount > 0 ? (
+                      <li className="mb-2 flex justify-between">
+                        <span>First order:</span>
+                        <span>
+                          {"-" + order.firstDiscount.toLocaleString("vi-VN")}đ
+                        </span>
+                      </li>
+                    ) : null}
+
                     <li className="mb-2 flex justify-between">
                       <span>Delivery date:</span>
                       <span>{order.deliveryDate}</span>

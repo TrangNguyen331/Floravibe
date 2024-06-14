@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.hcmute.tlcn.utils.PageUtils.convertListToPage;
 
@@ -75,15 +76,32 @@ public class OrderServiceImpl implements OrderService {
         Order order=new Order();
         modelMapper.map(dto,order);
 
+        String email = dto.getAdditionalOrder().getEmail();
+        // Check if this is the user's first order
+        Optional<Account> accountOptional = accountRepository.findByEmail(email);
+        if (accountOptional.isEmpty()) {
+            throw new NotFoundException("Account not found!");
+
+        }
+        else{
+            Account account = accountOptional.get();
+            List<Order> userOrders = repository.findAllByUser(account.getEmail());
+
+            if (userOrders.isEmpty()) {
+                // Apply the discount for the first order
+                order.setFirstDiscount(dto.getFirstDiscount());
+            }
+        }
         VoucherDto voucherDto = new VoucherDto();
-        voucherDto.setId(dto.getVoucherDetail().getId());
-        voucherDto.setVoucherName(dto.getVoucherDetail().getVoucherName());
-        voucherDto.setVoucherValue(dto.getVoucherDetail().getVoucherValue());
-        voucherDto.setDescription(dto.getVoucherDetail().getDescription());
-        voucherDto.setEffectiveDate(dto.getVoucherDetail().getEffectiveDate());
-        voucherDto.setValidUntil(dto.getVoucherDetail().getValidUntil());
-        voucherDto.setQuantity(dto.getVoucherDetail().getQuantity());
-        voucherDto.setUsedVoucher(dto.getVoucherDetail().getUsedVoucher());
+//        voucherDto.setId(dto.getVoucherDetail().getId());
+//        voucherDto.setVoucherName(dto.getVoucherDetail().getVoucherName());
+//        voucherDto.setVoucherValue(dto.getVoucherDetail().getVoucherValue());
+//        voucherDto.setDescription(dto.getVoucherDetail().getDescription());
+//        voucherDto.setEffectiveDate(dto.getVoucherDetail().getEffectiveDate());
+//        voucherDto.setValidUntil(dto.getVoucherDetail().getValidUntil());
+//        voucherDto.setQuantity(dto.getVoucherDetail().getQuantity());
+//        voucherDto.setUsedVoucher(dto.getVoucherDetail().getUsedVoucher());
+        modelMapper.map(dto.getVoucherDetail(), voucherDto);
         order.setVoucherDetail(voucherDto);
         order.setCancelDate(null);
         repository.save(order);

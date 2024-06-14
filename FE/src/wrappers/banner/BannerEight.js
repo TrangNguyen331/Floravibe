@@ -1,5 +1,5 @@
 import React from "react";
-import bannerData from "../../data/banner/banner-eight.json";
+import bannerData from "../../data/banner/banner-four.json";
 import BannerEightSingle from "../../components/banner/BannerEightSingle.js";
 
 const BannerEight = () => {

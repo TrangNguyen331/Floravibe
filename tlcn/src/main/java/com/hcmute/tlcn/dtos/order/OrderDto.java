@@ -24,7 +24,5 @@ public class OrderDto {
     private double total;
     private String status;
     private String methodPaid;
-//    private boolean isPaid =false;
-
-
+    private double firstDiscount;
 }

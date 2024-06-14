@@ -29,7 +29,16 @@ const ShopCategories = ({ categories, getSortParams, bannerCategory }) => {
                 <li key={key}>
                   <div className="sidebar-widget-list-left">
                     <button
-                      className={bannerCategory === category ? "active" : ""}
+                      className={
+                        bannerCategory
+                          .normalize("NFD")
+                          .replace(/[\u0300-\u036f]/g, "") ===
+                        category
+                          .normalize("NFD")
+                          .replace(/[\u0300-\u036f]/g, "")
+                          ? "active"
+                          : ""
+                      }
                       onClick={(e) => {
                         getSortParams("category", category);
                         setActiveSort(e);

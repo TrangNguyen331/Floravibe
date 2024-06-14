@@ -182,3 +182,9 @@ ul {
 .custom-option.custom-select__option--is-selected {
   background: #2684ff;
 }
+
+.divider {
+  margin: 10px 0;
+  width: 100%;
+  border: 1px solid #dee0e4;
+}

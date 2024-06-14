@@ -124,20 +124,23 @@
         border-top: 1px solid #dee0e4;
 
         ul {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          font-size: 18px;
-
-          li.order-total {
-            font-weight: 500;
-            color: #212121;
-          }
-
           li {
-            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
             list-style: outside none none;
-            color: $theme-color;
+            margin-bottom: 10px;
+            span.order-total {
+              font-weight: 500;
+              color: #212121;
+              font-size: 18px;
+            }
+            .order-total-price {
+              font-weight: 500;
+              color: $theme-color;
+              font-size: 18px;
+            }
           }
         }
       }
@@ -255,4 +258,30 @@ h3.order-page-title {
   font-weight: 500;
   line-height: 1;
   padding: 10px 26px;
+}
+.product-quickview-modal-wrapper {
+  .modal-dialog {
+    width: 890px;
+  }
+}
+.content-container {
+  max-width: 780px;
+  margin: 0 auto;
+  .icon-speaker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    i {
+      margin-bottom: 24px;
+      font-size: 30px;
+      font-weight: bold;
+      color: $theme-color;
+      background-color: #f4ecfb;
+      padding: 20px;
+      border-radius: 50%;
+    }
+  }
+  p {
+    font-size: 17px;
+  }
 }
