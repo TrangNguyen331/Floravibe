@@ -18,7 +18,7 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
-    @GetMapping
+    @GetMapping("/allPayments")
     public ResponseEntity<List<Payments>> getAllPayments() {
         List<Payments> payments = paymentService.getAllPayments();
         return new ResponseEntity<>(payments, HttpStatus.OK);

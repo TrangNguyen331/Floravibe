@@ -13,6 +13,8 @@ import {
 import axiosInstance from "../axiosInstance";
 import { DownIcon, SortDefaultIcon, UpIcon, EyeIcon } from "../icons";
 import Paginate from "./Pagination/Paginate";
+import { FaSpinner } from "react-icons/fa";
+import { Box, LinearProgress } from "@mui/material";
 
 function Icon({ icon, ...props }) {
   const Icon = icon;
@@ -34,6 +36,7 @@ const OrdersTable = ({
   const [totalPages, setTotalPage] = useState(0);
   const [totalResults, setTotalResult] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [loadingGet, setLoadingGet] = useState(false);
 
   const [sortType, setSortType] = useState("default");
   const [sortTotalType, setSortTotalType] = useState("default");
@@ -49,7 +52,7 @@ const OrdersTable = ({
     },
     {
       value: "IN_PROCESSING",
-      label: "In Processing",
+      label: "In Progress",
       color:
         "p-2 rounded-md bg-pink-100 text-pink-700 dark:bg-pink-700 dark:text-pink-100 mb-2 mt-2",
     },
@@ -66,6 +69,9 @@ const OrdersTable = ({
         "p-2 rounded-md bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100 mb-2 mt-2",
     },
   ];
+  const getStatusOption = (statusValue) => {
+    return statusOptions.find((option) => option.value === statusValue);
+  };
   // pagination change control
   // async function onPageChange(p) {
   //   await fetchData(p, filter, resultsPerPage);
@@ -123,10 +129,12 @@ const OrdersTable = ({
 
   const fetchAllOrdersData = async () => {
     try {
+      setLoadingGet(true);
       const response = await axiosInstance.get(
-        "/api/v1/orders/paging?page=0&size=99"
-      );
-      const sortedOrdersData = response.data.content.sort(
+        "/api/v1/orders/allOrders", {
+        timeout: 10000, 
+      });
+      const sortedOrdersData = response.data.sort(
         (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
       );
       setAllOrdersData(sortedOrdersData);
@@ -134,6 +142,7 @@ const OrdersTable = ({
       setTotalPage(Math.ceil(sortedOrdersData.length / resultsPerPage)); // dòng này sử dụng cho @mui
       setTotalResult(sortedOrdersData.length);
       setDataLoaded(true);
+      setLoadingGet(false);
     } catch (error) {
       console.log("Fetch data error", error);
     }
@@ -329,173 +338,208 @@ const OrdersTable = ({
   return (
     <div>
       {/* Table */}
-      <TableContainer className="mb-8">
-        <Table>
-          <TableHeader>
-            <tr>
-              <TableCell>
-                <div className="flex items-center">
-                  Client
-                  <div onClick={handleSort} className="cursor-pointer">
-                    <Icon
-                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
-                      aria-hidden="true"
-                      icon={
-                        sortType === "asc"
-                          ? UpIcon
-                          : sortType === "desc"
-                          ? DownIcon
-                          : SortDefaultIcon
-                      }
-                    />
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>Order ID</TableCell>
-              <TableCell>Items</TableCell>
-              <TableCell>
-                <div className="flex items-center">
-                  Total
-                  <div onClick={handleSortTotal} className="cursor-pointer">
-                    <Icon
-                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
-                      aria-hidden="true"
-                      icon={
-                        sortTotalType === "asc"
-                          ? UpIcon
-                          : sortTotalType === "desc"
-                          ? DownIcon
-                          : SortDefaultIcon
-                      }
-                    />
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center">
-                  Status
-                  <div onClick={handleSortStatus} className="cursor-pointer">
-                    <Icon
-                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
-                      aria-hidden="true"
-                      icon={
-                        sortStatusType === "asc"
-                          ? UpIcon
-                          : sortStatusType === "desc"
-                          ? DownIcon
-                          : SortDefaultIcon
-                      }
-                    />
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center">
-                  Date
-                  <div onClick={handleSortDate} className="cursor-pointer">
-                    <Icon
-                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
-                      aria-hidden="true"
-                      icon={
-                        sortDateType === "asc"
-                          ? UpIcon
-                          : sortDateType === "desc"
-                          ? DownIcon
-                          : SortDefaultIcon
-                      }
-                    />
-                  </div>
-                </div>
-              </TableCell>
-            </tr>
-          </TableHeader>
-          <TableBody>
-            {data.map((order, i) => (
-              <TableRow key={order.id}>
+      {loadingGet ? (
+        <Box sx={{ width: '100%', color: 'grey.500', backgroundColor: 'grey.500'}}>
+          <LinearProgress sx={{
+            '& .MuiLinearProgress-bar': {
+              backgroundColor: '#edebfe', // Customize bar color
+            },
+            backgroundColor: '#7e3af2', // Customize background color
+          }}
+        />
+        </Box> 
+    ) : ( 
+        <TableContainer className="mb-8">
+          <Table>
+            <TableHeader>
+              <tr>
                 <TableCell>
-                  <div className="flex items-center text-sm">
-                    <div>
-                      <p className="font-semibold">
-                        {order.additionalOrder.fullName}
-                      </p>
+                  <div className="flex items-center">
+                    Client
+                    <div onClick={handleSort} className="cursor-pointer">
+                      <Icon
+                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                        aria-hidden="true"
+                        icon={
+                          sortType === "asc"
+                            ? UpIcon
+                            : sortType === "desc"
+                            ? DownIcon
+                            : SortDefaultIcon
+                        }
+                      />
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>Order ID</TableCell>
+                <TableCell>Items</TableCell>
+                <TableCell>
+                  <div className="flex items-center">
+                    Total
+                    <div onClick={handleSortTotal} className="cursor-pointer">
+                      <Icon
+                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                        aria-hidden="true"
+                        icon={
+                          sortTotalType === "asc"
+                            ? UpIcon
+                            : sortTotalType === "desc"
+                            ? DownIcon
+                            : SortDefaultIcon
+                        }
+                      />
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <span className="text-base">{order.id || ""}</span>
-                </TableCell>
-                <TableCell className="text-base">
-                  {order && order.details && order.details.length > 0
-                    ? order.details.map((detail) => (
-                        <div key={detail.productId} className="flex">
-                          <span
-                            className="px-2 inline-flex text-xs leading-5
-                            font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-700 dark:text-purple-100 mb-2 mt-2"
-                          >
-                            {detail.product.name} x {detail.quantity}
-                          </span>
-                        </div>
-                      ))
-                    : ""}
-                </TableCell>
-                <TableCell>
-                  <span className="text-base">
-                    {order.total.toLocaleString("vi-VN") || ""} ₫
-                  </span>
+                  <div className="flex items-center">
+                    Status
+                    <div onClick={handleSortStatus} className="cursor-pointer">
+                      <Icon
+                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                        aria-hidden="true"
+                        icon={
+                          sortStatusType === "asc"
+                            ? UpIcon
+                            : sortStatusType === "desc"
+                            ? DownIcon
+                            : SortDefaultIcon
+                        }
+                      />
+                    </div>
+                  </div>
                 </TableCell>
                 <TableCell>
-                  <select
-                    className={`form-control ${
-                      statusOptions.find(
-                        (option) => option.value === order.status
-                      ).color
-                    }`}
-                    value={order.status}
-                    onChange={(e) =>
-                      handleStatusChange(e.target.value, order.id)
-                    }
-                  >
-                    {statusOptions.map((option) => (
-                      <option
-                        key={option.value}
-                        value={option.value}
-                        className={option.color}
-                      >
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="flex items-center">
+                    Date
+                    <div onClick={handleSortDate} className="cursor-pointer">
+                      <Icon
+                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                        aria-hidden="true"
+                        icon={
+                          sortDateType === "asc"
+                            ? UpIcon
+                            : sortDateType === "desc"
+                            ? DownIcon
+                            : SortDefaultIcon
+                        }
+                      />
+                    </div>
+                  </div>
                 </TableCell>
-                <TableCell>
-                  <span className="text-base">
-                    {new Date(order.createdDate).toLocaleDateString()}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <Link to={`/app/order/${order.id}`}>
-                    <Button icon={EyeIcon} layout="outline" />
-                  </Link>
-                </TableCell>
-              </TableRow>
-            ))}
-            {searchValue && data.length === 0 && (
-              <p className="text-center my-4 text-purple-500">
-                No result match
-              </p>
+              </tr>
+            </TableHeader>
+            <TableBody>
+              {data.map((order, i) => (
+                <TableRow key={order.id}>
+                  <TableCell>
+                    <div className="flex items-center text-sm">
+                      <div>
+                        <p className="font-semibold">
+                          {order.additionalOrder.fullName}
+                        </p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-base">{order.id || ""}</span>
+                  </TableCell>
+                  <TableCell className="text-base">
+                    {order && order.details && order.details.length > 0
+                      ? order.details.map((detail) => (
+                          <div key={detail.productId} className="flex">
+                            <span
+                              className="px-2 inline-flex text-xs leading-5
+                              font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-700 dark:text-purple-100 mb-2 mt-2"
+                            >
+                              {detail.product.name} x {detail.quantity}
+                            </span>
+                          </div>
+                        ))
+                      : ""}
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-base">
+                      {order.total.toLocaleString("vi-VN") || ""} ₫
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <select
+                      className={`form-control ${
+                        statusOptions.find((option) => option.value === order.status).color
+                      }`}
+                      value={order.status}
+                      onChange={(e) => {
+                        handleStatusChange(e.target.value, order.id);
+                        window.location.reload();
+                      }}
+                      disabled={order.status === 'COMPLETED' || order.status === 'CANCEL'}
+                    >
+                      {statusOptions.map((option) => (
+                        <option
+                          key={option.value}
+                          value={option.value}
+                          className={option.color}
+                        >
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </TableCell>
+                  {/* <TableCell>
+                    <select
+                      className={`form-control ${
+                        statusOptions.find(
+                          (option) => option.value === order.status
+                        ).color
+                      }`}
+                      value={order.status}
+                      onChange={(e) =>
+                        handleStatusChange(e.target.value, order.id)
+                      }
+                    >
+                      {statusOptions.map((option) => (
+                        <option
+                          key={option.value}
+                          value={option.value}
+                          className={option.color}
+                        >
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </TableCell> */}
+                  <TableCell>
+                    <span className="text-base">
+                      {new Date(order.createdDate).toLocaleDateString("vi-VN")}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/app/order/${order.id}`}>
+                      <Button icon={EyeIcon} layout="outline" />
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {searchValue && data.length === 0 && (
+                <p className="text-center my-4 text-purple-500">
+                  No result match
+                </p>
+              )}
+            </TableBody>
+          </Table>
+          <TableFooter>
+            {dataLoaded && (
+              <Paginate
+                totalPages={totalPages}
+                totalResults={totalResults}
+                page={page}
+                onPageChange={onPageChange}
+              />
             )}
-          </TableBody>
-        </Table>
-        <TableFooter>
-          {dataLoaded && (
-            <Paginate
-              totalPages={totalPages}
-              totalResults={totalResults}
-              page={page}
-              onPageChange={onPageChange}
-            />
-          )}
-        </TableFooter>
-      </TableContainer>
+          </TableFooter>
+        </TableContainer>
+    )}
     </div>
   );
 };

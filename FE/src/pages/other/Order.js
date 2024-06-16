@@ -143,7 +143,7 @@ const Order = ({ location, cartItems, currency }) => {
                             <span className="order-bottom-left">
                               Your delivery date
                             </span>
-                            <span>{order.deliveryDate}</span>
+                            <span>{new Date(order.deliveryDate).toLocaleDateString("vi-VN")}</span>
                           </li>
                           <li>
                             <span className="order-bottom-left">

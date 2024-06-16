@@ -23,7 +23,7 @@ const ProductGrid = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get(`/api/v1/products/all`);
+        const response = await axiosInstance.get(`/api/v1/products/allProducts`);
 
         dispatch(updateProducts(response.data));
       } catch (error) {

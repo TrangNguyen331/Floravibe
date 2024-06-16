@@ -103,9 +103,9 @@ public class OrderController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> orders = service.getAllOrders();
+    @GetMapping("/allOrders")
+    public ResponseEntity<List<ResponseOrderDto>> getAllOrders() {
+        List<ResponseOrderDto> orders = service.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 }

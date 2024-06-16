@@ -289,7 +289,7 @@ const MyAccount = ({ location }) => {
                                         />
                                       ) : (
                                         <img
-                                          src="https://i.pinimg.com/564x/93/4e/37/934e37c613b24b4c7aa236644dd46fdc.jpg"
+                                          src="https://i.pinimg.com/originals/90/48/9f/90489fda05254bb2fef245248e9befb1.jpg"
                                           alt="default"
                                           className="avatar-image"
                                         />

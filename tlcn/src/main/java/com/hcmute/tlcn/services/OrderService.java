@@ -15,5 +15,5 @@ public interface OrderService {
     Order updateOrder (String id,OrderDto dto);
     Order cancelOrder (String id);
     ResponseOrderDto getById(String id);
-    List<Order> getAllOrders();
+    List<ResponseOrderDto> getAllOrders();
 }

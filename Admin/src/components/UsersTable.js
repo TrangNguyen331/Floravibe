@@ -28,6 +28,7 @@ import RoundIcon from "./RoundIcon";
 import axiosInstance from "../axiosInstance";
 import { AccountForm } from "./AccountForm";
 import { useToasts } from "react-toast-notifications";
+import { Box, LinearProgress } from "@mui/material";
 const UsersTable = () => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
@@ -35,10 +36,10 @@ const UsersTable = () => {
   const [totalPages, setTotalPage] = useState(0);
   const [totalResults, setTotalResult] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [loadingGet, setLoadingGet] = useState(false);
 
   const [searchType, setSearchType] = useState("");
   const [searchValue, setSearchValue] = useState("");
-
 
   const { addToast } = useToasts();
   // pagination change control
@@ -66,8 +67,10 @@ const UsersTable = () => {
   const handleCheckboxChange = async (userId) => {
     console.log("Handle on change", userId);
     try {
+      setLoadingGet(true);
       await axiosInstance.put(`/api/v1/auth/active/${userId}`);
       await fetchData(1);
+      setLoadingGet(false);
     } catch (error) {
       console.log("Error", error);
     }
@@ -216,6 +219,7 @@ const UsersTable = () => {
             }}
           >
             <option hidden>Choose to search</option>
+            <option>User Name</option>
             <option>First Name</option>
             <option>Last Name</option>
             <option>Email</option>
@@ -252,7 +256,18 @@ const UsersTable = () => {
       </Card>
 
       {/* Table */}
-      <TableContainer className="mb-8">
+      {loadingGet ? (
+        <Box sx={{ width: '100%', color: 'grey.500', backgroundColor: 'grey.500'}}>
+          <LinearProgress sx={{
+            '& .MuiLinearProgress-bar': {
+              backgroundColor: '#edebfe', // Customize bar color
+            },
+            backgroundColor: '#7e3af2', // Customize background color
+          }}
+        />
+        </Box> 
+    ) : ( 
+        <TableContainer className="mb-8">
         <Table>
           <TableHeader>
             <tr>
@@ -350,7 +365,9 @@ const UsersTable = () => {
             // />
           )}
         </TableFooter>
-      </TableContainer>
+        </TableContainer>
+    )}
+      
     </div>
   );
 };

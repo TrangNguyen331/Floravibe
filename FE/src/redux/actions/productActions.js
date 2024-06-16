@@ -11,7 +11,7 @@ export const fetchProductsSuccess = (products) => ({
 // fetch products
 export const fetchProducts = () => {
   return (dispatch) => {
-    axiosInstance.get(`/api/v1/products/all`).then((response) => {
+    axiosInstance.get(`/api/v1/products/allProducts`).then((response) => {
       dispatch(fetchProductsSuccess(response.data));
     });
   };

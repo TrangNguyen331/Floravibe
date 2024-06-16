@@ -73,7 +73,7 @@ const ProductDescriptionInfo = ({
             </span>
           </Fragment>
         ) : ( */}
-        <span>{finalProductPrice.toLocaleString("vi-VN") + "đ"}</span>
+        <span>{finalProductPrice.toLocaleString("vi-VN") + "₫"}</span>
         {/* )} */}
       </div>
 

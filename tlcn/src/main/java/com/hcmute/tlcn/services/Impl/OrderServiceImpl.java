@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.hcmute.tlcn.utils.PageUtils.convertListToPage;
 
@@ -157,7 +158,10 @@ public class OrderServiceImpl implements OrderService {
         return orderDto;
     }
     @Override
-    public List<Order> getAllOrders() {
-        return repository.findAll();
+    public List<ResponseOrderDto> getAllOrders() {
+        List<Order> orders = repository.findAll();
+        return orders.stream()
+                .map(this::convertToResponseOrderDto)
+                .collect(Collectors.toList());
     }
 }

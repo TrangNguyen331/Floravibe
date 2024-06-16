@@ -1,6 +1,6 @@
 export default {
   // avatar: "https://i.pravatar.cc/300",
-  avatar: "https://i.pinimg.com/originals/cc/36/5d/cc365d2fe529b8bc25807ca552d694fa.jpg",
+  avatar: "https://i.pinimg.com/originals/95/78/83/9578835cc8ee0e2dc3e7a7cc265ea994.jpg",
   username: "george_peter",
   firstName: "George",
   lastName: "Peter",

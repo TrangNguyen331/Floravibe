@@ -91,7 +91,7 @@ public class ProductController {
         Product result = service.deleteReview(id,reviewId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    @GetMapping("/all")
+    @GetMapping("/allProducts")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = service.getAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);

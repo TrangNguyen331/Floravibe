@@ -40,6 +40,7 @@ import { fa, tr } from "faker/lib/locales";
 import RoundIcon from "../components/RoundIcon";
 import Paginate from "../components/Pagination/Paginate";
 import { useToasts } from "react-toast-notifications";
+import { Box, LinearProgress } from "@mui/material";
 // import { Grid, Typography, Pagination } from '@mui/material';
 
 const ProductsAll = () => {
@@ -66,10 +67,10 @@ const ProductsAll = () => {
   const [totalPages, setTotalPage] = useState(0);
   const [totalResults, setTotalResult] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [loadingGet, setLoadingGet] = useState(false);
 
   const { addToast } = useToasts();
 
-  // pagination change control
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState(null); // 'edit', 'delete'
@@ -87,11 +88,12 @@ const ProductsAll = () => {
 
   const fetchData = async (page) => {
     try {
+      setLoadingGet(true);
       const response = await axiosInstance.get(
         "/api/v1/products/paging?page=" + (page - 1) + "&size=" + resultsPerPage
       );
       const allProductsResponse = await axiosInstance.get(
-        "/api/v1/products/all"
+        "/api/v1/products/allProducts"
       );
 
       const sortedProducts = allProductsResponse.data.sort(
@@ -129,6 +131,7 @@ const ProductsAll = () => {
 
       setTotalResult(response.data.totalElements);
       setDataLoaded(true);
+      setLoadingGet(false);
     } catch (error) {
       console.log("Fetch data error", error);
     }
@@ -521,7 +524,7 @@ const ProductsAll = () => {
             <option>Name Of Product</option>
             {/* <option>Price</option> */}
             <option>Category</option>
-            <option>Tags</option>
+            <option>Tag</option>
             <option>Quantity</option>
           </Select>
         </Label>
@@ -578,7 +581,7 @@ const ProductsAll = () => {
               </div>
               <input
                 type="text"
-                className="py-3 pl-10 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
+                className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
                 placeholder="Search..."
                 value={searchValue}
                 onChange={(e) => {
@@ -651,7 +654,18 @@ const ProductsAll = () => {
       </Modal>
 
       {/* Product Views */}
-      <TableContainer className="mb-8">
+      {loadingGet ? (
+        <Box sx={{ width: '100%', color: 'grey.500', backgroundColor: 'grey.500'}}>
+          <LinearProgress sx={{
+            '& .MuiLinearProgress-bar': {
+              backgroundColor: '#edebfe', // Customize bar color
+            },
+            backgroundColor: '#7e3af2', // Customize background color
+          }}
+        />
+        </Box> 
+    ) : ( 
+        <TableContainer className="mb-8">
         <Table>
           <TableHeader>
             <tr>
@@ -812,23 +826,18 @@ const ProductsAll = () => {
             )}
           </TableBody>
         </Table>
-        <TableFooter>
-          {dataLoaded && (
-            <Paginate
-              totalPages={totalPages}
-              totalResults={totalResults}
-              page={page}
-              onPageChange={onPageChange}
-            />
-            // <Pagination
-            //   totalResults={totalResults}
-            //   resultsPerPage={resultsPerPage}
-            //   label="Table navigation"
-            //   onChange={(page) => onPageChange(page)}
-            // />
-          )}
-        </TableFooter>
-      </TableContainer>
+          <TableFooter>
+            {dataLoaded && (
+              <Paginate
+                  totalPages={totalPages}
+                  totalResults={totalResults}
+                  page={page}
+                  onPageChange={onPageChange}
+                />            
+            )}
+          </TableFooter>
+        </TableContainer>
+    )}
     </div>
   );
 };

@@ -41,8 +41,8 @@ const MyOrders = ({ location }) => {
     );
   };
   const fetchData = async () => {
-    setLoadingGet(true);
     try {
+      setLoadingGet(true);
       const response = await axiosInstance.get("/api/v1/orders");
       setOrders(response.data);
       setCurrentOrderFilter((prevFilter) =>

@@ -193,8 +193,8 @@ function Dashboard() {
                 onChange={(e) => handleFilter(e.target.value)}
               >
                 <option>All</option>
-                <option>In-Request Orders</option>
-                <option>In-Processing Orders</option>
+                <option>In Request Orders</option>
+                <option>In Progress Orders</option>
                 <option>Cancel Orders</option>
                 <option>Completed Orders</option>
               </Select>

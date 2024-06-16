@@ -7,20 +7,64 @@ import {
   Card,
   CardBody,
   Badge,
-  TableBody,
-  TableContainer,
-  Table,
+  // TableBody,
+  // TableContainer,
+  // Table,
   TableHeader,
-  TableCell,
-  TableRow,
+  // TableCell,
+  // TableRow,
+  TableFooter,
   Button,
   Avatar,
 } from "@windmill/react-ui";
 import { genRating } from "../utils/genarateRating";
 import axiosInstance from "../axiosInstance";
+import { KeyboardArrowDown, KeyboardArrowUp, StarBorder } from "@mui/icons-material";
+import { Box, Collapse, Divider, FormControl, IconButton, InputLabel, MenuItem, Paper, Rating, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+
 const SingleOrder = () => {
   const { id } = useParams();
   const [order, setOrder] = useState(null);
+  const [payment, setPayment] = useState(null);
+  const [open, setOpen] = useState({});
+  const statusOptions = [
+    { 
+      value: "IN_REQUEST",
+      label: "IN REQUEST",
+      color:
+        "px-5 py-4 rounded-full bg-orange-100 text-orange-700 dark:bg-orange-700 dark:text-orange-100",
+    },
+    {
+      value: "IN_PROCESSING",
+      label: "IN PROGRESS",
+      color:
+        "px-4 py-4 rounded-full bg-pink-100 text-pink-700 dark:bg-pink-700 dark:text-pink-100",
+    },
+    {
+      value: "CANCEL",
+      label: "CANCEL",
+      color:
+        "px-5 py-3 rounded-full bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-100",
+    },
+    {
+      value: "COMPLETED",
+      label: "COMPLETED",
+      color:
+        "px-5 py-3 rounded-full bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100",
+    },
+  ];
+  const getStatusOption = (statusValue) => {
+    return statusOptions.find((option) => option.value === statusValue);
+  };
+
+  const toggleOpen = (index) => {
+    setOpen((prevOpen) => ({
+      ...prevOpen,
+      [index]: !prevOpen[index],
+    }));
+  };
+
+
   const formatReadableDate = (date) => {
     const parsedDate = new Date(date);
     // Format the date using Intl.DateTimeFormat
@@ -34,17 +78,47 @@ const SingleOrder = () => {
     }).format(parsedDate);
     return formattedDateTime;
   };
+  function formatNumberWithDecimal(number) {
+    const numString = String(number); // Convert the number to a string
+    const groups = numString.split(/(?=(?:\d{3})+(?!\d))/); // Split the string into groups of three digits
+    const formattedNumber = groups.join("."); // Join the groups with a decimal point
+    return formattedNumber;
+  }
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get("/api/v1/orders/" + id);
+      setOrder(response.data);
+    } catch (error) {}
+  };
+
+  const handleStatusChange = async (event) => {
+    const newStatus = event.target.value;
+    try {
+      const updatedOrder = { ...order, status: newStatus };
+      await axiosInstance.put(`/api/v1/orders/${id}`, updatedOrder);
+      setOrder(updatedOrder);
+    } catch (error) {
+      console.error("Update status failed:", error);
+    }
+  };
+
+  const fetchPaymentData = async () => {
       try {
-        const response = await axiosInstance.get("/api/v1/orders/" + id);
-        setOrder(response.data);
+        const response = await axiosInstance.get('/api/v1/payments/allPayments');
+        const paymentForOrder = response.data.find(payment => payment.orderId === id);
+        setPayment(paymentForOrder);
+        console.log("Payment");
+        console.log(paymentForOrder);
       } catch (error) {}
     };
+
+  useEffect(() => {
     fetchData();
+    fetchPaymentData();
   }, []);
   console.log("order", order);
+  
   return (
     <div>
       <PageTitle>Order Details</PageTitle>
@@ -75,12 +149,38 @@ const SingleOrder = () => {
               <div className="p-4">
                 <div className="flex items-center justify-between py-5">
                   <h3>Order {order.id}</h3>
-                  <Badge className="py-1 px-2" type="success">
-                    {order.status}
-                  </Badge>
+                  <div>
+                    {order.status === 'COMPLETED' || order.status === 'CANCEL' ? (
+                      <span className={getStatusOption(order.status)?.color || ""}>
+                        {getStatusOption(order.status)?.label || ""}
+                      </span>
+                    ) : (
+                      <select
+                        className={`form-control ${
+                          statusOptions.find((option) => option.value === order.status).color
+                        } w-auto`}
+                        value={order.status}
+                        onChange={handleStatusChange}
+                      >
+                        {statusOptions.map((option) => (
+                          <option
+                            key={option.value}
+                            value={option.value}
+                            className={option.color}
+                          >
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                  {/* <span className={getStatusOption(order.status)?.color || ""}>
+                    {getStatusOption(order.status)?.label || ""}
+                  </span> */}
                 </div>
                 <div className="flex items-center gap-3">
-                  <Badge className="py-1 px-2 gap-2 text-sm" type="neutral">
+                  <Badge className="py-1 px-2 gap-2 text-sm leading-5
+                            font-semibold rounded-full bg-purple-100 text-purple-900 dark:bg-purple-700 dark:text-purple-100" type="neutral">
                     Order time:
                     <span className="font-normal">
                       {new Date(order.createdDate).toLocaleString("vi-VN")}
@@ -118,23 +218,31 @@ const SingleOrder = () => {
                       <span>Phone:</span>
                       <span>{order.additionalOrder.phone}</span>
                     </li>
-
-                    {order.firstDiscount && order.firstDiscount > 0 ? (
+                    {/* {order.firstDiscount && order.firstDiscount > 0 ? (
                       <li className="mb-2 flex justify-between">
                         <span>First order:</span>
                         <span>
-                          {"-" + order.firstDiscount.toLocaleString("vi-VN")}đ
+                          {"-" + order.firstDiscount.toLocaleString("vi-VN")} {""} ₫
                         </span>
                       </li>
-                    ) : null}
-
+                    ) : null} */}
                     <li className="mb-2 flex justify-between">
                       <span>Delivery date:</span>
-                      <span>{order.deliveryDate}</span>
+                      <span>{new Date(order.deliveryDate).toLocaleDateString("vi-VN")}</span>
                     </li>
                     <li className="mb-2 flex justify-between">
                       <span>Delivery time:</span>
                       <span>{order.deliveryTime}</span>
+                    </li>
+                    <li className="mb-2 flex justify-between">
+                      <span>Payment status:</span>
+                      <Badge 
+                        className="px-3"
+                        style={{fontSize: '15px'}} 
+                        type={payment && payment.paid ? 'success' : 'danger'}
+                      >
+                        {payment && payment.paid ? 'Paid' : 'Unpaid'}
+                      </Badge>
                     </li>
                     <li className="mb-2 flex justify-between">
                       <span>Payment method:</span>
@@ -150,12 +258,32 @@ const SingleOrder = () => {
                 {/* <hr className="mx-3 my-2 customeDivider" /> */}
                 <div className="p-4">
                   <h2 className="mb-4">Shipping Address</h2>
-                  <div>
+                  <div className="mb-4">
                     {order.additionalOrder.houseNumber},{" "}
                     {order.additionalOrder.ward},{" "}
                     {order.additionalOrder.district},{" "}
                     {order.additionalOrder.city}
                   </div>
+                  {order.additionalOrder.additionalInformation && (
+                    <>
+                      <Divider className="my-4 mx-4" variant="middle"/>
+                      <div className="mt-4">
+                        <span 
+                          className="mb-4"
+                          style={{
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            // color: '#7e3af2'
+                          }}
+                        >
+                          Note
+                        </span>
+                        <div>
+                          <span className="pt-3 pr-3 pb-3">{order.additionalOrder.additionalInformation}</span>                   
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </CardBody>
             </Card>
@@ -164,30 +292,182 @@ const SingleOrder = () => {
             <Card>
               <CardBody>
                 <div className="p-4">
-                  <h2 className="mb-4">Products ordered</h2>
-                  <TableContainer>
-                    <Table>
+                  <h2 className="mb-4">Products Ordered</h2>
+                  <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 700 }} aria-label="spanning table">
                       <TableHeader>
-                        <tr>
-                          <TableCell>PRODUCT NAME</TableCell>
-                          <TableCell>UNIT PRICE</TableCell>
-                          <TableCell>QUANTITY</TableCell>
-                          <TableCell>SUBTOTAL</TableCell>
-                        </tr>
+                        {/* <TableRow>
+                          <TableCell align="center" colSpan={3}>
+                            DETAILS
+                          </TableCell>
+                          <TableCell align="right">PRICE</TableCell>
+                        </TableRow> */}
+                        <TableRow>
+                          <TableCell />
+                          <TableCell className="ml-4">PRODUCT NAME</TableCell>
+                          <TableCell align="center">UNIT PRICE</TableCell>
+                          <TableCell align="center">QUANTITY</TableCell>
+                          <TableCell align="right">SUM</TableCell>
+                        </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {order.details.map((detail, index) => (
-                          <TableRow
-                            key={index}
-                            className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                        {/* {order.details.map((detail, index) => (
+                          <TableRow 
+                              key={index}
+                              className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                           >
-                            <TableCell>{detail.product.name}</TableCell>
-                            <TableCell>{detail.unitPrice}</TableCell>
-                            <TableCell>{detail.quantity}</TableCell>
-                            <TableCell>{detail.subtotal}</TableCell>
+                            <TableCell>
+                              <div className="flex items-center text-sm">
+                                <Avatar
+                                  className="hidden mr-4 md:block"
+                                  src={
+                                    detail.product && detail.product.images && detail.product.images.length > 0
+                                      ? detail.product.images[0]
+                                      : ""
+                                  }
+                                  alt="Product image"
+                                />
+                                <div>
+                                  {detail.product.name}
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell align="center">{formatNumberWithDecimal(detail.unitPrice)} {" "} ₫</TableCell>
+                            <TableCell align="center">{detail.quantity}</TableCell>
+                            <TableCell align="right">{formatNumberWithDecimal(detail.subtotal)} {" "} ₫</TableCell>
                           </TableRow>
-                        ))}
+                        ))} */}
+                        {order.details.map((detail, index) => {
+                          const hasReviews = detail.product.reviews.some(
+                            (review) => review.orderId === id && review.ratingValue > 0
+                          );
+                          return (
+                            <React.Fragment key={index}>
+                              <TableRow
+                                className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                              >
+                                <TableCell>
+                                  {hasReviews && (
+                                    <IconButton
+                                      aria-label="expand row"
+                                      size="small"
+                                      onClick={() => toggleOpen(index)}
+                                    >
+                                      {open[index] ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                                    </IconButton>
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex items-center text-sm space-x-2">
+                                    <Avatar
+                                      className="hidden mr-4 md:block"
+                                      src={
+                                        detail.product && detail.product.images && detail.product.images.length > 0
+                                          ? detail.product.images[0]
+                                          : ""
+                                      }
+                                      alt="Product image"
+                                    />
+                                    <div>{detail.product.name}</div>
+                                  </div>
+                                </TableCell>
+                                <TableCell align="center">
+                                  {formatNumberWithDecimal(detail.unitPrice)} {" "} ₫
+                                </TableCell>
+                                <TableCell align="center">{detail.quantity}</TableCell>
+                                <TableCell align="right">
+                                  {formatNumberWithDecimal(detail.subtotal)} {" "} ₫
+                                </TableCell>
+                              </TableRow>
+                              {hasReviews && (
+                                <TableRow>
+                                  <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                                    <Collapse in={open[index]} timeout="auto" unmountOnExit>
+                                      <Box margin={1}>
+                                        <Typography variant="h6" gutterBottom component="div" style={{color: '#7e3af2'}}>
+                                          Product Reviews
+                                        </Typography>
+                                        {detail.product.reviews.map((review, i) => (
+                                          review.orderId === id && review.ratingValue > 0 && (
+                                            <div className="flex py-3" key={i}>
+                                              <div className="flex items-center">
+                                                <Avatar
+                                                  className="hidden mr-3 md:block"
+                                                  size="large"
+                                                  src={review.account.avatar}
+                                                  alt="User image"
+                                                />
+                                              </div>
+                                              <div className="flex flex-col">
+                                                <div className="flex items-center justify-between">
+                                                  <div className="flex items-center justify-content-center">
+                                                    <p className="font-medium text-lg text-gray-800 dark:text-gray-300 font-semibold">
+                                                      {review.account.username}{" "}
+                                                    </p>
+                                                    <span className="ml-4 text-sm text-gray-400">
+                                                      {new Date(review.createDate).toLocaleString("vi-VN")}
+                                                    </span>
+                                                  </div>
+                                                  <div>
+                                                    {review.ratingValue && review.ratingValue > 0 && (
+                                                      <div className="flex items-center ml-2">
+                                                        <Rating
+                                                          align="right"
+                                                          name="average-rating"
+                                                          size="small"
+                                                          value={review.ratingValue}
+                                                          precision={0.2}
+                                                          emptyIcon={<StarBorder className="text-gray-400" style={{ fontSize: '18px' }}/>}
+                                                          readOnly
+                                                        />
+                                                      </div>
+                                                    )}
+                                                  </div>
+                                                </div>
+                                                <p className="text-sm mt-2 w-4/5 text-gray-600 dark:text-gray-400">
+                                                  {review.content}
+                                                </p>
+                                              </div>
+                                            </div>
+
+                                          )
+                                        ))}
+                                      </Box>
+                                    </Collapse>
+                                  </TableCell>
+                                </TableRow>
+                              )}
+                            </React.Fragment>
+                          );
+                        })}
+                        
                       </TableBody>
+                        <TableRow sx={{ justifyContent: 'flex-end' }}>
+                          <TableCell style={{border: 'none', background: 'transparent'}}/>
+                          <TableCell style={{border: 'none', background: 'transparent'}}/>
+                          <TableCell>Subtotal</TableCell>
+                          <TableCell colSpan={2} align="right">{formatNumberWithDecimal(order.total + order.voucherDetail.voucherValue + order.firstDiscount)} {" "} ₫</TableCell>
+                        </TableRow>
+                        {order.firstDiscount && order.firstDiscount > 0 ? (
+                          <TableRow>
+                            <TableCell style={{border: 'none', background: 'transparent'}}/>
+                            <TableCell style={{border: 'none', background: 'transparent'}}/>
+                            <TableCell>First Order Discount</TableCell>
+                            <TableCell colSpan={2} align="right">{"-" + " " + formatNumberWithDecimal(order.firstDiscount)} {" "} ₫</TableCell>
+                          </TableRow>
+                        ) : null}
+                        <TableRow>
+                          <TableCell style={{border: 'none', background: 'transparent'}}/>
+                          <TableCell style={{border: 'none', background: 'transparent'}}/>
+                          <TableCell>Voucher</TableCell>
+                          <TableCell colSpan={2} align="right">{"-" + " " + formatNumberWithDecimal(order.voucherDetail.voucherValue)} {" "} ₫</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell />
+                          <TableCell />
+                          <TableCell>Total</TableCell>
+                          <TableCell colSpan={2} align="right" style={{ color: '#7e3af2', fontWeight: 'bold', fontSize: 20 }}>{formatNumberWithDecimal(order.total)} {" "} ₫</TableCell>
+                        </TableRow>
                     </Table>
                   </TableContainer>
                 </div>

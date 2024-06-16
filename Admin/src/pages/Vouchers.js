@@ -33,6 +33,14 @@ const Vouchers = () => {
   const { addToast } = useToasts();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState("add"); // 'add', 'edit'
+
+  function formatNumberWithDecimal(number) {
+    const numString = String(number); // Convert the number to a string
+    const groups = numString.split(/(?=(?:\d{3})+(?!\d))/); // Split the string into groups of three digits
+    const formattedNumber = groups.join("."); // Join the groups with a decimal point
+    return formattedNumber;
+  }
+
   const closeModal = () => {
     setMode(null);
     setIsModalOpen(false);
@@ -97,6 +105,13 @@ const Vouchers = () => {
   };
 
   const handleSave = async (mode) => {
+    if (new Date(voucherInfo.validUntil) < new Date(voucherInfo.effectiveDate)) {
+      addToast("The Valid Til must be later than the Effective Date.", {
+        appearance: "warning",
+        autoDismiss: true,
+      });
+      return;
+    }
     if (
       !voucherInfo.voucherName ||
       !voucherInfo.description ||
@@ -253,13 +268,13 @@ const Vouchers = () => {
                   {voucher.description}
                 </TableCell>
                 <TableCell className="text-base">
-                  {voucher.voucherValue}
+                  {formatNumberWithDecimal(voucher.voucherValue)} {" "} ₫
                 </TableCell>
                 <TableCell className={new Date(voucher.effectiveDate) < new Date() ? "text-base text-green-400" : "text-base"}>
-                  {new Date(voucher.effectiveDate).toLocaleDateString()}
+                  {new Date(voucher.effectiveDate).toLocaleDateString("vi-VN")}
                 </TableCell>
                 <TableCell className={new Date(voucher.validUntil) < new Date() ? "text-base text-red-600" : "text-base"}>
-                  {new Date(voucher.validUntil).toLocaleDateString()}
+                  {new Date(voucher.validUntil).toLocaleDateString("vi-VN")}
                 </TableCell>
                 <TableCell className="text-base">{voucher.quantity}</TableCell>
                 <TableCell className="text-base">

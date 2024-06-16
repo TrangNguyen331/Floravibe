@@ -55,7 +55,7 @@ const routes = [
   {
     path: "/app/collections/all",
     icon: "CollectionIcon",
-    name: "Collections",
+    name: "Categories",
   },
   {
     path: "/app/tags/all",

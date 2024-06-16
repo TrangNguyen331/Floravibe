@@ -7,12 +7,17 @@ import response from "../utils/demo/productData";
 import { Card, CardBody, Badge, Button, Avatar } from "@windmill/react-ui";
 import { genRating } from "../utils/genarateRating";
 import axiosInstance from "../axiosInstance";
+import { Box, Rating, Typography } from "@mui/material";
+import ProductAvgRating from "../components/ProductAvgRating";
+import StarBorder from "@mui/icons-material/StarBorder";
 const SingleProduct = () => {
   const { id } = useParams();
   const [review, setReview] = useState({
     content: "",
   });
   const [product, setProduct] = useState(null);
+  const [order, setOrder] = useState(null);
+
   // change view component
   const [tabView, setTabView] = useState("reviews");
   const handleTabView = (viewName) => setTabView(viewName);
@@ -30,17 +35,18 @@ const SingleProduct = () => {
     return formattedDateTime;
   };
   //   get product
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get("/api/v1/products/" + id);
+      setProduct(response.data);
+    } catch (error) {}
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get("/api/v1/products/" + id);
-        setProduct(response.data);
-      } catch (error) {}
-    };
     fetchData();
   }, []);
   console.log("getProduct", product);
+
   return (
     <div>
       <PageTitle>Product Details</PageTitle>
@@ -86,6 +92,13 @@ const SingleProduct = () => {
                   <h1 className="text-3xl mb-4 font-semibold text-gray-700 dark:text-gray-200">
                     {product.name}
                   </h1>
+                  <Box className="mb-2" display="flex" alignItems="center">
+                    <ProductAvgRating product={product} /> {" "} ({product.reviews.length}{" "}
+                      reviews)
+                  </Box>
+                  <h4 className="mt-4 text-purple-600 text-2xl font-semibold">
+                    {product.price.toLocaleString("vi-VN")} {" "} ₫
+                  </h4>
                   <div className="mb-5">
                     {product &&
                     product.collections &&
@@ -94,7 +107,7 @@ const SingleProduct = () => {
                           <Badge
                             type="success"
                             key={collection.id}
-                            className="mr-3"
+                            className="mr-3 bg-purple-100 text-purple-700"
                           >
                             {collection.name}
                           </Badge>
@@ -111,16 +124,13 @@ const SingleProduct = () => {
                       ? product.tags.map((tag, index) => (
                           <span
                             key={tag.id}
-                            className="mx-2 inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10"
+                            className="mx-2 inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10"
                           >
                             {tag.name}
                           </span>
                         ))
                       : ""}
                   </div>
-                  <h4 className="mt-4 text-purple-600 text-2xl font-semibold">
-                    {product.price.toLocaleString("vi-VN")}đ
-                  </h4>
                 </div>
               </div>
             </CardBody>
@@ -153,24 +163,44 @@ const SingleProduct = () => {
                     {genRating(product.reviews.length)}
                     <div className="mt-4">
                       {product.reviews.map((review, i) => (
-                        <div className="flex py-3" key={i}>
-                          <Avatar
-                            className="hidden mr-3 md:block"
-                            size="large"
-                            src={review.account.avatar}
-                            alt="User image"
-                          />
-                          <div>
-                            <p className="font-medium text-lg text-gray-800 dark:text-gray-300">
-                              {review.account.username}{" "}
-                              <span className="text-sm text-gray-600 ml-2">
-                                {formatReadableDate(review.createDate)}
-                              </span>
-                            </p>
+                        <div className="flex justify-between py-3" key={i}>
+                          <div className="flex">
+                            <Avatar
+                              className="hidden mr-3 md:block"
+                              size="large"
+                              src={review.account.avatar}
+                              alt="User image"
+                            />
+                            <div>
+                              <div>
+                                <p className="font-medium text-lg text-gray-800 dark:text-gray-300">
+                                  {review.account.username}{" "}
+                                  <span className="text-sm text-gray-600 ml-2">
+                                    {formatReadableDate(review.createDate)}
+                                  </span>
+                                </p>
+                              </div>
 
-                            <p className="text-sm mt-2 w-3/4 text-gray-600 dark:text-gray-400">
-                              {review.content}
-                            </p>
+                              <div>
+                                <p className="text-sm mt-2 w-3/4 text-gray-600 dark:text-gray-400">
+                                  {review.content}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex justify-end mt-2">
+                            {review.ratingValue && review.ratingValue > 0 ? (
+                              <Rating
+                                  name="average-rating"
+                                  size="small"
+                                  value={review.ratingValue}
+                                  precision={0.2}
+                                  emptyIcon={<StarBorder style={{ fontSize: '18px' }}/>}
+                                  readOnly
+                                />
+                            ) : (
+                              ""
+                            )}
                           </div>
                         </div>
                       ))}
