@@ -98,6 +98,7 @@ const SingleOrder = () => {
       const updatedOrder = { ...order, status: newStatus };
       await axiosInstance.put(`/api/v1/orders/${id}`, updatedOrder);
       setOrder(updatedOrder);
+      window.location.reload();
     } catch (error) {
       console.error("Update status failed:", error);
     }
@@ -303,7 +304,7 @@ const SingleOrder = () => {
                           <TableCell align="right">PRICE</TableCell>
                         </TableRow> */}
                         <TableRow>
-                          <TableCell />
+                          {/* <TableCell /> */}
                           <TableCell className="ml-4">PRODUCT NAME</TableCell>
                           <TableCell align="center">UNIT PRICE</TableCell>
                           <TableCell align="center">QUANTITY</TableCell>
@@ -346,18 +347,20 @@ const SingleOrder = () => {
                               <TableRow
                                 className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                               >
+                                
                                 <TableCell>
-                                  {hasReviews && (
-                                    <IconButton
-                                      aria-label="expand row"
-                                      size="small"
-                                      onClick={() => toggleOpen(index)}
-                                    >
-                                      {open[index] ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                                    </IconButton>
-                                  )}
-                                </TableCell>
-                                <TableCell>
+                                  <div className="flex">
+                                    <div className="mr-3">
+                                    {hasReviews && (
+                                      <IconButton
+                                        aria-label="expand row"
+                                        size="small"
+                                        onClick={() => toggleOpen(index)}
+                                      >
+                                        {open[index] ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                                      </IconButton>
+                                    )}
+                                  </div>
                                   <div className="flex items-center text-sm space-x-2">
                                     <Avatar
                                       className="hidden mr-4 md:block"
@@ -369,6 +372,7 @@ const SingleOrder = () => {
                                       alt="Product image"
                                     />
                                     <div>{detail.product.name}</div>
+                                  </div>
                                   </div>
                                 </TableCell>
                                 <TableCell align="center">
@@ -390,7 +394,7 @@ const SingleOrder = () => {
                                         {detail.product.reviews.map((review, i) => (
                                           review.orderId === id && review.ratingValue > 0 && (
                                             <div className="flex py-3" key={i}>
-                                              <div className="flex items-center">
+                                              <div className="flex">
                                                 <Avatar
                                                   className="hidden mr-3 md:block"
                                                   size="large"
@@ -398,7 +402,7 @@ const SingleOrder = () => {
                                                   alt="User image"
                                                 />
                                               </div>
-                                              <div className="flex flex-col">
+                                              <div className="flex justify-end flex-grow flex-col">
                                                 <div className="flex items-center justify-between">
                                                   <div className="flex items-center justify-content-center">
                                                     <p className="font-medium text-lg text-gray-800 dark:text-gray-300 font-semibold">
@@ -408,7 +412,7 @@ const SingleOrder = () => {
                                                       {new Date(review.createDate).toLocaleString("vi-VN")}
                                                     </span>
                                                   </div>
-                                                  <div>
+                                                  <div className="flex justify-end">
                                                     {review.ratingValue && review.ratingValue > 0 && (
                                                       <div className="flex items-center ml-2">
                                                         <Rating
@@ -424,9 +428,11 @@ const SingleOrder = () => {
                                                     )}
                                                   </div>
                                                 </div>
-                                                <p className="text-sm mt-2 w-4/5 text-gray-600 dark:text-gray-400">
-                                                  {review.content}
-                                                </p>
+                                                <div>
+                                                  <p className="text-sm mt-2 w-full text-gray-600 dark:text-gray-400">
+                                                    {review.content}
+                                                  </p>
+                                                </div>
                                               </div>
                                             </div>
 

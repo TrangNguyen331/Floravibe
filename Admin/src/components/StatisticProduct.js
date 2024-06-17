@@ -12,6 +12,7 @@ import {
 import axiosInstance from "../axiosInstance";
 import Paginate from "./Pagination/Paginate";
 import { Box, LinearProgress } from "@mui/material";
+import ProductAvgRating from "./ProductAvgRating";
 
 const StatisticProduct = () => {
   const [page, setPage] = useState(1);
@@ -111,6 +112,7 @@ const StatisticProduct = () => {
                 <TableCell>Product Name</TableCell>
                 <TableCell>Order Number For Product</TableCell>
                 <TableCell>Number Of Bouquets Sold</TableCell>
+                <TableCell>Rating Of Product</TableCell>
               </tr>
             </TableHeader>
             <TableBody className="text-center">
@@ -140,6 +142,11 @@ const StatisticProduct = () => {
                   </TableCell>
                   <TableCell className="text-sm">
                     {data.statisticProduct[product.id] || 0}
+                  </TableCell>
+                  <TableCell className="text-center text-sm align-middle">
+                    <Box display="flex" alignItems="center" className="justify-center items-center w-full">
+                      <ProductAvgRating className="text-xl" product={product} /> {" "} ({product.reviews.length} {" "} {" "} reviews)
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))}

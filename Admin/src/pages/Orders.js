@@ -28,10 +28,10 @@ const Orders = () => {
       setSearchValue("");
       setResultPerPage(resultsPerPage);
     }
-    if (filter_name === "In-Request Orders") {
+    if (filter_name === "In Request Orders") {
       setFilter("IN_REQUEST");
     }
-    if (filter_name === "In-Processing Orders") {
+    if (filter_name === "In Progress Orders") {
       setFilter("IN_PROCESSING");
     }
     if (filter_name === "Cancel Orders") {

@@ -23,11 +23,12 @@ export default function ProductAvgRating({ product }) {
       <Rating
         name="average-rating"
         value={roundedAverageRating}
-        precision={0.2}
+        precision={0.1}
         emptyIcon={<StarBorderIcon />}
         readOnly
+        className="mr-2"
       />
-      {`(${formattedAverageRating})`}
+      {`${formattedAverageRating}`}
     </React.Fragment>
   );
 }
