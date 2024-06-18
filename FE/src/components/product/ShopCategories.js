@@ -1,10 +1,20 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect } from "react";
 import { setActiveSort } from "../../helpers/product";
 import { useTranslation } from "react-i18next";
 
-const ShopCategories = ({ categories, getSortParams, bannerCategory }) => {
+const ShopCategories = ({
+  categories,
+  getSortParams,
+  bannerCategory,
+  isReset,
+}) => {
   const { t } = useTranslation(["product"]);
+  useEffect(() => {
+    if (isReset) {
+      setActiveSort("");
+    }
+  }, [isReset]);
   return (
     <div className="sidebar-widget">
       <h4 className="pro-sidebar-title">{t("sidebar.categories")}</h4>
@@ -64,6 +74,7 @@ ShopCategories.propTypes = {
   categories: PropTypes.array,
   getSortParams: PropTypes.func,
   bannerCategory: PropTypes.string,
+  isReset: PropTypes.bool,
 };
 
 export default ShopCategories;

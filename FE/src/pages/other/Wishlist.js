@@ -29,25 +29,24 @@ const Wishlist = ({
   const { addToast } = useToasts();
   const { pathname } = location;
   const [products, setProducts] = useState([]);
+  const [alreadyGet, setAlreadyGet] = useState(false);
   const fetchProducts = async () => {
     try {
-      const response = await axiosInstance.get(
-        `/api/v1/products/paging?size=999&page=0`
-      );
-      setProducts(response.data.content);
+      const response = await axiosInstance.get(`/api/v1/products/allProducts`);
+      setProducts(response.data);
+      setAlreadyGet(true);
     } catch (error) {
-      return [];
+      console.log(error);
     }
   };
 
   useEffect(() => {
     fetchProducts();
   }, []);
-  console.log("all products", products);
   const { t } = useTranslation(["wishlist", "breadcrumb", "home"]);
   const token = useSelector((state) => state.auth.token);
   // const [myWishlist, setWishlist] = useState([]);
-  const [alreadyGet, setAlreadyGet] = useState(false);
+
   // const getWishlistItems = async () => {
   //   try {
   //     const response = await axiosInstance.get(`/api/v1/wishlist`);
@@ -193,7 +192,44 @@ const Wishlist = ({
                                 </td>
 
                                 <td className="product-wishlist-cart">
-                                  {wishlistItem.affiliateLink ? (
+                                  {productStock && productStock.stockQty > 0 ? (
+                                    <button
+                                      onClick={() => {
+                                        addToCart(wishlistItem, addToast);
+                                      }}
+                                      className={
+                                        cartItem !== undefined &&
+                                        cartItem.quantity > 0
+                                          ? "active"
+                                          : ""
+                                      }
+                                      disabled={
+                                        cartItem !== undefined &&
+                                        cartItem.quantity > 0
+                                        // (productStock &&
+                                        //   productStock.stockQty <= 0)
+                                      }
+                                      title={
+                                        wishlistItem !== undefined
+                                          ? t(
+                                              "home:productgrid.tooltip-added-to-cart"
+                                            )
+                                          : t(
+                                              "home:productgrid.tooltip-add-to-cart"
+                                            )
+                                      }
+                                    >
+                                      {cartItem !== undefined &&
+                                      cartItem.quantity > 0
+                                        ? t("home:productgrid.added")
+                                        : t("home:productgrid.add-to-cart")}
+                                    </button>
+                                  ) : (
+                                    <button disabled className="active">
+                                      Out of Stock
+                                    </button>
+                                  )}
+                                  {/* {wishlistItem.affiliateLink ? (
                                     <a
                                       href={wishlistItem.affiliateLink}
                                       rel="noopener noreferrer"
@@ -208,7 +244,8 @@ const Wishlist = ({
                                     >
                                       {t("home:productgrid.select-option")}
                                     </Link>
-                                  ) : productStock &&
+                                  ) : 
+                                  productStock &&
                                     productStock.stockQty <= 0 ? (
                                     <button>out of stock</button>
                                   ) : (
@@ -243,7 +280,7 @@ const Wishlist = ({
                                         ? t("home:productgrid.added")
                                         : t("home:productgrid.add-to-cart")}
                                     </button>
-                                  )}
+                                  )} */}
                                 </td>
 
                                 <td className="product-remove">

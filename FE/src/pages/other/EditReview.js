@@ -196,7 +196,7 @@ const EditReview = (props) => {
                           }
                         />
                       ) : (
-                        <div>
+                        <div className="review-content">
                           {
                             detail.product.reviews.find(
                               (item) => item.orderId === props.orderId

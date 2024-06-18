@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import MetaTags from "react-meta-tags";
@@ -7,11 +7,10 @@ import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
 import { connect } from "react-redux";
 import { addToCart } from "../../redux/actions/cartActions";
 import { deleteFromCompare } from "../../redux/actions/compareActions";
-import { getDiscountPrice } from "../../helpers/product";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import ProductAverageRating from "../../components/product/sub-components/ProductAverageRating";
-
+import axiosInstance from "../../axiosInstance";
 const Compare = ({
   location,
   cartItems,
@@ -22,7 +21,21 @@ const Compare = ({
 }) => {
   const { pathname } = location;
   const { addToast } = useToasts();
-  console.log(compareItems);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `/api/v1/products/allProducts`
+        );
+        setProducts(response.data);
+      } catch (error) {
+        return [];
+      }
+    };
+    fetchProducts();
+  }, []);
   return (
     <Fragment>
       <MetaTags>
@@ -51,6 +64,13 @@ const Compare = ({
                               const cartItem = cartItems.filter(
                                 (item) => item.id === compareItem.id
                               )[0];
+                              const productStock = products.some(
+                                (product) => product.id === compareItem.id
+                              )
+                                ? products.find(
+                                    (product) => product.id === compareItem.id
+                                  )
+                                : null;
                               return (
                                 <td className="product-image-title" key={key}>
                                   <div className="compare-remove">
@@ -91,24 +111,8 @@ const Compare = ({
                                     </Link>
                                   </div>
                                   <div className="compare-btn">
-                                    {compareItem.affiliateLink ? (
-                                      <a
-                                        href={compareItem.affiliateLink}
-                                        rel="noopener noreferrer"
-                                        target="_blank"
-                                      >
-                                        {" "}
-                                        Buy now{" "}
-                                      </a>
-                                    ) : compareItem.variation &&
-                                      compareItem.variation.length >= 1 ? (
-                                      <Link
-                                        to={`${process.env.PUBLIC_URL}/product/${compareItem.id}`}
-                                      >
-                                        Select Option
-                                      </Link>
-                                    ) : compareItem.stockQty &&
-                                      compareItem.stockQty > 0 ? (
+                                    {productStock &&
+                                    productStock.stockQty > 0 ? (
                                       <button
                                         onClick={() =>
                                           addToCart(compareItem, addToast)
@@ -158,7 +162,7 @@ const Compare = ({
                             })}
                           </tr>
                           <tr>
-                            <th className="title-column">DESCRIPTION</th>
+                            <th className="title-column">ADDITIONAL INFO</th>
                             {compareItems.map((compareItem, key) => {
                               return (
                                 <td className="product-desc" key={key}>

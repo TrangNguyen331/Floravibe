@@ -248,7 +248,6 @@ const Checkout = ({ location, cartItems, currency }) => {
       };
 
       try {
-        // await axiosInstance.post("/api/v1/orders", body);
         const response = await axiosInstance.post("/api/v1/orders", body);
         console.log(response);
 

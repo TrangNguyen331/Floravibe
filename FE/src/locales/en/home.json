@@ -3,9 +3,10 @@
     "shop-now": "SHOP NOW"
   },
   "tabproduct": {
-    "new-items": "New Items!",
-    "new-arrivals": "New Arrivals",
-    "best-sellers": "Best Sellers"
+    "new-items": "Popular Items!",
+    "roses": "Roses",
+    "baby": "Baby",
+    "tulip": "Tulip"
   },
   "productgrid": {
     "new": "New",
@@ -18,5 +19,9 @@
     "add-to-cart": "Add To Cart",
     "added": "Added",
     "quick-view": "Quick View"
+  },
+  "bannervoucher": {
+    "shop-vouchers": "Shop Vouchers",
+    "tagline": "Applies to all invoices in the shop"
   }
 }

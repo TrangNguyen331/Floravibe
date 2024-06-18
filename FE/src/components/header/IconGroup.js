@@ -178,6 +178,16 @@ const IconGroup = ({
         <div className="account-dropdown">
           {isLogin ? (
             <ul>
+              <li className="user-info">
+                <span>
+                  <img
+                    src={userAvatar.avatar}
+                    alt="user avatar"
+                    className="avatar"
+                  />
+                </span>
+                <span className="username">{userAvatar.username}</span>
+              </li>
               <li>
                 <Link to={process.env.PUBLIC_URL + "/my-account"}>
                   {t("my account")}
@@ -210,7 +220,7 @@ const IconGroup = ({
           )}
         </div>
       </div>
-      {isLogin && <div className="same-style py-1">{userAvatar.username}</div>}
+      {/* {isLogin && <div className="same-style py-1">{userAvatar.username}</div>} */}
       <div className="same-style mobile-off-canvas d-block d-lg-none">
         <button
           className="mobile-aside-button"

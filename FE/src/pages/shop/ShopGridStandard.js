@@ -21,13 +21,17 @@ const ShopGridStandard = ({ location }) => {
   const [sortValue, setSortValue] = useState("");
   const [filterSortType, setFilterSortType] = useState("");
   const [filterSortValue, setFilterSortValue] = useState("");
+  const [tagType, setTagType] = useState("");
+  const [tagValue, setTagValue] = useState("");
+  const [priceType, setPriceType] = useState("");
+  const [priceValue, setPriceValue] = useState("");
   const [offset, setOffset] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentData, setCurrentData] = useState([]);
   const [sortedProducts, setSortedProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [products, setProducts] = useState([]);
-
+  const [isClearFilter, setIsClearFilter] = useState(false);
   const [visible, setVisible] = useState(6);
 
   const [search, setSearch] = useState("");
@@ -42,7 +46,6 @@ const ShopGridStandard = ({ location }) => {
       const response = await axiosInstance.get(
         `/api/v1/products/paging?size=${pageLimit}&search=${search}&page=${page}`
       );
-
       return response.data;
     } catch (error) {
       return [];
@@ -59,17 +62,28 @@ const ShopGridStandard = ({ location }) => {
   const getLayout = (layout) => {
     setLayout(layout);
   };
-
+  const getSortTagParams = (sortType, sortValue) => {
+    setTagType(sortType);
+    setTagValue(sortValue);
+  };
+  const getSortPriceParams = (sortType, sortValue) => {
+    setPriceType(sortType);
+    setPriceValue(sortValue);
+  };
   const getSortParams = (sortType, sortValue) => {
-    console.log(sortType, sortValue);
     setSortType(sortType);
     setSortValue(sortValue);
   };
 
   const getFilterSortParams = (sortType, sortValue) => {
-    console.log(sortType, sortValue);
     setFilterSortType(sortType);
     setFilterSortValue(sortValue);
+  };
+  const resetFilters = () => {
+    setIsClearFilter(true);
+    getSortParams("", "");
+    getSortTagParams("", "");
+    getFilterSortParams("", "");
   };
   const dispatch = useDispatch();
   const fetchDataAndProcess = async (page, search) => {
@@ -90,14 +104,13 @@ const ShopGridStandard = ({ location }) => {
             item.stockQty
           )
       );
-
       setProducts(products);
 
-      // const originData = getSortedProducts(products, "", "");
-      // console.log("origin", originData);
       let sortedProducts = getSortedProducts(products, sortType, sortValue);
+      sortedProducts = getSortedProducts(sortedProducts, priceType, priceValue);
+      const sortResult = getSortedProducts(sortedProducts, tagType, tagValue);
       const filterSortedProducts = getSortedProducts(
-        sortedProducts,
+        sortResult,
         filterSortType,
         filterSortValue
       );
@@ -125,6 +138,10 @@ const ShopGridStandard = ({ location }) => {
     sortValue,
     filterSortType,
     filterSortValue,
+    tagType,
+    tagValue,
+    priceType,
+    priceValue,
     search,
     currentPage,
     bannerCategory,
@@ -132,6 +149,11 @@ const ShopGridStandard = ({ location }) => {
   useEffect(() => {
     dispatch(clearSelectedCategory());
   }, []);
+  useEffect(() => {
+    if (isClearFilter) {
+      setIsClearFilter(false);
+    }
+  }, [isClearFilter]);
   return (
     <Fragment>
       <MetaTags>
@@ -164,6 +186,10 @@ const ShopGridStandard = ({ location }) => {
                   searchHandler={handleSearch}
                   sideSpaceClass="mr-30"
                   bannerCategory={selectedCategory}
+                  resetFilters={resetFilters}
+                  isReset={isClearFilter}
+                  getSortTagParams={getSortTagParams}
+                  getSortPriceParams={getSortPriceParams}
                 />
               </div>
               <div className="col-lg-9 order-1 order-lg-2">
@@ -173,6 +199,7 @@ const ShopGridStandard = ({ location }) => {
                   getFilterSortParams={getFilterSortParams}
                   productCount={products.length}
                   sortedProductCount={currentData.length}
+                  isReset={isClearFilter}
                 />
 
                 {/* shop page content default */}

@@ -54,9 +54,7 @@
       font-family: "Cormorant Garamond";
       font-size: 18px;
       font-weight: 600;
-
-      margin: 3px 0 58px;
-
+      margin: 8px 0 58px;
       color: #010101;
       @media #{$lg-layout} {
         margin: 3px 0 25px;
@@ -1352,7 +1350,6 @@
     }
   }
 }
-
 
 .col-width-banner33-1 {
   position: relative;

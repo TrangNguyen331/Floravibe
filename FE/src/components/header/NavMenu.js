@@ -33,9 +33,9 @@ const NavMenu = ({ strings, menuWhiteClass, sidebarMenu }) => {
           <li>
             <Link to={process.env.PUBLIC_URL + "/blog"}>{t("blog")}</Link>
           </li>
-          {/* <li>
+          <li>
             <Link to={process.env.PUBLIC_URL + "/contact"}>Contact Us</Link>
-          </li> */}
+          </li>
         </ul>
       </nav>
     </div>

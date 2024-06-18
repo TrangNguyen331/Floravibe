@@ -6,7 +6,7 @@
     "twitterLink": "//www.twitter.com",
     "instagramLink": "//www.instagram.com",
     "name": "Kim Hanh",
-    "position": "Developer"
+    "position": "Florist"
   },
   {
     "id": "2",
@@ -15,7 +15,7 @@
     "twitterLink": "//www.twitter.com",
     "instagramLink": "//www.instagram.com",
     "name": "Minh Chau",
-    "position": "Developer"
+    "position": "Florist"
   },
   {
     "id": "3",
@@ -24,6 +24,6 @@
     "twitterLink": "//www.twitter.com",
     "instagramLink": "//www.instagram.com",
     "name": "Thuy Trang",
-    "position": "Developer"
+    "position": "Florist"
   }
 ]

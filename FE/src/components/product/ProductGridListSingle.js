@@ -7,7 +7,6 @@ import ProductModal from "./ProductModal";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import axiosInstance from "../../axiosInstance";
 import ProductAverageRating from "./sub-components/ProductAverageRating";
 const ProductGridListSingle = ({
   product,
@@ -62,7 +61,13 @@ const ProductGridListSingle = ({
                 ""
               )}
             </Link>
-
+            {product.stockQty === 0 ? (
+              <div className="product-img-badges">
+                <span className="sold-out">sold out</span>
+              </div>
+            ) : (
+              ""
+            )}
             <div className="product-action">
               <div className="pro-same-action pro-wishlist">
                 <button
@@ -148,7 +153,10 @@ const ProductGridListSingle = ({
               </Link>
             </h3>
             <div className="product-price">
-              <span>{finalProductPrice.toLocaleString("vi-VN") + "₫"} </span>
+              <span>{finalProductPrice.toLocaleString("vi-VN") + "₫"}</span>
+            </div>
+            <div className="product-rating">
+              <ProductAverageRating product={product} />
             </div>
           </div>
         </div>
@@ -173,14 +181,9 @@ const ProductGridListSingle = ({
                       ""
                     )}
                   </Link>
-                  {product.discount || product.new ? (
+                  {product.stockQty === 0 ? (
                     <div className="product-img-badges">
-                      {product.discount ? (
-                        <span className="pink">-{product.discount}%</span>
-                      ) : (
-                        ""
-                      )}
-                      {product.new ? <span className="purple">New</span> : ""}
+                      <span className="sold-out">sold out</span>
                     </div>
                   ) : (
                     ""
@@ -256,7 +259,6 @@ const ProductGridListSingle = ({
 
                   <div className="shop-list-wishlist ml-10">
                     <button
-                      // className={wishlistItem !== undefined ? "active" : ""}
                       disabled={wishlistItem !== undefined}
                       title={
                         wishlistItem !== undefined

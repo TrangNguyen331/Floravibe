@@ -214,7 +214,7 @@ const Cart = ({
                                         );
                                       }}
                                       disabled={
-                                        cartItem.quantity ===
+                                        cartItem.quantity >=
                                         productStock[cartItem.id]
                                       }
                                     >

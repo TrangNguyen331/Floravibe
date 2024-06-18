@@ -5,7 +5,6 @@ import { getProducts } from "../../helpers/product";
 import ProductGridSingle from "../../components/product/ProductGridSingle";
 import { addToCart } from "../../redux/actions/cartActions";
 import { addToWishlist } from "../../redux/actions/wishlistActions";
-
 import axiosInstance from "../../axiosInstance";
 import { updateProducts } from "../../redux/actions/productActions";
 const ProductGrid = ({
@@ -23,7 +22,9 @@ const ProductGrid = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get(`/api/v1/products/allProducts`);
+        const response = await axiosInstance.get(
+          `/api/v1/products/allProducts`
+        );
 
         dispatch(updateProducts(response.data));
       } catch (error) {

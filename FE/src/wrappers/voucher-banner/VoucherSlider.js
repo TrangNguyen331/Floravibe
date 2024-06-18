@@ -5,9 +5,10 @@ import axiosInstance from "../../axiosInstance";
 import BannerVoucher from "./BannerVoucher";
 import "../../assets/scss/_banner-voucher.scss";
 import SectionTitle from "../../components/section-title/SectionTitle";
+import { useTranslation } from "react-i18next";
 const VoucherSlider = ({ spaceBottomClass, bgColorClass }) => {
+  const { t } = useTranslation(["home"]);
   const [vouchers, setVouchers] = useState([]);
-
   const getVouchers = async () => {
     try {
       const response = await axiosInstance.get("/api/v1/vouchers");
@@ -42,11 +43,11 @@ const VoucherSlider = ({ spaceBottomClass, bgColorClass }) => {
     >
       <div className="container">
         <SectionTitle
-          titleText="Shop Vouchers"
+          titleText={t("bannervoucher.shop-vouchers")}
           positionClass="text-center"
           spaceClass="mb-30"
         />
-        <div className="tagline">Applies to all invoices in the shop</div>
+        <div className="tagline">{t("bannervoucher.tagline")}</div>
         <div className="row">
           <Swiper {...params}>
             {vouchers

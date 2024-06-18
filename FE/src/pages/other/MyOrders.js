@@ -207,7 +207,7 @@ const MyOrders = ({ location }) => {
                                     <div className="order-total-wrap">
                                       <ul>
                                         <li>
-                                          <span>Payment method</span>
+                                          <span> {t("detail.pay-method")}</span>
                                           <span>{order.methodPaid}</span>
                                         </li>
                                         <li>
@@ -332,7 +332,7 @@ const MyOrders = ({ location }) => {
                                     <div className="order-total-wrap">
                                       <ul>
                                         <li>
-                                          <span>Payment method</span>
+                                          <span>{t("detail.pay-method")}</span>
                                           <span>{order.methodPaid}</span>
                                         </li>
                                         <li>
@@ -443,7 +443,7 @@ const MyOrders = ({ location }) => {
                                     <div className="order-total-wrap">
                                       <ul>
                                         <li>
-                                          <span>Payment method</span>
+                                          <span>{t("detail.pay-method")}</span>
                                           <span>{order.methodPaid}</span>
                                         </li>
                                         <li>
@@ -542,7 +542,7 @@ const MyOrders = ({ location }) => {
                                     <div className="order-total-wrap">
                                       <ul>
                                         <li>
-                                          <span>Payment method</span>
+                                          <span>{t("detail.pay-method")}</span>
                                           <span>{order.methodPaid}</span>
                                         </li>
                                         <li>
@@ -656,7 +656,7 @@ const MyOrders = ({ location }) => {
                                     <div className="order-total-wrap">
                                       <ul>
                                         <li>
-                                          <span>Payment method</span>
+                                          <span>{t("detail.pay-method")}</span>
                                           <span>{order.methodPaid}</span>
                                         </li>
                                         <li>

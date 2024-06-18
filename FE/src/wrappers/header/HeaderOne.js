@@ -4,9 +4,12 @@ import NavMenu from "../../components/header/NavMenu";
 import IconGroup from "../../components/header/IconGroup";
 import MobileMenu from "../../components/header/MobileMenu";
 import { Link } from "react-router-dom";
+import HeaderTop from "../../components/header/HeaderTop";
 
 const HeaderOne = ({
   layout,
+  top,
+  borderStyle,
   headerPaddingClass,
   headerPositionClass,
   headerBgClass,
@@ -34,6 +37,18 @@ const HeaderOne = ({
       }`}
     >
       <div
+        className={`${headerPaddingClass ? headerPaddingClass : ""} ${
+          top === "visible" ? "d-none d-lg-block" : "d-none"
+        } header-top-area ${
+          borderStyle === "fluid-border" ? "border-none" : ""
+        }`}
+      >
+        <div className={layout === "container-fluid" ? layout : "container"}>
+          {/* header top */}
+          <HeaderTop borderStyle={borderStyle} />
+        </div>
+      </div>
+      <div
         className={` ${
           headerPaddingClass ? headerPaddingClass : ""
         } sticky-bar header-res-padding clearfix ${
@@ -41,7 +56,7 @@ const HeaderOne = ({
         }`}
       >
         <div className={layout === "container-fluid" ? layout : "container"}>
-          <div className="row ">
+          <div className="row">
             <div
               className="col-xl-2 col-lg-2 col-md-6 col-4 d-flex align-items-center"
               style={{

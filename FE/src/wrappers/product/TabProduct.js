@@ -25,38 +25,53 @@ const TabProduct = ({
           titleText={t("tabproduct.new-items")}
           positionClass="text-center"
         />
-        <Tab.Container defaultActiveKey="bestSeller">
+        <Tab.Container defaultActiveKey="roses">
           <Nav
             variant="pills"
             className="product-tab-list pt-30 pb-55 text-center"
           >
             <Nav.Item>
-              <Nav.Link eventKey="newArrival">
-                <h4>{t("tabproduct.new-arrivals")}</h4>
+              <Nav.Link eventKey="roses">
+                <h4>{t("tabproduct.roses")}</h4>
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey="bestSeller">
-                <h4>{t("tabproduct.best-sellers")}</h4>
+              <Nav.Link eventKey="baby">
+                <h4>{t("tabproduct.baby")}</h4>
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="tulip">
+                <h4>{t("tabproduct.tulip")}</h4>
               </Nav.Link>
             </Nav.Item>
           </Nav>
           <Tab.Content>
-            <Tab.Pane eventKey="bestSeller">
+            <Tab.Pane eventKey="roses">
               <div className="row">
                 <ProductGrid
                   category={category}
-                  type="bestSeller"
+                  type="roses"
                   limit={8}
                   spaceBottomClass="mb-25"
                 />
               </div>
             </Tab.Pane>
-            <Tab.Pane eventKey="newArrival">
+            <Tab.Pane eventKey="baby">
               <div className="row">
                 <ProductGrid
                   category={category}
-                  type="new"
+                  type="baby"
+                  limit={8}
+                  spaceBottomClass="mb-25"
+                />
+              </div>
+            </Tab.Pane>
+            <Tab.Pane eventKey="tulip">
+              <div className="row">
+                <ProductGrid
+                  category={category}
+                  type="tulip"
                   limit={8}
                   spaceBottomClass="mb-25"
                 />

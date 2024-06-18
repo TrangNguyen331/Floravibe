@@ -8,7 +8,7 @@ import ProductModal from "./ProductModal";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import axiosInstance from "../../axiosInstance";
+import ProductAverageRating from "./sub-components/ProductAverageRating";
 const ProductGridSingle = ({
   product,
   currency,
@@ -77,18 +77,9 @@ const ProductGridSingle = ({
                 ""
               )}
             </Link>
-            {product.discount || product.new ? (
+            {product.stockQty === 0 ? (
               <div className="product-img-badges">
-                {product.discount ? (
-                  <span className="pink">-{product.discount}%</span>
-                ) : (
-                  ""
-                )}
-                {product.new ? (
-                  <span className="purple">{t("productgrid.new")}</span>
-                ) : (
-                  ""
-                )}
+                <span className="sold-out">sold out</span>
               </div>
             ) : (
               ""
@@ -178,24 +169,11 @@ const ProductGridSingle = ({
                 {product.name}
               </Link>
             </h3>
-            {product.rating && product.rating > 0 ? (
-              <div className="product-rating">
-                <Rating ratingValue={product.rating} />
-              </div>
-            ) : (
-              ""
-            )}
             <div className="product-price">
-              {/* {discountedPrice !== null ? (
-                <Fragment>
-                  <span>{  finalDiscountedPrice + " "+currency.currencySymbol}</span>{" "}
-                  <span className="old">
-                    { finalProductPrice +" "+currency.currencySymbol}
-                  </span>
-                </Fragment>
-              ) : ( */}
               <span>{finalProductPrice.toLocaleString("vi-VN") + "₫"} </span>
-              {/* )} */}
+            </div>
+            <div className="product-rating">
+              <ProductAverageRating product={product} />
             </div>
           </div>
         </div>

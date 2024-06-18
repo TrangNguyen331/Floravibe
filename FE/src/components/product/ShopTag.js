@@ -1,11 +1,15 @@
 import PropTypes from "prop-types";
-import React from "react";
-import { setActiveSort } from "../../helpers/product";
+import React, { useEffect } from "react";
+import { setActiveSort, setActiveTagSort } from "../../helpers/product";
 import { useTranslation } from "react-i18next";
 
-const ShopTag = ({ tags, getSortParams }) => {
+const ShopTag = ({ tags, getSortParams, isReset }) => {
   const { t } = useTranslation(["product"]);
-
+  useEffect(() => {
+    if (isReset) {
+      setActiveTagSort("");
+    }
+  }, [isReset]);
   return (
     <div className="sidebar-widget mt-50">
       <h4 className="pro-sidebar-title">{t("sidebar.tag")} </h4>
@@ -18,7 +22,7 @@ const ShopTag = ({ tags, getSortParams }) => {
                   <button
                     onClick={(e) => {
                       getSortParams("tag", tag);
-                      setActiveSort(e);
+                      setActiveTagSort(e);
                     }}
                   >
                     {tag}
@@ -38,6 +42,7 @@ const ShopTag = ({ tags, getSortParams }) => {
 ShopTag.propTypes = {
   getSortParams: PropTypes.func,
   tags: PropTypes.array,
+  isReset: PropTypes.bool,
 };
 
 export default ShopTag;

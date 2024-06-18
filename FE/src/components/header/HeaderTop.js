@@ -4,13 +4,13 @@ import { multilanguage } from "redux-multilanguage";
 import { connect } from "react-redux";
 import { setCurrency } from "../../redux/actions/currencyActions";
 import LanguageCurrencyChanger from "./sub-components/LanguageCurrencyChanger";
-
+import { useTranslation } from "react-i18next";
 const HeaderTop = ({
   currency,
   setCurrency,
   currentLanguageCode,
   dispatch,
-  borderStyle
+  borderStyle,
 }) => {
   return (
     <div
@@ -18,19 +18,11 @@ const HeaderTop = ({
         borderStyle === "fluid-border" ? "border-bottom" : ""
       }`}
     >
-      <LanguageCurrencyChanger
-        currency={currency}
-        setCurrency={setCurrency}
-        currentLanguageCode={currentLanguageCode}
-        dispatch={dispatch}
-      />
+      <div className="header-contact">
+        <p>Call Us 0188468580</p>
+      </div>
       <div className="header-offer">
-        <p>
-          Free delivery on order over{" "}
-          <span>
-            {(200 * currency.currencyRate).toFixed(2) +" "+currency.currencySymbol }
-          </span>
-        </p>
+        <p>Free delivery every order</p>
       </div>
     </div>
   );
@@ -41,20 +33,20 @@ HeaderTop.propTypes = {
   setCurrency: PropTypes.func,
   currency: PropTypes.object,
   currentLanguageCode: PropTypes.string,
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    currency: state.currencyData
+    currency: state.currencyData,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    setCurrency: currencyName => {
+    setCurrency: (currencyName) => {
       dispatch(setCurrency(currencyName));
-    }
+    },
   };
 };
 

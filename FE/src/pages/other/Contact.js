@@ -13,10 +13,7 @@ const Contact = ({ location }) => {
     <Fragment>
       <MetaTags>
         <title>Contact</title>
-        <meta
-          name="Contact"
-          content="Contact"
-        />
+        <meta name="Contact" content="Contact" />
       </MetaTags>
       <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
       <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
@@ -38,8 +35,8 @@ const Contact = ({ location }) => {
                       <i className="fa fa-phone" />
                     </div>
                     <div className="contact-info-dec">
-                      <p>+012 345 678 102</p>
-                      <p>+012 345 678 102</p>
+                      <p>+0188468580</p>
+                      <p>+0468580188</p>
                     </div>
                   </div>
                   <div className="single-contact-info">
@@ -48,14 +45,10 @@ const Contact = ({ location }) => {
                     </div>
                     <div className="contact-info-dec">
                       <p>
-                        <a href="mailto:yourname@email.com">
-                          yourname@email.com
-                        </a>
+                        <a href="#">yourname@email.com</a>
                       </p>
                       <p>
-                        <a href="https://yourwebsitename.com">
-                          yourwebsitename.com
-                        </a>
+                        <a href="#">yourwebsitename.com</a>
                       </p>
                     </div>
                   </div>
@@ -144,7 +137,7 @@ const Contact = ({ location }) => {
 };
 
 Contact.propTypes = {
-  location: PropTypes.object
+  location: PropTypes.object,
 };
 
 export default Contact;

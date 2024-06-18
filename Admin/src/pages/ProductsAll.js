@@ -395,15 +395,7 @@ const ProductsAll = () => {
         additionalInformation: product.additionalInformation,
         price: product.price,
         tags: product.tags,
-        // tags: product.tags.map((tag) => ({
-        //   value: tag,
-        //   label: tag,
-        // })),
         images: product.images,
-        // collections: product.collections.map((collection) => ({
-        //   value: collection,
-        //   label: collection,
-        // })),
         collections: product.collections,
         stockQty: product.stockQty,
       });
@@ -733,92 +725,96 @@ const ProductsAll = () => {
             </tr>
           </TableHeader>
           <TableBody>
-            {data.map((product) => (
-              <TableRow
-                key={product.id}
-                className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-              >
-                <TableCell>
-                  <div className="flex items-center text-sm">
-                    <Link to={`/app/product/${product.id}`}>
-                      <Avatar
-                        className="hidden mr-4 md:block"
-                        src={
-                          product && product.images && product.images.length > 0
-                            ? product.images[0]
-                            : ""
-                        }
-                        alt="Product image"
-                      />
-                    </Link>
-                    <div>
-                      <Link to={`/app/product/${product.id}`}>
-                        <p className="font-semibold">{product.name}</p>
-                      </Link>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="whitespace-normal break-words">
-                  {truncateContent(product.description)}
-                </TableCell>
-                <TableCell className="text-sm">
-                  {formatNumberWithDecimal(product.price)}₫
-                </TableCell>
-                <TableCell
-                  className={`text-sm text-center ${
-                    product.stockQty === 0 ? "text-red-500" : ""
-                  }`}
+            {data
+              .filter((item) => item.isActive)
+              .map((product) => (
+                <TableRow
+                  key={product.id}
+                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                 >
-                  {product.stockQty}
-                </TableCell>
-                <TableCell className="text-sm space-x-2">
-                  {product &&
-                  product.collections &&
-                  product.collections.length > 0
-                    ? product.collections.map((collection) => (
-                        <Badge
-                          className="bg-purple-100 text-purple-700"
-                          type="success"
-                          key={collection.id}
-                        >
-                          {collection.name}
-                        </Badge>
-                      ))
-                    : null}
-                </TableCell>
-                <TableCell className="text-sm">
-                  {product && product.tags && product.tags.length > 0
-                    ? product.tags.map((tag) => (
-                        <div key={tag.id} className="flex">
-                          <span
-                            className="px-2 inline-flex text-xs leading-5
-                      font-semibold rounded-full bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-blue-100 mb-2 mt-2"
+                  <TableCell>
+                    <div className="flex items-center text-sm">
+                      <Link to={`/app/product/${product.id}`}>
+                        <Avatar
+                          className="hidden mr-4 md:block"
+                          src={
+                            product &&
+                            product.images &&
+                            product.images.length > 0
+                              ? product.images[0]
+                              : ""
+                          }
+                          alt="Product image"
+                        />
+                      </Link>
+                      <div>
+                        <Link to={`/app/product/${product.id}`}>
+                          <p className="font-semibold">{product.name}</p>
+                        </Link>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="whitespace-normal break-words">
+                    {truncateContent(product.description)}
+                  </TableCell>
+                  <TableCell className="text-sm">
+                    {formatNumberWithDecimal(product.price)}₫
+                  </TableCell>
+                  <TableCell
+                    className={`text-sm text-center ${
+                      product.stockQty === 0 ? "text-red-500" : ""
+                    }`}
+                  >
+                    {product.stockQty}
+                  </TableCell>
+                  <TableCell className="text-sm space-x-2">
+                    {product &&
+                    product.collections &&
+                    product.collections.length > 0
+                      ? product.collections.map((collection) => (
+                          <Badge
+                            className="bg-purple-100 text-purple-700"
+                            type="success"
+                            key={collection.id}
                           >
-                            {tag.name}
-                          </span>
-                        </div>
-                      ))
-                    : null}
-                </TableCell>
-                <TableCell>
-                  <div className="flex">
-                    <Button
-                      icon={EditIcon}
-                      className="mr-3"
-                      layout="outline"
-                      aria-label="Edit"
-                      onClick={() => openModal("edit", product.id)}
-                    />
-                    <Button
-                      icon={TrashIcon}
-                      layout="outline"
-                      aria-label="Delete"
-                      onClick={() => openModal("delete", product.id)}
-                    />
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+                            {collection.name}
+                          </Badge>
+                        ))
+                      : null}
+                  </TableCell>
+                  <TableCell className="text-sm">
+                    {product && product.tags && product.tags.length > 0
+                      ? product.tags.map((tag) => (
+                          <div key={tag.id} className="flex">
+                            <span
+                              className="px-2 inline-flex text-xs leading-5
+                      font-semibold rounded-full bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-blue-100 mb-2 mt-2"
+                            >
+                              {tag.name}
+                            </span>
+                          </div>
+                        ))
+                      : null}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex">
+                      <Button
+                        icon={EditIcon}
+                        className="mr-3"
+                        layout="outline"
+                        aria-label="Edit"
+                        onClick={() => openModal("edit", product.id)}
+                      />
+                      <Button
+                        icon={TrashIcon}
+                        layout="outline"
+                        aria-label="Delete"
+                        onClick={() => openModal("delete", product.id)}
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
             {searchValue && data.length === 0 && (
               <p className="text-center my-4 text-purple-500">
                 No result match

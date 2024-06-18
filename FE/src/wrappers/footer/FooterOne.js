@@ -13,7 +13,7 @@ const FooterOne = ({
   spaceRightClass,
   containerClass,
   extraFooterClass,
-  sideMenu
+  sideMenu,
 }) => {
   const [scroll, setScroll] = useState(0);
   const [top, setTop] = useState(0);
@@ -81,46 +81,6 @@ const FooterOne = ({
                       Contact
                     </Link>
                   </li>
-                  <li>
-                    <Link to={process.env.PUBLIC_URL + "/"}>
-                      Orders tracking
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div
-            className={`${
-              sideMenu ? "col-xl-2 col-sm-4" : "col-lg-2 col-sm-4"
-            }`}
-          >
-            <div
-              className={`${
-                sideMenu
-                  ? "footer-widget mb-30 ml-95"
-                  : "footer-widget mb-30 ml-50"
-              }`}
-            >
-              <div className="footer-title">
-                <h3>USEFUL LINKS</h3>
-              </div>
-              <div className="footer-list">
-                <ul>
-                  <li>
-                    <Link to={process.env.PUBLIC_URL + "#/"}>Returns</Link>
-                  </li>
-                  <li>
-                    <Link to={process.env.PUBLIC_URL + "#/"}>
-                      Support Policy
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to={process.env.PUBLIC_URL + "#/"}>Size guide</Link>
-                  </li>
-                  <li>
-                    <Link to={process.env.PUBLIC_URL + "#/"}>FAQs</Link>
-                  </li>
                 </ul>
               </div>
             </div>
@@ -184,6 +144,32 @@ const FooterOne = ({
           </div>
           <div
             className={`${
+              sideMenu ? "col-xl-2 col-sm-4" : "col-lg-2 col-sm-4"
+            }`}
+          >
+            <div
+              className={`${
+                sideMenu
+                  ? "footer-widget mb-30 ml-95"
+                  : "footer-widget mb-30 ml-50"
+              }`}
+            >
+              <div className="footer-title">
+                <h3>USEFUL LINKS</h3>
+              </div>
+              <div className="footer-list">
+                <ul>
+                  <li>
+                    <Link to={process.env.PUBLIC_URL + "/policy"}>
+                      Support Policy
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div
+            className={`${
               sideMenu ? "col-xl-3 col-sm-8" : "col-lg-4 col-sm-6"
             }`}
           >
@@ -214,7 +200,7 @@ FooterOne.propTypes = {
   spaceBottomClass: PropTypes.string,
   spaceTopClass: PropTypes.string,
   spaceLeftClass: PropTypes.string,
-  spaceRightClass: PropTypes.string
+  spaceRightClass: PropTypes.string,
 };
 
 export default FooterOne;

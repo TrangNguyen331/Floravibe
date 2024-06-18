@@ -17,6 +17,10 @@ const ShopSidebar = ({
   sideSpaceClass,
   searchHandler,
   bannerCategory,
+  resetFilters,
+  isReset,
+  getSortTagParams,
+  getSortPriceParams,
 }) => {
   const handleSearch = (search) => {
     searchHandler(search);
@@ -33,11 +37,20 @@ const ShopSidebar = ({
         categories={uniqueCategories}
         getSortParams={getSortParams}
         bannerCategory={bannerCategory}
+        isReset={isReset}
       />
       {/* filter by price */}
-      <ShopPriceFilter />
+      <ShopPriceFilter getSortParams={getSortPriceParams} isReset={isReset} />
       {/* filter by tag */}
-      <ShopTag tags={uniqueTags} getSortParams={getSortParams} />
+      <ShopTag
+        tags={uniqueTags}
+        getSortParams={getSortTagParams}
+        isReset={isReset}
+      />
+
+      <div className="mt-25 reset-filter-btn">
+        <button onClick={resetFilters}>Clear all</button>
+      </div>
     </div>
   );
 };

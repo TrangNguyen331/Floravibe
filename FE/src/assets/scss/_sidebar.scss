@@ -41,18 +41,14 @@
   h4.pro-sidebar-title {
     font-size: 16px;
     font-weight: 500;
-
     margin: 0;
-
     color: #333;
   }
   .sidebar-widget-list {
     ul {
       li {
         position: relative;
-
         align-items: center;
-
         padding: 0 0 15px;
         &:last-child {
           padding: 0 0 0;
@@ -180,7 +176,6 @@
     ul {
       li {
         display: inline-block;
-
         margin: 0 10px 15px 0;
         @media #{$lg-layout} {
           margin: 0 5px 15px 0;
@@ -190,11 +185,8 @@
           line-height: 1;
 
           display: inline-block;
-
           padding: 9px 17px 12px;
-
           text-transform: capitalize;
-
           color: #424242;
           border: none;
           border-radius: 50px;
@@ -212,24 +204,31 @@
       }
     }
   }
-}
-.sidebar-widget-price {
-  .minmax-price {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .filter-price-btn {
-    button {
-      display: block;
-      padding: 6px 15px;
-      text-align: center;
-      letter-spacing: 1px;
-      width: 100%;
-      border: none;
-      background-color: $theme-color;
-      color: #fff;
+  .sidebar-widget-price {
+    .minmax-price {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      input {
+        &:focus {
+          background: #eceff8;
+        }
+      }
     }
+  }
+}
+.filter-price-btn,
+.reset-filter-btn {
+  button {
+    display: block;
+    padding: 6px 15px;
+    text-align: center;
+    letter-spacing: 1px;
+    width: 100%;
+    border: none;
+    background-color: $theme-color;
+    color: #fff;
     &:hover {
       background-color: #333;
     }

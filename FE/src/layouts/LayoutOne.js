@@ -3,19 +3,10 @@ import React, { Fragment } from "react";
 import HeaderOne from "../wrappers/header/HeaderOne";
 import FooterOne from "../wrappers/footer/FooterOne";
 
-const LayoutOne = ({
-  children,
-  // headerContainerClass,
-  // headerPaddingClass,
-  // headerPositionClass,
-}) => {
+const LayoutOne = ({ children, headerTop }) => {
   return (
     <Fragment>
-      <HeaderOne
-      // layout={headerContainerClass}
-      // headerPaddingClass={headerPaddingClass}
-      // headerPositionClass={headerPositionClass}
-      />
+      <HeaderOne top={headerTop} />
       {children}
       <FooterOne
         backgroundColorClass="bg-gray"

@@ -10,15 +10,25 @@ export const getProducts = (products, category, type, limit) => {
         )
       )
     : products;
-  if (type && type === "new") {
+  if (type && type === "roses") {
     const newProducts = finalProducts.filter((single) =>
-      single.collections.some((col) => col.name.includes("14/02"))
+      single.tags.some(
+        (col) =>
+          col.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ===
+          "Hoa Hồng".normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      )
     );
     return newProducts.slice(0, limit || newProducts.length);
   }
-  if (type && type === "bestSeller") {
+  if (type && type === "baby") {
     const newProducts = finalProducts.filter((single) =>
-      single.collections.some((col) => col.name.includes("Chúc Mừng"))
+      single.tags.some((col) => col.name.includes("Baby"))
+    );
+    return newProducts.slice(0, limit || newProducts.length);
+  }
+  if (type && type === "tulip") {
+    const newProducts = finalProducts.filter((single) =>
+      single.tags.some((col) => col.name.includes("Tulip"))
     );
     return newProducts.slice(0, limit || newProducts.length);
   }
@@ -58,9 +68,10 @@ export const getProductCartQuantity = (cartItems, product, color, size) => {
 
 //get products based on category
 export const getSortedProducts = (products, sortType, sortValue) => {
-  if (products && sortType && sortValue) {
-    if (sortType === "category") {
-      return products.filter(
+  let sortedProducts = [...products];
+  switch (sortType) {
+    case "category":
+      sortedProducts = sortedProducts.filter(
         (product) =>
           product.collections.filter(
             (single) =>
@@ -68,31 +79,74 @@ export const getSortedProducts = (products, sortType, sortValue) => {
               sortValue.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
           )[0]
       );
-    }
-    if (sortType === "tag") {
-      return products.filter(
+      break;
+    case "tag":
+      sortedProducts = sortedProducts.filter(
         (product) =>
           product.tags.filter((single) => single.name === sortValue)[0]
       );
-    }
-    if (sortType === "filterSort") {
-      let sortProducts = [...products];
+      break;
+    case "priceRange":
+      const [minPrice, maxPrice] = sortValue;
+      sortedProducts = sortedProducts.filter(
+        (product) => product.price >= minPrice && product.price <= maxPrice
+      );
+      break;
+    case "filterSort":
       if (sortValue === "default") {
-        return sortProducts;
+        return sortedProducts;
       }
       if (sortValue === "priceHighToLow") {
-        return sortProducts.sort((a, b) => {
-          return b.price - a.price;
-        });
+        return sortedProducts.sort((a, b) => b.price - a.price);
       }
       if (sortValue === "priceLowToHigh") {
-        return sortProducts.sort((a, b) => {
-          return a.price - b.price;
-        });
+        return sortedProducts.sort((a, b) => a.price - b.price);
       }
-    }
+      break;
+    default:
+      break;
   }
-  return products;
+  // if (products && sortType && sortValue) {
+  //   if (sortType === "category") {
+  //     return products.filter(
+  //       (product) =>
+  //         product.collections.filter(
+  //           (single) =>
+  //             single.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ===
+  //             sortValue.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  //         )[0]
+  //     );
+  //   }
+  //   if (sortType === "tag") {
+  //     return products.filter(
+  //       (product) =>
+  //         product.tags.filter((single) => single.name === sortValue)[0]
+  //     );
+  //   }
+  //   if (sortType === "priceRange") {
+  //     return products.filter(
+  //       (product) =>
+  //         product.price >= sortValue[0] && product.price <= sortValue[1]
+  //     );
+  //   }
+  //   if (sortType === "filterSort") {
+  //     let sortProducts = [...products];
+  //     if (sortValue === "default") {
+  //       return sortProducts;
+  //     }
+  //     if (sortValue === "priceHighToLow") {
+  //       return sortProducts.sort((a, b) => {
+  //         return b.price - a.price;
+  //       });
+  //     }
+  //     if (sortValue === "priceLowToHigh") {
+  //       return sortProducts.sort((a, b) => {
+  //         return a.price - b.price;
+  //       });
+  //     }
+  //   }
+  // }
+  return sortedProducts;
 };
 
 // get individual element
@@ -185,12 +239,25 @@ export const getIndividualSizes = (product) => {
 
 export const setActiveSort = (e) => {
   const filterButtons = document.querySelectorAll(
-    ".sidebar-widget-list-left button, .sidebar-widget-tag button, .product-filter button"
+    ".sidebar-widget-list-left button, .product-filter button"
   );
   filterButtons.forEach((item) => {
     item.classList.remove("active");
   });
-  e.currentTarget.classList.add("active");
+  if (e && e.currentTarget) {
+    e.currentTarget.classList.add("active");
+  }
+};
+export const setActiveTagSort = (e) => {
+  const filterButtons = document.querySelectorAll(
+    ".sidebar-widget-tag button, .product-filter button"
+  );
+  filterButtons.forEach((item) => {
+    item.classList.remove("active");
+  });
+  if (e && e.currentTarget) {
+    e.currentTarget.classList.add("active");
+  }
 };
 
 export const setActiveLayout = (e) => {
