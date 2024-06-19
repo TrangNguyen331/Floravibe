@@ -6,9 +6,11 @@ import BannerVoucher from "./BannerVoucher";
 import "../../assets/scss/_banner-voucher.scss";
 import SectionTitle from "../../components/section-title/SectionTitle";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 const VoucherSlider = ({ spaceBottomClass, bgColorClass }) => {
   const { t } = useTranslation(["home"]);
   const [vouchers, setVouchers] = useState([]);
+  const token = useSelector((state) => state.auth.token);
   const getVouchers = async () => {
     try {
       const response = await axiosInstance.get("/api/v1/vouchers");
@@ -32,6 +34,9 @@ const VoucherSlider = ({ spaceBottomClass, bgColorClass }) => {
     observer: true,
     observeParents: true,
   };
+  const targetList = token
+    ? vouchers.filter((voucher) => voucher.isActive && !voucher.guest)
+    : vouchers.filter((voucher) => voucher.isActive && voucher.guest);
 
   return !vouchers ? (
     ""
@@ -48,16 +53,25 @@ const VoucherSlider = ({ spaceBottomClass, bgColorClass }) => {
           spaceClass="mb-30"
         />
         <div className="tagline">{t("bannervoucher.tagline")}</div>
+
         <div className="row">
-          <Swiper {...params}>
-            {vouchers
-              .filter((voucher) => voucher.isActive)
-              .map((voucher) => (
+          {targetList.length < 3 ? (
+            <div className="guest-voucher">
+              {targetList.map((voucher) => (
                 <div key={voucher.id}>
                   <BannerVoucher data={voucher} />
                 </div>
               ))}
-          </Swiper>
+            </div>
+          ) : (
+            <Swiper {...params}>
+              {targetList.map((voucher) => (
+                <div key={voucher.id}>
+                  <BannerVoucher data={voucher} />
+                </div>
+              ))}
+            </Swiper>
+          )}
         </div>
       </div>
     </div>

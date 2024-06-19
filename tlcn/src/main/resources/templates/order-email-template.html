@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guest Order</title>
+</head>
+<body>
+<h1>Order Details</h1>
+<p>Thank you for your order!</p>
+<p>Order: <span th:text="${orderInfo.id}">id</span></p>
+<p>Status: <span th:text="${orderInfo.status}">status</span></p>
+<table>
+    <thead>
+    <tr>
+        <th>Image</th>
+        <th>Product Name</th>
+        <th>Unit Price</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="detail : ${orderInfo.details}">
+        <td>
+            <img th:src="@{${detail.product.images[0]}}"  alt="product-img" width="97" height="118"/>
+        </td>
+        <td th:text="${detail.product.name}">.</td>
+        <td th:text="${#numbers.formatDecimal(detail.unitPrice, 0, 'COMMA', 0, 'POINT')}">0</td>
+        <td th:text="${detail.quantity}">0</td>
+        <td th:text="${#numbers.formatDecimal(detail.subtotal, 0, 'COMMA', 0, 'POINT')}">0</td>
+    </tr>
+    </tbody>
+</table>
+<p>Total: <span th:text="${#numbers.formatDecimal(orderInfo.total, 0, 'COMMA', 0, 'POINT')}"></span></p>
+<div th:if="${orderInfo.voucherDetail.id != null}">
+    <p>Voucher: <span th:text="'-' + ${#numbers.formatDecimal(orderInfo.voucherDetail.voucherValue, 0, 'COMMA', 0, 'POINT')}">Voucher Value</span></p>
+</div>
+<p>Delivery Date: <span th:text="${orderInfo.deliveryDate}">Date</span></p>
+<p>Delivery Time: <span th:text="${orderInfo.deliveryTime}">Time</span></p>
+<p>Delivery Time: <span th:text="${orderInfo.methodPaid}">Payment method</span></p>
+</body>
+</html>

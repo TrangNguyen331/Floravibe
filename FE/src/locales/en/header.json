@@ -9,5 +9,12 @@
   "my orders": "My Orders",
   "logout": "Logout",
   "login": "Login",
-  "register": "Register"
+  "register": "Register",
+  "contact_us": "Contact Us",
+  "cart": "Cart",
+  "wishlist": "Wishlist",
+  "compare": "Compare",
+  "checkout": "Checkout",
+  "other": "Other",
+  "login/register": "Login/Register"
 }

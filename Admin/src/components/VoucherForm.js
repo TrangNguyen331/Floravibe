@@ -79,6 +79,15 @@ const VoucherForm = ({ data, handleInputChange }) => {
             value={(data && data.description) || ""}
           />
         </div>
+        <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
+          <Input
+            type="checkbox"
+            checked={data.guest}
+            onChange={(e) => handleInputChange("guest", e.target.checked)}
+            className="h-5 w-5"
+          />
+          <span className="ml-2">For guest</span>
+        </div>
       </div>
     </form>
   );

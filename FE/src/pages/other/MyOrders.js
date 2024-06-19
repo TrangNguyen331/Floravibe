@@ -44,6 +44,7 @@ const MyOrders = ({ location }) => {
     try {
       setLoadingGet(true);
       const response = await axiosInstance.get("/api/v1/orders");
+      console.log(response);
       setOrders(response.data);
       setCurrentOrderFilter((prevFilter) =>
         filterOrderByStatus(response.data, "All")
@@ -73,6 +74,7 @@ const MyOrders = ({ location }) => {
   useEffect(() => {
     fetchData();
   }, []);
+  console.log(orders);
   return (
     <Fragment>
       <MetaTags>

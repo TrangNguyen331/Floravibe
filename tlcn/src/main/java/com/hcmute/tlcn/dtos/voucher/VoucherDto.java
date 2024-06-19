@@ -20,4 +20,5 @@ public class VoucherDto {
     public LocalDate validUntil;
     public int quantity;
     public int usedVoucher;
+    public boolean guest=false;
 }

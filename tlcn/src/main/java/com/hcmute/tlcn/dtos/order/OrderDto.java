@@ -25,4 +25,5 @@ public class OrderDto {
     private String status;
     private String methodPaid;
     private double firstDiscount;
+    private boolean guest;
 }

@@ -1,5 +1,7 @@
 package com.hcmute.tlcn.services.Impl;
 
+import com.hcmute.tlcn.dtos.order.OrderDto;
+import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
 import com.hcmute.tlcn.entities.Account;
 import com.hcmute.tlcn.services.EmailService;
 import jakarta.mail.MessagingException;
@@ -23,6 +25,9 @@ public class EmailServiceImpl implements EmailService {
     @Value("${email.reset-url}")
     private String resetLink;
 
+    @Value("${email.guest-order-url}")
+    private String guestOrderUrl;
+
     @Override
     public void sendMail(Account account) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
@@ -36,6 +41,27 @@ public class EmailServiceImpl implements EmailService {
             context.setVariable("name", account.getFullName());
             context.setVariable("resetlink", resetLink+account.getUsername()); // Pass the link as a variable
             String htmlContent = templateEngine.process("email-template", context);
+
+            // Set the HTML content of the email
+            helper.setText(htmlContent, true);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        emailSender.send(message);
+    }
+
+    public void sendGuestOrderMail(String guestEmail, ResponseOrderDto orderDto) throws MessagingException {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        try {
+            helper.setTo(guestEmail);
+            helper.setSubject("Floravibe - Order Info");
+
+            // Load the HTML email template
+            Context context = new Context();
+            context.setVariable("orderInfo", orderDto);
+
+            String htmlContent = templateEngine.process("order-email-template", context);
 
             // Set the HTML content of the email
             helper.setText(htmlContent, true);

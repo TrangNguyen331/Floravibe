@@ -19,7 +19,7 @@ spring:
       max-request-size: 10MB
 email:
   reset-url: http://localhost:5000/resetpassword/change-password?userName=
-
+  guest-order-url: http://localhost:5000/checkout?guestEmail=
 application:
   version: "v1"
   default:

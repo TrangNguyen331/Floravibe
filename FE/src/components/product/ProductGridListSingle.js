@@ -79,12 +79,8 @@ const ProductGridListSingle = ({
                       : t("productgrid.add-to-wishlist")
                   }
                   onClick={() => {
-                    if (token) {
-                      addToWishlist(product, addToast);
-                      // handleAddToWishList();
-                    } else {
-                      history.push("/login-register");
-                    }
+                    addToWishlist(product, addToast);
+                    // handleAddToWishList();
                   }}
                 >
                   <i className="pe-7s-like" />
@@ -107,11 +103,7 @@ const ProductGridListSingle = ({
                 ) : (
                   <button
                     onClick={() => {
-                      if (token) {
-                        addToCart(product, addToast);
-                      } else {
-                        history.push("/login-register");
-                      }
+                      addToCart(product, addToast);
                     }}
                     className={
                       cartItem !== undefined && cartItem.quantity > 0

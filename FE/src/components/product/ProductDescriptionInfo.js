@@ -204,17 +204,13 @@ const ProductDescriptionInfo = ({
             {
               <button
                 onClick={() => {
-                  if (token) {
-                    addToCart(
-                      product,
-                      addToast,
-                      quantityCount,
-                      selectedProductColor,
-                      selectedProductSize
-                    );
-                  } else {
-                    history.push("/login-register");
-                  }
+                  addToCart(
+                    product,
+                    addToast,
+                    quantityCount,
+                    selectedProductColor,
+                    selectedProductSize
+                  );
                 }}
                 disabled={
                   productCartQty >= product.stockQty ||
@@ -236,12 +232,8 @@ const ProductDescriptionInfo = ({
                   : t("home:productgrid.add-to-wishlist")
               }
               onClick={() => {
-                if (token) {
-                  addToWishlist(product, addToast);
-                  // handleAddToWishList();
-                } else {
-                  history.push("/login-register");
-                }
+                addToWishlist(product, addToast);
+                // handleAddToWishList();
               }}
             >
               {wishlistItem ? (

@@ -1,5 +1,11 @@
 @import "variables";
 .voucherslider-area {
+  .guest-voucher {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
   .tagline {
     color: #666;
     font-size: 20px;

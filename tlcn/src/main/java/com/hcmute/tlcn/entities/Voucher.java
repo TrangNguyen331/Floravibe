@@ -22,4 +22,5 @@ public class Voucher {
     public int quantity;
     public int usedVoucher;
     public boolean isActive=true;
+    public boolean guest=false;
 }

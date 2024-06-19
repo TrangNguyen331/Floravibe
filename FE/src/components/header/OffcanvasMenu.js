@@ -16,9 +16,7 @@ const OffcanvasMenu = ({ activeState, getActiveState }) => {
         </button>
       </div>
       <div className="side-logo">
-        <Link to={process.env.PUBLIC_URL + "/"}>
-           Flower for Thought
-        </Link>
+        <Link to={process.env.PUBLIC_URL + "/"}>Floravibe</Link>
       </div>
       {/* nav menu*/}
       <NavMenu sidebarMenu={true} />
@@ -31,7 +29,7 @@ const OffcanvasMenu = ({ activeState, getActiveState }) => {
 
 OffcanvasMenu.propTypes = {
   activeState: PropTypes.bool,
-  getActiveState: PropTypes.func
+  getActiveState: PropTypes.func,
 };
 
 export default OffcanvasMenu;

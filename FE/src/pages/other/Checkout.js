@@ -116,9 +116,13 @@ const Checkout = ({ location, cartItems, currency }) => {
       });
       return;
     }
-    const selectedVoucher = vouchers
-      .filter((voucher) => voucher.isActive === true)
-      .find((voucher) => voucher.voucherName === submitData.voucherName);
+    const selectedVoucher = token
+      ? vouchers
+          .filter((voucher) => voucher.isActive === true && !voucher.guest)
+          .find((voucher) => voucher.voucherName === submitData.voucherName)
+      : vouchers
+          .filter((voucher) => voucher.isActive === true && voucher.guest)
+          .find((voucher) => voucher.voucherName === submitData.voucherName);
 
     if (selectedVoucher) {
       const currentDate = new Date();
@@ -156,145 +160,147 @@ const Checkout = ({ location, cartItems, currency }) => {
     }
   };
 
-  const placeOrder = async () => {
-    if (token) {
-      setIsLoadingPlaceOrder(true);
-      const totalValue = cartItems.reduce(
-        (sum, item) => sum + item.quantity * item.price,
-        0
+  const guestPlaceOrder = async () => {
+    setIsLoadingPlaceOrder(true);
+    const totalValue = cartItems.reduce(
+      (sum, item) => sum + item.quantity * item.price,
+      0
+    );
+    const selectedVoucher = vouchers
+      .filter((voucher) => voucher.isActive === true)
+      .find((voucher) => voucher.voucherName === appliedVoucherName);
+
+    const voucherDiscount = selectedVoucher ? selectedVoucher.voucherValue : 0;
+
+    let selectedCityName = "";
+    let selectedDistrictName = "";
+    let selectedWardName = "";
+
+    if (submitData.city && submitData.district && submitData.ward) {
+      const selectedCityData = cities.find(
+        (city) => city.Name === submitData.city
       );
-      const selectedVoucher = vouchers
-        .filter((voucher) => voucher.isActive === true)
-        .find((voucher) => voucher.voucherName === appliedVoucherName);
-
-      const voucherDiscount = selectedVoucher
-        ? selectedVoucher.voucherValue
-        : 0;
-
-      let selectedCityName = "";
-      let selectedDistrictName = "";
-      let selectedWardName = "";
-
-      if (submitData.city && submitData.district && submitData.ward) {
-        const selectedCityData = cities.find(
-          (city) => city.Name === submitData.city
+      if (selectedCityData) {
+        selectedCityName = selectedCityData.Name;
+        const selectedDistrictData = selectedCityData.Districts.find(
+          (district) => district.Name === submitData.district
         );
-        if (selectedCityData) {
-          selectedCityName = selectedCityData.Name;
-          const selectedDistrictData = selectedCityData.Districts.find(
-            (district) => district.Name === submitData.district
+        if (selectedDistrictData) {
+          selectedDistrictName = selectedDistrictData.Name;
+          const selectedWardData = selectedDistrictData.Wards.find(
+            (ward) => ward.Name === submitData.ward
           );
-          if (selectedDistrictData) {
-            selectedDistrictName = selectedDistrictData.Name;
-            const selectedWardData = selectedDistrictData.Wards.find(
-              (ward) => ward.Name === submitData.ward
-            );
-            if (selectedWardData) {
-              selectedWardName = selectedWardData.Name;
-            }
+          if (selectedWardData) {
+            selectedWardName = selectedWardData.Name;
           }
         }
       }
-
-      const body = {
-        details: cartItems.map((item) => ({
-          productId: item.id,
-          unitPrice: item.price,
-          quantity: item.quantity,
-          subtotal: item.price * item.quantity,
-        })),
-        additionalOrder: {
-          email: submitData.email,
-          phone: submitData.phone,
-          firstName: submitData.firstName,
-          lastName: submitData.lastName,
-          fullName: submitData.fullName,
-          ward: selectedWardName,
-          district: selectedDistrictName,
-          city: selectedCityName,
-          houseNumber: submitData.houseNumber,
-          additionalInformation: submitData.additionalInformation,
-        },
-        voucherDetail: selectedVoucher
-          ? {
-              id: selectedVoucher.id,
-              voucherName: appliedVoucherName,
-              voucherValue: selectedVoucher.voucherValue,
-              description: selectedVoucher.description,
-              effectiveDate: selectedVoucher.effectiveDate,
-              validUntil: selectedVoucher.validUntil,
-              quantity: selectedVoucher.quantity,
-              usedVoucher: selectedVoucher.usedVoucher,
-            }
-          : {
-              id: null,
-              voucherName: "",
-              voucherValue: 0,
-              description: "",
-              effectiveDate: "",
-              validUntil: "",
-              quantity: 0,
-              usedVoucher: 0,
-            },
-        deliveryDate: new Date(submitData.deliveryDate),
-        deliveryTime: submitData.deliveryTime,
-        total:
-          orders.length === 0
-            ? totalValue - firstDiscount - voucherDiscount
-            : totalValue - voucherDiscount,
-        status: "IN_REQUEST",
-        methodPaid: paymentMethod,
-        firstDiscount: orders.length === 0 ? firstDiscount : 0,
-      };
-
-      try {
-        const response = await axiosInstance.post("/api/v1/orders", body);
-        console.log(response);
-
-        if (selectedVoucher) {
-          const quantity =
-            selectedVoucher.quantity === 0 ? 0 : selectedVoucher.quantity - 1;
-          const usedVoucher = selectedVoucher.usedVoucher + 1;
-          let voucherBody = {
-            voucherName: selectedVoucher.voucherName,
+    }
+    const orderDiscount = token ? (orders.length === 0 ? firstDiscount : 0) : 0;
+    const body = {
+      details: cartItems.map((item) => ({
+        productId: item.id,
+        unitPrice: item.price,
+        quantity: item.quantity,
+        subtotal: item.price * item.quantity,
+      })),
+      additionalOrder: {
+        email: submitData.email,
+        phone: submitData.phone,
+        firstName: submitData.firstName,
+        lastName: submitData.lastName,
+        fullName: submitData.fullName,
+        ward: selectedWardName,
+        district: selectedDistrictName,
+        city: selectedCityName,
+        houseNumber: submitData.houseNumber,
+        additionalInformation: submitData.additionalInformation,
+      },
+      voucherDetail: selectedVoucher
+        ? {
+            id: selectedVoucher.id,
+            voucherName: appliedVoucherName,
             voucherValue: selectedVoucher.voucherValue,
             description: selectedVoucher.description,
             effectiveDate: selectedVoucher.effectiveDate,
             validUntil: selectedVoucher.validUntil,
-            quantity: quantity,
-            usedVoucher: usedVoucher,
-          };
+            quantity: selectedVoucher.quantity,
+            usedVoucher: selectedVoucher.usedVoucher,
+          }
+        : {
+            id: null,
+            voucherName: "",
+            voucherValue: 0,
+            description: "",
+            effectiveDate: "",
+            validUntil: "",
+            quantity: 0,
+            usedVoucher: 0,
+          },
+      deliveryDate: new Date(submitData.deliveryDate),
+      deliveryTime: submitData.deliveryTime,
+      total: token
+        ? orders.length === 0
+          ? totalValue - firstDiscount - voucherDiscount
+          : totalValue - voucherDiscount
+        : totalValue - voucherDiscount,
+      status: "IN_REQUEST",
+      methodPaid: paymentMethod,
+      firstDiscount: orderDiscount,
+      guest: token ? false : true,
+    };
 
+    try {
+      const response = await axiosInstance.post("/api/v1/orders", body, {
+        timeout: 8000,
+      });
+      console.log("response", response);
+
+      if (selectedVoucher) {
+        const quantity =
+          selectedVoucher.quantity === 0 ? 0 : selectedVoucher.quantity - 1;
+        const usedVoucher = selectedVoucher.usedVoucher + 1;
+        let voucherBody = {
+          voucherName: selectedVoucher.voucherName,
+          voucherValue: selectedVoucher.voucherValue,
+          description: selectedVoucher.description,
+          effectiveDate: selectedVoucher.effectiveDate,
+          validUntil: selectedVoucher.validUntil,
+          quantity: quantity,
+          usedVoucher: usedVoucher,
+        };
+        try {
           await axiosInstance.put(
             "/api/v1/vouchers/" + selectedVoucher.id,
-            voucherBody
+            voucherBody,
+            {
+              timeout: 10000,
+            }
           );
+        } catch (error) {
+          console.log(error);
         }
-
-        addToast("Order success", {
-          appearance: "success",
-          autoDismiss: true,
-        });
-        getAllOrders();
-        dispatch(deleteAllFromCart(addToast));
-        setIsLoadingPlaceOrder(false);
-        // Check if the payment method is VNPAY and if paymentLink is returned
-        if (paymentMethod === "VNPAY" && response.data.paymentLink) {
-          window.location.href = response.data.paymentLink;
-        } else {
-          history.push(process.env.PUBLIC_URL + "/order-thankyou");
-        }
-      } catch (error) {
-        addToast(t("notice.fail-create-order"), {
-          appearance: "error",
-          autoDismiss: true,
-        });
       }
-    } else {
-      addToast(t("notice.must-login"), {
-        appearance: "warning",
+
+      addToast("Order success", {
+        appearance: "success",
         autoDismiss: true,
       });
+
+      dispatch(deleteAllFromCart(addToast));
+      setIsLoadingPlaceOrder(false);
+
+      if (paymentMethod === "VNPAY" && response.data.paymentLink) {
+        window.location.href = response.data.paymentLink;
+      } else {
+        history.push(process.env.PUBLIC_URL + "/order-thankyou");
+      }
+    } catch (error) {
+      console.log(error);
+      // addToast(t("notice.fail-create-order"), {
+      //   appearance: "error",
+      //   autoDismiss: true,
+      // });
     }
   };
   const clickPlaceOrder = async () => {
@@ -313,7 +319,8 @@ const Checkout = ({ location, cartItems, currency }) => {
       setIsError(true);
     } else {
       setIsError(false);
-      await placeOrder();
+      // await placeOrder();
+      await guestPlaceOrder();
     }
   };
   const getAllOrders = async () => {
@@ -626,7 +633,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                         <label>Email</label>
                         <input
                           type="text"
-                          disabled
+                          // disabled
                           name="email"
                           value={submitData.email}
                           onChange={handleInputChange}
@@ -708,7 +715,8 @@ const Checkout = ({ location, cartItems, currency }) => {
                           </li>
                           <li>{t("orders:detail.free")}</li>
                         </ul>
-                        {orders.length === 0 && (
+
+                        {token && orders.length === 0 && (
                           <ul className="mt-3">
                             <li className="your-order-shipping">First order</li>
                             <li>
@@ -737,7 +745,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                             {t("orders:detail.total")}
                           </li>
                           <li>
-                            {orders.length === 0
+                            {token && orders.length === 0
                               ? (
                                   cartTotalPrice -
                                   firstDiscount -
@@ -779,7 +787,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                       onClick={() => clickPlaceOrder()}
                       disabled={isLoadingPlaceOrder}
                     >
-                      {isLoading ? (
+                      {isLoadingPlaceOrder ? (
                         <div className="loading-send">
                           <span
                             className="spinner-border spinner-border-sm"

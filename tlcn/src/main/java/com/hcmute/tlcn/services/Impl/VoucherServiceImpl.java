@@ -28,6 +28,9 @@ public class VoucherServiceImpl implements VoucherService {
     public Voucher addNew(VoucherDto dto){
         Voucher voucher = new Voucher();
         modelMapper.map(dto,voucher);
+        if(dto.isGuest()){
+            voucher.setGuest(true);
+        }
         repository.save(voucher);
         return voucher;
     }
@@ -43,6 +46,7 @@ public class VoucherServiceImpl implements VoucherService {
         voucher.setValidUntil(dto.getValidUntil());
         voucher.setQuantity(dto.getQuantity());
         voucher.setUsedVoucher(dto.getUsedVoucher());
+        voucher.setGuest(dto.isGuest());
         repository.save(voucher);
         return voucher;
     }

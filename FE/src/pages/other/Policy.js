@@ -33,11 +33,11 @@ const Policy = () => {
           <div className="first_section">
             <Row>
               <Col lg="4" md="4">
-                <h3 className="first_title">Đổi hoặc Trả hàng</h3>
+                <h3 className="first_title">ĐỔI/TRẢ HÀNG</h3>
               </Col>
               <Col lg="8" md="8">
                 <p>
-                  Thời gian nhận đổi hoặc trả là 3 ngày kể từ ngày nhận hàng.
+                  Thời gian nhận đổi hoặc trả là 1-2 ngày kể từ ngày nhận hàng.
                 </p>
                 <p>
                   Khách hàng cần xem xét kỹ trước khi quyết định đặt mua. Chúng
@@ -59,7 +59,7 @@ const Policy = () => {
           <div className="first_section">
             <Row>
               <Col lg="4" md="4">
-                <h3 className="first_title">Hoàn tiền</h3>
+                <h3 className="first_title">HOÀN TIỀN</h3>
               </Col>
               <Col lg="8" md="8">
                 <p>
@@ -78,7 +78,7 @@ const Policy = () => {
           <div className="first_section">
             <Row>
               <Col lg="4" md="4">
-                <h3 className="first_title">Thời gian giao</h3>
+                <h3 className="first_title">THỜI GIAN GIAO</h3>
               </Col>
               <Col lg="8" md="8">
                 <p>

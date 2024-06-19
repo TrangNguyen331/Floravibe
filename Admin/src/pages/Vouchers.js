@@ -60,6 +60,7 @@ const Vouchers = () => {
         validUntil: null,
         quantity: null,
         usedVoucher: null,
+        guest: false,
       });
     }
     setMode(mode);
@@ -75,6 +76,7 @@ const Vouchers = () => {
     validUntil: null,
     quantity: null,
     usedVoucher: null,
+    guest: false,
   });
   const fetchData = async (page) => {
     try {
@@ -105,7 +107,9 @@ const Vouchers = () => {
   };
 
   const handleSave = async (mode) => {
-    if (new Date(voucherInfo.validUntil) < new Date(voucherInfo.effectiveDate)) {
+    if (
+      new Date(voucherInfo.validUntil) < new Date(voucherInfo.effectiveDate)
+    ) {
       addToast("The Valid Til must be later than the Effective Date.", {
         appearance: "warning",
         autoDismiss: true,
@@ -135,6 +139,7 @@ const Vouchers = () => {
         validUntil: voucherInfo.validUntil,
         quantity: voucherInfo.quantity,
         usedVoucher: voucherInfo.usedVoucher,
+        guest: voucherInfo.guest,
       };
 
       if (mode === "add") {
@@ -159,6 +164,7 @@ const Vouchers = () => {
         effectiveDate: null,
         validUntil: null,
         quantity: null,
+        guest: false,
       });
       fetchData(1);
     } catch (error) {
@@ -256,6 +262,7 @@ const Vouchers = () => {
               <TableCell>Quantity</TableCell>
               <TableCell>Used</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>For Guest</TableCell>
             </tr>
           </TableHeader>
           <TableBody>
@@ -268,12 +275,24 @@ const Vouchers = () => {
                   {voucher.description}
                 </TableCell>
                 <TableCell className="text-base">
-                  {formatNumberWithDecimal(voucher.voucherValue)} {" "} ₫
+                  {formatNumberWithDecimal(voucher.voucherValue)} ₫
                 </TableCell>
-                <TableCell className={new Date(voucher.effectiveDate) < new Date() ? "text-base text-green-400" : "text-base"}>
+                <TableCell
+                  className={
+                    new Date(voucher.effectiveDate) < new Date()
+                      ? "text-base text-green-400"
+                      : "text-base"
+                  }
+                >
                   {new Date(voucher.effectiveDate).toLocaleDateString("vi-VN")}
                 </TableCell>
-                <TableCell className={new Date(voucher.validUntil) < new Date() ? "text-base text-red-600" : "text-base"}>
+                <TableCell
+                  className={
+                    new Date(voucher.validUntil) < new Date()
+                      ? "text-base text-red-600"
+                      : "text-base"
+                  }
+                >
                   {new Date(voucher.validUntil).toLocaleDateString("vi-VN")}
                 </TableCell>
                 <TableCell className="text-base">{voucher.quantity}</TableCell>
@@ -286,6 +305,9 @@ const Vouchers = () => {
                     checked={voucher.isActive}
                     onChange={() => handleCheckboxChange(voucher.id)}
                   />
+                </TableCell>
+                <TableCell className="text-base">
+                  <Input type="checkbox" checked={voucher.guest} />
                 </TableCell>
                 <TableCell>
                   <Button

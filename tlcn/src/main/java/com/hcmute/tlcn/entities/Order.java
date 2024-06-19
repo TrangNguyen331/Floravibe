@@ -34,4 +34,5 @@ public class Order {
     private LocalDateTime createdDate;
     private LocalDateTime cancelDate;
     private LocalDateTime completedDate;
+    private boolean guest;
 }

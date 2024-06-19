@@ -10,7 +10,9 @@ import com.hcmute.tlcn.repositories.AccountRepository;
 import com.hcmute.tlcn.repositories.OrderRepository;
 import com.hcmute.tlcn.repositories.PaymentRepos;
 import com.hcmute.tlcn.repositories.ProductRepository;
+import com.hcmute.tlcn.services.EmailService;
 import com.hcmute.tlcn.services.OrderService;
+import jakarta.mail.MessagingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +32,15 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository repository;
     private final ProductRepository productRepository;
     private final PaymentRepos paymentRepository;
+    private final EmailService emailService;
     ModelMapper modelMapper = new ModelMapper();
 
-    public OrderServiceImpl(AccountRepository accountRepository, OrderRepository repository, ProductRepository productRepository,PaymentRepos paymentRepository) {
+    public OrderServiceImpl(AccountRepository accountRepository, OrderRepository repository, ProductRepository productRepository,PaymentRepos paymentRepository,EmailService emailService) {
         this.accountRepository = accountRepository;
         this.repository = repository;
         this.productRepository = productRepository;
         this.paymentRepository = paymentRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -77,31 +81,20 @@ public class OrderServiceImpl implements OrderService {
         Order order=new Order();
         modelMapper.map(dto,order);
 
-        String email = dto.getAdditionalOrder().getEmail();
-        // Check if this is the user's first order
-        Optional<Account> accountOptional = accountRepository.findByEmail(email);
-        if (accountOptional.isEmpty()) {
-            throw new NotFoundException("Account not found!");
 
-        }
-        else{
-            Account account = accountOptional.get();
-            List<Order> userOrders = repository.findAllByUser(account.getEmail());
-
-            if (userOrders.isEmpty()) {
-                // Apply the discount for the first order
-                order.setFirstDiscount(dto.getFirstDiscount());
-            }
-        }
+//        if (accountOptional.isEmpty()) {
+//            throw new NotFoundException("Account not found!");
+//        }
+//        else{
+//            Account account = accountOptional.get();
+//            List<Order> userOrders = repository.findAllByUser(account.getEmail());
+//
+//            if (userOrders.isEmpty()) {
+//                // Apply the discount for the first order
+//                order.setFirstDiscount(dto.getFirstDiscount());
+//            }
+//        }
         VoucherDto voucherDto = new VoucherDto();
-//        voucherDto.setId(dto.getVoucherDetail().getId());
-//        voucherDto.setVoucherName(dto.getVoucherDetail().getVoucherName());
-//        voucherDto.setVoucherValue(dto.getVoucherDetail().getVoucherValue());
-//        voucherDto.setDescription(dto.getVoucherDetail().getDescription());
-//        voucherDto.setEffectiveDate(dto.getVoucherDetail().getEffectiveDate());
-//        voucherDto.setValidUntil(dto.getVoucherDetail().getValidUntil());
-//        voucherDto.setQuantity(dto.getVoucherDetail().getQuantity());
-//        voucherDto.setUsedVoucher(dto.getVoucherDetail().getUsedVoucher());
         modelMapper.map(dto.getVoucherDetail(), voucherDto);
         order.setVoucherDetail(voucherDto);
         order.setCancelDate(null);
@@ -115,6 +108,20 @@ public class OrderServiceImpl implements OrderService {
             
             product.setStockQty(remainingStock);
             productRepository.save(product);
+
+            detailDto.setProduct(productRepository.findById(detailDto.getProductId()).orElse(null));
+        }
+        String email = dto.getAdditionalOrder().getEmail();
+
+        // Check if this is the user's first order
+        Optional<Account> accountOptional = accountRepository.findByEmail(email);
+        if(accountOptional.isEmpty() || dto.isGuest()){
+            order.setGuest(dto.isGuest());
+            try {
+                emailService.sendGuestOrderMail(email, orderDto);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
         }
         return order;
     }

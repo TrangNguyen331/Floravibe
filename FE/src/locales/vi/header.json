@@ -9,5 +9,12 @@
   "my orders": "Đơn Hàng",
   "logout": "Đăng Xuất",
   "login": "Đăng Nhập",
-  "register": "Đăng ký"
+  "register": "Đăng ký",
+  "contact_us": "Liên hệ",
+  "cart": "Giỏ Hàng",
+  "wishlist": "Yêu Thích",
+  "compare": "So Sánh",
+  "checkout": "Thanh Toán",
+  "other": "Khác",
+  "login/register": "Đăng nhập/Đăng ký"
 }

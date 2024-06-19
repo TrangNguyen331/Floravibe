@@ -170,16 +170,16 @@ const MyAccount = ({ location }) => {
         const response = await axiosInstance.get("/api/v1/auth/identity");
         setUserInfo({
           ...userInfo,
-          firstName: response.data.firstName,
-          lastName: response.data.lastName,
-          fullName: response.data.fullName,
-          ward: response.data.ward,
-          district: response.data.district,
-          city: response.data.city,
-          houseNumber: response.data.houseNumber,
-          phone: response.data.phone,
-          email: response.data.email,
-          avatar: response.data.avatar,
+          firstName: response.data.firstName || "",
+          lastName: response.data.lastName || "",
+          fullName: response.data.fullName || "",
+          ward: response.data.ward || "",
+          district: response.data.district || "",
+          city: response.data.city || "",
+          houseNumber: response.data.houseNumber || "",
+          phone: response.data.phone || "",
+          email: response.data.email || "",
+          avatar: response.data.avatar || "",
         });
       }
     };
