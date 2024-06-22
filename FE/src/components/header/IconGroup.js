@@ -180,11 +180,19 @@ const IconGroup = ({
             <ul>
               <li className="user-info">
                 <span>
-                  <img
-                    src={userAvatar.avatar}
-                    alt="user avatar"
-                    className="avatar"
-                  />
+                  {userAvatar && userAvatar.avatar ? (
+                    <img
+                      src={userAvatar.avatar}
+                      alt="user avatar"
+                      className="avatar"
+                    />
+                  ) : (
+                    <img
+                      src="https://i.pinimg.com/originals/90/48/9f/90489fda05254bb2fef245248e9befb1.jpg"
+                      alt="default"
+                      className="avatar"
+                    />
+                  )}
                 </span>
                 <span className="username">{userAvatar.username}</span>
               </li>

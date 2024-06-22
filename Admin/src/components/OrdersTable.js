@@ -15,6 +15,7 @@ import { DownIcon, SortDefaultIcon, UpIcon, EyeIcon } from "../icons";
 import Paginate from "./Pagination/Paginate";
 import { FaSpinner } from "react-icons/fa";
 import { Box, LinearProgress } from "@mui/material";
+import { statusOptions } from "../helper/numberhelper";
 
 function Icon({ icon, ...props }) {
   const Icon = icon;
@@ -43,32 +44,6 @@ const OrdersTable = ({
   const [sortStatusType, setSortStatusType] = useState("default");
   const [sortDateType, setSortDateType] = useState("default");
 
-  const statusOptions = [
-    {
-      value: "IN_REQUEST",
-      label: "In Request",
-      color:
-        "p-2 rounded-md bg-orange-100 text-orange-700 dark:bg-orange-700 dark:text-orange-100 mb-2 mt-2",
-    },
-    {
-      value: "IN_PROCESSING",
-      label: "In Progress",
-      color:
-        "p-2 rounded-md bg-pink-100 text-pink-700 dark:bg-pink-700 dark:text-pink-100 mb-2 mt-2",
-    },
-    {
-      value: "CANCEL",
-      label: "Cancel",
-      color:
-        "p-2 rounded-md bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-100 mb-2 mt-2",
-    },
-    {
-      value: "COMPLETED",
-      label: "Completed",
-      color:
-        "p-2 rounded-md bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100 mb-2 mt-2",
-    },
-  ];
   const getStatusOption = (statusValue) => {
     return statusOptions.find((option) => option.value === statusValue);
   };
@@ -130,9 +105,8 @@ const OrdersTable = ({
   const fetchAllOrdersData = async () => {
     try {
       setLoadingGet(true);
-      const response = await axiosInstance.get(
-        "/api/v1/orders/allOrders", {
-        timeout: 10000, 
+      const response = await axiosInstance.get("/api/v1/orders/allOrders", {
+        timeout: 10000,
       });
       const sortedOrdersData = response.data.sort(
         (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
@@ -339,16 +313,19 @@ const OrdersTable = ({
     <div>
       {/* Table */}
       {loadingGet ? (
-        <Box sx={{ width: '100%', color: 'grey.500', backgroundColor: 'grey.500'}}>
-          <LinearProgress sx={{
-            '& .MuiLinearProgress-bar': {
-              backgroundColor: '#edebfe', // Customize bar color
-            },
-            backgroundColor: '#7e3af2', // Customize background color
-          }}
-        />
-        </Box> 
-    ) : ( 
+        <Box
+          sx={{ width: "100%", color: "grey.500", backgroundColor: "grey.500" }}
+        >
+          <LinearProgress
+            sx={{
+              "& .MuiLinearProgress-bar": {
+                backgroundColor: "#edebfe", // Customize bar color
+              },
+              backgroundColor: "#7e3af2", // Customize background color
+            }}
+          />
+        </Box>
+      ) : (
         <TableContainer className="mb-8">
           <Table>
             <TableHeader>
@@ -466,14 +443,19 @@ const OrdersTable = ({
                   <TableCell>
                     <select
                       className={`form-control ${
-                        statusOptions.find((option) => option.value === order.status).color
+                        statusOptions.find(
+                          (option) => option.value === order.status
+                        ).color
                       }`}
                       value={order.status}
                       onChange={(e) => {
                         handleStatusChange(e.target.value, order.id);
                         window.location.reload();
                       }}
-                      disabled={order.status === 'COMPLETED' || order.status === 'CANCEL'}
+                      disabled={
+                        order.status === "COMPLETED" ||
+                        order.status === "CANCEL"
+                      }
                     >
                       {statusOptions.map((option) => (
                         <option
@@ -539,7 +521,7 @@ const OrdersTable = ({
             )}
           </TableFooter>
         </TableContainer>
-    )}
+      )}
     </div>
   );
 };

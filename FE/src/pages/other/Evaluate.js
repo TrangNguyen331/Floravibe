@@ -94,6 +94,8 @@ const Evaluate = (props) => {
       <Modal
         show={props.show}
         onHide={props.onHide}
+        keyboard={false}
+        backdrop="static"
         className="product-quickview-modal-wrapper"
       >
         <Modal.Header closeButton></Modal.Header>

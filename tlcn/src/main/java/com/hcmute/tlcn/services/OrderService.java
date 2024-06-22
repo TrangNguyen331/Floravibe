@@ -16,4 +16,6 @@ public interface OrderService {
     Order cancelOrder (String id);
     ResponseOrderDto getById(String id);
     List<ResponseOrderDto> getAllOrders();
+
+    List<ResponseOrderDto> getOrderByEmail(String email);
 }

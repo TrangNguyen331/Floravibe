@@ -34,6 +34,8 @@ const NotFound = lazy(() => import("./pages/other/NotFound"));
 const Policy = lazy(() => import("./pages/other/Policy"));
 const ResetPassword = lazy(() => import("./pages/other/ResetPassword"));
 const ForgotPassword = lazy(() => import("./pages/other/ForgotPassword"));
+const CheckOrder = lazy(() => import("./pages/other/CheckOrder"));
+const CheckOrderDetails = lazy(() => import("./pages/other/CheckOrderDetails"));
 const App = () => {
   return (
     <ToastProvider placement="top-right">
@@ -141,7 +143,14 @@ const App = () => {
                   path={process.env.PUBLIC_URL + "/policy"}
                   component={Policy}
                 />
-
+                <Route
+                  path={process.env.PUBLIC_URL + "/check-order"}
+                  component={CheckOrder}
+                />
+                <Route
+                  path={process.env.PUBLIC_URL + "/checkorder/:id"}
+                  component={CheckOrderDetails}
+                />
                 <Route exact component={NotFound} />
               </Switch>
             </Suspense>

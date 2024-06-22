@@ -51,7 +51,8 @@ const Checkout = ({ location, cartItems, currency }) => {
   const firstDiscount = 50000;
   const [appliedVoucherName, setAppliedVoucherName] = useState("");
   const [vouchers, setVouchers] = useState([]);
-
+  const [products, setProducts] = useState([]);
+  const [alreadyGet, setAlreadyGet] = useState(false);
   const getVouchers = async () => {
     try {
       const response = await axiosInstance.get("/api/v1/vouchers");
@@ -60,8 +61,18 @@ const Checkout = ({ location, cartItems, currency }) => {
       console.log(t("notice.load-data"), error);
     }
   };
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axiosInstance.get(`/api/v1/products/allProducts`);
+      setProducts(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     getVouchers();
+    fetchProducts();
   }, []);
 
   const handleInputChange = (event) => {
@@ -162,6 +173,7 @@ const Checkout = ({ location, cartItems, currency }) => {
 
   const guestPlaceOrder = async () => {
     setIsLoadingPlaceOrder(true);
+
     const totalValue = cartItems.reduce(
       (sum, item) => sum + item.quantity * item.price,
       0
@@ -196,7 +208,11 @@ const Checkout = ({ location, cartItems, currency }) => {
         }
       }
     }
-    const orderDiscount = token ? (orders.length === 0 ? firstDiscount : 0) : 0;
+    const orderDiscount = token
+      ? orders.length === 0 || !orders.some((order) => !order.guest)
+        ? firstDiscount
+        : 0
+      : 0;
     const body = {
       details: cartItems.map((item) => ({
         productId: item.id,
@@ -239,11 +255,12 @@ const Checkout = ({ location, cartItems, currency }) => {
           },
       deliveryDate: new Date(submitData.deliveryDate),
       deliveryTime: submitData.deliveryTime,
-      total: token
-        ? orders.length === 0
-          ? totalValue - firstDiscount - voucherDiscount
-          : totalValue - voucherDiscount
-        : totalValue - voucherDiscount,
+      total: totalValue - orderDiscount - voucherDiscount,
+      // total: token
+      //   ? orders.length === 0
+      //     ? totalValue - firstDiscount - voucherDiscount
+      //     : totalValue - voucherDiscount
+      //   : totalValue - voucherDiscount,
       status: "IN_REQUEST",
       methodPaid: paymentMethod,
       firstDiscount: orderDiscount,
@@ -272,10 +289,7 @@ const Checkout = ({ location, cartItems, currency }) => {
         try {
           await axiosInstance.put(
             "/api/v1/vouchers/" + selectedVoucher.id,
-            voucherBody,
-            {
-              timeout: 10000,
-            }
+            voucherBody
           );
         } catch (error) {
           console.log(error);
@@ -303,6 +317,7 @@ const Checkout = ({ location, cartItems, currency }) => {
       // });
     }
   };
+
   const clickPlaceOrder = async () => {
     if (
       submitData.firstName === "" ||
@@ -318,15 +333,27 @@ const Checkout = ({ location, cartItems, currency }) => {
     ) {
       setIsError(true);
     } else {
-      setIsError(false);
-      // await placeOrder();
-      await guestPlaceOrder();
+      const isOverStock = cartItems.some((cartItem) => {
+        const product = products.find((product) => product.id === cartItem.id);
+        return product && cartItem.quantity > product.stockQty;
+      });
+
+      if (isOverStock) {
+        addToast("Có sản phẩm không đủ số lượng trong kho", {
+          appearance: "error",
+          autoDismiss: true,
+        });
+      } else {
+        setIsError(false);
+        await guestPlaceOrder();
+      }
     }
   };
   const getAllOrders = async () => {
     try {
       const response = await axiosInstance.get("/api/v1/orders");
       setOrders(response.data);
+      setAlreadyGet(true);
     } catch (error) {
       console.log(t("notice.load-order-fail"));
     }
@@ -692,13 +719,6 @@ const Checkout = ({ location, cartItems, currency }) => {
                                   {cartItem.name} x {cartItem.quantity}
                                 </span>{" "}
                                 <span className="order-price">
-                                  {/* {discountedPrice !== null
-                                      ? currency.currencySymbol +
-                                      (
-                                        finalDiscountedPrice *
-                                        cartItem.quantity
-                                      ).toFixed(2)
-                                      :  */}
                                   {(
                                     finalProductPrice * cartItem.quantity
                                   ).toLocaleString("vi-VN") + "₫"}
@@ -716,7 +736,10 @@ const Checkout = ({ location, cartItems, currency }) => {
                           <li>{t("orders:detail.free")}</li>
                         </ul>
 
-                        {token && orders.length === 0 && (
+                        {(token && alreadyGet && orders.length === 0) ||
+                        (token &&
+                          alreadyGet &&
+                          !orders.some((order) => !order.guest)) ? (
                           <ul className="mt-3">
                             <li className="your-order-shipping">First order</li>
                             <li>
@@ -725,7 +748,8 @@ const Checkout = ({ location, cartItems, currency }) => {
                                 "₫"}
                             </li>
                           </ul>
-                        )}
+                        ) : null}
+
                         {voucherDiscount > 0 && (
                           <ul className="mt-3">
                             <li className="your-order-shipping">
@@ -745,7 +769,10 @@ const Checkout = ({ location, cartItems, currency }) => {
                             {t("orders:detail.total")}
                           </li>
                           <li>
-                            {token && orders.length === 0
+                            {(token && alreadyGet && orders.length === 0) ||
+                            (token &&
+                              alreadyGet &&
+                              !orders.some((order) => !order.guest))
                               ? (
                                   cartTotalPrice -
                                   firstDiscount -

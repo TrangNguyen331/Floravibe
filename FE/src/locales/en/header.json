@@ -16,5 +16,6 @@
   "compare": "Compare",
   "checkout": "Checkout",
   "other": "Other",
-  "login/register": "Login/Register"
+  "login/register": "Login/Register",
+  "check-order": "Check Order"
 }

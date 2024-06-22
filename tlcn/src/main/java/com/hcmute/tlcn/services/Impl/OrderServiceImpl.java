@@ -117,11 +117,11 @@ public class OrderServiceImpl implements OrderService {
         Optional<Account> accountOptional = accountRepository.findByEmail(email);
         if(accountOptional.isEmpty() || dto.isGuest()){
             order.setGuest(dto.isGuest());
-            try {
-                emailService.sendGuestOrderMail(email, orderDto);
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
+        }
+        try {
+            emailService.sendGuestOrderMail(email, orderDto);
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
         return order;
     }
@@ -171,4 +171,23 @@ public class OrderServiceImpl implements OrderService {
                 .map(this::convertToResponseOrderDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<ResponseOrderDto> getOrderByEmail(String email) {
+        List<ResponseOrderDto> response = new ArrayList<>();
+
+        List<Order> orders = repository.findAllByUser(email);
+        for (Order order : orders) {
+            ResponseOrderDto orderDto = modelMapper.map(order, ResponseOrderDto.class);
+
+            for (OrderDetailDto detailDto : orderDto.getDetails()) {
+                Product product = productRepository.findById(detailDto.getProductId()).orElse(null);
+                detailDto.setProduct(product);
+            }
+
+            response.add(orderDto);
+        }
+        return response;
+    }
+
 }

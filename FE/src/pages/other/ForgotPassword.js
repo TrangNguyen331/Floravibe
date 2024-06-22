@@ -80,7 +80,7 @@ const ForgotPassword = ({ location }) => {
                       <input
                         type="email"
                         name="email"
-                        placeholder="Enter username or email address"
+                        placeholder="Enter email address"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />

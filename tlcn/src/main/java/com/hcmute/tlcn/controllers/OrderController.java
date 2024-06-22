@@ -108,4 +108,10 @@ public class OrderController {
         List<ResponseOrderDto> orders = service.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
+
+    @GetMapping("/check-order")
+    public ResponseEntity<List<ResponseOrderDto>> getOrderByEmail(@RequestParam String email) {
+        List<ResponseOrderDto> orders = service.getOrderByEmail(email);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
 }
