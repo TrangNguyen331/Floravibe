@@ -62,7 +62,9 @@ const CheckOrderDetails = ({ location }) => {
                               {order.status === "CANCEL" && (
                                 <p className="order-datetime">
                                   {t("detail.cancel-time")}{" "}
-                                  {formatReadableDate(order.cancelDate)}
+                                  {formatReadableDate(
+                                    order.cancelDetail.cancelDate
+                                  )}
                                 </p>
                               )}
                             </div>

@@ -1,5 +1,6 @@
 package com.hcmute.tlcn.services.Impl;
 
+import com.hcmute.tlcn.dtos.order.CancelOrderDetailDto;
 import com.hcmute.tlcn.dtos.order.OrderDetailDto;
 import com.hcmute.tlcn.dtos.order.OrderDto;
 import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
@@ -73,6 +74,11 @@ public class OrderServiceImpl implements OrderService {
                 orderDto.getDetails() ) {
             detailDto.setProduct(productRepository.findById(detailDto.getProductId()).orElse(null));
         }
+        if (order.getCancelDetail() != null) {
+            CancelOrderDetail cancelDetail = order.getCancelDetail();
+            CancelOrderDetailDto cancelDetailDto = modelMapper.map(cancelDetail, CancelOrderDetailDto.class);
+            orderDto.setCancelDetail(cancelDetailDto);
+        }
         return orderDto;
     }
 
@@ -80,7 +86,6 @@ public class OrderServiceImpl implements OrderService {
     public Order addNew(OrderDto dto) {
         Order order=new Order();
         modelMapper.map(dto,order);
-
 
 //        if (accountOptional.isEmpty()) {
 //            throw new NotFoundException("Account not found!");
@@ -97,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
         VoucherDto voucherDto = new VoucherDto();
         modelMapper.map(dto.getVoucherDetail(), voucherDto);
         order.setVoucherDetail(voucherDto);
-        order.setCancelDate(null);
+//        order.setCancelDate(null);
         repository.save(order);
 
         ResponseOrderDto orderDto = modelMapper.map(order, ResponseOrderDto.class);
@@ -139,18 +144,48 @@ public class OrderServiceImpl implements OrderService {
             order.setCompletedDate(LocalDateTime.now());
         }
         else if("CANCEL".equals(order.getStatus())){
-            order.setCancelDate(LocalDateTime.now());
+            CancelOrderDetailDto cancelOrderDetailDto = dto.getCancelDetail();
+            if (cancelOrderDetailDto != null) {
+                CancelOrderDetail cancelDetail = new CancelOrderDetail();
+//                cancelDetail.setCancelEmail(cancelOrderDetailDto.getCancelEmail());
+                cancelDetail.setCancelReason(cancelOrderDetailDto.getCancelReason());
+                cancelDetail.setCancelRole(cancelOrderDetailDto.getCancelRole());
+                cancelDetail.setCancelDate(LocalDateTime.now());
+                order.setCancelDetail(cancelDetail);
+            }
         }
+
         repository.save(order);
         return order;
     }
 
     @Override
-    public Order cancelOrder(String id) {
+    public Order cancelOrder(String id, CancelOrderDetailDto cancelOrderDetailDto) {
         Order order= repository.findById(id).orElseThrow(()-> new NotFoundException("Order not found!"));
         order.setStatus("CANCEL");
-        order.setCancelDate(LocalDateTime.now());
+//        order.setCancelDate(LocalDateTime.now());
+        CancelOrderDetail cancelOrderDetail = new CancelOrderDetail();
+//        cancelOrderDetail.setCancelEmail(cancelOrderDetailDto.getCancelEmail());
+        cancelOrderDetail.setCancelReason(cancelOrderDetailDto.getCancelReason());
+        cancelOrderDetail.setCancelRole(cancelOrderDetailDto.getCancelRole());
+        cancelOrderDetail.setCancelDate(LocalDateTime.now()); // Set cancelDate to current time
+
+        order.setCancelDetail(cancelOrderDetail);
         repository.save(order);
+
+        for (OrderDetail detail : order.getDetails()) {
+            int quantity = detail.getQuantity();
+
+            // Find product in database
+            Optional<Product> optionalProduct = productRepository.findById(detail.getProductId());
+            if (optionalProduct.isPresent()) {
+                Product product = optionalProduct.get();
+                // Increase stockQty by quantity from canceled order
+                product.setStockQty(product.getStockQty() + quantity);
+                // Save updated product
+                productRepository.save(product);
+            }
+        }
         return order;
     }
 

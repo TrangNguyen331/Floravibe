@@ -1,5 +1,6 @@
 package com.hcmute.tlcn.services;
 
+import com.hcmute.tlcn.dtos.order.CancelOrderDetailDto;
 import com.hcmute.tlcn.dtos.order.OrderDto;
 import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
 import com.hcmute.tlcn.entities.Order;
@@ -13,7 +14,7 @@ public interface OrderService {
     Page<ResponseOrderDto> getPaging(String search, Pageable pageable);
     Order addNew(OrderDto dto);
     Order updateOrder (String id,OrderDto dto);
-    Order cancelOrder (String id);
+    Order cancelOrder (String id, CancelOrderDetailDto cancelOrderDetailDto);
     ResponseOrderDto getById(String id);
     List<ResponseOrderDto> getAllOrders();
 

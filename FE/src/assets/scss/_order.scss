@@ -35,7 +35,7 @@
           }
 
           p.order-datetime {
-            color: #555252;
+            color: #666;
             font-weight: 400;
           }
         }
@@ -145,7 +145,13 @@
         }
       }
     }
-
+    .order-details-link-wrapper {
+      display: flex;
+      justify-content: space-between;
+      span {
+        color: #666;
+      }
+    }
     .order-details-link {
       display: flex;
       justify-content: end;

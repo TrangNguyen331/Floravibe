@@ -27,6 +27,7 @@ import {
 import OrdersTable from "../components/OrdersTable";
 import axiosInstance from "../axiosInstance";
 import StatisticProduct from "../components/StatisticProduct";
+import TestStatstic from "../components/TestStatstic";
 
 function Dashboard() {
   const [dashboard, setDashBoard] = useState({
@@ -204,19 +205,16 @@ function Dashboard() {
         <RoundIcon
           icon={RefreshIcon}
           onClick={() => {
-            setRefresh(!refresh)
+            setRefresh(!refresh);
           }}
           className="pr-3 mr-6 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
         />
       </Card>
-      <OrdersTable 
-        resultsPerPage={5} 
-        filter={filter}
-        refresh={refresh}
-      />
+      <OrdersTable resultsPerPage={5} filter={filter} refresh={refresh} />
 
       <PageTitle>Statistic Product</PageTitle>
       <StatisticProduct />
+      <TestStatstic />
     </>
   );
 }

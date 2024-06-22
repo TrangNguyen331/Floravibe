@@ -26,4 +26,5 @@ public class OrderDto {
     private String methodPaid;
     private double firstDiscount;
     private boolean guest;
+    private CancelOrderDetailDto cancelDetail;
 }

@@ -1,13 +1,12 @@
 package com.hcmute.tlcn.controllers;
 
+import com.hcmute.tlcn.dtos.order.CancelOrderDetailDto;
 import com.hcmute.tlcn.dtos.order.CheckoutResponse;
 import com.hcmute.tlcn.dtos.order.OrderDto;
 import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
 import com.hcmute.tlcn.dtos.payment.PaymentDTO;
 import com.hcmute.tlcn.dtos.payment.UpdatePaymentStatusRequest;
 import com.hcmute.tlcn.entities.Order;
-import com.hcmute.tlcn.entities.Product;
-import com.hcmute.tlcn.entities.Voucher;
 import com.hcmute.tlcn.services.OrderService;
 import com.hcmute.tlcn.services.PaymentService;
 import com.hcmute.tlcn.utils.PageUtils;
@@ -98,8 +97,8 @@ public class OrderController {
     }
 
     @PutMapping("/{id}/cancel")
-    public ResponseEntity<Order> cancelOrder(@PathVariable String id){
-        Order result = service.cancelOrder(id);
+    public ResponseEntity<Order> cancelOrder(@PathVariable String id,@RequestBody CancelOrderDetailDto cancelOrderDetailDto){
+        Order result = service.cancelOrder(id,cancelOrderDetailDto);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

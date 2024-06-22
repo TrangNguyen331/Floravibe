@@ -185,6 +185,5 @@ Evaluate.propTypes = {
   show: PropTypes.bool,
   orderId: PropTypes.string,
   fetchData: PropTypes.func,
-  //   product: PropTypes.object,
 };
 export default Evaluate;

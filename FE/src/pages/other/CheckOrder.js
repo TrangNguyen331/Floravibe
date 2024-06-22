@@ -178,15 +178,24 @@ const CheckOrder = ({ location }) => {
                             </li>
                           </ul>
                         </div>
-                        <div className="order-details-link">
-                          <Link
-                            to={
-                              process.env.PUBLIC_URL + "/checkorder/" + order.id
-                            }
-                          >
-                            {t("list.view-details")}{" "}
-                            <i className="fa fa-long-arrow-right"></i>
-                          </Link>
+                        <div className="order-details-link-wrapper">
+                          <span>
+                            {order.cancelDetail.cancelRole === "USER"
+                              ? "Được hủy bởi bạn"
+                              : "Được hủy bởi shop"}
+                          </span>
+                          <div className="order-details-link">
+                            <Link
+                              to={
+                                process.env.PUBLIC_URL +
+                                "/checkorder/" +
+                                order.id
+                              }
+                            >
+                              {t("list.view-details")}{" "}
+                              <i className="fa fa-long-arrow-right"></i>
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     </div>

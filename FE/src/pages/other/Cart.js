@@ -203,10 +203,6 @@ const Cart = ({
                                     <button
                                       className="inc qtybutton"
                                       onClick={() => {
-                                        console.log(
-                                          "stock",
-                                          productStock[cartItem.id]
-                                        );
                                         addToCart(
                                           cartItem,
                                           addToast,
@@ -233,12 +229,6 @@ const Cart = ({
                                     : null}
                                 </td>
                                 <td className="product-subtotal">
-                                  {/* {discountedPrice !== null
-                                    ? currency.currencySymbol +
-                                      (
-                                        finalDiscountedPrice * cartItem.quantity
-                                      ).toFixed(2)
-                                    :  */}
                                   {(
                                     finalProductPrice * cartItem.quantity
                                   ).toLocaleString("vi-VN") + "₫"}

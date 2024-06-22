@@ -1,6 +1,7 @@
 package com.hcmute.tlcn.services;
 
 import com.hcmute.tlcn.dtos.product.ProductDto;
+import com.hcmute.tlcn.dtos.product.ResponseProductStatsDto;
 import com.hcmute.tlcn.dtos.review.ReviewDto;
 import com.hcmute.tlcn.entities.Product;
 import org.springframework.data.domain.Page;
@@ -25,4 +26,5 @@ public interface ProductService {
 
     Product deleteReview(String id, String reviewId);
     List<Product> getAllProducts();
+
 }

@@ -222,7 +222,7 @@ const SingleOrder = () => {
                     <Badge className="py-1 px-2 gap-2 text-sm" type="neutral">
                       Cancel time:
                       <span className="font-normal">
-                        {new Date(order.cancelDate).toLocaleString("vi-VN")}
+                        {/* {new Date(order.cancelDate).toLocaleString("vi-VN")} */}
                       </span>
                     </Badge>
                   )}

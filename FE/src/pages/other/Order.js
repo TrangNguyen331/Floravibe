@@ -81,7 +81,7 @@ const Order = ({ location, cartItems, currency }) => {
                               {order.status === "CANCEL" && (
                                 <p className="order-datetime">
                                   {t("detail.cancel-time")}{" "}
-                                  {formatReadableDate(order.cancelDate)}
+                                  {/* {formatReadableDate(order.cancelDate)} */}
                                 </p>
                               )}
                             </div>
@@ -143,7 +143,11 @@ const Order = ({ location, cartItems, currency }) => {
                             <span className="order-bottom-left">
                               Your delivery date
                             </span>
-                            <span>{new Date(order.deliveryDate).toLocaleDateString("vi-VN")}</span>
+                            <span>
+                              {new Date(order.deliveryDate).toLocaleDateString(
+                                "vi-VN"
+                              )}
+                            </span>
                           </li>
                           <li>
                             <span className="order-bottom-left">

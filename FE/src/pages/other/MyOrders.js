@@ -16,17 +16,18 @@ import {
 import { useTranslation } from "react-i18next";
 import Evaluate from "./Evaluate";
 import EditReview from "./EditReview";
-import CancelVnpay from "./CancelVnpay";
+import CancelReasonModal from "./CancelReasonModal";
 
 const MyOrders = ({ location }) => {
   const token = useSelector((state) => state.auth.token);
   const [orders, setOrders] = useState([]);
   const [orderId, setOrderId] = useState(null);
+  const [methodPaid, setMethodPaid] = useState(null);
   const [loadingGet, setLoadingGet] = useState(false);
   const [currentFilterOrder, setCurrentOrderFilter] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [isCancelShow, setCancelShow] = useState(false);
+  const [showCancelReason, setShowCancelReason] = useState(false);
   const { t } = useTranslation(["orders", "breadcrumb"]);
   const { pathname } = location;
   const filterOrder = (key) => {
@@ -63,18 +64,21 @@ const MyOrders = ({ location }) => {
     setIsEdit(true);
   };
   const clickCancel = async (orderId, methodPaid) => {
-    try {
-      await axiosInstance.put(`api/v1/orders/${orderId}/cancel`);
-      await fetchData();
-      if (methodPaid === "VNPAY") {
-        setCancelShow(true);
-      }
-    } catch (error) {}
+    setOrderId(orderId);
+    setMethodPaid(methodPaid);
+    setShowCancelReason(true);
+    // try {
+    //   await axiosInstance.put(`api/v1/orders/${orderId}/cancel`);
+    //   await fetchData();
+    //   if (methodPaid === "VNPAY") {
+    //     setCancelShow(true);
+    //   }
+    // } catch (error) {}
   };
   useEffect(() => {
     fetchData();
   }, []);
-  console.log(orders);
+
   return (
     <Fragment>
       <MetaTags>
@@ -226,43 +230,56 @@ const MyOrders = ({ location }) => {
                                       </ul>
                                     </div>
                                   </div>
-                                  <div className="order-details-link">
-                                    {order.status === "IN_REQUEST" ? (
-                                      <button
-                                        onClick={() =>
-                                          clickCancel(
-                                            order.id,
-                                            order.methodPaid
-                                          )
+                                  <div className="order-details-link-wrapper">
+                                    <span>
+                                      {order.status === "CANCEL"
+                                        ? order.cancelDetail &&
+                                          order.cancelDetail.cancelRole ===
+                                            "USER"
+                                          ? "Được hủy bởi bạn"
+                                          : "Được hủy bởi shop"
+                                        : ""}
+                                    </span>
+                                    <div className="order-details-link">
+                                      {order.status === "IN_REQUEST" ? (
+                                        <button
+                                          onClick={() =>
+                                            clickCancel(
+                                              order.id,
+                                              order.methodPaid
+                                            )
+                                          }
+                                        >
+                                          Cancel
+                                        </button>
+                                      ) : order.rated ? (
+                                        <button
+                                          onClick={() => clickRated(order.id)}
+                                        >
+                                          Rated
+                                        </button>
+                                      ) : (
+                                        order.status === "COMPLETED" && (
+                                          <button
+                                            onClick={() =>
+                                              clickRating(order.id)
+                                            }
+                                          >
+                                            Rating
+                                          </button>
+                                        )
+                                      )}
+                                      <Link
+                                        to={
+                                          process.env.PUBLIC_URL +
+                                          "/order/" +
+                                          order.id
                                         }
                                       >
-                                        Cancel
-                                      </button>
-                                    ) : order.rated ? (
-                                      <button
-                                        onClick={() => clickRated(order.id)}
-                                      >
-                                        Rated
-                                      </button>
-                                    ) : (
-                                      order.status === "COMPLETED" && (
-                                        <button
-                                          onClick={() => clickRating(order.id)}
-                                        >
-                                          Rating
-                                        </button>
-                                      )
-                                    )}
-                                    <Link
-                                      to={
-                                        process.env.PUBLIC_URL +
-                                        "/order/" +
-                                        order.id
-                                      }
-                                    >
-                                      {t("list.view-details")}{" "}
-                                      <i className="fa fa-long-arrow-right"></i>
-                                    </Link>
+                                        {t("list.view-details")}{" "}
+                                        <i className="fa fa-long-arrow-right"></i>
+                                      </Link>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -675,17 +692,25 @@ const MyOrders = ({ location }) => {
                                       </ul>
                                     </div>
                                   </div>
-                                  <div className="order-details-link">
-                                    <Link
-                                      to={
-                                        process.env.PUBLIC_URL +
-                                        "/order/" +
-                                        order.id
-                                      }
-                                    >
-                                      {t("list.view-details")}{" "}
-                                      <i className="fa fa-long-arrow-right"></i>
-                                    </Link>
+                                  <div className="order-details-link-wrapper">
+                                    <span>
+                                      {order.cancelDetail &&
+                                      order.cancelDetail.cancelRole === "USER"
+                                        ? "Được hủy bởi bạn"
+                                        : "Được hủy bởi shop"}
+                                    </span>
+                                    <div className="order-details-link">
+                                      <Link
+                                        to={
+                                          process.env.PUBLIC_URL +
+                                          "/order/" +
+                                          order.id
+                                        }
+                                      >
+                                        {t("list.view-details")}{" "}
+                                        <i className="fa fa-long-arrow-right"></i>
+                                      </Link>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -726,7 +751,14 @@ const MyOrders = ({ location }) => {
         onHide={() => setIsEdit(false)}
         orderId={orderId}
       />
-      <CancelVnpay show={isCancelShow} onHide={() => setCancelShow(false)} />
+      {/* <CancelVnpay show={isCancelShow} onHide={() => setCancelShow(false)} /> */}
+      <CancelReasonModal
+        show={showCancelReason}
+        onHide={() => setShowCancelReason(false)}
+        orderId={orderId}
+        methodPaid={methodPaid}
+        fetchData={fetchData}
+      />
     </Fragment>
   );
 };

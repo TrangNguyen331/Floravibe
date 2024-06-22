@@ -31,5 +31,6 @@ public class ResponseOrderDto {
     private LocalDateTime createdDate;
     private LocalDateTime cancelDate;
     private LocalDateTime completedDate;
+    private CancelOrderDetailDto cancelDetail;
     private boolean guest;
 }

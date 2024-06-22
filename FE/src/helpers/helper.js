@@ -56,3 +56,26 @@ export const formatReadableDate = (date) => {
   }).format(parsedDate);
   return formattedDateTime;
 };
+
+export const reasonList = [
+  {
+    key: "out_of_stock",
+    value: "Sản phẩm hết hàng",
+  },
+  {
+    key: "wrong_product",
+    value: "Sai sản phẩm",
+  },
+  {
+    key: "wrong_address_phone",
+    value: "Muốn cập nhật địa chỉ/sdt nhận hàng",
+  },
+  {
+    key: "change_voucher",
+    value: "Muốn đổi mã giảm giá",
+  },
+  {
+    key: "cheaper_shop",
+    value: "Phát hiện chỗ có giá rẻ hơn",
+  },
+];
