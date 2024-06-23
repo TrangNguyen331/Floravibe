@@ -3,11 +3,11 @@ import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
 import MetaTags from "react-meta-tags";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
-import Nav from "react-bootstrap/Nav";
 import { Link } from "react-router-dom";
-import Tab from "react-bootstrap/Tab";
+import { Nav, Tab, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../axiosInstance";
+import { LuBadgeInfo } from "react-icons/lu";
 import {
   filterOrderByStatus,
   formatReadableDate,
@@ -23,6 +23,7 @@ const MyOrders = ({ location }) => {
   const [orders, setOrders] = useState([]);
   const [orderId, setOrderId] = useState(null);
   const [methodPaid, setMethodPaid] = useState(null);
+  const [email, setEmail] = useState(null);
   const [loadingGet, setLoadingGet] = useState(false);
   const [currentFilterOrder, setCurrentOrderFilter] = useState([]);
   const [modalShow, setModalShow] = useState(false);
@@ -40,6 +41,22 @@ const MyOrders = ({ location }) => {
     return [...orders].sort(
       (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
     );
+  };
+  const getSortedCancelOrder = (orders) => {
+    if (!orders) {
+      orders = [];
+    }
+    return [...orders].sort((a, b) => {
+      const dateA =
+        a.cancelDetail &&
+        a.cancelDetail.cancelDate &&
+        new Date(a.cancelDetail.cancelDate);
+      const dateB =
+        b.cancelDetail &&
+        b.cancelDetail.cancelDate &&
+        new Date(b.cancelDetail.cancelDate);
+      return dateB - dateA;
+    });
   };
   const fetchData = async () => {
     try {
@@ -63,17 +80,11 @@ const MyOrders = ({ location }) => {
     setOrderId(orderId);
     setIsEdit(true);
   };
-  const clickCancel = async (orderId, methodPaid) => {
+  const clickCancel = async (orderId, methodPaid, email) => {
     setOrderId(orderId);
     setMethodPaid(methodPaid);
+    setEmail(email);
     setShowCancelReason(true);
-    // try {
-    //   await axiosInstance.put(`api/v1/orders/${orderId}/cancel`);
-    //   await fetchData();
-    //   if (methodPaid === "VNPAY") {
-    //     setCancelShow(true);
-    //   }
-    // } catch (error) {}
   };
   useEffect(() => {
     fetchData();
@@ -232,21 +243,42 @@ const MyOrders = ({ location }) => {
                                   </div>
                                   <div className="order-details-link-wrapper">
                                     <span>
-                                      {order.status === "CANCEL"
-                                        ? order.cancelDetail &&
-                                          order.cancelDetail.cancelRole ===
-                                            "USER"
-                                          ? "Được hủy bởi bạn"
-                                          : "Được hủy bởi shop"
-                                        : ""}
+                                      {order.status === "CANCEL" ? (
+                                        <div className="cancel-wrapper">
+                                          <span>
+                                            {order.cancelDetail &&
+                                            order.cancelDetail.cancelRole ===
+                                              "USER"
+                                              ? t("detail.cancel-user")
+                                              : t("detail.cancel-admin")}
+                                          </span>
+                                          <span>
+                                            <OverlayTrigger
+                                              overlay={
+                                                <Tooltip>
+                                                  {order.cancelDetail &&
+                                                    order.cancelDetail
+                                                      .cancelReason}
+                                                </Tooltip>
+                                              }
+                                            >
+                                              <LuBadgeInfo />
+                                            </OverlayTrigger>
+                                          </span>
+                                        </div>
+                                      ) : (
+                                        ""
+                                      )}
                                     </span>
+
                                     <div className="order-details-link">
                                       {order.status === "IN_REQUEST" ? (
                                         <button
                                           onClick={() =>
                                             clickCancel(
                                               order.id,
-                                              order.methodPaid
+                                              order.methodPaid,
+                                              order.additionalOrder.email
                                             )
                                           }
                                         >
@@ -374,7 +406,8 @@ const MyOrders = ({ location }) => {
                                         onClick={() =>
                                           clickCancel(
                                             order.id,
-                                            order.methodPaid
+                                            order.methodPaid,
+                                            order.additionalOrder.email
                                           )
                                         }
                                       >
@@ -627,95 +660,122 @@ const MyOrders = ({ location }) => {
                       </Tab.Pane>
                       <Tab.Pane eventKey="canceled">
                         {currentFilterOrder.length > 0 ? (
-                          getSortedOrder(currentFilterOrder).map((order) => (
-                            <div className="row" key={order.id}>
-                              <div className="col-lg-12">
-                                <div className="order-wrap">
-                                  <div className="order-product-info">
-                                    <div className="order-top">
-                                      <ul>
-                                        <li>
-                                          <div className="order-id-date">
-                                            <p>
-                                              {t("detail.id")} {order.id}
-                                            </p>
-                                            <p className="order-datetime">
-                                              {t("detail.date")}{" "}
-                                              {formatReadableDate(
-                                                order.createdDate
-                                              )}
-                                            </p>
-                                          </div>
-                                        </li>
-                                        <li className="order-status">
-                                          {/* {getStatus(order.status)} */}
-                                          {order.status === "CANCEL" &&
-                                            t("list.canceled")}
-                                        </li>
-                                      </ul>
-                                    </div>
-                                    <div className="order-middle">
-                                      <ul>
-                                        {order.details.map((detail) => (
-                                          <li key={detail.productId}>
-                                            <span className="order-middle-left">
-                                              {detail.product.name} x{" "}
-                                              {detail.quantity}
+                          getSortedCancelOrder(currentFilterOrder).map(
+                            (order) => (
+                              <div className="row" key={order.id}>
+                                <div className="col-lg-12">
+                                  <div className="order-wrap">
+                                    <div className="order-product-info">
+                                      <div className="order-top">
+                                        <ul>
+                                          <li>
+                                            <div className="order-id-date">
+                                              <p>
+                                                {t("detail.id")} {order.id}
+                                              </p>
+                                              <p className="order-datetime">
+                                                {t("detail.date")}{" "}
+                                                {formatReadableDate(
+                                                  order.createdDate
+                                                )}
+                                              </p>
+                                            </div>
+                                          </li>
+                                          <li className="order-status">
+                                            {/* {getStatus(order.status)} */}
+                                            {order.status === "CANCEL" &&
+                                              t("list.canceled")}
+                                          </li>
+                                        </ul>
+                                      </div>
+                                      <div className="order-middle">
+                                        <ul>
+                                          {order.details.map((detail) => (
+                                            <li key={detail.productId}>
+                                              <span className="order-middle-left">
+                                                {detail.product.name} x{" "}
+                                                {detail.quantity}
+                                              </span>
+                                              <span className="order-price">
+                                                {detail.subtotal.toLocaleString(
+                                                  "vi-VN"
+                                                )}
+                                                ₫
+                                              </span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                      <div className="order-total-wrap">
+                                        <ul>
+                                          <li>
+                                            <span>
+                                              {t("detail.pay-method")}
                                             </span>
-                                            <span className="order-price">
-                                              {detail.subtotal.toLocaleString(
+                                            <span>{order.methodPaid}</span>
+                                          </li>
+                                          <li>
+                                            <span className="order-total">
+                                              {t("detail.total")}
+                                            </span>
+                                            <span className="order-total-price">
+                                              {order.total.toLocaleString(
                                                 "vi-VN"
                                               )}
                                               ₫
                                             </span>
                                           </li>
-                                        ))}
-                                      </ul>
+                                        </ul>
+                                      </div>
                                     </div>
-                                    <div className="order-total-wrap">
-                                      <ul>
-                                        <li>
-                                          <span>{t("detail.pay-method")}</span>
-                                          <span>{order.methodPaid}</span>
-                                        </li>
-                                        <li>
-                                          <span className="order-total">
-                                            {t("detail.total")}
-                                          </span>
-                                          <span className="order-total-price">
-                                            {order.total.toLocaleString(
-                                              "vi-VN"
-                                            )}
-                                            ₫
-                                          </span>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </div>
-                                  <div className="order-details-link-wrapper">
-                                    <span>
-                                      {order.cancelDetail &&
-                                      order.cancelDetail.cancelRole === "USER"
-                                        ? "Được hủy bởi bạn"
-                                        : "Được hủy bởi shop"}
-                                    </span>
-                                    <div className="order-details-link">
-                                      <Link
-                                        to={
-                                          process.env.PUBLIC_URL +
-                                          "/order/" +
-                                          order.id
-                                        }
-                                      >
-                                        {t("list.view-details")}{" "}
-                                        <i className="fa fa-long-arrow-right"></i>
-                                      </Link>
+                                    <div className="order-details-link-wrapper">
+                                      <span>
+                                        {order.status === "CANCEL" ? (
+                                          <div className="cancel-wrapper">
+                                            <span>
+                                              {order.cancelDetail &&
+                                              order.cancelDetail.cancelRole ===
+                                                "USER"
+                                                ? t("detail.cancel-user")
+                                                : t("detail.cancel-admin")}
+                                            </span>
+                                            <span>
+                                              <OverlayTrigger
+                                                trigger="click"
+                                                overlay={
+                                                  <Tooltip>
+                                                    {order.cancelDetail &&
+                                                      order.cancelDetail
+                                                        .cancelReason}
+                                                  </Tooltip>
+                                                }
+                                              >
+                                                <LuBadgeInfo />
+                                              </OverlayTrigger>
+                                            </span>
+                                          </div>
+                                        ) : (
+                                          ""
+                                        )}
+                                      </span>
+                                      <div className="order-details-link">
+                                        <Link
+                                          to={
+                                            process.env.PUBLIC_URL +
+                                            "/order/" +
+                                            order.id
+                                          }
+                                        >
+                                          {t("list.view-details")}{" "}
+                                          <i className="fa fa-long-arrow-right"></i>
+                                        </Link>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          ))
+                            )
+                          )
                         ) : (
                           <div className="row">
                             <div className="col-lg-12">
@@ -751,12 +811,13 @@ const MyOrders = ({ location }) => {
         onHide={() => setIsEdit(false)}
         orderId={orderId}
       />
-      {/* <CancelVnpay show={isCancelShow} onHide={() => setCancelShow(false)} /> */}
+
       <CancelReasonModal
         show={showCancelReason}
         onHide={() => setShowCancelReason(false)}
         orderId={orderId}
         methodPaid={methodPaid}
+        email={email}
         fetchData={fetchData}
       />
     </Fragment>

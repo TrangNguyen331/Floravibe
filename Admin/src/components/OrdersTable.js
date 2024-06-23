@@ -90,8 +90,6 @@ const OrdersTable = ({
         setTotalPage(Math.ceil(filteredData.length / resultsPerPage));
         setTotalResult(filteredData.length);
       } else {
-        // setOrdersData(sortedData);
-        // setData(sortedData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
         setTotalPage(response.data.totalPages);
         setTotalResult(response.data.totalElements);
       }

@@ -8,7 +8,9 @@ import { useTranslation } from "react-i18next";
 import axiosInstance from "../../axiosInstance";
 import { formatReadableDate } from "../../helpers/helper";
 import { Link } from "react-router-dom";
-
+import { Tooltip, OverlayTrigger } from "react-bootstrap";
+import { LuBadgeInfo } from "react-icons/lu";
+import CancelReasonModal from "./CancelReasonModal";
 const CheckOrder = ({ location }) => {
   const { pathname } = location;
   const { t } = useTranslation(["orders", "breadcrumb"]);
@@ -16,24 +18,25 @@ const CheckOrder = ({ location }) => {
   const [allOrders, setAllOrders] = useState([]);
   const [loadingGet, setLoadingGet] = useState(false);
   const [email, setEmail] = useState("");
+  const [cancelEmail, setCancelEmail] = useState("");
   const [orderId, setOrderId] = useState("");
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filterApplied, setFilterApplied] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState("");
-  //   const getAllOrders = async () => {
-  //     try {
-  //       const response = await axiosInstance.get("/api/v1/orders/allOrders", {
-  //         timeout: 7000,
-  //       });
-  //       setAllOrders(response.data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     getAllOrders();
-  //   }, []);
+  const [methodPaid, setMethodPaid] = useState(null);
+  const [showCancelReason, setShowCancelReason] = useState(false);
+  const getAllOrders = async () => {
+    try {
+      const response = await axiosInstance.get("/api/v1/orders/allOrders", {
+        timeout: 10000,
+      });
+      setAllOrders(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getAllOrders();
+  }, []);
   const clickCheckOrders = async () => {
     if (!email && !orderId) {
       return;
@@ -58,8 +61,11 @@ const CheckOrder = ({ location }) => {
 
     setLoadingGet(false);
   };
-  const clickViewDetails = (orderId) => {
-    setSelectedOrder(orderId);
+  const clickCancel = async (orderId, methodPaid, email) => {
+    setOrderId(orderId);
+    setMethodPaid(methodPaid);
+    setCancelEmail(email);
+    setShowCancelReason(true);
   };
   return (
     <Fragment>
@@ -180,11 +186,45 @@ const CheckOrder = ({ location }) => {
                         </div>
                         <div className="order-details-link-wrapper">
                           <span>
-                            {order.cancelDetail.cancelRole === "USER"
-                              ? "Được hủy bởi bạn"
-                              : "Được hủy bởi shop"}
+                            {order.status === "CANCEL" ? (
+                              <div className="cancel-wrapper">
+                                <span>
+                                  {order.cancelDetail &&
+                                  order.cancelDetail.cancelRole === "USER"
+                                    ? t("detail.cancel-user")
+                                    : t("detail.cancel-admin")}
+                                </span>
+                                <span>
+                                  <OverlayTrigger
+                                    overlay={
+                                      <Tooltip>
+                                        {order.cancelDetail &&
+                                          order.cancelDetail.cancelReason}
+                                      </Tooltip>
+                                    }
+                                  >
+                                    <LuBadgeInfo />
+                                  </OverlayTrigger>
+                                </span>
+                              </div>
+                            ) : (
+                              ""
+                            )}
                           </span>
                           <div className="order-details-link">
+                            {order.status === "IN_REQUEST" && (
+                              <button
+                                onClick={() =>
+                                  clickCancel(
+                                    order.id,
+                                    order.methodPaid,
+                                    order.additionalOrder.email
+                                  )
+                                }
+                              >
+                                Cancel
+                              </button>
+                            )}
                             <Link
                               to={
                                 process.env.PUBLIC_URL +
@@ -210,6 +250,14 @@ const CheckOrder = ({ location }) => {
           </div>
         </div>
       </LayoutOne>
+      <CancelReasonModal
+        show={showCancelReason}
+        onHide={() => setShowCancelReason(false)}
+        orderId={orderId}
+        methodPaid={methodPaid}
+        email={cancelEmail}
+        fetchData={getAllOrders}
+      />
     </Fragment>
   );
 };

@@ -4,7 +4,10 @@
       padding-bottom: 60px;
     }
   }
-
+  .tooltip-inner {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
   .order-wrap {
     font-size: 16px;
     padding: 38px 45px 34px;
@@ -148,6 +151,11 @@
     .order-details-link-wrapper {
       display: flex;
       justify-content: space-between;
+      .cancel-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
       span {
         color: #666;
       }

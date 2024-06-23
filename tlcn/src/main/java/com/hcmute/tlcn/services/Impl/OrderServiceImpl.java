@@ -74,11 +74,7 @@ public class OrderServiceImpl implements OrderService {
                 orderDto.getDetails() ) {
             detailDto.setProduct(productRepository.findById(detailDto.getProductId()).orElse(null));
         }
-        if (order.getCancelDetail() != null) {
-            CancelOrderDetail cancelDetail = order.getCancelDetail();
-            CancelOrderDetailDto cancelDetailDto = modelMapper.map(cancelDetail, CancelOrderDetailDto.class);
-            orderDto.setCancelDetail(cancelDetailDto);
-        }
+
         return orderDto;
     }
 
@@ -140,6 +136,7 @@ public class OrderServiceImpl implements OrderService {
                     .orElseThrow(() -> new NotFoundException("Payment not found for order"));
 
             payment.setPaid(true);
+            payment.setUpdatedDate(LocalDateTime.now());
             paymentRepository.save(payment);
             order.setCompletedDate(LocalDateTime.now());
         }
@@ -147,28 +144,40 @@ public class OrderServiceImpl implements OrderService {
             CancelOrderDetailDto cancelOrderDetailDto = dto.getCancelDetail();
             if (cancelOrderDetailDto != null) {
                 CancelOrderDetail cancelDetail = new CancelOrderDetail();
-//                cancelDetail.setCancelEmail(cancelOrderDetailDto.getCancelEmail());
+                cancelDetail.setCancelEmail(cancelOrderDetailDto.getCancelEmail());
                 cancelDetail.setCancelReason(cancelOrderDetailDto.getCancelReason());
                 cancelDetail.setCancelRole(cancelOrderDetailDto.getCancelRole());
                 cancelDetail.setCancelDate(LocalDateTime.now());
                 order.setCancelDetail(cancelDetail);
             }
+            adjustProductStock(order);
         }
 
         repository.save(order);
         return order;
     }
+    private void adjustProductStock(Order order) {
+        for (OrderDetail detail : order.getDetails()) {
+            int quantity = detail.getQuantity();
 
+            // Find product in database
+            Optional<Product> optionalProduct = productRepository.findById(detail.getProductId());
+            optionalProduct.ifPresent(product -> {
+                // Increase stockQty by quantity from canceled order
+                product.setStockQty(product.getStockQty() + quantity);
+                productRepository.save(product);
+            });
+        }
+    }
     @Override
     public Order cancelOrder(String id, CancelOrderDetailDto cancelOrderDetailDto) {
         Order order= repository.findById(id).orElseThrow(()-> new NotFoundException("Order not found!"));
         order.setStatus("CANCEL");
-//        order.setCancelDate(LocalDateTime.now());
         CancelOrderDetail cancelOrderDetail = new CancelOrderDetail();
-//        cancelOrderDetail.setCancelEmail(cancelOrderDetailDto.getCancelEmail());
+        cancelOrderDetail.setCancelEmail(cancelOrderDetailDto.getCancelEmail());
         cancelOrderDetail.setCancelReason(cancelOrderDetailDto.getCancelReason());
         cancelOrderDetail.setCancelRole(cancelOrderDetailDto.getCancelRole());
-        cancelOrderDetail.setCancelDate(LocalDateTime.now()); // Set cancelDate to current time
+        cancelOrderDetail.setCancelDate(LocalDateTime.now());
 
         order.setCancelDetail(cancelOrderDetail);
         repository.save(order);
@@ -182,7 +191,7 @@ public class OrderServiceImpl implements OrderService {
                 Product product = optionalProduct.get();
                 // Increase stockQty by quantity from canceled order
                 product.setStockQty(product.getStockQty() + quantity);
-                // Save updated product
+
                 productRepository.save(product);
             }
         }

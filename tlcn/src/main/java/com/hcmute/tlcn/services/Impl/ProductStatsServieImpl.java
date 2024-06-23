@@ -25,47 +25,42 @@ public class ProductStatsServieImpl implements ProductStatsService {
     @Override
     public Page<ResponseProductStatsDto> getProductStats(String search, Pageable pageable) {
         List<Order> completedOrders = orderRepository.findAllByStatus("COMPLETED");
+        List<Product> allProducts = productService.getAllProducts();
         List<ResponseProductStatsDto> statsList = new ArrayList<>();
 
-        // Iterate through completed orders and aggregate statistics
-        for (Order order : completedOrders) {
-            for (OrderDetail detail : order.getDetails()) {
-                String productId = detail.getProductId();
-                int quantitySold = detail.getQuantity();
+        for (Product product : allProducts) {
+            if (product.isActive()) { // Chỉ xử lý các sản phẩm có isActive là true
 
-                // Check if product stats already exist in the list
-                boolean found = false;
-                for (ResponseProductStatsDto statsDto : statsList) {
-                    if (statsDto.getProductId().equals(productId)) {
-                        statsDto.setOrderCount(statsDto.getOrderCount() + 1);
-                        statsDto.setTotalQuantitySold(statsDto.getTotalQuantitySold() + quantitySold);
-                        found = true;
-                        break;
+                String productImage = product.getImages().isEmpty() ? null : product.getImages().get(0);
+
+                // Tính toán số sao trung bình và số lượng review
+                int totalRating = product.getReviews().stream().mapToInt(Review::getRatingValue).sum();
+                int reviewCount = product.getReviews().size();
+                double averageRating = reviewCount > 0 ? (double) totalRating / reviewCount : 0;
+
+                // Tìm tất cả các chi tiết đơn hàng cho sản phẩm này trong các đơn hàng hoàn thành
+                int orderCount = 0;
+                int totalQuantitySold = 0;
+                for (Order order : completedOrders) {
+                    for (OrderDetail detail : order.getDetails()) {
+                        if (detail.getProductId().equals(product.getId())) {
+                            orderCount++;
+                            totalQuantitySold += detail.getQuantity();
+                        }
                     }
                 }
 
-                // If product stats not found, create new stats DTO and add to the list
-                if (!found) {
-                    Product product = productService.getProductById(productId);
-                    if (search.isEmpty() || product.getName().toLowerCase().contains(search.toLowerCase())) {
-                        String productImage = product.getImages().isEmpty() ? null : product.getImages().get(0);
+                if (search.isEmpty() || product.getName().toLowerCase().contains(search.toLowerCase())) {
+                    ResponseProductStatsDto statsDto = new ResponseProductStatsDto();
+                    statsDto.setProductId(product.getId());
+                    statsDto.setProductName(product.getName());
+                    statsDto.setProductImage(productImage);
+                    statsDto.setOrderCount(orderCount);
+                    statsDto.setTotalQuantitySold(totalQuantitySold);
+                    statsDto.setAverageRating(averageRating);
+                    statsDto.setReviewCount(reviewCount);
 
-                        // Tính toán số sao trung bình và số lượng review
-                        int totalRating = product.getReviews().stream().mapToInt(Review::getRatingValue).sum();
-                        int reviewCount = product.getReviews().size();
-                        double averageRating = reviewCount > 0 ? (double) totalRating / reviewCount : 0;
-
-                        ResponseProductStatsDto statsDto = new ResponseProductStatsDto();
-                        statsDto.setProductId(productId);
-                        statsDto.setProductName(product.getName());
-                        statsDto.setProductImage(productImage);
-                        statsDto.setOrderCount(1);
-                        statsDto.setTotalQuantitySold(quantitySold);
-                        statsDto.setAverageRating(averageRating); // Đặt giá trị này
-                        statsDto.setReviewCount(reviewCount); // Đặt giá trị này
-
-                        statsList.add(statsDto);
-                    }
+                    statsList.add(statsDto);
                 }
             }
         }

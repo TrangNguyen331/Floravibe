@@ -30,7 +30,9 @@
     "unit-price": "Unit Price",
     "qty": "Quantity",
     "stockQty": "Stock Quantity",
-    "subtotal": "Subtotal"
+    "subtotal": "Subtotal",
+    "cancel-user": "Cancelled by you",
+    "cancel-admin": "Cancelled by shop"
   },
   "complete": {
     "order-complete": "Order Complete",

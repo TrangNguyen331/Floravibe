@@ -14,6 +14,7 @@ const CancelReasonModal = (props) => {
     setLoadingSubmit(true);
     try {
       let body = {
+        cancelEmail: props.email,
         cancelReason: reason,
         cancelRole: "USER",
       };
@@ -21,7 +22,7 @@ const CancelReasonModal = (props) => {
       setLoadingSubmit(false);
       props.onHide();
       await props.fetchData();
-      console.log("ok");
+
       if (props.methodPaid === "VNPAY") {
         setCancelShow(true);
       }
@@ -41,10 +42,7 @@ const CancelReasonModal = (props) => {
         <Modal.Header closeButton>
           <Modal.Title>Lý do hủy đơn hàng</Modal.Title>
         </Modal.Header>
-        <div
-          className="modal-body"
-          style={{ maxHeight: "60vh", overflowY: "auto" }}
-        >
+        <div className="modal-body">
           <div className="row">
             <div className="col-lg-12 col-md-7">
               <Form.Group>
@@ -94,6 +92,7 @@ CancelReasonModal.propTypes = {
   show: PropTypes.bool,
   orderId: PropTypes.string,
   methodPaid: PropTypes.string,
+  email: PropTypes.string,
   fetchData: PropTypes.func,
 };
 export default CancelReasonModal;

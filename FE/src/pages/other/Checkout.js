@@ -580,16 +580,20 @@ const Checkout = ({ location, cartItems, currency }) => {
                                   </option>
                                 ))}
                           </select>
-                          <input
-                            className={`billing-address ${
+                          <div
+                            className={`billing-info mb-20 ${
                               isError && !submitData.houseNumber ? "error" : ""
                             }`}
-                            placeholder={t("myacc:detail-address")}
-                            type="text"
-                            name="houseNumber"
-                            value={submitData.houseNumber}
-                            onChange={handleInputChange}
-                          />
+                          >
+                            <input
+                              className="billing-address"
+                              placeholder={t("myacc:detail-address")}
+                              type="text"
+                              name="houseNumber"
+                              value={submitData.houseNumber}
+                              onChange={handleInputChange}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -656,11 +660,15 @@ const Checkout = ({ location, cartItems, currency }) => {
                       </div>
                     </div>
                     <div className="col-lg-6 col-md-6">
-                      <div className="billing-info mb-20">
+                      <div
+                        className={`billing-info mb-20 ${
+                          isError && !submitData.email ? "error" : ""
+                        }`}
+                      >
                         <label>Email</label>
                         <input
                           type="text"
-                          // disabled
+                          placeholder={t("myacc:email-address")}
                           name="email"
                           value={submitData.email}
                           onChange={handleInputChange}

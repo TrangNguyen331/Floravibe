@@ -1,6 +1,7 @@
 package com.hcmute.tlcn.dtos.order;
 
 import com.hcmute.tlcn.dtos.voucher.VoucherDto;
+import com.hcmute.tlcn.entities.CancelOrderDetail;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +32,6 @@ public class ResponseOrderDto {
     private LocalDateTime createdDate;
     private LocalDateTime cancelDate;
     private LocalDateTime completedDate;
-    private CancelOrderDetailDto cancelDetail;
+    private CancelOrderDetail cancelDetail;
     private boolean guest;
 }

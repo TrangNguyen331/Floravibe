@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-
 import InfoCard from "../components/Cards/InfoCard";
 import ChartCard from "../components/Chart/ChartCard";
 import { Doughnut, Line } from "react-chartjs-2";
 import ChartLegend from "../components/Chart/ChartLegend";
+import PropTypes from "prop-types";
 import PageTitle from "../components/Typography/PageTitle";
 import {
   ChatIcon,
@@ -17,7 +17,6 @@ import {
 } from "../icons";
 import RoundIcon from "../components/RoundIcon";
 import { Card, CardBody, Label, Select } from "@windmill/react-ui";
-
 import {
   doughnutOptions,
   lineOptions,
@@ -27,8 +26,10 @@ import {
 import OrdersTable from "../components/OrdersTable";
 import axiosInstance from "../axiosInstance";
 import StatisticProduct from "../components/StatisticProduct";
+import { Box, Divider, Tab, Tabs, Typography, styled } from "@mui/material";
 import TestStatstic from "../components/TestStatstic";
-
+import Orders from "./Orders";
+import TestOrderTable from "../components/TestOrderTable";
 function Dashboard() {
   const [dashboard, setDashBoard] = useState({
     totalCustomer: "",
@@ -38,6 +39,69 @@ function Dashboard() {
     totalCancelOrder: "",
     totalCompleteOrder: "",
   });
+  const StyledTabs = styled((props) => (
+    <Tabs
+      {...props}
+      TabIndicatorProps={{
+        children: <span className="MuiTabs-indicatorSpan" />,
+      }}
+    />
+  ))({
+    "& .MuiTabs-indicator": {
+      display: "flex",
+      justifyContent: "center",
+      backgroundColor: "transparent",
+    },
+    "& .MuiTabs-indicatorSpan": {
+      // maxWidth: 60,
+      height: "8px",
+      width: "70%",
+      backgroundColor: "#7e3af2",
+    },
+  });
+  const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
+    ({ theme }) => ({
+      textTransform: "none",
+      fontWeight: 500,
+      fontSize: theme.typography.pxToRem(20),
+      marginRight: theme.spacing(1),
+      color: "#97979c",
+      "&.Mui-selected": {
+        fontWeight: 600,
+        fontSize: 22,
+        color: "#7e3af2",
+      },
+      "&.Mui-focusVisible": {
+        backgroundColor: "rgba(100, 95, 228, 0.32)",
+      },
+    })
+  );
+  CustomTabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+  };
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  }
+  function CustomTabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={cusValue !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {cusValue === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      </div>
+    );
+  }
 
   useEffect(() => {
     let isMounted = true;
@@ -59,25 +123,31 @@ function Dashboard() {
   }, []);
   const [filter, setFilter] = useState("");
   const [refresh, setRefresh] = useState(false);
-
-  const handleFilter = (filter_name) => {
-    // console.log(filter_name);
-    if (filter_name === "All") {
-      setRefresh(!refresh);
-    }
-    if (filter_name === "In Request Orders") {
-      setFilter("IN_REQUEST");
-    }
-    if (filter_name === "In Progress Orders") {
-      setFilter("IN_PROCESSING");
-    }
-    if (filter_name === "Cancel Orders") {
-      setFilter("CANCEL");
-    }
-    if (filter_name === "Completed Orders") {
-      setFilter("COMPLETED");
-    }
+  const [cusValue, setCusValue] = useState(0);
+  const [selectedValue, setSelectedValue] = useState("All");
+  const [resultsPerPage, setResultsPerPage] = useState(5);
+  const handleChange = (event, newValue) => {
+    setCusValue(newValue);
   };
+
+  // const handleFilter = (filter_name) => {
+  //   setSelectedValue(filter_name);
+  //   if (filter_name === "All") {
+  //     setRefresh(!refresh);
+  //   }
+  //   if (filter_name === "In Request Orders") {
+  //     setFilter("IN_REQUEST");
+  //   }
+  //   if (filter_name === "In Progress Orders") {
+  //     setFilter("IN_PROCESSING");
+  //   }
+  //   if (filter_name === "Cancel Orders") {
+  //     setFilter("CANCEL");
+  //   }
+  //   if (filter_name === "Completed Orders") {
+  //     setFilter("COMPLETED");
+  //   }
+  // };
 
   return (
     <>
@@ -130,6 +200,7 @@ function Dashboard() {
           title="Cancel Orders"
           onClick={() => setFilter("CANCEL")}
           value={dashboard.totalCancelOrder || "0"}
+          disabled
         >
           <RoundIcon
             icon={CancelIcon}
@@ -169,52 +240,32 @@ function Dashboard() {
         </InfoCard>
       </div>
 
-      {/* <div className="grid gap-6 mb-8 md:grid-cols-2">
-        <ChartCard title="User Analytics">
-          <Line {...lineOptions} />
-          <ChartLegend legends={lineLegends} />
-        </ChartCard>
-
-        <ChartCard title="Revenue">
-          <Doughnut {...doughnutOptions} />
-          <ChartLegend legends={doughnutLegends} />
-        </ChartCard>
-      </div> */}
-      <PageTitle>Orders</PageTitle>
-      <Card className="mt-2 mb-5 shadow-md flex justify-between items-center">
-        <CardBody>
-          <div className="flex items-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Filter Orders
-            </p>
-
-            <Label className="mx-3">
-              <Select
-                className="py-3"
-                onChange={(e) => handleFilter(e.target.value)}
-              >
-                <option>All</option>
-                <option>In Request Orders</option>
-                <option>In Progress Orders</option>
-                <option>Cancel Orders</option>
-                <option>Completed Orders</option>
-              </Select>
-            </Label>
-          </div>
-        </CardBody>
-        <RoundIcon
-          icon={RefreshIcon}
-          onClick={() => {
-            setRefresh(!refresh);
-          }}
-          className="pr-3 mr-6 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
-        />
-      </Card>
-      <OrdersTable resultsPerPage={5} filter={filter} refresh={refresh} />
-
-      <PageTitle>Statistic Product</PageTitle>
-      <StatisticProduct />
-      <TestStatstic />
+      <Box sx={{ width: "100%" }}>
+        <Box>
+          <StyledTabs
+            value={cusValue}
+            onChange={handleChange}
+            aria-label="styled tabs example"
+          >
+            <StyledTab label="Orders" {...a11yProps(0)} />
+            <StyledTab label="Statistic Product" {...a11yProps(1)} />
+            <StyledTab label="Customers" {...a11yProps(2)} />
+          </StyledTabs>
+          <Divider className="mt-3" variant="middle" />
+          <CustomTabPanel value={cusValue} index={0}>
+            <TestOrderTable
+              resultsPerPage={resultsPerPage}
+              setResultsPerPage={setResultsPerPage}
+            />
+          </CustomTabPanel>
+          <CustomTabPanel value={cusValue} index={1}>
+            <>
+              <TestStatstic />
+            </>
+          </CustomTabPanel>
+          <CustomTabPanel value={cusValue} index={2}></CustomTabPanel>
+        </Box>
+      </Box>
     </>
   );
 }

@@ -30,33 +30,58 @@ const Evaluate = (props) => {
       fecthOrderDetail();
     }
   }, [props.orderId, props.show]);
-
+  useEffect(() => {
+    if (order) {
+      const initialData = order.map((item) => ({
+        orderId: props.orderId,
+        productId: item.productId,
+        content: "",
+        ratingValue: 5,
+      }));
+      setSubmitData(initialData);
+    }
+  }, [order, props.orderId]);
+  // const handleOnChange = (productId, value, type) => {
+  //   setSubmitData((prevData) => {
+  //     const existingReviewIndex = prevData.findIndex(
+  //       (item) => item.productId === productId
+  //     );
+  //     if (existingReviewIndex !== -1) {
+  //       const updatedData = [...prevData];
+  //       if (type === "rating") {
+  //         updatedData[existingReviewIndex].ratingValue = value;
+  //       } else if (type === "review") {
+  //         updatedData[existingReviewIndex].content = value;
+  //       }
+  //       return updatedData;
+  //     } else {
+  //       const newReview = {
+  //         orderId: props.orderId,
+  //         productId,
+  //         content: type === "review" ? value : "",
+  //         ratingValue: type === "rating" ? value : 5,
+  //       };
+  //       return [...prevData, newReview];
+  //     }
+  //   });
+  // };
   const handleOnChange = (productId, value, type) => {
-    setSubmitData((prevData) => {
-      const existingReviewIndex = prevData.findIndex(
-        (item) => item.productId === productId
-      );
-      if (existingReviewIndex !== -1) {
-        const updatedData = [...prevData];
-        if (type === "rating") {
-          updatedData[existingReviewIndex].ratingValue = value;
-        } else if (type === "review") {
-          updatedData[existingReviewIndex].content = value;
-        }
-        return updatedData;
-      } else {
-        const newReview = {
-          orderId: props.orderId,
-          productId,
-          content: type === "review" ? value : "",
-          ratingValue: type === "rating" ? value : 5,
-        };
-        return [...prevData, newReview];
+    const existingReviewIndex = submitData.findIndex(
+      (item) => item.productId === productId
+    );
+    const updatedData = [...submitData];
+    if (existingReviewIndex !== -1) {
+      if (type === "rating") {
+        updatedData[existingReviewIndex].ratingValue = value;
+      } else if (type === "review") {
+        updatedData[existingReviewIndex].content = value;
       }
-    });
+    }
+    setSubmitData(updatedData);
   };
+
   const submitReview = async () => {
-    console.log(submitData);
+    // console.log(submitData);
     try {
       setLoadingSubmit(true);
       for (const data of submitData) {
@@ -75,7 +100,6 @@ const Evaluate = (props) => {
         autoDismiss: true,
       });
       setLoadingSubmit(false);
-
       props.onHide();
       setSubmitData([]);
     } catch (error) {
@@ -118,9 +142,13 @@ const Evaluate = (props) => {
                   <div className="rating-area">
                     <ProductRating
                       ratingValue={
-                        submitData.find(
+                        submitData.some(
                           (item) => item.productId === detail.productId
-                        )?.ratingValue || 5
+                        )
+                          ? submitData.find(
+                              (item) => item.productId === detail.productId
+                            ).ratingValue
+                          : 5
                       }
                       onChange={(value) =>
                         handleOnChange(detail.productId, value, "rating")

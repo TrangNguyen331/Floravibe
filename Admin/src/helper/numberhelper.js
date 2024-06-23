@@ -36,3 +36,26 @@ export const statusOptions = [
       "p-2 rounded-md bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100 mb-2 mt-2",
   },
 ];
+
+export const reasonList = [
+  {
+    key: "out_of_stock",
+    value: "Sản phẩm hết hàng",
+  },
+  {
+    key: "shipping_problem",
+    value: "Có vấn đề về vận chuyển",
+  },
+  {
+    key: "cancel_by_user",
+    value: "Khách hàng yêu cầu hủy",
+  },
+  {
+    key: "wrong_product_info",
+    value: "Giá cả hoặc thông tin sản phẩm sai",
+  },
+  {
+    key: "black_list",
+    value: "Khách hàng nằm trong danh sách đen",
+  },
+];

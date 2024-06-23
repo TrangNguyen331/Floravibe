@@ -17,8 +17,17 @@ export const filterOrderByStatus = (orders, status) => {
           .sort((a, b) => a.createdDate - b.createdDate);
       case "Canceled":
         return [...orders]
-          .filter((x) => x.status === "CANCEL")
-          .sort((a, b) => a.createdDate - b.createdDate);
+          .filter(
+            (x) =>
+              x.status === "CANCEL" &&
+              x.cancelDetail &&
+              x.cancelDetail.cancelDate !== null
+          )
+          .sort((a, b) => {
+            const dateA = new Date(a.cancelDetail.cancelDate);
+            const dateB = new Date(b.cancelDetail.cancelDate);
+            return dateB - dateA;
+          });
       default:
         return [...orders].sort((a, b) => a.createdDate - b.createdDate);
     }
@@ -29,7 +38,6 @@ export const filterOrderByStatus = (orders, status) => {
 export const getStatus = (key) => {
   switch (key) {
     case "IN_REQUEST":
-      // return "In Progress";
       return "In Request";
     case "IN_PROCESSING":
       return "Processing";
@@ -59,8 +67,8 @@ export const formatReadableDate = (date) => {
 
 export const reasonList = [
   {
-    key: "out_of_stock",
-    value: "Sản phẩm hết hàng",
+    key: "bad_service",
+    value: "Không hài lòng với dịch vụ",
   },
   {
     key: "wrong_product",
@@ -75,7 +83,15 @@ export const reasonList = [
     value: "Muốn đổi mã giảm giá",
   },
   {
+    key: "change_voucher",
+    value: "Không muốn mua nữa",
+  },
+  {
     key: "cheaper_shop",
     value: "Phát hiện chỗ có giá rẻ hơn",
+  },
+  {
+    key: "cheaper_shop",
+    value: "Không tìm được lý do hủy phù hợp ",
   },
 ];

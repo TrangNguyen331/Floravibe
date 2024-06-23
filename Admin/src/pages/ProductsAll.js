@@ -71,7 +71,6 @@ const ProductsAll = () => {
 
   const { addToast } = useToasts();
 
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState(null); // 'edit', 'delete'
   const [selectedProduct, setSelectedProduct] = useState({
@@ -299,7 +298,7 @@ const ProductsAll = () => {
               )
           );
           break;
-        case "Tags":
+        case "Tag":
           filterProducts = productsData.filter(
             (product) =>
               product.tags &&
@@ -647,193 +646,196 @@ const ProductsAll = () => {
 
       {/* Product Views */}
       {loadingGet ? (
-        <Box sx={{ width: '100%', color: 'grey.500', backgroundColor: 'grey.500'}}>
-          <LinearProgress sx={{
-            '& .MuiLinearProgress-bar': {
-              backgroundColor: '#edebfe', // Customize bar color
-            },
-            backgroundColor: '#7e3af2', // Customize background color
-          }}
-        />
-        </Box> 
-    ) : ( 
+        <Box
+          sx={{ width: "100%", color: "grey.500", backgroundColor: "grey.500" }}
+        >
+          <LinearProgress
+            sx={{
+              "& .MuiLinearProgress-bar": {
+                backgroundColor: "#edebfe", // Customize bar color
+              },
+              backgroundColor: "#7e3af2", // Customize background color
+            }}
+          />
+        </Box>
+      ) : (
         <TableContainer className="mb-8">
-        <Table>
-          <TableHeader>
-            <tr>
-              <TableCell>
-                <div className="flex items-center">
-                  Name
-                  <div className="cursor-pointer">
-                    <Icon
-                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
-                      aria-hidden="true"
-                      onClick={handleSortName}
-                      icon={
-                        sortName === "asc"
-                          ? UpIcon
-                          : sortName === "desc"
-                          ? DownIcon
-                          : SortDefaultIcon
-                      }
-                    />
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>
-                <div className="flex items-center">
-                  Price
-                  <div className="cursor-pointer">
-                    <Icon
-                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
-                      aria-hidden="true"
-                      onClick={handleSortPrice}
-                      icon={
-                        sortPrice === "asc"
-                          ? UpIcon
-                          : sortPrice === "desc"
-                          ? DownIcon
-                          : SortDefaultIcon
-                      }
-                    />
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center">
-                  Quantity
-                  <div className="cursor-pointer">
-                    <Icon
-                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
-                      aria-hidden="true"
-                      onClick={handleSortQty}
-                      icon={
-                        sortQty === "asc"
-                          ? UpIcon
-                          : sortQty === "desc"
-                          ? DownIcon
-                          : SortDefaultIcon
-                      }
-                    />
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>Categories</TableCell>
-              <TableCell>Tags</TableCell>
-              <TableCell>Action</TableCell>
-            </tr>
-          </TableHeader>
-          <TableBody>
-            {data
-              .filter((item) => item.isActive)
-              .map((product) => (
-                <TableRow
-                  key={product.id}
-                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <TableCell>
-                    <div className="flex items-center text-sm">
-                      <Link to={`/app/product/${product.id}`}>
-                        <Avatar
-                          className="hidden mr-4 md:block"
-                          src={
-                            product &&
-                            product.images &&
-                            product.images.length > 0
-                              ? product.images[0]
-                              : ""
-                          }
-                          alt="Product image"
-                        />
-                      </Link>
-                      <div>
-                        <Link to={`/app/product/${product.id}`}>
-                          <p className="font-semibold">{product.name}</p>
-                        </Link>
-                      </div>
+          <Table>
+            <TableHeader>
+              <tr>
+                <TableCell>
+                  <div className="flex items-center">
+                    Name
+                    <div className="cursor-pointer">
+                      <Icon
+                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                        aria-hidden="true"
+                        onClick={handleSortName}
+                        icon={
+                          sortName === "asc"
+                            ? UpIcon
+                            : sortName === "desc"
+                            ? DownIcon
+                            : SortDefaultIcon
+                        }
+                      />
                     </div>
-                  </TableCell>
-                  <TableCell className="whitespace-normal break-words">
-                    {truncateContent(product.description)}
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {formatNumberWithDecimal(product.price)}₫
-                  </TableCell>
-                  <TableCell
-                    className={`text-sm text-center ${
-                      product.stockQty === 0 ? "text-red-500" : ""
-                    }`}
+                  </div>
+                </TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>
+                  <div className="flex items-center">
+                    Price
+                    <div className="cursor-pointer">
+                      <Icon
+                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                        aria-hidden="true"
+                        onClick={handleSortPrice}
+                        icon={
+                          sortPrice === "asc"
+                            ? UpIcon
+                            : sortPrice === "desc"
+                            ? DownIcon
+                            : SortDefaultIcon
+                        }
+                      />
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center">
+                    Quantity
+                    <div className="cursor-pointer">
+                      <Icon
+                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                        aria-hidden="true"
+                        onClick={handleSortQty}
+                        icon={
+                          sortQty === "asc"
+                            ? UpIcon
+                            : sortQty === "desc"
+                            ? DownIcon
+                            : SortDefaultIcon
+                        }
+                      />
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>Categories</TableCell>
+                <TableCell>Tags</TableCell>
+                <TableCell>Action</TableCell>
+              </tr>
+            </TableHeader>
+            <TableBody>
+              {data
+                .filter((item) => item.isActive)
+                .map((product) => (
+                  <TableRow
+                    key={product.id}
+                    className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                   >
-                    {product.stockQty}
-                  </TableCell>
-                  <TableCell className="text-sm space-x-2">
-                    {product &&
-                    product.collections &&
-                    product.collections.length > 0
-                      ? product.collections.map((collection) => (
-                          <Badge
-                            className="bg-purple-100 text-purple-700"
-                            type="success"
-                            key={collection.id}
-                          >
-                            {collection.name}
-                          </Badge>
-                        ))
-                      : null}
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {product && product.tags && product.tags.length > 0
-                      ? product.tags.map((tag) => (
-                          <div key={tag.id} className="flex">
-                            <span
-                              className="px-2 inline-flex text-xs leading-5
-                      font-semibold rounded-full bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-blue-100 mb-2 mt-2"
+                    <TableCell>
+                      <div className="flex items-center text-sm">
+                        <Link to={`/app/product/${product.id}`}>
+                          <Avatar
+                            className="hidden mr-4 md:block"
+                            src={
+                              product &&
+                              product.images &&
+                              product.images.length > 0
+                                ? product.images[0]
+                                : ""
+                            }
+                            alt="Product image"
+                          />
+                        </Link>
+                        <div>
+                          <Link to={`/app/product/${product.id}`}>
+                            <p className="font-semibold">{product.name}</p>
+                          </Link>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="whitespace-normal break-words">
+                      {truncateContent(product.description)}
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      {formatNumberWithDecimal(product.price)}₫
+                    </TableCell>
+                    <TableCell
+                      className={`text-sm text-center ${
+                        product.stockQty === 0 ? "text-red-500" : ""
+                      }`}
+                    >
+                      {product.stockQty}
+                    </TableCell>
+                    <TableCell className="text-sm space-x-2">
+                      {product &&
+                      product.collections &&
+                      product.collections.length > 0
+                        ? product.collections.map((collection) => (
+                            <Badge
+                              className="bg-purple-100 text-purple-700"
+                              type="success"
+                              key={collection.id}
                             >
-                              {tag.name}
-                            </span>
-                          </div>
-                        ))
-                      : null}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex">
-                      <Button
-                        icon={EditIcon}
-                        className="mr-3"
-                        layout="outline"
-                        aria-label="Edit"
-                        onClick={() => openModal("edit", product.id)}
-                      />
-                      <Button
-                        icon={TrashIcon}
-                        layout="outline"
-                        aria-label="Delete"
-                        onClick={() => openModal("delete", product.id)}
-                      />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            {searchValue && data.length === 0 && (
-              <p className="text-center my-4 text-purple-500">
-                No result match
-              </p>
-            )}
-          </TableBody>
-        </Table>
+                              {collection.name}
+                            </Badge>
+                          ))
+                        : null}
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      {product && product.tags && product.tags.length > 0
+                        ? product.tags.map((tag) => (
+                            <div key={tag.id} className="flex">
+                              <span
+                                className="px-2 inline-flex text-xs leading-5
+                      font-semibold rounded-full bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-blue-100 mb-2 mt-2"
+                              >
+                                {tag.name}
+                              </span>
+                            </div>
+                          ))
+                        : null}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex">
+                        <Button
+                          icon={EditIcon}
+                          className="mr-3"
+                          layout="outline"
+                          aria-label="Edit"
+                          onClick={() => openModal("edit", product.id)}
+                        />
+                        <Button
+                          icon={TrashIcon}
+                          layout="outline"
+                          aria-label="Delete"
+                          onClick={() => openModal("delete", product.id)}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              {searchValue && data.length === 0 && (
+                <p className="text-center my-4 text-purple-500">
+                  No result match
+                </p>
+              )}
+            </TableBody>
+          </Table>
           <TableFooter>
             {dataLoaded && (
               <Paginate
-                  totalPages={totalPages}
-                  totalResults={totalResults}
-                  page={page}
-                  onPageChange={onPageChange}
-                />            
+                totalPages={totalPages}
+                totalResults={totalResults}
+                page={page}
+                onPageChange={onPageChange}
+              />
             )}
           </TableFooter>
         </TableContainer>
-    )}
+      )}
     </div>
   );
 };
