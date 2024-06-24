@@ -33,11 +33,11 @@ const NavMenu = ({ strings, menuWhiteClass, sidebarMenu }) => {
           <li>
             <Link to={process.env.PUBLIC_URL + "/blog"}>{t("blog")}</Link>
           </li>
-          <li>
+          {/* <li>
             <Link to={process.env.PUBLIC_URL + "/check-order"}>
               {t("check-order")}
             </Link>
-          </li>
+          </li> */}
         </ul>
       </nav>
     </div>

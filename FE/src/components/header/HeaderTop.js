@@ -3,6 +3,7 @@ import React from "react";
 import { multilanguage } from "redux-multilanguage";
 import { connect } from "react-redux";
 import { setCurrency } from "../../redux/actions/currencyActions";
+import { Link } from "react-router-dom";
 import LanguageCurrencyChanger from "./sub-components/LanguageCurrencyChanger";
 import { useTranslation } from "react-i18next";
 const HeaderTop = ({
@@ -22,6 +23,11 @@ const HeaderTop = ({
         <p>Call Us 0188468580</p>
       </div>
       <div className="header-offer">
+        <Link to={process.env.PUBLIC_URL + "/check-order"}>
+          {/* {t("check-order")} */}
+          Check Your Order
+        </Link>
+        <div className="mr-2">|</div>
         <p>Free delivery every order</p>
       </div>
     </div>

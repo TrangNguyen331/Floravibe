@@ -38,17 +38,18 @@ import { ReactComponent as AddIcon } from "./add.svg";
 import { ReactComponent as PublishIcon } from "./publish.svg";
 import { ReactComponent as StoreIcon } from "./store.svg";
 import { ReactComponent as VoucherICon } from "./voucher.svg";
-import { ReactComponent as FlowerIcon} from "./flower.svg";
-import { ReactComponent as BlogIcon} from "./blog.svg";
-import { ReactComponent as CheckIcon} from "./check.svg";
-import { ReactComponent as CancelIcon} from "./cancel.svg";
-import { ReactComponent as DashboardIcon} from "./dashboard.svg";
-import { ReactComponent as RefreshIcon} from "./refresh.svg";
-import { ReactComponent as DownIcon} from "./arrow-down.svg";
-import { ReactComponent as UpIcon} from "./arrow-up.svg";
-import { ReactComponent as SortDefaultIcon} from "./sort-default.svg";
-import { ReactComponent as TagIcon} from "./tag.svg";
-import { ReactComponent as CollectionIcon} from "./collection.svg";
+import { ReactComponent as FlowerIcon } from "./flower.svg";
+import { ReactComponent as BlogIcon } from "./blog.svg";
+import { ReactComponent as CheckIcon } from "./check.svg";
+import { ReactComponent as CancelIcon } from "./cancel.svg";
+import { ReactComponent as DashboardIcon } from "./dashboard.svg";
+import { ReactComponent as RefreshIcon } from "./refresh.svg";
+import { ReactComponent as DownIcon } from "./arrow-down.svg";
+import { ReactComponent as UpIcon } from "./arrow-up.svg";
+import { ReactComponent as SortDefaultIcon } from "./sort-default.svg";
+import { ReactComponent as TagIcon } from "./tag.svg";
+import { ReactComponent as CollectionIcon } from "./collection.svg";
+import { ReactComponent as Info } from "./info.svg";
 export {
   GroupIcon,
   UserIcon,
@@ -100,5 +101,6 @@ export {
   DownIcon,
   SortDefaultIcon,
   TagIcon,
-  CollectionIcon
+  CollectionIcon,
+  Info,
 };

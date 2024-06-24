@@ -2,24 +2,12 @@ import React, { useState, useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import Icon from "../components/Icon";
 import PageTitle from "../components/Typography/PageTitle";
-import { DashboardIcon } from "../icons";
-import {
-  Card,
-  CardBody,
-  Badge,
-  // TableBody,
-  // TableContainer,
-  // Table,
-  TableHeader,
-  // TableCell,
-  // TableRow,
-  TableFooter,
-  Button,
-  Avatar,
-} from "@windmill/react-ui";
+import { DashboardIcon, Info } from "../icons";
+import { Card, CardBody, Badge, TableHeader, Avatar } from "@windmill/react-ui";
 import { genRating } from "../utils/genarateRating";
 import axiosInstance from "../axiosInstance";
 import {
+  InfoOutlined,
   KeyboardArrowDown,
   KeyboardArrowUp,
   StarBorder,
@@ -28,18 +16,14 @@ import {
   Box,
   Collapse,
   Divider,
-  FormControl,
   IconButton,
-  InputLabel,
-  MenuItem,
   Paper,
+  Popover,
   Rating,
-  Select,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   Typography,
 } from "@mui/material";
@@ -64,7 +48,7 @@ const SingleOrder = () => {
     },
     {
       value: "CANCEL",
-      label: "CANCEL",
+      label: "CANCELLED",
       color:
         "px-5 py-3 rounded-full bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-100",
     },
@@ -143,6 +127,17 @@ const SingleOrder = () => {
   }, []);
   console.log("order", order);
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+  const openPop = Boolean(anchorEl);
+
   return (
     <div>
       <PageTitle>Order Details</PageTitle>
@@ -207,25 +202,104 @@ const SingleOrder = () => {
                     {getStatusOption(order.status)?.label || ""}
                   </span> */}
                 </div>
-                <div className="flex items-center gap-3">
-                  <Badge
-                    className="py-1 px-2 gap-2 text-sm leading-5
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Badge
+                      className="py-1 px-2 gap-2 text-sm leading-5
                             font-semibold rounded-full bg-purple-100 text-purple-900 dark:bg-purple-700 dark:text-purple-100"
-                    type="neutral"
-                  >
-                    Order time:
-                    <span className="font-normal">
-                      {new Date(order.createdDate).toLocaleString("vi-VN")}
-                    </span>
-                  </Badge>
-                  {order.status === "CANCEL" && (
-                    <Badge className="py-1 px-2 gap-2 text-sm" type="neutral">
-                      Cancel time:
+                      type="neutral"
+                    >
+                      Order time:
                       <span className="font-normal">
-                        {/* {new Date(order.cancelDate).toLocaleString("vi-VN")} */}
+                        {new Date(order.createdDate).toLocaleString("vi-VN")}
                       </span>
                     </Badge>
-                  )}
+                    {order.status === "CANCEL" && (
+                      <Badge
+                        className="py-1 px-2 gap-2 text-sm py-1 px-2 gap-2 text-sm leading-5
+                            font-semibold rounded-full bg-purple-100 text-purple-900 dark:bg-purple-700 dark:text-purple-100"
+                        type="neutral"
+                      >
+                        Cancel time:
+                        <span className="font-normal">
+                          {/* {new Date(order.cancelDate).toLocaleString("vi-VN")} */}
+                        </span>
+                      </Badge>
+                    )}
+                    {order.status === "COMPLETED" && (
+                      <Badge
+                        className="py-1 px-2 gap-2 text-sm py-1 px-2 gap-2 text-sm leading-5
+                            font-semibold rounded-full bg-purple-100 text-purple-900 dark:bg-purple-700 dark:text-purple-100"
+                        type="success"
+                      >
+                        Completed time:
+                        <span className="font-normal">
+                          {new Date(order.completedDate).toLocaleString(
+                            "vi-VN"
+                          )}
+                        </span>
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center">
+                    <span className="mr-1">
+                      {order.status === "CANCEL"
+                        ? order.cancelDetail &&
+                          order.cancelDetail.cancelRole === "ADMIN"
+                          ? "Cancelled by you"
+                          : "Cancelled by customer"
+                        : ""}
+                    </span>
+                    {order.status === "CANCEL" && order.cancelDetail ? (
+                      <div>
+                        <InfoOutlined
+                          aria-owns={openPop ? "mouse-over-popover" : undefined}
+                          aria-haspopup="true"
+                          onMouseEnter={handlePopoverOpen}
+                          onMouseLeave={handlePopoverClose}
+                          className="w-1 h-1 text-purple-600 justify-between align-middle"
+                        />
+                        <Popover
+                          id="mouse-over-popover"
+                          sx={{
+                            pointerEvents: "none",
+                          }}
+                          open={openPop}
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "right",
+                          }}
+                          onClose={handlePopoverClose}
+                          disableRestoreFocus
+                        >
+                          <Typography sx={{ p: 1 }}>
+                            Order has been cancelled because:
+                          </Typography>
+                          <Typography
+                            sx={{
+                              paddingLeft: 1,
+                              paddingRight: 1,
+                              paddingBottom: 1,
+                              color: "#7e3af2",
+                            }}
+                          >
+                            {order.cancelDetail.cancelReason}
+                          </Typography>
+                        </Popover>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+
+                    {/* <LightTooltip title="Order has been cancelled because:">
+                      <InfoOutlined className="w-1 h-1 text-purple-600 justify-between align-middle" />
+                    </LightTooltip> */}
+                  </div>
                 </div>
               </div>
             </CardBody>
@@ -349,32 +423,6 @@ const SingleOrder = () => {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {/* {order.details.map((detail, index) => (
-                          <TableRow 
-                              key={index}
-                              className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                          >
-                            <TableCell>
-                              <div className="flex items-center text-sm">
-                                <Avatar
-                                  className="hidden mr-4 md:block"
-                                  src={
-                                    detail.product && detail.product.images && detail.product.images.length > 0
-                                      ? detail.product.images[0]
-                                      : ""
-                                  }
-                                  alt="Product image"
-                                />
-                                <div>
-                                  {detail.product.name}
-                                </div>
-                              </div>
-                            </TableCell>
-                            <TableCell align="center">{formatNumberWithDecimal(detail.unitPrice)} {" "} ₫</TableCell>
-                            <TableCell align="center">{detail.quantity}</TableCell>
-                            <TableCell align="right">{formatNumberWithDecimal(detail.subtotal)} {" "} ₫</TableCell>
-                          </TableRow>
-                        ))} */}
                         {order.details.map((detail, index) => {
                           const hasReviews = detail.product.reviews.some(
                             (review) =>
@@ -386,26 +434,30 @@ const SingleOrder = () => {
                                 <TableCell>
                                   <div className="flex">
                                     <div className="mr-3">
-                                      {hasReviews ? (
-                                        <IconButton
-                                          aria-label="expand row"
-                                          size="small"
-                                          onClick={() => toggleOpen(index)}
-                                        >
-                                          {open[index] ? (
-                                            <KeyboardArrowUp />
-                                          ) : (
+                                      {order.rated ? (
+                                        hasReviews ? (
+                                          <IconButton
+                                            aria-label="expand row"
+                                            size="small"
+                                            onClick={() => toggleOpen(index)}
+                                          >
+                                            {open[index] ? (
+                                              <KeyboardArrowUp />
+                                            ) : (
+                                              <KeyboardArrowDown />
+                                            )}
+                                          </IconButton>
+                                        ) : (
+                                          <IconButton
+                                            aria-label="expand row"
+                                            size="small"
+                                            className="invisible"
+                                          >
                                             <KeyboardArrowDown />
-                                          )}
-                                        </IconButton>
+                                          </IconButton>
+                                        )
                                       ) : (
-                                        <IconButton
-                                          aria-label="expand row"
-                                          size="small"
-                                          className="invisible"
-                                        >
-                                          <KeyboardArrowDown />
-                                        </IconButton>
+                                        ""
                                       )}
                                     </div>
                                     <div className="flex items-center text-sm space-x-2">
@@ -542,12 +594,12 @@ const SingleOrder = () => {
                         />
                         <TableCell>Subtotal</TableCell>
                         <TableCell colSpan={2} align="right">
-                          {formatNumberWithDecimal(
+                          {/* {formatNumberWithDecimal(
                             order.total +
                               order.voucherDetail.voucherValue +
                               order.firstDiscount
-                          )}{" "}
-                          ₫
+                          )}{" "} */}
+                          {order.unitTotal}₫
                         </TableCell>
                       </TableRow>
                       {order.firstDiscount && order.firstDiscount > 0 ? (

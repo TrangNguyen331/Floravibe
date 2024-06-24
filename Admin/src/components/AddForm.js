@@ -8,7 +8,7 @@ const AddForm = () => {
     <form action="#">
       <div>
         <div className="dark:text-white">
-          <strong>Product Image</strong>
+          <span>Product Image</span>
           <Input
             type="file"
             className="mb-4 mt-2 text-gray-800 dark:text-gray-300"
@@ -16,7 +16,7 @@ const AddForm = () => {
         </div>
         <div className="grid gap-4 mb-4 grid-cols-2">
           <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
-            <strong>Product Name</strong>
+            <span>Product Name</span>
             <Input
               type="text"
               className="mt-2 bg-transparent border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -24,7 +24,7 @@ const AddForm = () => {
             />
           </div>
           <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
-            <strong>Product Price</strong>
+            <span>Product Price</span>
             <Input
               type="number"
               className="mt-2 bg-transparent border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-opacity-0 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -34,7 +34,7 @@ const AddForm = () => {
         </div>
 
         <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
-          <strong>Product Collection</strong>
+          <span>Product Collection</span>
           <Input
             type="text"
             value="Summer"
@@ -44,7 +44,7 @@ const AddForm = () => {
         </div>
 
         <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
-          <strong>Product Tag</strong>
+          <span>Product Tag</span>
           <TagsInput
             classNames="mt-2"
             defaultValue={tags}
@@ -54,7 +54,7 @@ const AddForm = () => {
         </div>
 
         <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-          <strong>Product Description</strong>
+          <span>Product Description</span>
           <Textarea
             id="description"
             rows="5"

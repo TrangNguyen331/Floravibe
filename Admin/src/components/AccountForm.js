@@ -7,7 +7,7 @@ export const AccountForm = ({ data, handleInputChange }) => {
       <div>
         <div className="grid gap-4 mb-4 grid-cols-2">
           <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-            <strong>First name</strong>
+            <span>First name</span>
             <Input
               type="text"
               onChange={(e) =>
@@ -18,7 +18,7 @@ export const AccountForm = ({ data, handleInputChange }) => {
             />
           </div>
           <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-            <strong>Last name</strong>
+            <span>Last name</span>
             <Input
               type="text"
               onChange={(e) =>
@@ -30,7 +30,7 @@ export const AccountForm = ({ data, handleInputChange }) => {
           </div>
         </div>
         <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-          <strong>Email</strong>
+          <span>Email</span>
           <Input
             type="email"
             onChange={(e) => handleInputChange("email", e.target?.value || "")}
@@ -39,7 +39,7 @@ export const AccountForm = ({ data, handleInputChange }) => {
           />
         </div>
         <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-          <strong>Username</strong>
+          <span>Username</span>
           <Input
             type="text"
             onChange={(e) =>
@@ -50,7 +50,7 @@ export const AccountForm = ({ data, handleInputChange }) => {
           />
         </div>
         <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-          <strong>Password</strong>
+          <span>Password</span>
           <Input
             type="password"
             onChange={(e) =>

@@ -23,12 +23,30 @@ import {
 import { NavLink } from "react-router-dom";
 import Icon from "../components/Icon";
 import Paginate from "./Pagination/Paginate";
-import { AddIcon, DashboardIcon, RefreshIcon, SearchIcon, UpIcon, DownIcon, SortDefaultIcon } from "../icons";
+import {
+  AddIcon,
+  DashboardIcon,
+  RefreshIcon,
+  SearchIcon,
+  UpIcon,
+  DownIcon,
+  SortDefaultIcon,
+} from "../icons";
 import RoundIcon from "./RoundIcon";
 import axiosInstance from "../axiosInstance";
 import { AccountForm } from "./AccountForm";
 import { useToasts } from "react-toast-notifications";
-import { Box, LinearProgress } from "@mui/material";
+import {
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  IconButton,
+  LinearProgress,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { Close } from "@mui/icons-material";
 const UsersTable = () => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
@@ -81,7 +99,8 @@ const UsersTable = () => {
     fetchData(1);
   }, []);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const closeModal = () => {
+  const closeModal = (event, reason) => {
+    if (reason && reason === "backdropClick") return;
     setIsModalOpen(false);
   };
   const openModal = async () => {
@@ -148,7 +167,6 @@ const UsersTable = () => {
   };
   return (
     <div>
-
       {/* Breadcum */}
       <div className="flex text-gray-800 dark:text-gray-300">
         <div className="flex items-center text-purple-600">
@@ -177,29 +195,48 @@ const UsersTable = () => {
 
       {/* Modal */}
       <div>
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <ModalHeader className="flex items-center text-2xl">
-            Add New Account
-          </ModalHeader>
-          <ModalBody>
-            <AccountForm
-              data={formData}
-              handleInputChange={handleInputChange}
-            />
-          </ModalBody>
-          <ModalFooter>
+        <Dialog
+          open={isModalOpen}
+          onClose={closeModal}
+          PaperProps={{
+            component: "form",
+          }}
+        >
+          <Toolbar className="justify-between">
+            <Typography
+              sx={{ color: "#7e3af2", fontWeight: "bold", fontSize: 19 }}
+            >
+              Add New Account
+            </Typography>
+            <IconButton
+              edge="end"
+              style={{ color: "#7e3af2" }}
+              onClick={closeModal}
+              aria-label="close"
+            >
+              <Close />
+            </IconButton>
+          </Toolbar>
+          <DialogContent dividers>
+            <ModalBody className="ml-4 mr-4">
+              <AccountForm
+                data={formData}
+                handleInputChange={handleInputChange}
+              />
+            </ModalBody>
+          </DialogContent>
+          <DialogActions className="mt-2 mb-2 mr-3">
             <div className="flex items-center gap-2">
               <Button layout="outline" onClick={closeModal}>
                 Cancel
               </Button>
-              <Button block onClick={handleRegister}>
+              <Button className="pl-6 pr-6" block onClick={handleRegister}>
                 Add
               </Button>
             </div>
-          </ModalFooter>
-        </Modal>
+          </DialogActions>
+        </Dialog>
       </div>
-      
 
       {/* Search */}
       <Card className="mt-5 mb-5 pt-3 pb-3 shadow-md flex justify-between items-center">
@@ -257,117 +294,117 @@ const UsersTable = () => {
 
       {/* Table */}
       {loadingGet ? (
-        <Box sx={{ width: '100%', color: 'grey.500', backgroundColor: 'grey.500'}}>
-          <LinearProgress sx={{
-            '& .MuiLinearProgress-bar': {
-              backgroundColor: '#edebfe', // Customize bar color
-            },
-            backgroundColor: '#7e3af2', // Customize background color
-          }}
-        />
-        </Box> 
-    ) : ( 
+        <Box
+          sx={{ width: "100%", color: "grey.500", backgroundColor: "grey.500" }}
+        >
+          <LinearProgress
+            sx={{
+              "& .MuiLinearProgress-bar": {
+                backgroundColor: "#edebfe", // Customize bar color
+              },
+              backgroundColor: "#7e3af2", // Customize background color
+            }}
+          />
+        </Box>
+      ) : (
         <TableContainer className="mb-8">
-        <Table>
-          <TableHeader>
-            <tr>
-              <TableCell>User Name</TableCell>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Roles</TableCell>
-              <TableCell>Active</TableCell>
-            </tr>
-          </TableHeader>
-          <TableBody>
-            {data.map((user, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                  <div className="flex items-center text-base">
-                    
-                    <Avatar
-                      className="hidden mr-3 md:block"
-                      src={
-                        user.avatar
-                          ? user.avatar
-                          // : "https://i.pinimg.com/564x/93/4e/37/934e37c613b24b4c7aa236644dd46fdc.jpg"
-                          // : "https://i.pinimg.com/originals/c5/0e/50/c50e501274761567685ebb90fdea4460.jpg"
-                          : "https://i.pinimg.com/originals/90/48/9f/90489fda05254bb2fef245248e9befb1.jpg"                         
-
-
-                      }
-                      alt="User image"
-                    />
-                    <div>
-                      <p className="font-semibold">
-                        {user.username}
-                      </p>
+          <Table>
+            <TableHeader>
+              <tr>
+                <TableCell>User Name</TableCell>
+                <TableCell>First Name</TableCell>
+                <TableCell>Last Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Roles</TableCell>
+                <TableCell>Active</TableCell>
+              </tr>
+            </TableHeader>
+            <TableBody>
+              {data.map((user, i) => (
+                <TableRow key={i}>
+                  <TableCell>
+                    <div className="flex items-center text-base">
+                      <Avatar
+                        className="hidden mr-3 md:block"
+                        src={
+                          user.avatar
+                            ? user.avatar
+                            : // : "https://i.pinimg.com/564x/93/4e/37/934e37c613b24b4c7aa236644dd46fdc.jpg"
+                              // : "https://i.pinimg.com/originals/c5/0e/50/c50e501274761567685ebb90fdea4460.jpg"
+                              "https://i.pinimg.com/originals/90/48/9f/90489fda05254bb2fef245248e9befb1.jpg"
+                        }
+                        alt="User image"
+                      />
+                      <div>
+                        <p className="font-semibold">{user.username}</p>
+                      </div>
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-base">
-                    {user.firstName ? user.firstName : "Unknown"}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span className="text-base">
-                    {user.lastName ? user.lastName : "Unknown"}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span className="text-base">{user.email}</span>
-                </TableCell>
-                {/* <TableCell className="space-x-2">
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-base">
+                      {user.firstName ? user.firstName : "Unknown"}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-base">
+                      {user.lastName ? user.lastName : "Unknown"}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-base">{user.email}</span>
+                  </TableCell>
+                  {/* <TableCell className="space-x-2">
                   {user.roles.map((role, index) => (
                     <Badge type="success" key={index}>
                       {role}
                     </Badge>
                   ))}
                 </TableCell> */}
-                <TableCell className="space-x-2">
-                  {user.roles.map((role, index) => (
-                    <Badge
-                      className={role == 'ROLE_USER'
-                        ? 'bg-purple-100 text-purple-700'
-                        : role == 'ROLE_ADMIN'
-                        ? 'bg-pink-100 text-pink-700'
-                        : ''}
-                      key={index}>
-                      {role}
-                    </Badge>
-                  ))}
-                </TableCell>
-                <TableCell>
-                  <Input
-                    type="checkbox"
-                    checked={user.isActive}
-                    onChange={() => handleCheckboxChange(user.id)}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TableFooter>
-          {dataLoaded && (
+                  <TableCell className="space-x-2">
+                    {user.roles.map((role, index) => (
+                      <Badge
+                        className={
+                          role == "ROLE_USER"
+                            ? "bg-purple-100 text-purple-700"
+                            : role == "ROLE_ADMIN"
+                            ? "bg-pink-100 text-pink-700"
+                            : ""
+                        }
+                        key={index}
+                      >
+                        {role}
+                      </Badge>
+                    ))}
+                  </TableCell>
+                  <TableCell>
+                    <Input
+                      type="checkbox"
+                      checked={user.isActive}
+                      onChange={() => handleCheckboxChange(user.id)}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <TableFooter>
+            {dataLoaded && (
               <Paginate
-                  totalPages={totalPages}
-                  totalResults={totalResults}
-                  page={page}
-                  onPageChange={onPageChange}
-                />
-            // <Pagination
-            //   totalResults={totalResults}
-            //   resultsPerPage={resultsPerPage}
-            //   label="Table navigation"
-            //   onChange={(page) => onPageChange(page)}
-            // />
-          )}
-        </TableFooter>
+                totalPages={totalPages}
+                totalResults={totalResults}
+                page={page}
+                onPageChange={onPageChange}
+              />
+              // <Pagination
+              //   totalResults={totalResults}
+              //   resultsPerPage={resultsPerPage}
+              //   label="Table navigation"
+              //   onChange={(page) => onPageChange(page)}
+              // />
+            )}
+          </TableFooter>
         </TableContainer>
-    )}
-      
+      )}
     </div>
   );
 };

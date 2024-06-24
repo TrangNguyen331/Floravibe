@@ -10,6 +10,7 @@ import {
   SortDefaultIcon,
   RefreshIcon,
   SearchIcon,
+  CancelIcon,
 } from "../icons";
 import {
   Card,
@@ -40,7 +41,22 @@ import { fa, tr } from "faker/lib/locales";
 import RoundIcon from "../components/RoundIcon";
 import Paginate from "../components/Pagination/Paginate";
 import { useToasts } from "react-toast-notifications";
-import { Box, LinearProgress } from "@mui/material";
+import {
+  AppBar,
+  BottomNavigation,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  IconButton,
+  LinearProgress,
+  Paper,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { Cancel, Close } from "@mui/icons-material";
 // import { Grid, Typography, Pagination } from '@mui/material';
 
 const ProductsAll = () => {
@@ -402,7 +418,9 @@ const ProductsAll = () => {
     setMode(mode);
     setIsModalOpen(true);
   }
-  const closeModal = () => {
+  const closeModal = (event, reason) => {
+    if (reason && reason === "backdropClick") return;
+
     setMode(null);
     setSelectedProduct({
       id: "",
@@ -491,7 +509,7 @@ const ProductsAll = () => {
         <p className="mx-2">All Products</p>
       </div>
 
-      {/* Sort */}
+      {/* Search */}
       <Card className="mt-5 mb-5 pt-3 pb-3 shadow-md flex justify-between items-center">
         <CardBody>
           <div className="flex items-center justify-between">
@@ -596,54 +614,131 @@ const ProductsAll = () => {
         />
       </Card>
 
-      {/* Product modal  */}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        className="fullscreen-modal"
-        // className={mode === "edit" ? "fullscreen-modal" : ""}
-      >
-        <ModalHeader className="flex items-center text-2xl mb-4">
-          {mode === "edit" && "Edit Product"}
-          {mode === "delete" && "Delete Product"}
-        </ModalHeader>
-        <ModalBody className="modal-body">
-          {mode === "edit" ? (
-            <EditForm
-              data={selectedProduct}
-              collectionData={collections}
-              tagData={allTags}
-              onSave={handleSave}
-              onCancel={closeModal}
-              onProductChange={handleProductChange}
-            />
-          ) : (
-            <p>
-              Make sure you want to delete product{" "}
-              {selectedProduct && `"${selectedProduct.name}"`}
-            </p>
-          )}
-        </ModalBody>
-        <ModalFooter className="modal-footer">
-          <div className="hidden sm:block">
-            <Button layout="outline" onClick={closeModal}>
-              Cancel
-            </Button>
+      {/* Product Dialog */}
+      {mode === "edit" ? (
+        <Dialog open={isModalOpen} onClose={closeModal} fullScreen>
+          <div className="flex justify-between" sx={{ position: "relative" }}>
+            <Toolbar className="flex-grow justify-between">
+              <Typography
+                className="justify-between"
+                sx={{ ml: 2, flex: 1, color: "#7e3af2", fontWeight: "bold" }}
+                variant="h6"
+                component="div"
+              >
+                {mode === "edit" && "Edit Product"}
+                {/* {mode === "delete" && "Delete Product"} */}
+              </Typography>
+              <IconButton
+                edge="end"
+                style={{ color: "#7e3af2" }}
+                onClick={closeModal}
+                aria-label="close"
+              >
+                <Close />
+              </IconButton>
+            </Toolbar>
           </div>
-          <div className="hidden sm:block">
-            {mode === "edit" ? (
+          <Divider />
+          {/* <Paper className="pt-8 pr-8 pl-8 pb-16" elevation={0}> */}
+          <Paper className="p-8" elevation={0}>
+            <ModalBody className="modal-body">
+              <EditForm
+                data={selectedProduct}
+                collectionData={collections}
+                tagData={allTags}
+                onSave={handleSave}
+                onCancel={closeModal}
+                onProductChange={handleProductChange}
+              />
+            </ModalBody>
+          </Paper>
+          <Divider />
+          {/* <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
+            <BottomNavigation className="mt-2 mb-2 mr-3">
+              <div className="hidden sm:block">
+                <Button layout="outline" onClick={closeModal}>
+                  Cancel
+                </Button>
+              </div>
+              <div className="hidden sm:block">
+                <Button block onClick={() => handleSave("edit")}>
+                  Save
+                </Button>
+              </div>
+            </BottomNavigation>
+          </Paper> */}
+          <DialogActions className="mt-4 mb-4 mr-3">
+            <div className="hidden sm:block">
+              <Button layout="outline" onClick={closeModal}>
+                Cancel
+              </Button>
+            </div>
+            <div className="hidden sm:block">
               <Button block onClick={() => handleSave("edit")}>
                 Save
               </Button>
-            ) : (
+            </div>
+          </DialogActions>
+        </Dialog>
+      ) : (
+        <Dialog
+          onClose={closeModal}
+          open={isModalOpen}
+          className="flex justify-between"
+        >
+          <Toolbar className="justify-between">
+            <Typography
+              sx={{ color: "#7e3af2", fontWeight: "bold" }}
+              variant="h6"
+              component="div"
+            >
+              Delete Product
+            </Typography>
+            <IconButton
+              edge="end"
+              style={{ color: "#7e3af2" }}
+              onClick={closeModal}
+              aria-label="close"
+            >
+              <Close />
+            </IconButton>
+          </Toolbar>
+          <DialogContent dividers>
+            <Typography className="pt-5 pb-5 pl-4 pr-4">
+              <p>
+                Make sure you want to delete product{" "}
+                {selectedProduct && `"${selectedProduct.name}"`}
+              </p>
+            </Typography>
+          </DialogContent>
+          <DialogActions className="mt-2 mb-2 mr-3">
+            <div className="hidden sm:block">
+              <Button layout="outline" onClick={closeModal}>
+                Cancel
+              </Button>
+            </div>
+            <div className="hidden sm:block">
               <Button block onClick={() => handleSave("delete")}>
                 Delete
               </Button>
-            )}
-          </div>
-        </ModalFooter>
-      </Modal>
-
+            </div>
+          </DialogActions>
+          {/* <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
+            <BottomNavigation className="mt-2 mb-2 mr-3">
+              <div className="hidden sm:block">
+                <Button layout="outline" onClick={closeModal}>
+                  Cancel
+                </Button>
+              </div>
+              <div className="hidden sm:block">
+                <Button block onClick={() => handleSave("delete")}>
+                  Delete
+                </Button>
+              </div>
+            </BottomNavigation>
+          </Paper> */}
+        </Dialog>
+      )}
       {/* Product Views */}
       {loadingGet ? (
         <Box

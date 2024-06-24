@@ -104,7 +104,7 @@ const EditForm = ({
           <div className="col-span-1">
             <div className="grid gap-4 mb-5 grid-cols-2">
               <div className="block text-base font-medium text-gray-900 dark:text-white">
-                <strong>Product Name</strong>
+                <span>Product Name</span>
                 <Input
                   type="text"
                   placeholder="Type product name here"
@@ -116,7 +116,7 @@ const EditForm = ({
                 />
               </div>
               <div className="block text-base font-medium text-gray-900 dark:text-white">
-                <strong>Product Price</strong>
+                <span>Product Price</span>
                 <Input
                   type="number"
                   placeholder="Enter product price here"
@@ -130,7 +130,7 @@ const EditForm = ({
             </div>
 
             <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-              <strong>Product Collection</strong>
+              <span>Product Collection</span>
               {/* <TagsInput
                   type="text"
                   className="mt-2 bg-transparent border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -175,7 +175,7 @@ const EditForm = ({
               />
             </div>
             <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-              <strong>Product Tag</strong>
+              <span>Product Tag</span>
               {/* <TagsInput
                 classNames="mt-2"
                 onChange={handleTagsChange}
@@ -220,7 +220,7 @@ const EditForm = ({
             </div>
 
             <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-              <strong>Product Description</strong>
+              <span>Product Description</span>
               <Textarea
                 id="description"
                 rows="5"
@@ -233,7 +233,7 @@ const EditForm = ({
               />
             </div>
             <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
-              <strong>Stock Quantity</strong>
+              <span>Stock Quantity</span>
               <Input
                 type="number"
                 className="block p-2.5 mt-2 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 bg-transparent bg-opacity-0 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -248,7 +248,7 @@ const EditForm = ({
 
             <div className="block mt-2 text-base font-medium text-gray-900 dark:text-white">
               <div className="mb-2">
-                <strong>Product Additional Information</strong>
+                <span>Product Additional Information</span>
               </div>
               <CKEditor
                 editor={ClassicEditor}
@@ -308,7 +308,7 @@ const EditForm = ({
           </div>
           <div className="col-span-1 bg-gray-100 rounded-lg p-6">
             {/* <div className="dark:text-white mb-4 text-base">
-              <strong>Product Image</strong>
+              <span>Product Image</span>
               <input type="file" multiple onChange={handleImgChange} />
               <div className="flex flex-wrap gap-2 mt-1">
                 {data &&

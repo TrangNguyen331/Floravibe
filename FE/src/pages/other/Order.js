@@ -109,8 +109,8 @@ const Order = ({ location, cartItems, currency }) => {
                             </span>
                             <span>{t("detail.free")}</span>
                           </li>
-                          {isFirstOrder && (
-                            <li className="mt-3">
+                          {order.firstDiscount > 0 && (
+                            <li>
                               <span className="order-bottom-left">
                                 {t("detail.first-order")}
                               </span>
@@ -126,7 +126,11 @@ const Order = ({ location, cartItems, currency }) => {
                             <li>
                               <span className="order-bottom-left">Voucher</span>
                               <span>
-                                {"-" + order.voucherDetail.voucherValue}₫
+                                {"-" +
+                                  order.voucherDetail.voucherValue.toLocaleString(
+                                    "vi-VN"
+                                  )}
+                                ₫
                               </span>
                             </li>
                           )}
@@ -208,14 +212,18 @@ const Order = ({ location, cartItems, currency }) => {
                           </li>
                         </ul>
                       </div>
-                      <div className="order-bottom">
-                        <ul>
-                          <h4>{t("detail.order-note")}</h4>
-                          <li>
-                            <p>{order.additionalOrder.additionalInformation}</p>
-                          </li>
-                        </ul>
-                      </div>
+                      {order.additionalOrder.additionalInformation && (
+                        <div className="order-bottom">
+                          <ul>
+                            <h4>{t("detail.order-note")}</h4>
+                            <li>
+                              <p>
+                                {order.additionalOrder.additionalInformation}
+                              </p>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

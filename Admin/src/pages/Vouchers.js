@@ -19,6 +19,15 @@ import { HomeIcon, AddIcon, EditIcon, DashboardIcon } from "../icons";
 import axiosInstance from "../axiosInstance";
 import VoucherForm from "../components/VoucherForm";
 import { useToasts } from "react-toast-notifications";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { Close } from "@mui/icons-material";
 function Icon({ icon, ...props }) {
   const Icon = icon;
   return <Icon {...props} />;
@@ -41,7 +50,8 @@ const Vouchers = () => {
     return formattedNumber;
   }
 
-  const closeModal = () => {
+  const closeModal = (event, reason) => {
+    if (reason && reason === "backdropClick") return;
     setMode(null);
     setIsModalOpen(false);
   };
@@ -211,24 +221,45 @@ const Vouchers = () => {
 
       {/* Modal */}
       <div>
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <ModalHeader className="flex items-center text-2xl">
-            {mode === "add" ? "Add New Voucher" : "Edit Voucher"}
-          </ModalHeader>
-          <ModalBody>
-            {mode === "add" ? (
-              <VoucherForm
-                data={voucherInfo}
-                handleInputChange={handleInputChange}
-              />
-            ) : (
-              <VoucherForm
-                data={voucherInfo}
-                handleInputChange={handleInputChange}
-              />
-            )}
-          </ModalBody>
-          <ModalFooter>
+        <Dialog
+          open={isModalOpen}
+          onClose={closeModal}
+          disableBackdropClick={true}
+          PaperProps={{
+            component: "form",
+          }}
+        >
+          <Toolbar className="justify-between">
+            <Typography
+              sx={{ color: "#7e3af2", fontWeight: "bold", fontSize: 19 }}
+            >
+              {mode === "add" ? "Add New Voucher" : "Edit Voucher"}
+            </Typography>
+            <IconButton
+              edge="end"
+              style={{ color: "#7e3af2" }}
+              onClick={closeModal}
+              aria-label="close"
+            >
+              <Close />
+            </IconButton>
+          </Toolbar>
+          <DialogContent dividers>
+            <ModalBody>
+              {mode === "add" ? (
+                <VoucherForm
+                  data={voucherInfo}
+                  handleInputChange={handleInputChange}
+                />
+              ) : (
+                <VoucherForm
+                  data={voucherInfo}
+                  handleInputChange={handleInputChange}
+                />
+              )}
+            </ModalBody>
+          </DialogContent>
+          <DialogActions className="mt-2 mb-2 mr-3">
             <div className="hidden sm:block">
               <Button layout="outline" onClick={closeModal}>
                 Cancel
@@ -245,8 +276,8 @@ const Vouchers = () => {
                 </Button>
               )}
             </div>
-          </ModalFooter>
-        </Modal>
+          </DialogActions>
+        </Dialog>
       </div>
 
       {/* Table */}

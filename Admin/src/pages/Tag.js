@@ -17,7 +17,14 @@ import {
 } from "@windmill/react-ui";
 import PageTitle from "../components/Typography/PageTitle";
 import { NavLink } from "react-router-dom";
-import { AddIcon, EditIcon, DashboardIcon, UpIcon, DownIcon, SortDefaultIcon } from "../icons";
+import {
+  AddIcon,
+  EditIcon,
+  DashboardIcon,
+  UpIcon,
+  DownIcon,
+  SortDefaultIcon,
+} from "../icons";
 import axiosInstance from "../axiosInstance";
 import { useToasts } from "react-toast-notifications";
 import TagForm from "../components/TagForm";
@@ -25,6 +32,15 @@ import { FaSpinner } from "react-icons/fa";
 import ".././assets/css/customLoading.css";
 import { RefreshIcon, SearchIcon, TrashIcon } from "../icons";
 import RoundIcon from "../components/RoundIcon";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { Close } from "@mui/icons-material";
 
 function Icon({ icon, ...props }) {
   const Icon = icon;
@@ -46,7 +62,8 @@ const Tag = () => {
     name: null,
   });
 
-  const closeModal = () => {
+  const closeModal = (event, reason) => {
+    if (reason && reason === "backdropClick") return;
     setMode(null);
     setIsModalOpen(false);
   };
@@ -114,7 +131,7 @@ const Tag = () => {
         });
       } else if (mode === "delete") {
         try {
-          await axiosInstance.delete(`/api/v1/tags/`+ tagData.id);
+          await axiosInstance.delete(`/api/v1/tags/` + tagData.id);
           closeModal();
           addToast("Tag deleted successfully", {
             appearance: "success",
@@ -149,32 +166,31 @@ const Tag = () => {
       [key]: value,
     }));
   };
-  
-  const handleSortName = () => { 
+
+  const handleSortName = () => {
     try {
       let newSort, sortedData;
-      switch (sortName) {   
+      switch (sortName) {
         case "default":
-          newSort = "asc"; 
-          sortedData = [...data].sort((a, b) =>
-            a.name.localeCompare(b.name)
-          );
+          newSort = "asc";
+          sortedData = [...data].sort((a, b) => a.name.localeCompare(b.name));
           break;
         case "asc":
-          newSort = "desc"; 
-          sortedData= [...data].sort((a, b) =>
-            b.name.localeCompare(a.name)
-          );
+          newSort = "desc";
+          sortedData = [...data].sort((a, b) => b.name.localeCompare(a.name));
           break;
         case "desc":
-          newSort = "default"; 
+          newSort = "default";
           sortedData = [...dataOrg];
           break;
       }
       setSortName(newSort);
       setData(sortedData);
     } catch (error) {
-      console.error("An error occurred during sorting by name: ", error.message);
+      console.error(
+        "An error occurred during sorting by name: ",
+        error.message
+      );
     }
   };
 
@@ -183,7 +199,7 @@ const Tag = () => {
       if (searchValue === "") {
         setData(dataOrg);
       } else {
-        const filteredData = dataOrg.filter(tag =>
+        const filteredData = dataOrg.filter((tag) =>
           tag.name.toLowerCase().includes(searchValue.toLowerCase())
         );
         setData(filteredData);
@@ -193,7 +209,7 @@ const Tag = () => {
     }
   };
   useEffect(() => {
-      handleSearch();
+    handleSearch();
   }, [searchValue]);
 
   return (
@@ -262,63 +278,74 @@ const Tag = () => {
             }}
             className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
           />
-        </div>    
+        </div>
       </Card>
 
       {/* Modal */}
       <div>
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <ModalHeader className="flex items-center text-2xl">
-            {mode === "add" ? "Add New Tag" : mode === "edit" ? "Edit Tag" : "Delete Tag"}
-          </ModalHeader>
-          <ModalBody>
-            {mode === "add" ? (
-              <TagForm
-                data={tagData}
-                handleInputChange={handleInputChange}
-              />
-            ) : mode === "edit" ? (
-              <TagForm data={tagData} handleInputChange={handleInputChange} />
-            ) : (
-              <p>
-                Make sure you want to delete tag{" "}
-                {tagData && `"${tagData.name}"`}
-              </p>
-            )}
-            {/* <TagForm data={tagData} handleInputChange={handleInputChange} /> */}
-          </ModalBody>
-          <ModalFooter>
+        <Dialog
+          open={isModalOpen}
+          onClose={closeModal}
+          maxWidth="sm"
+          fullWidth={true}
+          PaperProps={{
+            component: "form",
+          }}
+        >
+          <Toolbar className="justify-between">
+            <Typography
+              sx={{ color: "#7e3af2", fontWeight: "bold", fontSize: 19 }}
+            >
+              {mode === "add"
+                ? "Add New Tag"
+                : mode === "edit"
+                ? "Edit Tag"
+                : "Delete Tag"}
+            </Typography>
+            <IconButton
+              edge="end"
+              style={{ color: "#7e3af2" }}
+              onClick={closeModal}
+              aria-label="close"
+            >
+              <Close />
+            </IconButton>
+          </Toolbar>
+          <DialogContent dividers>
+            <ModalBody>
+              {mode === "add" ? (
+                <TagForm data={tagData} handleInputChange={handleInputChange} />
+              ) : mode === "edit" ? (
+                <TagForm data={tagData} handleInputChange={handleInputChange} />
+              ) : (
+                <p>
+                  Make sure you want to delete tag{" "}
+                  {tagData && `"${tagData.name}"`}
+                </p>
+              )}
+              {/* <TagForm data={tagData} handleInputChange={handleInputChange} /> */}
+            </ModalBody>
+          </DialogContent>
+          <DialogActions className="mt-2 mb-2 mr-3">
             <div className="hidden sm:block">
               <Button layout="outline" onClick={closeModal}>
                 Cancel
               </Button>
             </div>
             <div className="hidden sm:block">
-              {/* {mode === "edit" ? (
-              <Button
-                onClick={() => handleSave("edit")}
-                disabled={loadingSave}
-                className="gap-2 items-center"
-              >
-                {loadingSave ? <FaSpinner className="animate-spin" /> : null}
-                Save
-              </Button>
-            ) : (
-              <Button block onClick={() => handleSave("delete")}>
-                Delete
-              </Button>
-            )} */}
-              <Button
-                onClick={() => handleSave(mode)}
-                disabled={loadingSave}
-                className="gap-2 items-center"
-              >
-                {loadingSave ? <FaSpinner className="animate-spin" /> : null}
-                Save
-              </Button>
+              {mode === "edit" ? (
+                <Button block onClick={() => handleSave("edit")}>
+                  Save
+                </Button>
+              ) : (
+                <Button block onClick={() => handleSave("add")}>
+                  {loadingSave ? <FaSpinner className="animate-spin" /> : null}
+                  Add
+                </Button>
+              )}
             </div>
-          </ModalFooter>
-        </Modal>
+          </DialogActions>
+        </Dialog>
       </div>
 
       {/* Table */}

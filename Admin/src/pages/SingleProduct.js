@@ -194,7 +194,7 @@ const SingleProduct = () => {
                                   name="average-rating"
                                   size="small"
                                   value={review.ratingValue}
-                                  precision={0.2}
+                                  precision={0.1}
                                   emptyIcon={<StarBorder style={{ fontSize: '18px' }}/>}
                                   readOnly
                                 />

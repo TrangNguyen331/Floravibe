@@ -23,6 +23,7 @@ public class ResponseOrderDto {
     private VoucherDto voucherDetail;
     private LocalDate deliveryDate;
     private String deliveryTime;
+    private double unitTotal;
     private double total;
     private String status;
     private String methodPaid;

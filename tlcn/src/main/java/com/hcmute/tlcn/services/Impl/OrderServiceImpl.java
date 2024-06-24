@@ -101,17 +101,26 @@ public class OrderServiceImpl implements OrderService {
 //        order.setCancelDate(null);
         repository.save(order);
 
+        double unitTotal = 0;// mc thêm
+
         ResponseOrderDto orderDto = modelMapper.map(order, ResponseOrderDto.class);
         for (OrderDetailDto detailDto : orderDto.getDetails()) {
             Product product = productRepository.findById(detailDto.getProductId())
                     .orElseThrow(() -> new NotFoundException("Product not found"));
             int remainingStock = product.getStockQty() - detailDto.getQuantity();
-            
+
+            double unitPrice = detailDto.getQuantity() * product.getPrice();// mc thêm
+//            detailDto.setSubtotal(unitPrice);// mc thêm
+            unitTotal += unitPrice; // mc thêm
+
             product.setStockQty(remainingStock);
             productRepository.save(product);
 
             detailDto.setProduct(productRepository.findById(detailDto.getProductId()).orElse(null));
         }
+        order.setUnitTotal(unitTotal);
+        repository.save(order);
+
         String email = dto.getAdditionalOrder().getEmail();
 
         // Check if this is the user's first order

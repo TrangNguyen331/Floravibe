@@ -932,7 +932,7 @@
                                                 style="padding-bottom:5px;padding-left:10px;padding-right:5px;padding-top:5px;">
                                                 <div
                                                         style="color:#000000;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:right;mso-line-height-alt:16.8px;">
-                                                    <p style="margin: 0;"><strong>Tổng giá trị sản
+                                                    <p style="margin: 0;"><strong>Tổng giá trị các sản
                                                         phẩm:</strong></p>
                                                 </div>
                                             </td>
@@ -949,7 +949,7 @@
                                                 style="padding-bottom:5px;padding-left:5px;padding-right:5px;padding-top:10px;">
                                                 <div
                                                         style="color:#101112;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:right;mso-line-height-alt:16.8px;">
-                                                    <p style="margin: 0;">>[Tổng tiền các sp] ₫</p>
+                                                    <p style="margin: 0" th:text="${#numbers.formatDecimal(orderInfo.unitTotal, 0, 'COMMA', 0, 'POINT')} + '₫'">[Tổng tiền các sp] ₫</p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -1198,10 +1198,11 @@
                                 <td class="column column-1" width="75%"
                                     style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
                                     <table class="paragraph_block block-1" width="100%" border="0"
-                                           cellpadding="10" cellspacing="0" role="presentation"
+                                           cellpadding="0" cellspacing="0" role="presentation"
                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
                                         <tr>
-                                            <td class="pad">
+                                            <td class="pad"
+                                                style="padding-bottom:5px;padding-left:10px;padding-right:5px;padding-top:5px;">
                                                 <div
                                                         style="color:#101112;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:right;mso-line-height-alt:16.8px;">
                                                     <p style="margin: 0;"><strong>Phí vận
@@ -1214,7 +1215,7 @@
                                 <td class="column column-2" width="25%"
                                     style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
                                     <table class="paragraph_block block-1" width="100%" border="0"
-                                           cellpadding="10" cellspacing="0" role="presentation"
+                                           cellpadding="5" cellspacing="0" role="presentation"
                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
                                         <tr>
                                             <td class="pad">

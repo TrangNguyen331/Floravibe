@@ -1174,6 +1174,7 @@
   }
 }
 .header-offer {
+  display: flex;
   p {
     margin: 0;
     letter-spacing: 0.8px;
@@ -1186,6 +1187,11 @@
     @media #{$sm-layout} {
       text-align: right;
     }
+  }
+
+  a {
+    margin-right: 10px;
+
   }
 }
 

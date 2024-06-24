@@ -34,6 +34,15 @@ import { useToasts } from "react-toast-notifications";
 import CollectionForm from "../components/CollectionForm";
 import { FaSpinner } from "react-icons/fa";
 import ".././assets/css/customLoading.css";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { Close } from "@mui/icons-material";
 function Icon({ icon, ...props }) {
   const Icon = icon;
   return <Icon {...props} />;
@@ -54,7 +63,8 @@ const Collection = () => {
     name: null,
   });
 
-  const closeModal = () => {
+  const closeModal = (event, reason) => {
+    if (reason && reason === "backdropClick") return;
     setMode(null);
     setIsModalOpen(false);
   };
@@ -175,7 +185,10 @@ const Collection = () => {
       setSortName(newSort);
       setData(sortedData);
     } catch (error) {
-      console.error("An error occurred during sorting by name: ", error.message);
+      console.error(
+        "An error occurred during sorting by name: ",
+        error.message
+      );
     }
   };
 
@@ -196,7 +209,7 @@ const Collection = () => {
   useEffect(() => {
     handleSearch();
   }, [searchValue]);
-
+  const abc = () => {};
   return (
     <div>
       <PageTitle>Product Categories</PageTitle>
@@ -268,48 +281,74 @@ const Collection = () => {
 
       {/* Modal */}
       <div>
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <ModalHeader className="flex items-center text-2xl">
-            {mode === "add" && "Add New Category"}
-            {mode === "edit" && "Edit Category"}
-            {mode === "delete" && "Delete Category"}
-          </ModalHeader>
-          <ModalBody>
-            {mode === "add" ? (
-              <CollectionForm
-                data={collectionData}
-                handleInputChange={handleInputChange}
-              />
-            ) : mode === "edit" ? (
-              <CollectionForm
-                data={collectionData}
-                handleInputChange={handleInputChange}
-              />
-            ) : (
-              <p>
-                Are you sure to delete collection{" "}
-                {collectionData && `"${collectionData.name}"`}
-              </p>
-            )}
-          </ModalBody>
-          <ModalFooter>
+        <Dialog
+          open={isModalOpen}
+          onClose={closeModal}
+          maxWidth="sm"
+          fullWidth={true}
+          disableBackdropClick={true}
+          disableEscapeKeyDown={true}
+          PaperProps={{
+            component: "form",
+          }}
+        >
+          <Toolbar className="justify-between">
+            <Typography
+              sx={{ color: "#7e3af2", fontWeight: "bold", fontSize: 19 }}
+            >
+              {mode === "add" && "Add New Category"}
+              {mode === "edit" && "Edit Category"}
+              {mode === "delete" && "Delete Category"}
+            </Typography>
+            <IconButton
+              edge="end"
+              style={{ color: "#7e3af2" }}
+              onClick={closeModal}
+              aria-label="close"
+            >
+              <Close />
+            </IconButton>
+          </Toolbar>
+          <DialogContent dividers>
+            <ModalBody>
+              {mode === "add" ? (
+                <CollectionForm
+                  data={collectionData}
+                  handleInputChange={handleInputChange}
+                />
+              ) : mode === "edit" ? (
+                <CollectionForm
+                  data={collectionData}
+                  handleInputChange={handleInputChange}
+                />
+              ) : (
+                <p>
+                  Are you sure to delete collection{" "}
+                  {collectionData && `"${collectionData.name}"`}
+                </p>
+              )}
+            </ModalBody>
+          </DialogContent>
+          <DialogActions className="mt-2 mb-2 mr-3">
             <div className="hidden sm:block">
               <Button layout="outline" onClick={closeModal}>
                 Cancel
               </Button>
             </div>
             <div className="hidden sm:block">
-              <Button
-                onClick={() => handleSave(mode)}
-                disabled={loadingSave}
-                className="gap-2 items-center"
-              >
-                {loadingSave ? <FaSpinner className="animate-spin" /> : null}
-                Save
-              </Button>
+              {mode === "edit" ? (
+                <Button block onClick={() => handleSave("edit")}>
+                  Save
+                </Button>
+              ) : (
+                <Button block onClick={() => handleSave("add")}>
+                  {loadingSave ? <FaSpinner className="animate-spin" /> : null}
+                  Add
+                </Button>
+              )}
             </div>
-          </ModalFooter>
-        </Modal>
+          </DialogActions>
+        </Dialog>
       </div>
 
       {/* Table */}
