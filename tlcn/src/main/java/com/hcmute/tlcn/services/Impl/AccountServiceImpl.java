@@ -17,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -122,5 +121,9 @@ public class AccountServiceImpl implements AccountService {
             return "Fail";
         }
         return "Success";
+    }
+    @Override
+    public List<Account> getAllAccounts() {
+        return accountRepository.findAll();
     }
 }

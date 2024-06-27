@@ -1,4 +1,4 @@
-package com.hcmute.tlcn.dtos.product;
+package com.hcmute.tlcn.dtos.statistic;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -43,6 +43,9 @@ const Vouchers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState("add"); // 'add', 'edit'
 
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
   function formatNumberWithDecimal(number) {
     const numString = String(number); // Convert the number to a string
     const groups = numString.split(/(?=(?:\d{3})+(?!\d))/); // Split the string into groups of three digits
@@ -111,21 +114,38 @@ const Vouchers = () => {
     try {
       await axiosInstance.put(`/api/v1/vouchers/active/${voucherId}`);
       await fetchData(1);
+      {
+        addToast("Change status voucher successfully.", {
+          appearance: "success",
+          autoDismiss: true,
+          zIndex: 9999,
+        });
+        return;
+      }
     } catch (error) {
       console.log("Error", error);
+      {
+        addToast("Change status voucher fail.", {
+          appearance: "success",
+          autoDismiss: true,
+        });
+        return;
+      }
     }
   };
 
   const handleSave = async (mode) => {
-    if (
-      new Date(voucherInfo.validUntil) < new Date(voucherInfo.effectiveDate)
-    ) {
-      addToast("The Valid Til must be later than the Effective Date.", {
-        appearance: "warning",
-        autoDismiss: true,
-      });
-      return;
-    }
+    if (new Date(voucherInfo.validUntil) < new Date(voucherInfo.effectiveDate))
+      // {
+      //   addToast("The Valid Til must be later than the Effective Date.", {
+      //     appearance: "warning",
+      //     autoDismiss: true,
+      //     zIndex: 9999,
+      //   });
+      //   return;
+      // }
+      setAlertMessage("The Valid Til must be later than the Effective Date.");
+    setShowAlert(true);
     if (
       !voucherInfo.voucherName ||
       !voucherInfo.description ||
@@ -137,6 +157,7 @@ const Vouchers = () => {
       addToast("Please fill in all the required fields", {
         appearance: "warning",
         autoDismiss: true,
+        zIndex: 9999,
       });
       return;
     }
@@ -330,15 +351,19 @@ const Vouchers = () => {
                 <TableCell className="text-base">
                   {voucher.usedVoucher}
                 </TableCell>
-                <TableCell className="text-base">
+                <TableCell className="text-base text-center">
                   <Input
                     type="checkbox"
                     checked={voucher.isActive}
                     onChange={() => handleCheckboxChange(voucher.id)}
                   />
                 </TableCell>
-                <TableCell className="text-base">
-                  <Input type="checkbox" checked={voucher.guest} />
+                <TableCell className="text-base text-center">
+                  {voucher.guest ? (
+                    <Input type="checkbox" checked={voucher.guest} />
+                  ) : (
+                    ""
+                  )}
                 </TableCell>
                 <TableCell>
                   <Button

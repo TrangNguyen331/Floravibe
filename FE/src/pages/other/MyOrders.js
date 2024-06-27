@@ -4,7 +4,16 @@ import MetaTags from "react-meta-tags";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import { Link } from "react-router-dom";
-import { Nav, Tab, Tooltip, OverlayTrigger } from "react-bootstrap";
+import {
+  Nav,
+  Tab,
+  Tooltip,
+  OverlayTrigger,
+  ToggleButton,
+  Popover,
+  PopoverTitle,
+  PopoverContent,
+} from "react-bootstrap";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../axiosInstance";
 import { LuBadgeInfo } from "react-icons/lu";
@@ -255,11 +264,24 @@ const MyOrders = ({ location }) => {
                                           <span>
                                             <OverlayTrigger
                                               overlay={
-                                                <Tooltip>
-                                                  {order.cancelDetail &&
-                                                    order.cancelDetail
-                                                      .cancelReason}
-                                                </Tooltip>
+                                                // <Tooltip>
+                                                //   {order.cancelDetail &&
+                                                //     order.cancelDetail
+                                                //       .cancelReason}
+                                                // </Tooltip>
+                                                <Popover>
+                                                  <PopoverTitle>
+                                                    The reason cancellation:
+                                                  </PopoverTitle>
+                                                  <PopoverContent
+                                                    className="popover-reason-cancel"
+                                                    style={{ color: "#a749ff" }}
+                                                  >
+                                                    {order.cancelDetail &&
+                                                      order.cancelDetail
+                                                        .cancelReason}
+                                                  </PopoverContent>
+                                                </Popover>
                                               }
                                             >
                                               <LuBadgeInfo />
@@ -741,13 +763,28 @@ const MyOrders = ({ location }) => {
                                             </span>
                                             <span>
                                               <OverlayTrigger
-                                                trigger="click"
+                                                // trigger="click"
                                                 overlay={
-                                                  <Tooltip>
-                                                    {order.cancelDetail &&
-                                                      order.cancelDetail
-                                                        .cancelReason}
-                                                  </Tooltip>
+                                                  // <Tooltip>
+                                                  //   {order.cancelDetail &&
+                                                  //     order.cancelDetail
+                                                  //       .cancelReason}
+                                                  // </Tooltip>
+                                                  <Popover>
+                                                    <PopoverTitle>
+                                                      The reason cancellation:
+                                                    </PopoverTitle>
+                                                    <PopoverContent
+                                                      className="popover-reason-cancel"
+                                                      style={{
+                                                        color: "#a749ff",
+                                                      }}
+                                                    >
+                                                      {order.cancelDetail &&
+                                                        order.cancelDetail
+                                                          .cancelReason}
+                                                    </PopoverContent>
+                                                  </Popover>
                                                 }
                                               >
                                                 <LuBadgeInfo />

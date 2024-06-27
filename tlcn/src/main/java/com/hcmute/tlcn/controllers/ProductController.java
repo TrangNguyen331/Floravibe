@@ -1,16 +1,12 @@
 package com.hcmute.tlcn.controllers;
 
 import com.hcmute.tlcn.dtos.product.ProductDto;
-import com.hcmute.tlcn.dtos.product.ResponseProductStatsDto;
 import com.hcmute.tlcn.dtos.review.ReviewDto;
-import com.hcmute.tlcn.entities.Order;
 import com.hcmute.tlcn.entities.Product;
 import com.hcmute.tlcn.services.ProductService;
 import com.hcmute.tlcn.utils.PageUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

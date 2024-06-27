@@ -1970,6 +1970,7 @@ a.default-btn {
 
 [class*="ToastContainer"] {
   overflow: hidden !important;
+  z-index: 9000;
 }
 
 @media (min-width: 1220px) {

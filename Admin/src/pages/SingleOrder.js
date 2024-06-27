@@ -5,6 +5,7 @@ import PageTitle from "../components/Typography/PageTitle";
 import { DashboardIcon, Info } from "../icons";
 import { Card, CardBody, Badge, TableHeader, Avatar } from "@windmill/react-ui";
 import { genRating } from "../utils/genarateRating";
+import ReasonCancel from "../components/ReasonCancel";
 import axiosInstance from "../axiosInstance";
 import {
   InfoOutlined,
@@ -33,6 +34,13 @@ const SingleOrder = () => {
   const [order, setOrder] = useState(null);
   const [payment, setPayment] = useState(null);
   const [open, setOpen] = useState({});
+  const [cancelOrder, setCancelOrder] = useState(null);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const token = localStorage.getItem("token");
+  const [userInfo, setUserInfo] = useState({
+    fullName: "",
+    email: "",
+  });
   const statusOptions = [
     {
       value: "IN_REQUEST",
@@ -97,18 +105,79 @@ const SingleOrder = () => {
     } catch (error) {}
   };
 
-  const handleStatusChange = async (event) => {
-    const newStatus = event.target.value;
-    try {
-      const updatedOrder = { ...order, status: newStatus };
-      await axiosInstance.put(`/api/v1/orders/${id}`, updatedOrder);
-      setOrder(updatedOrder);
-      window.location.reload();
-    } catch (error) {
-      console.error("Update status failed:", error);
-    }
+  // const handleStatusChange = async (event) => {
+  //   const newStatus = event.target.value;
+  //   try {
+  //     const updatedOrder = { ...order, status: newStatus };
+  //     await axiosInstance.put(`/api/v1/orders/${id}`, updatedOrder);
+  //     setOrder(updatedOrder);
+  //     window.location.reload();
+  //   } catch (error) {
+  //     console.error("Update status failed:", error);
+  //   }
+  // };
+  const closeModal = (event, reason) => {
+    if (reason && reason === "backdropClick") return;
+    setIsCancelModalOpen(false);
   };
 
+  const handleStatusChange = async (newStatus) => {
+    try {
+      if (newStatus === "CANCEL") {
+        setIsCancelModalOpen(true);
+      } else {
+        order.status = newStatus;
+        console.log(order);
+
+        const updatedOrder = { ...order, status: newStatus };
+        await axiosInstance.put(`/api/v1/orders/${id}`, order);
+        setOrder(updatedOrder);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log("Update status fail:", error);
+    }
+    //  try {
+    //    // Tìm item tương ứng với orderId
+    //    let updatedData = order.map((item) => {
+    //        if (newStatus === "CANCEL") {
+    //          setCancelOrder(id);
+    //          setIsCancelModalOpen(true);
+    //        } else {
+    //          item.status = newStatus;
+    //          console.log(item);
+
+    //          axiosInstance
+    //            .put(`/api/v1/orders/${item.id}`, item)
+    //            .then(() => {
+    //              setData(updatedData);
+    //              fetchData(page, filter, resultsPerPage);
+    //            })
+    //            .catch((error) => {
+    //              console.log("Update status failed:", error);
+    //            });
+    //        }
+    //      return item;
+    //    });
+
+    //    setData(updatedData); // Cập nhật lại state data sau khi thay đổi
+    //  } catch (error) {
+    //    console.log("Update status fail:", error);
+    //  }
+  };
+  useEffect(() => {
+    const setDataInit = async () => {
+      if (token) {
+        const response = await axiosInstance.get("/api/v1/auth/identity");
+        setUserInfo({
+          // ...userInfo,
+          fullName: response.data.fullName || "",
+          email: response.data.email || "",
+        });
+      }
+    };
+    setDataInit();
+  }, []);
   const fetchPaymentData = async () => {
     try {
       const response = await axiosInstance.get("/api/v1/payments/allPayments");
@@ -184,7 +253,7 @@ const SingleOrder = () => {
                           ).color
                         } w-auto`}
                         value={order.status}
-                        onChange={handleStatusChange}
+                        onChange={(e) => handleStatusChange(e.target.value)}
                       >
                         {statusOptions.map((option) => (
                           <option
@@ -214,7 +283,7 @@ const SingleOrder = () => {
                         {new Date(order.createdDate).toLocaleString("vi-VN")}
                       </span>
                     </Badge>
-                    {order.status === "CANCEL" && (
+                    {order.status === "CANCEL" && order.cancelDetail && (
                       <Badge
                         className="py-1 px-2 gap-2 text-sm py-1 px-2 gap-2 text-sm leading-5
                             font-semibold rounded-full bg-purple-100 text-purple-900 dark:bg-purple-700 dark:text-purple-100"
@@ -223,6 +292,9 @@ const SingleOrder = () => {
                         Cancel time:
                         <span className="font-normal">
                           {/* {new Date(order.cancelDate).toLocaleString("vi-VN")} */}
+                          {new Date(
+                            order.cancelDetail.cancelDate
+                          ).toLocaleString("vi-VN")}
                         </span>
                       </Badge>
                     )}
@@ -246,7 +318,7 @@ const SingleOrder = () => {
                       {order.status === "CANCEL"
                         ? order.cancelDetail &&
                           order.cancelDetail.cancelRole === "ADMIN"
-                          ? "Cancelled by you"
+                          ? "Cancelled by Admin"
                           : "Cancelled by customer"
                         : ""}
                     </span>
@@ -594,12 +666,12 @@ const SingleOrder = () => {
                         />
                         <TableCell>Subtotal</TableCell>
                         <TableCell colSpan={2} align="right">
-                          {/* {formatNumberWithDecimal(
+                          {formatNumberWithDecimal(
                             order.total +
                               order.voucherDetail.voucherValue +
                               order.firstDiscount
-                          )}{" "} */}
-                          {order.unitTotal}₫
+                          )}{" "}
+                          ₫{/* {order.unitTotal}₫ */}
                         </TableCell>
                       </TableRow>
                       {order.firstDiscount && order.firstDiscount > 0 ? (
@@ -668,6 +740,14 @@ const SingleOrder = () => {
       ) : (
         ""
       )}
+      <ReasonCancel
+        isModalOpen={isCancelModalOpen}
+        onClose={closeModal}
+        orderId={id}
+        cancelEmail={userInfo.email}
+        data={order && order}
+        fetchData={fetchData}
+      />
     </div>
   );
 };

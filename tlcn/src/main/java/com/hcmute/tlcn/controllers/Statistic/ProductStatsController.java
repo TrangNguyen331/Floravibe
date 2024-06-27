@@ -1,7 +1,6 @@
-package com.hcmute.tlcn.controllers;
+package com.hcmute.tlcn.controllers.Statistic;
 
-import com.hcmute.tlcn.dtos.product.ResponseProductStatsDto;
-import com.hcmute.tlcn.services.ProductService;
+import com.hcmute.tlcn.dtos.statistic.ResponseProductStatsDto;
 import com.hcmute.tlcn.services.ProductStatsService;
 import com.hcmute.tlcn.utils.PageUtils;
 import lombok.RequiredArgsConstructor;

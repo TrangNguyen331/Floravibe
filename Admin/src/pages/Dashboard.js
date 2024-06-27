@@ -27,9 +27,9 @@ import OrdersTable from "../components/OrdersTable";
 import axiosInstance from "../axiosInstance";
 import StatisticProduct from "../components/StatisticProduct";
 import { Box, Divider, Tab, Tabs, Typography, styled } from "@mui/material";
-import TestStatstic from "../components/TestStatstic";
 import Orders from "./Orders";
 import TestOrderTable from "../components/TestOrderTable";
+import UserStatistic from "../components/UserStatistic";
 function Dashboard() {
   const [dashboard, setDashBoard] = useState({
     totalCustomer: "",
@@ -53,34 +53,69 @@ function Dashboard() {
       backgroundColor: "transparent",
     },
     "& .MuiTabs-indicatorSpan": {
-      // maxWidth: 60,
-      height: "8px",
-      width: "70%",
-      backgroundColor: "#7e3af2",
+      maxWidth: 40,
+      width: "100%",
+      backgroundColor: "#635ee7",
     },
   });
+
   const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
     ({ theme }) => ({
       textTransform: "none",
-      fontWeight: 500,
-      fontSize: theme.typography.pxToRem(20),
+      fontWeight: theme.typography.fontWeightRegular,
+      fontSize: theme.typography.pxToRem(15),
       marginRight: theme.spacing(1),
-      color: "#97979c",
+      color: "rgba(255, 255, 255, 0.7)",
       "&.Mui-selected": {
-        fontWeight: 600,
-        fontSize: 22,
-        color: "#7e3af2",
+        color: "#fff",
       },
       "&.Mui-focusVisible": {
         backgroundColor: "rgba(100, 95, 228, 0.32)",
       },
     })
   );
-  CustomTabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-  };
+  // const StyledTabs = styled((props) => (
+  //   <Tabs
+  //     {...props}
+  //     TabIndicatorProps={{
+  //       children: <span className="MuiTabs-indicatorSpan" />,
+  //     }}
+  //   />
+  // ))({
+  //   "& .MuiTabs-indicator": {
+  //     display: "flex",
+  //     justifyContent: "center",
+  //     backgroundColor: "transparent",
+  //   },
+  //   "& .MuiTabs-indicatorSpan": {
+  //     // maxWidth: 60,
+  //     height: "8px",
+  //     width: "70%",
+  //     backgroundColor: "#7e3af2",
+  //   },
+  // });
+  // const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
+  //   ({ theme }) => ({
+  //     textTransform: "none",
+  //     fontWeight: 500,
+  //     fontSize: theme.typography.pxToRem(20),
+  //     marginRight: theme.spacing(1),
+  //     color: "#97979c",
+  //     "&.Mui-selected": {
+  //       fontWeight: 600,
+  //       fontSize: 22,
+  //       color: "#7e3af2",
+  //     },
+  //     "&.Mui-focusVisible": {
+  //       backgroundColor: "rgba(100, 95, 228, 0.32)",
+  //     },
+  //   })
+  // );
+  // CustomTabPanel.propTypes = {
+  //   children: PropTypes.node,
+  //   index: PropTypes.number.isRequired,
+  //   value: PropTypes.number.isRequired,
+  // };
   function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,
@@ -102,7 +137,6 @@ function Dashboard() {
       </div>
     );
   }
-
   useEffect(() => {
     let isMounted = true;
     const fetchData = async () => {
@@ -124,14 +158,12 @@ function Dashboard() {
   const [filter, setFilter] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [cusValue, setCusValue] = useState(0);
-  const [selectedValue, setSelectedValue] = useState("All");
-  const [resultsPerPage, setResultsPerPage] = useState(5);
+  const [resultsPerPage, setResultsPerPage] = useState(10);
   const handleChange = (event, newValue) => {
     setCusValue(newValue);
   };
-
   // const handleFilter = (filter_name) => {
-  //   setSelectedValue(filter_name);
+  //   // console.log(filter_name);
   //   if (filter_name === "All") {
   //     setRefresh(!refresh);
   //   }
@@ -158,6 +190,7 @@ function Dashboard() {
       {/* <!-- Cards --> */}
       <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
         <InfoCard
+          disableHover
           title="New Orders"
           onClick={() => setFilter("IN_REQUEST")}
           value={dashboard.totalNewOrder || "0"}
@@ -171,6 +204,7 @@ function Dashboard() {
         </InfoCard>
 
         <InfoCard
+          disableHover
           title="Shipping Orders"
           onClick={() => setFilter("IN_PROCESSING")}
           value={dashboard.totalShippingOrder || "0"}
@@ -184,6 +218,7 @@ function Dashboard() {
         </InfoCard>
 
         <InfoCard
+          disableHover
           title="Complete Orders"
           value={dashboard.totalCompleteOrder || "0"}
           onClick={() => setFilter("COMPLETED")}
@@ -197,6 +232,7 @@ function Dashboard() {
         </InfoCard>
 
         <InfoCard
+          disableHover
           title="Cancel Orders"
           onClick={() => setFilter("CANCEL")}
           value={dashboard.totalCancelOrder || "0"}
@@ -239,9 +275,20 @@ function Dashboard() {
           />
         </InfoCard>
       </div>
+      {/* <div className="grid gap-6 mb-8 md:grid-cols-2">
+        <ChartCard title="User Analytics">
+          <Line {...lineOptions} />
+          <ChartLegend legends={lineLegends} />
+        </ChartCard>
+
+        <ChartCard title="Revenue">
+          <Doughnut {...doughnutOptions} />
+          <ChartLegend legends={doughnutLegends} />
+        </ChartCard>
+      </div> */}
 
       <Box sx={{ width: "100%" }}>
-        <Box>
+        <Box sx={{ bgcolor: "#2e1534" }}>
           <StyledTabs
             value={cusValue}
             onChange={handleChange}
@@ -260,12 +307,50 @@ function Dashboard() {
           </CustomTabPanel>
           <CustomTabPanel value={cusValue} index={1}>
             <>
-              <TestStatstic />
+              <StatisticProduct />
             </>
           </CustomTabPanel>
-          <CustomTabPanel value={cusValue} index={2}></CustomTabPanel>
+          <CustomTabPanel value={cusValue} index={2}>
+            <UserStatistic />
+          </CustomTabPanel>
         </Box>
       </Box>
+
+      {/* <PageTitle>Orders</PageTitle>
+      <Card className="mt-2 mb-5 shadow-md flex justify-between items-center">
+        <CardBody>
+          <div className="flex items-center">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Filter Orders
+            </p>
+
+            <Label className="mx-3">
+              <Select
+                className="py-3"
+                onChange={(e) => handleFilter(e.target.value)}
+              >
+                <option>All</option>
+                <option>In Request Orders</option>
+                <option>In Progress Orders</option>
+                <option>Cancel Orders</option>
+                <option>Completed Orders</option>
+              </Select>
+            </Label>
+          </div>
+        </CardBody>
+        <RoundIcon
+          icon={RefreshIcon}
+          onClick={() => {
+            setRefresh(!refresh);
+          }}
+          className="pr-3 mr-6 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
+        />
+      </Card>
+      <OrdersTable resultsPerPage={5} filter={filter} refresh={refresh} />
+
+      <PageTitle>Statistic Product</PageTitle>
+      <StatisticProduct />
+      <TestStatstic /> */}
     </>
   );
 }

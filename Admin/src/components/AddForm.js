@@ -34,7 +34,7 @@ const AddForm = () => {
         </div>
 
         <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
-          <span>Product Collection</span>
+          <span>Product Category</span>
           <Input
             type="text"
             value="Summer"

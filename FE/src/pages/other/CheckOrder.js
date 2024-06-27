@@ -85,8 +85,8 @@ const CheckOrder = ({ location }) => {
         <div className="check-order-area pt-50 pb-50">
           <div className="container">
             <h3 className="check-order-title">Check Order Status</h3>
-            <div className="row items-end">
-              <div className="col-lg-5 col-md-4">
+            <div className="row flex items-center justify-content-center">
+              <div className="col-lg-4 col-md-3">
                 <div className="check-input mb-20">
                   <label>Email</label>
                   <input
@@ -96,7 +96,10 @@ const CheckOrder = ({ location }) => {
                   />
                 </div>
               </div>
-              <div className="col-lg-5 col-md-4">
+              <div className="label">
+                <label>Or</label>
+              </div>
+              <div className="col-lg-4 col-md-3">
                 <div className="check-input mb-20">
                   <label>Order ID</label>
                   <input
@@ -107,7 +110,7 @@ const CheckOrder = ({ location }) => {
                 </div>
               </div>
               <div className="col-lg-2 col-md-4">
-                <div className="check-input mb-20">
+                <div className="check-input mb-20 items-center justify-content-center">
                   <button className="check-btn" onClick={clickCheckOrders}>
                     Check
                   </button>

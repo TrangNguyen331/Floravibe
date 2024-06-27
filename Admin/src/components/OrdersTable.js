@@ -90,6 +90,7 @@ const OrdersTable = ({
         setTotalPage(Math.ceil(filteredData.length / resultsPerPage));
         setTotalResult(filteredData.length);
       } else {
+        setOrdersData(allOrdersData);
         setTotalPage(response.data.totalPages);
         setTotalResult(response.data.totalElements);
       }
@@ -346,6 +347,7 @@ const OrdersTable = ({
                     </div>
                   </div>
                 </TableCell>
+                <TableCell>Email</TableCell>
                 <TableCell>Order ID</TableCell>
                 <TableCell>Items</TableCell>
                 <TableCell>
@@ -406,18 +408,32 @@ const OrdersTable = ({
             </TableHeader>
             <TableBody>
               {data.map((order, i) => (
-                <TableRow key={order.id}>
+                <TableRow
+                  key={order.id}
+                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                >
                   <TableCell>
-                    <div className="flex items-center text-sm">
-                      <div>
-                        <p className="font-semibold">
-                          {order.additionalOrder.fullName}
-                        </p>
+                    <Link to={`/app/order/${order.id}`}>
+                      <div className="flex items-center text-sm">
+                        <div>
+                          <p className="font-semibold">
+                            {order.additionalOrder.fullName}
+                          </p>
+                        </div>
                       </div>
-                    </div>
+                    </Link>
                   </TableCell>
                   <TableCell>
-                    <span className="text-base">{order.id || ""}</span>
+                    <Link to={`/app/order/${order.id}`}>
+                      <span className="text-base">
+                        {order.additionalOrder.email || ""}
+                      </span>
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/app/order/${order.id}`}>
+                      <span className="text-base">{order.id || ""}</span>
+                    </Link>
                   </TableCell>
                   <TableCell className="text-base">
                     {order && order.details && order.details.length > 0
@@ -494,11 +510,11 @@ const OrdersTable = ({
                       {new Date(order.createdDate).toLocaleDateString("vi-VN")}
                     </span>
                   </TableCell>
-                  <TableCell>
+                  {/* <TableCell>
                     <Link to={`/app/order/${order.id}`}>
                       <Button icon={EyeIcon} layout="outline" />
                     </Link>
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               ))}
               {searchValue && data.length === 0 && (

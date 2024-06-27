@@ -44,6 +44,8 @@ const AddProduct = () => {
   const [allTags, setAllTags] = useState([]);
   const [tagLoaded, setTagLoaded] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const [selectedProduct, setSelectedProduct] = useState({
     id: "",
     name: "",
@@ -257,10 +259,10 @@ const AddProduct = () => {
             </div>
 
             <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
-              <FormTitle>Product Collection</FormTitle>
+              <FormTitle>Product Category</FormTitle>
               <Select
                 isMulti
-                className="custom-select"
+                className="custom-select bg-transparent border-gray-300 text-gray-900 placeholder-gray-100 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 components={{ Option: CustomOption }}
                 styles={{
                   multiValue: (base) => ({
@@ -273,7 +275,7 @@ const AddProduct = () => {
                     color: "#ffffff",
                   }),
                 }}
-                placeholder="Enter product collection"
+                placeholder="Enter product category"
                 filterOption={createFilter({ ignoreAccents: false })}
                 closeMenuOnSelect={false}
                 options={

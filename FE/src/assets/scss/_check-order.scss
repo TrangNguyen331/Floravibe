@@ -1,4 +1,13 @@
 .check-order-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .label{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .check-order-title {
     font-weight: 600;
     text-align: center;
@@ -13,9 +22,9 @@
     button {
       height: 45px;
       width: 100%;
-      background-color: #f2f2f2;
+      background-color: $theme-color;
       border: medium none;
-      color: #333;
+      color: #ffffff;
       cursor: pointer;
       font-size: 14px;
       font-weight: 500;
@@ -23,9 +32,10 @@
       padding: 11px 30px;
       text-transform: uppercase;
       transition: all 0.3s ease 0s;
+      border-radius: 70px;
       &:hover {
-        background-color: $theme-color;
-        color: #fff;
+        background-color: #f2f2f2;
+        color: #000000;
       }
     }
   }

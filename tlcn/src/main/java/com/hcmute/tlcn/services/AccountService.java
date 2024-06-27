@@ -7,6 +7,8 @@ import com.hcmute.tlcn.entities.Account;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface AccountService {
     String register(RegisterDto input);
     Page<Account> getPaging(String search, Pageable pageable);
@@ -15,4 +17,6 @@ public interface AccountService {
     Account updatePassword(String userName, UpdatePasswordDto dto);
     Account activeDeActive(String id);
     String forgotPassword(String email);
+
+    List<Account> getAllAccounts();
 }

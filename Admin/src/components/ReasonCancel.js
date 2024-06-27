@@ -17,7 +17,7 @@ import { ModalBody, Button } from "@windmill/react-ui";
 import axiosInstance from "../axiosInstance";
 import { reasonList } from "../helper/numberhelper";
 import { FaSpinner } from "react-icons/fa";
-const CancelOrderForm = ({
+const ReasonCancel = ({
   isModalOpen,
   onClose,
   orderId,
@@ -31,14 +31,13 @@ const CancelOrderForm = ({
   const clickSubmit = async () => {
     setLoadingSubmit(true);
     try {
-      let body = data.filter((order) => order.id === orderId)[0];
-      body.status = "CANCEL";
-      body.cancelDetail = {
+      data.status = "CANCEL";
+      data.cancelDetail = {
         cancelEmail: cancelEmail,
         cancelReason: reason,
         cancelRole: "ADMIN",
       };
-      await axiosInstance.put(`/api/v1/orders/${orderId}`, body);
+      await axiosInstance.put(`/api/v1/orders/${orderId}`, data);
       setLoadingSubmit(false);
       setReason("");
       onClose();
@@ -138,4 +137,4 @@ const CancelOrderForm = ({
     </div>
   );
 };
-export default CancelOrderForm;
+export default ReasonCancel;

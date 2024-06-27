@@ -52,7 +52,7 @@ export const reasonList = [
   },
   {
     key: "wrong_product_info",
-    value: "Giá cả hoặc thông tin sản phẩm sai",
+    value: "Giá cả/ Thông tin sản phẩm không đúng",
   },
   {
     key: "black_list",

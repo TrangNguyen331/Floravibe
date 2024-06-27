@@ -375,98 +375,102 @@ const TestOrderTable = ({ resultsPerPage, setResultsPerPage }) => {
   return (
     <div>
       {/* Table */}
-      {loadingGet ? (
-        <Box
-          sx={{ width: "100%", color: "grey.500", backgroundColor: "grey.500" }}
-        >
-          <LinearProgress
-            sx={{
-              "& .MuiLinearProgress-bar": {
-                backgroundColor: "#edebfe", // Customize bar color
-              },
-              backgroundColor: "#7e3af2", // Customize background color
-            }}
-          />
-        </Box>
-      ) : (
-        <div>
-          <Card className="mt-5 mb-5 shadow-md flex justify-between items-center">
-            <CardBody>
-              <div className="flex items-center">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Filter Orders
-                </p>
-                <Label className="mx-3">
-                  <Select
-                    className="py-3"
-                    onChange={(e) => handleFilter(e.target.value)}
-                  >
-                    {optionList.map((option) => (
-                      <option key={option.key} value={option.value}>
-                        {option.value}
-                      </option>
-                    ))}
-                  </Select>
-                </Label>
+      <div>
+        <Card className="mt-5 mb-5 shadow-md flex justify-between items-center">
+          <CardBody>
+            <div className="flex items-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Filter Orders
+              </p>
+              <Label className="mx-3">
+                <Select
+                  className="py-3"
+                  onChange={(e) => handleFilter(e.target.value)}
+                >
+                  {optionList.map((option) => (
+                    <option key={option.key} value={option.value}>
+                      {option.value}
+                    </option>
+                  ))}
+                </Select>
+              </Label>
 
-                <Label className="">
-                  <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                    <input
-                      className="py-3 pr-5 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-                      value={resultsPerPage}
-                      onChange={(e) => setResultsPerPage(e.target.value)}
-                    />
-                    <div className="absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-none">
-                      Results on Table
-                    </div>
-                  </div>
-                </Label>
-              </div>
-            </CardBody>
-            <Label className="mx-0 ml-auto">
-              <Select
-                className="py-3 rounded-r-none bg-purple-200"
-                onChange={(e) => {
-                  setSearchType(e.target.value);
-                  setSearchValue("");
-                }}
-              >
-                <option hidden>Choose to search</option>
-                <option>Client</option>
-                <option>Order ID</option>
-                <option>Name Of Product</option>
-
-                <option>Date</option>
-              </Select>
-            </Label>
-            <Label className="mx-0 w-70">
-              <div className="relative text-gray-500 dark:focus-within:text-purple-400">
-                <input
-                  type={searchType === "Date" ? "date" : "text"}
-                  className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
-                  placeholder="Search..."
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                />
-                <div className="absolute inset-y-0 right-0 flex items-center mr-3">
-                  <SearchIcon
-                    className="w-5 h-5 text-purple-500 transition-colors duration-200"
-                    aria-hidden="true"
-                  />
+              <Label className="">
+                <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
+                  {/* <input
+                    className="py-3 pr-5 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+                    value={resultsPerPage}
+                    onChange={(e) => setResultsPerPage(e.target.value)}
+                  /> */}
+                  {/* <div className="absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-none">
+                    Results on Table
+                  </div> */}
                 </div>
-              </div>
-            </Label>
-            <RoundIcon
-              icon={RefreshIcon}
-              onClick={() => {
-                setSearchType("");
+              </Label>
+            </div>
+          </CardBody>
+          <Label className="mx-0 ml-auto">
+            <Select
+              className="py-3 rounded-r-none bg-purple-200"
+              onChange={(e) => {
+                setSearchType(e.target.value);
                 setSearchValue("");
-
-                setResultsPerPage(resultsPerPage);
               }}
-              className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
+            >
+              <option hidden>Choose to search</option>
+              <option>Client</option>
+              <option>Order ID</option>
+              <option>Name Of Product</option>
+
+              <option>Date</option>
+            </Select>
+          </Label>
+          <Label className="mx-0 w-70">
+            <div className="relative text-gray-500 dark:focus-within:text-purple-400">
+              <input
+                type={searchType === "Date" ? "date" : "text"}
+                className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
+                placeholder="Search..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center mr-3">
+                <SearchIcon
+                  className="w-5 h-5 text-purple-500 transition-colors duration-200"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
+          </Label>
+          <RoundIcon
+            icon={RefreshIcon}
+            onClick={() => {
+              setSearchType("");
+              setSearchValue("");
+
+              setResultsPerPage(resultsPerPage);
+            }}
+            className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
+          />
+        </Card>
+        {loadingGet ? (
+          <Box
+            sx={{
+              width: "100%",
+              color: "grey.500",
+              backgroundColor: "grey.500",
+            }}
+          >
+            <LinearProgress
+              sx={{
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: "#edebfe", // Customize bar color
+                },
+                backgroundColor: "#7e3af2", // Customize background color
+              }}
             />
-          </Card>
+          </Box>
+        ) : (
           <TableContainer className="mb-8">
             <Table>
               <TableHeader>
@@ -489,6 +493,7 @@ const TestOrderTable = ({ resultsPerPage, setResultsPerPage }) => {
                       </div>
                     </div>
                   </TableCell>
+                  <TableCell>Email</TableCell>
                   <TableCell>Order ID</TableCell>
                   <TableCell>Items</TableCell>
                   <TableCell>
@@ -552,18 +557,32 @@ const TestOrderTable = ({ resultsPerPage, setResultsPerPage }) => {
               </TableHeader>
               <TableBody>
                 {data.map((order, i) => (
-                  <TableRow key={order.id}>
+                  <TableRow
+                    key={order.id}
+                    className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                  >
                     <TableCell>
-                      <div className="flex items-center text-sm">
-                        <div>
-                          <p className="font-semibold">
-                            {order.additionalOrder.fullName}
-                          </p>
+                      <Link to={`/app/order/${order.id}`}>
+                        <div className="flex items-center text-sm">
+                          <div>
+                            <p className="font-semibold">
+                              {order.additionalOrder.fullName}
+                            </p>
+                          </div>
                         </div>
-                      </div>
+                      </Link>
                     </TableCell>
                     <TableCell>
-                      <span className="text-base">{order.id || ""}</span>
+                      <Link to={`/app/order/${order.id}`}>
+                        <span className="text-base">
+                          {order.additionalOrder.email || ""}
+                        </span>
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <Link to={`/app/order/${order.id}`}>
+                        <span className="text-base">{order.id || ""}</span>
+                      </Link>
                     </TableCell>
                     <TableCell className="text-base">
                       {order && order.details && order.details.length > 0
@@ -641,11 +660,11 @@ const TestOrderTable = ({ resultsPerPage, setResultsPerPage }) => {
                         )}
                       </span>
                     </TableCell>
-                    <TableCell>
-                      <Link to={`/app/order/${order.id}`}>
-                        <Button icon={EyeIcon} layout="outline" />
-                      </Link>
-                    </TableCell>
+                    {/* <TableCell>
+                    <Link to={`/app/order/${order.id}`}>
+                      <Button icon={EyeIcon} layout="outline" />
+                    </Link>
+                  </TableCell> */}
                   </TableRow>
                 ))}
                 {searchValue && data.length === 0 && (
@@ -666,8 +685,8 @@ const TestOrderTable = ({ resultsPerPage, setResultsPerPage }) => {
               )}
             </TableFooter>
           </TableContainer>
-        </div>
-      )}
+        )}
+      </div>
       <CancelOrderForm
         isModalOpen={isCancelModalOpen}
         onClose={closeModal}

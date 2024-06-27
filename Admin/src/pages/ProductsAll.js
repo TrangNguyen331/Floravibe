@@ -1,6 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import PageTitle from "../components/Typography/PageTitle";
-import { Link, NavLink } from "react-router-dom";
 import {
   EditIcon,
   TrashIcon,
@@ -57,6 +56,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Cancel, Close } from "@mui/icons-material";
+import { Link, NavLink } from "react-router-dom/cjs/react-router-dom";
 // import { Grid, Typography, Pagination } from '@mui/material';
 
 const ProductsAll = () => {

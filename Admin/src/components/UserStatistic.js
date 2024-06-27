@@ -1,22 +1,20 @@
-import React, { useState, useEffect } from "react";
 import {
-  TableContainer,
-  Table,
   TableHeader,
-  TableCell,
+  Table,
   TableBody,
-  TableRow,
+  TableCell,
+  TableContainer,
   TableFooter,
+  TableRow,
   Avatar,
 } from "@windmill/react-ui";
+import React, { useState, useEffect } from "react";
 import axiosInstance from "../axiosInstance";
 import Paginate from "./Pagination/Paginate";
-import ProductAvgRating from "./ProductAvgRating";
-import { Link } from "react-router-dom";
-import { Box, LinearProgress, Rating } from "@mui/material";
-import { StarBorder } from "@mui/icons-material";
+import { CheckBox } from "@mui/icons-material";
+import { Box, LinearProgress } from "@mui/material";
 
-const TestStatstic = () => {
+const UserStatistic = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPage] = useState(0);
   const [resultsPerPage, setResultsPerPage] = useState(10);
@@ -34,19 +32,21 @@ const TestStatstic = () => {
   const fetchData = async (page) => {
     try {
       setLoadingGet(true);
-      const response = await axiosInstance.get(
-        "/api/v1/productStats/paging?page=" +
-          (page - 1) +
-          "&size=" +
-          resultsPerPage
+      const response = await axiosInstance.get("/api/v1/customerStats/all");
+
+      setData(response.data);
+      const totalPage = Math.ceil(response.data.length / resultsPerPage);
+      console.log(resultsPerPage);
+      console.log(totalPage);
+      setTotalPage(totalPage);
+      setTotalResult(response.data.length);
+      setData(
+        response.data.slice((page - 1) * resultsPerPage, page * resultsPerPage)
       );
       setPage(page);
-      setData(response.data.content);
-      setTotalPage(response.data.totalPages);
-      setTotalResult(response.data.totalElements);
       setDataLoaded(true);
       setLoadingGet(false);
-      console.log(response.data.content);
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -75,57 +75,50 @@ const TestStatstic = () => {
           <Table>
             <TableHeader className="text-center">
               <tr>
-                <TableCell>Product Name</TableCell>
-                <TableCell>Order Number For Product</TableCell>
-                <TableCell>Number Of Bouquets Sold</TableCell>
-                <TableCell>Rating Of Product</TableCell>
+                <TableCell>Username</TableCell>
+                <TableCell>First Name</TableCell>
+                <TableCell>Last Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Number of times cancelled</TableCell>
+                <TableCell>Status</TableCell>
               </tr>
             </TableHeader>
             <TableBody className="text-center">
-              {data.map((product, index) => (
+              {data.map((user, index) => (
                 <TableRow
                   key={index}
-                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                  className="transition-colors duration-200"
                 >
                   <TableCell>
                     <div className="flex items-center text-sm">
-                      <Link to={`/app/product/${product.productId}`}>
-                        <Avatar
-                          className="hidden mr-4 md:block"
-                          src={product.productImage}
-                          alt="Product image"
-                        />
-                      </Link>
+                      <Avatar
+                        className="hidden mr-4 md:block"
+                        src={
+                          user.customerAvatar
+                            ? user.customerAvatar
+                            : "https://i.pinimg.com/originals/90/48/9f/90489fda05254bb2fef245248e9befb1.jpg"
+                        }
+                        alt="User avatar"
+                      />
                       <div>
-                        <Link to={`/app/product/${product.productId}`}>
-                          <p className="font-semibold">{product.productName}</p>
-                        </Link>
+                        <p className="font-semibold">{user.username}</p>
                       </div>
                     </div>
                   </TableCell>
                   <TableCell className="text-sm">
-                    {product.orderCount}
+                    {user.firstName ? user.firstName : "Unknown"}
                   </TableCell>
                   <TableCell className="text-sm">
-                    {product.totalQuantitySold}
+                    {user.lastName ? user.lastName : "Unknown"}
                   </TableCell>
-                  <TableCell className="text-center text-sm align-middle">
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      className="justify-center items-center w-full"
-                    >
-                      <Rating
-                        name="average-rating"
-                        value={product.averageRating}
-                        precision={0.1}
-                        emptyIcon={<StarBorder />}
-                        readOnly
-                        className="mr-2"
-                      />{" "}
-                      {parseFloat(product.averageRating).toFixed(1)} (
-                      {product.reviewCount} reviews)
-                    </Box>
+                  <TableCell className="text-sm">{user.email}</TableCell>
+                  <TableCell className="text-sm">{user.cancelTimes}</TableCell>
+                  <TableCell className="text-sm">
+                    {user.active ? (
+                      <CheckBox sx={{ color: "#7e3af2" }} disabled />
+                    ) : (
+                      ""
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -147,4 +140,4 @@ const TestStatstic = () => {
   );
 };
 
-export default TestStatstic;
+export default UserStatistic;

@@ -1,6 +1,6 @@
 package com.hcmute.tlcn.services.Impl;
 
-import com.hcmute.tlcn.dtos.product.ResponseProductStatsDto;
+import com.hcmute.tlcn.dtos.statistic.ResponseProductStatsDto;
 import com.hcmute.tlcn.entities.Order;
 import com.hcmute.tlcn.entities.OrderDetail;
 import com.hcmute.tlcn.entities.Product;

@@ -6,7 +6,7 @@ import {
   Redirect,
 } from "react-router-dom";
 import AccessibleNavigationAnnouncer from "./components/AccessibleNavigationAnnouncer";
-import { ToastProvider } from 'react-toast-notifications';
+import { ToastProvider } from "react-toast-notifications";
 import Logout from "./components/Logout";
 
 const Layout = lazy(() => import("./containers/Layout"));
