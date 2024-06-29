@@ -1,5 +1,6 @@
 package com.hcmute.tlcn.dtos.order;
 
+import com.hcmute.tlcn.dtos.voucher.VoucherDetailDto;
 import com.hcmute.tlcn.dtos.voucher.VoucherDto;
 import com.hcmute.tlcn.entities.CancelOrderDetail;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class ResponseOrderDto {
     private String id;
     private List<OrderDetailDto> details;
     private AdditionalOrderDetailDto additionalOrder;
-    private VoucherDto voucherDetail;
+    private VoucherDetailDto voucherDetail;
     private LocalDate deliveryDate;
     private String deliveryTime;
     private double unitTotal;

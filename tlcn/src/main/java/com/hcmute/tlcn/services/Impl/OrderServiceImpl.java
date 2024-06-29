@@ -4,16 +4,15 @@ import com.hcmute.tlcn.dtos.order.CancelOrderDetailDto;
 import com.hcmute.tlcn.dtos.order.OrderDetailDto;
 import com.hcmute.tlcn.dtos.order.OrderDto;
 import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
+import com.hcmute.tlcn.dtos.voucher.VoucherDetailDto;
 import com.hcmute.tlcn.dtos.voucher.VoucherDto;
 import com.hcmute.tlcn.entities.*;
 import com.hcmute.tlcn.exceptions.NotFoundException;
-import com.hcmute.tlcn.repositories.AccountRepository;
-import com.hcmute.tlcn.repositories.OrderRepository;
-import com.hcmute.tlcn.repositories.PaymentRepos;
-import com.hcmute.tlcn.repositories.ProductRepository;
+import com.hcmute.tlcn.repositories.*;
 import com.hcmute.tlcn.services.EmailService;
 import com.hcmute.tlcn.services.OrderService;
 import jakarta.mail.MessagingException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,21 +27,23 @@ import java.util.stream.Collectors;
 import static com.hcmute.tlcn.utils.PageUtils.convertListToPage;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final AccountRepository accountRepository;
     private final OrderRepository repository;
     private final ProductRepository productRepository;
     private final PaymentRepos paymentRepository;
     private final EmailService emailService;
+    private final VoucherRepository voucherRepository;
     ModelMapper modelMapper = new ModelMapper();
 
-    public OrderServiceImpl(AccountRepository accountRepository, OrderRepository repository, ProductRepository productRepository,PaymentRepos paymentRepository,EmailService emailService) {
-        this.accountRepository = accountRepository;
-        this.repository = repository;
-        this.productRepository = productRepository;
-        this.paymentRepository = paymentRepository;
-        this.emailService = emailService;
-    }
+//    public OrderServiceImpl(AccountRepository accountRepository, OrderRepository repository, ProductRepository productRepository,PaymentRepos paymentRepository,EmailService emailService) {
+//        this.accountRepository = accountRepository;
+//        this.repository = repository;
+//        this.productRepository = productRepository;
+//        this.paymentRepository = paymentRepository;
+//        this.emailService = emailService;
+//    }
 
     @Override
     public List<ResponseOrderDto> getOrderByUser(String user) {
@@ -83,47 +84,34 @@ public class OrderServiceImpl implements OrderService {
         Order order=new Order();
         modelMapper.map(dto,order);
 
-//        if (accountOptional.isEmpty()) {
-//            throw new NotFoundException("Account not found!");
-//        }
-//        else{
-//            Account account = accountOptional.get();
-//            List<Order> userOrders = repository.findAllByUser(account.getEmail());
-//
-//            if (userOrders.isEmpty()) {
-//                // Apply the discount for the first order
-//                order.setFirstDiscount(dto.getFirstDiscount());
-//            }
-//        }
-        VoucherDto voucherDto = new VoucherDto();
-        modelMapper.map(dto.getVoucherDetail(), voucherDto);
-        order.setVoucherDetail(voucherDto);
-//        order.setCancelDate(null);
-        repository.save(order);
+//        VoucherDto voucherDto = new VoucherDto();
+//        modelMapper.map(dto.getVoucherDetail(), voucherDto);
+//        order.setVoucherDetail(voucherDto);
+        VoucherDetailDto voucherDetailDto = new VoucherDetailDto();
+        modelMapper.map(dto.getVoucherDetail(), voucherDetailDto);
+        order.setVoucherDetail(voucherDetailDto);
 
-        double unitTotal = 0;// mc thêm
-
-        ResponseOrderDto orderDto = modelMapper.map(order, ResponseOrderDto.class);
-        for (OrderDetailDto detailDto : orderDto.getDetails()) {
+        double unitTotal = 0;
+        for (OrderDetail detailDto : dto.getDetails()) {
             Product product = productRepository.findById(detailDto.getProductId())
                     .orElseThrow(() -> new NotFoundException("Product not found"));
             int remainingStock = product.getStockQty() - detailDto.getQuantity();
 
-            double unitPrice = detailDto.getQuantity() * product.getPrice();// mc thêm
-//            detailDto.setSubtotal(unitPrice);// mc thêm
-            unitTotal += unitPrice; // mc thêm
+            double unitPrice = detailDto.getSubtotal();
+            unitTotal += unitPrice;
 
             product.setStockQty(remainingStock);
             productRepository.save(product);
-
-            detailDto.setProduct(productRepository.findById(detailDto.getProductId()).orElse(null));
         }
         order.setUnitTotal(unitTotal);
         repository.save(order);
 
-        String email = dto.getAdditionalOrder().getEmail();
+        ResponseOrderDto orderDto = modelMapper.map(order, ResponseOrderDto.class);
+        for (OrderDetailDto detailDto : orderDto.getDetails()) {
+            detailDto.setProduct(productRepository.findById(detailDto.getProductId()).orElse(null));
+        }
 
-        // Check if this is the user's first order
+        String email = dto.getAdditionalOrder().getEmail();
         Optional<Account> accountOptional = accountRepository.findByEmail(email);
         if(accountOptional.isEmpty() || dto.isGuest()){
             order.setGuest(dto.isGuest());

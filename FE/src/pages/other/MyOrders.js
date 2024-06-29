@@ -71,7 +71,7 @@ const MyOrders = ({ location }) => {
     try {
       setLoadingGet(true);
       const response = await axiosInstance.get("/api/v1/orders");
-      console.log(response);
+      console.log(response.data);
       setOrders(response.data);
       setCurrentOrderFilter((prevFilter) =>
         filterOrderByStatus(response.data, "All")
@@ -264,14 +264,11 @@ const MyOrders = ({ location }) => {
                                           <span>
                                             <OverlayTrigger
                                               overlay={
-                                                // <Tooltip>
-                                                //   {order.cancelDetail &&
-                                                //     order.cancelDetail
-                                                //       .cancelReason}
-                                                // </Tooltip>
                                                 <Popover>
                                                   <PopoverTitle>
-                                                    The reason cancellation:
+                                                    {t(
+                                                      "list.order-cancel-reason"
+                                                    )}
                                                   </PopoverTitle>
                                                   <PopoverContent
                                                     className="popover-reason-cancel"
@@ -304,13 +301,13 @@ const MyOrders = ({ location }) => {
                                             )
                                           }
                                         >
-                                          Cancel
+                                          {t("list.cancel")}
                                         </button>
                                       ) : order.rated ? (
                                         <button
                                           onClick={() => clickRated(order.id)}
                                         >
-                                          Rated
+                                          {t("detail.order-rated")}
                                         </button>
                                       ) : (
                                         order.status === "COMPLETED" && (
@@ -319,7 +316,7 @@ const MyOrders = ({ location }) => {
                                               clickRating(order.id)
                                             }
                                           >
-                                            Rating
+                                            {t("detail.order-rating")}
                                           </button>
                                         )
                                       )}
@@ -433,7 +430,7 @@ const MyOrders = ({ location }) => {
                                           )
                                         }
                                       >
-                                        Cancel
+                                        {t("list.cancel")}
                                       </button>
                                     )}
                                     <Link
@@ -490,7 +487,6 @@ const MyOrders = ({ location }) => {
                                           </div>
                                         </li>
                                         <li className="order-status">
-                                          {/* {getStatus(order.status)} */}
                                           {order.status === "IN_PROCESSING" &&
                                             t("list.process")}
                                         </li>
@@ -589,7 +585,6 @@ const MyOrders = ({ location }) => {
                                           </div>
                                         </li>
                                         <li className="order-status">
-                                          {/* {getStatus(order.status)} */}
                                           {order.status === "COMPLETED" &&
                                             t("list.complete")}
                                         </li>
@@ -638,14 +633,14 @@ const MyOrders = ({ location }) => {
                                       <button
                                         onClick={() => clickRated(order.id)}
                                       >
-                                        Rated
+                                        {t("detail.order-rated")}
                                       </button>
                                     ) : (
                                       order.status === "COMPLETED" && (
                                         <button
                                           onClick={() => clickRating(order.id)}
                                         >
-                                          Rating
+                                          {t("detail.order-rating")}
                                         </button>
                                       )
                                     )}
@@ -704,7 +699,6 @@ const MyOrders = ({ location }) => {
                                             </div>
                                           </li>
                                           <li className="order-status">
-                                            {/* {getStatus(order.status)} */}
                                             {order.status === "CANCEL" &&
                                               t("list.canceled")}
                                           </li>
@@ -763,16 +757,12 @@ const MyOrders = ({ location }) => {
                                             </span>
                                             <span>
                                               <OverlayTrigger
-                                                // trigger="click"
                                                 overlay={
-                                                  // <Tooltip>
-                                                  //   {order.cancelDetail &&
-                                                  //     order.cancelDetail
-                                                  //       .cancelReason}
-                                                  // </Tooltip>
                                                   <Popover>
                                                     <PopoverTitle>
-                                                      The reason cancellation:
+                                                      {t(
+                                                        "list.order-cancel-reason"
+                                                      )}
                                                     </PopoverTitle>
                                                     <PopoverContent
                                                       className="popover-reason-cancel"

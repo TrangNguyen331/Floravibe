@@ -6,7 +6,6 @@ import ChartLegend from "../components/Chart/ChartLegend";
 import PropTypes from "prop-types";
 import PageTitle from "../components/Typography/PageTitle";
 import {
-  ChatIcon,
   CartIcon,
   MoneyIcon,
   PeopleIcon,
@@ -23,13 +22,12 @@ import {
   doughnutLegends,
   lineLegends,
 } from "../utils/demo/chartsData";
-import OrdersTable from "../components/OrdersTable";
 import axiosInstance from "../axiosInstance";
 import StatisticProduct from "../components/StatisticProduct";
 import { Box, Divider, Tab, Tabs, Typography, styled } from "@mui/material";
-import Orders from "./Orders";
 import TestOrderTable from "../components/TestOrderTable";
 import UserStatistic from "../components/UserStatistic";
+
 function Dashboard() {
   const [dashboard, setDashBoard] = useState({
     totalCustomer: "",
@@ -185,8 +183,6 @@ function Dashboard() {
     <>
       <PageTitle>Dashboard</PageTitle>
 
-      {/* <CTA /> */}
-
       {/* <!-- Cards --> */}
       <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
         <InfoCard
@@ -315,42 +311,6 @@ function Dashboard() {
           </CustomTabPanel>
         </Box>
       </Box>
-
-      {/* <PageTitle>Orders</PageTitle>
-      <Card className="mt-2 mb-5 shadow-md flex justify-between items-center">
-        <CardBody>
-          <div className="flex items-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Filter Orders
-            </p>
-
-            <Label className="mx-3">
-              <Select
-                className="py-3"
-                onChange={(e) => handleFilter(e.target.value)}
-              >
-                <option>All</option>
-                <option>In Request Orders</option>
-                <option>In Progress Orders</option>
-                <option>Cancel Orders</option>
-                <option>Completed Orders</option>
-              </Select>
-            </Label>
-          </div>
-        </CardBody>
-        <RoundIcon
-          icon={RefreshIcon}
-          onClick={() => {
-            setRefresh(!refresh);
-          }}
-          className="pr-3 mr-6 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
-        />
-      </Card>
-      <OrdersTable resultsPerPage={5} filter={filter} refresh={refresh} />
-
-      <PageTitle>Statistic Product</PageTitle>
-      <StatisticProduct />
-      <TestStatstic /> */}
     </>
   );
 }

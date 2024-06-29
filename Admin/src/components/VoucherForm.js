@@ -53,6 +53,7 @@ const VoucherForm = ({ data, handleInputChange }) => {
                 handleInputChange("effectiveDate", e.target?.value || "")
               }
               value={(data && data.effectiveDate) || ""}
+              min={new Date().toISOString().split("T")[0]}
             />
           </div>
           <div className="block text-sm font-medium text-gray-900 dark:text-white">
@@ -64,6 +65,7 @@ const VoucherForm = ({ data, handleInputChange }) => {
                 handleInputChange("validUntil", e.target?.value || "")
               }
               value={(data && data.validUntil) || ""}
+              min={new Date().toISOString().split("T")[0]}
             />
           </div>
         </div>
@@ -87,6 +89,17 @@ const VoucherForm = ({ data, handleInputChange }) => {
             className="h-5 w-5"
           />
           <span className="ml-2">For guest</span>
+        </div>
+        <div className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
+          <Input
+            type="checkbox"
+            checked={data.isOnlinePayment}
+            onChange={(e) =>
+              handleInputChange("isOnlinePayment", e.target.checked)
+            }
+            className="h-5 w-5"
+          />
+          <span className="ml-2">For online payment</span>
         </div>
       </div>
     </form>

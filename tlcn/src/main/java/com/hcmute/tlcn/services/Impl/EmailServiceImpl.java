@@ -1,6 +1,5 @@
 package com.hcmute.tlcn.services.Impl;
 
-import com.hcmute.tlcn.dtos.order.OrderDto;
 import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
 import com.hcmute.tlcn.entities.Account;
 import com.hcmute.tlcn.services.EmailService;
@@ -24,9 +23,6 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${email.reset-url}")
     private String resetLink;
-
-    @Value("${email.guest-order-url}")
-    private String guestOrderUrl;
 
     @Override
     public void sendMail(Account account) throws MessagingException {

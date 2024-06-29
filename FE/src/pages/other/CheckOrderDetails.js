@@ -67,6 +67,12 @@ const CheckOrderDetails = ({ location }) => {
                                   )}
                                 </p>
                               )}
+                              {order.status === "COMPLETED" && (
+                                <p className="order-datetime">
+                                  {t("detail.complete-time")}{" "}
+                                  {formatReadableDate(order.completedDate)}
+                                </p>
+                              )}
                             </div>
                           </li>
 
@@ -95,7 +101,6 @@ const CheckOrderDetails = ({ location }) => {
                               <span className="order-bottom-left">
                                 {t("detail.first-order")}
                               </span>
-
                               <span>
                                 {"-" + (50000).toLocaleString("vi-VN") + "₫"}
                               </span>
@@ -140,8 +145,6 @@ const CheckOrderDetails = ({ location }) => {
                       </div>
                       <div className="order-total-wrap">
                         <ul>
-                          {/* <li className="order-total">{t("detail.total")}</li>
-                          <li>{order.total.toLocaleString("vi-VN")}₫</li> */}
                           <li>
                             <span className="order-total">
                               {t("detail.total")}
@@ -187,14 +190,18 @@ const CheckOrderDetails = ({ location }) => {
                           </li>
                         </ul>
                       </div>
-                      <div className="order-bottom">
-                        <ul>
-                          <h4>{t("detail.order-note")}</h4>
-                          <li>
-                            <p>{order.additionalOrder.additionalInformation}</p>
-                          </li>
-                        </ul>
-                      </div>
+                      {order.additionalOrder.additionalInformation && (
+                        <div className="order-bottom">
+                          <ul>
+                            <h4>{t("detail.order-note")}</h4>
+                            <li>
+                              <p>
+                                {order.additionalOrder.additionalInformation}
+                              </p>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

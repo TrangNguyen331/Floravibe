@@ -23,4 +23,5 @@ public class Voucher {
     public int usedVoucher;
     public boolean isActive=true;
     public boolean guest=false;
+    public boolean isOnlinePayment=false;
 }

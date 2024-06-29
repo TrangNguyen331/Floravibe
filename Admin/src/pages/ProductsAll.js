@@ -471,6 +471,7 @@ const ProductsAll = () => {
             "/api/v1/products/" + selectedProduct.id,
             body
           );
+          await fetchData(page);
         } catch (error) {
           console.log("Error", error);
         }
@@ -478,7 +479,6 @@ const ProductsAll = () => {
 
       setMode(null);
       setIsModalOpen(false);
-      window.location.reload();
     } catch (error) {
       console.error("Save error:", error);
     }

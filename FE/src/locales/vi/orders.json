@@ -8,12 +8,14 @@
     "cancel": "Hủy",
     "canceled": "Đã hủy",
     "view-details": "Xem Chi Tiết",
-    "no-order": "Chưa Có Đơn Hàng Nào"
+    "no-order": "Chưa Có Đơn Hàng Nào",
+    "order-cancel-reason": "Lý do hủy:"
   },
   "detail": {
     "id": "Mã Đơn Hàng:",
     "date": "Thời Gian Đặt Hàng:",
-    "cancel-time": "Thời gian hủy",
+    "cancel-time": "Thời gian hủy:",
+    "complete-time": "Thời gian hoàn thành:",
     "shipping": "Phí Vận Chuyển",
     "products": "Sản Phẩm",
     "free": "Miễn Phí",
@@ -32,7 +34,9 @@
     "stockQty": "Số Lượng Trong Kho",
     "subtotal": "Tổng Cộng",
     "cancel-user": "Được hủy bởi bạn",
-    "cancel-admin": "Được hủy bởi shop"
+    "cancel-admin": "Được hủy bởi shop",
+    "order-rating": "Đánh giá",
+    "order-rated": "Đã đánh giá"
   },
   "complete": {
     "order-complete": "Đặt Hàng Thành Công",

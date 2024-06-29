@@ -11,6 +11,7 @@ import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import ProductAverageRating from "../../components/product/sub-components/ProductAverageRating";
 import axiosInstance from "../../axiosInstance";
+import { useTranslation } from "react-i18next";
 const Compare = ({
   location,
   cartItems,
@@ -21,6 +22,7 @@ const Compare = ({
 }) => {
   const { pathname } = location;
   const { addToast } = useToasts();
+  const { t } = useTranslation(["home"]);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -135,12 +137,12 @@ const Compare = ({
                                       >
                                         {cartItem !== undefined &&
                                         cartItem.quantity > 0
-                                          ? "Added"
-                                          : "Add to cart"}
+                                          ? t("home:productgrid.added")
+                                          : t("home:productgrid.add-to-cart")}
                                       </button>
                                     ) : (
                                       <button disabled className="active">
-                                        Out of Stock
+                                        {t("home:productgrid.out-of-stock")}
                                       </button>
                                     )}
                                   </div>

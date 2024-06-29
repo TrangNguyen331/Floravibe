@@ -14,7 +14,6 @@ const Order = ({ location, cartItems, currency }) => {
   const [order, setOrder] = useState(null);
   const [orders, setOrders] = useState([]);
   const { id } = useParams();
-  let cartTotalPrice = 0;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,7 +40,7 @@ const Order = ({ location, cartItems, currency }) => {
       console.log("Fail to load my orders");
     }
   };
-  const isFirstOrder = orders.length > 0 && orders[0].id === order.id;
+  // const isFirstOrder = orders.length > 0 && orders[0].id === order.id;
   const { t } = useTranslation(["orders", "breadcrumb"]);
 
   return !order ? (
@@ -86,6 +85,12 @@ const Order = ({ location, cartItems, currency }) => {
                                   )}
                                 </p>
                               )}
+                              {order.status === "COMPLETED" && (
+                                <p className="order-datetime">
+                                  {t("detail.complete-time")}{" "}
+                                  {formatReadableDate(order.completedDate)}
+                                </p>
+                              )}
                             </div>
                           </li>
 
@@ -114,9 +119,6 @@ const Order = ({ location, cartItems, currency }) => {
                               <span className="order-bottom-left">
                                 {t("detail.first-order")}
                               </span>
-                              {order.details.forEach((detail) => {
-                                cartTotalPrice += detail.subtotal;
-                              })}
                               <span>
                                 {"-" + (50000).toLocaleString("vi-VN") + "₫"}
                               </span>
@@ -134,7 +136,6 @@ const Order = ({ location, cartItems, currency }) => {
                               </span>
                             </li>
                           )}
-
                           <li>
                             <span className="order-bottom-left">
                               {t("detail.pay-method")}
@@ -165,8 +166,6 @@ const Order = ({ location, cartItems, currency }) => {
                       </div>
                       <div className="order-total-wrap">
                         <ul>
-                          {/* <li className="order-total">{t("detail.total")}</li>
-                          <li>{order.total.toLocaleString("vi-VN")}₫</li> */}
                           <li>
                             <span className="order-total">
                               {t("detail.total")}

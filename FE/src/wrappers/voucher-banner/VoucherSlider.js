@@ -33,6 +33,23 @@ const VoucherSlider = ({ spaceBottomClass, bgColorClass }) => {
     },
     observer: true,
     observeParents: true,
+    breakpoints: {
+      1200: {
+        slidesPerView: 3,
+      },
+      1024: {
+        slidesPerView: 2,
+      },
+      768: {
+        slidesPerView: 2,
+      },
+      640: {
+        slidesPerView: 2,
+      },
+      320: {
+        slidesPerView: 1,
+      },
+    },
   };
   const targetList = token
     ? vouchers.filter((voucher) => voucher.isActive && !voucher.guest)

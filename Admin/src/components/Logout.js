@@ -1,10 +1,8 @@
-import OrdersTable from "./OrdersTable";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import { useToasts } from "react-toast-notifications";
 
 const Logout = () => {
-  console.log("log-out-trigger");
   const { addToast } = useToasts();
   const history = useHistory();
   useEffect(() => {
