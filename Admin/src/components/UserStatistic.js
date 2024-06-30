@@ -36,8 +36,6 @@ const UserStatistic = () => {
 
       setData(response.data);
       const totalPage = Math.ceil(response.data.length / resultsPerPage);
-      console.log(resultsPerPage);
-      console.log(totalPage);
       setTotalPage(totalPage);
       setTotalResult(response.data.length);
       setData(

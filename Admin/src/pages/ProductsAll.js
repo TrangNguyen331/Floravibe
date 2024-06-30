@@ -47,6 +47,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   Divider,
   IconButton,
@@ -639,20 +640,27 @@ const ProductsAll = () => {
             </Toolbar>
           </div>
           <Divider />
-          {/* <Paper className="pt-8 pr-8 pl-8 pb-16" elevation={0}> */}
-          <Paper className="p-8" elevation={0}>
-            <ModalBody className="modal-body">
-              <EditForm
-                data={selectedProduct}
-                collectionData={collections}
-                tagData={allTags}
-                onSave={handleSave}
-                onCancel={closeModal}
-                onProductChange={handleProductChange}
-              />
-            </ModalBody>
-          </Paper>
-          <Divider />
+          <DialogContent dividers>
+            <DialogContentText
+              // id="scroll-dialog-description"
+              // ref={descriptionElementRef}
+              tabIndex={-1}
+            >
+              {/* <Paper className="pt-8 pr-8 pl-8 pb-16" elevation={0}> */}
+              <Paper className="p-8" elevation={0}>
+                <ModalBody className="modal-body">
+                  <EditForm
+                    data={selectedProduct}
+                    collectionData={collections}
+                    tagData={allTags}
+                    onSave={handleSave}
+                    onCancel={closeModal}
+                    onProductChange={handleProductChange}
+                  />
+                </ModalBody>
+              </Paper>
+            </DialogContentText>
+          </DialogContent>
           {/* <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
             <BottomNavigation className="mt-2 mb-2 mr-3">
               <div className="hidden sm:block">
@@ -667,7 +675,7 @@ const ProductsAll = () => {
               </div>
             </BottomNavigation>
           </Paper> */}
-          <DialogActions className="mt-4 mb-4 mr-3">
+          <DialogActions className="mt-3 mb-3 mr-6">
             <div className="hidden sm:block">
               <Button layout="outline" onClick={closeModal}>
                 Cancel

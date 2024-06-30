@@ -107,6 +107,14 @@
             display: flex;
             justify-content: space-between;
             font-weight: 400;
+            &.order-deli {
+                font-weight: bold; 
+                color: #a749ff; 
+              }
+          }
+          li.order-deli {
+            font-weight: bold;
+            color: #a749ff;
           }
 
           li.order-shipping {

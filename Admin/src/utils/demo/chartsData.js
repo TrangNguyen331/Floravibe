@@ -21,7 +21,7 @@ export const doughnutOptions = {
   data: {
     datasets: [
       {
-        data: [33, 33, 33],
+        data: [33, 73, 53],
         /**
          * These colors come from Tailwind CSS palette
          * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
@@ -53,7 +53,7 @@ export const lineOptions = {
       "July",
       "August",
       "Septemper",
-      "Octoper",
+      "October",
       "November",
       "December",
     ],

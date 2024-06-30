@@ -118,7 +118,7 @@ const CheckOrderDetails = ({ location }) => {
                           </li>
                         </ul>
                       </div>
-                      <div className="order-bottom">
+                      {/* <div className="order-bottom">
                         <ul>
                           <li>
                             <span className="order-bottom-left">
@@ -137,7 +137,7 @@ const CheckOrderDetails = ({ location }) => {
                             <span>{order.deliveryTime}</span>
                           </li>
                         </ul>
-                      </div>
+                      </div> */}
                       <div className="order-total-wrap">
                         <ul>
                           {/* <li className="order-total">{t("detail.total")}</li>
@@ -189,12 +189,36 @@ const CheckOrderDetails = ({ location }) => {
                       </div>
                       <div className="order-bottom">
                         <ul>
-                          <h4>{t("detail.order-note")}</h4>
                           <li>
-                            <p>{order.additionalOrder.additionalInformation}</p>
+                            <span className="order-bottom-left">
+                              {t("detail.order-deli-date")}
+                            </span>
+                            <span>
+                              {new Date(order.deliveryDate).toLocaleDateString(
+                                "vi-VN"
+                              )}
+                            </span>
+                          </li>
+                          <li>
+                            <span className="order-bottom-left">
+                              {t("detail.order-deli-time")}
+                            </span>
+                            <span>{order.deliveryTime}</span>
                           </li>
                         </ul>
                       </div>
+                      {order.additionalOrder.additionalInformation && (
+                        <div className="order-bottom">
+                          <ul>
+                            <h4>{t("detail.order-note")}</h4>
+                            <li>
+                              <p>
+                                {order.additionalOrder.additionalInformation}
+                              </p>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -50,6 +50,7 @@ import { Close } from "@mui/icons-material";
 const UsersTable = () => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
+  const [dataOrg, setDataOrg] = useState([]);
   const [resultsPerPage, setResultPerPage] = useState(10);
   const [totalPages, setTotalPage] = useState(0);
   const [totalResults, setTotalResult] = useState(0);
@@ -68,14 +69,19 @@ const UsersTable = () => {
   const fetchData = async (page) => {
     try {
       console.log("page", page);
-      const response = await axiosInstance.get(
-        "/api/v1/auth/paging?page=" + (page - 1) + "&size=" + resultsPerPage
+      // const response = await axiosInstance.get(
+      //   "/api/v1/auth/paging?page=" + (page - 1) + "&size=" + resultsPerPage
+      // );
+      const response = await axiosInstance.get("/api/v1/auth/allUsers");
+      setData(response.data);
+      setDataOrg(response.data);
+      const totalPage = Math.ceil(response.data.length / resultsPerPage);
+      setTotalPage(totalPage);
+      setTotalResult(response.data.length);
+      setData(
+        response.data.slice((page - 1) * resultsPerPage, page * resultsPerPage)
       );
-      console.log("Response data", response.data);
-      setData(response.data.content);
       setPage(page);
-      setTotalPage(response.data.totalPages);
-      setTotalResult(response.data.totalElements);
       setDataLoaded(true);
     } catch (error) {
       console.log("Fetch data error", error);
@@ -165,6 +171,109 @@ const UsersTable = () => {
       addToast("Failed", { appearance: "error", autoDismiss: true });
     }
   };
+
+  const handleSearch = () => {
+    try {
+      let filter;
+      switch (searchType) {
+        case "User Name":
+          filter = data.filter(
+            (user) =>
+              user.username &&
+              user.username
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .includes(
+                  searchValue
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                )
+          );
+          break;
+        case "First Name":
+          filter = data.filter(
+            (user) =>
+              user.firstName &&
+              user.firstName
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .includes(
+                  searchValue
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                )
+          );
+          break;
+        case "Last Name":
+          filter = data.filter(
+            (user) =>
+              user.lastName &&
+              user.lastName
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .includes(
+                  searchValue
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                )
+          );
+          break;
+        case "Email":
+          filter = data.filter(
+            (user) =>
+              user.email &&
+              user.email
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .includes(
+                  searchValue
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                )
+          );
+          break;
+        case "Role":
+          switch (searchValue) {
+            case "Role User":
+              filter = data.filter(
+                (user) => user.roles && user.roles.includes("ROLE_USER")
+              );
+              break;
+
+            case "Role Admin":
+              filter = data.filter(
+                (user) => user.roles && user.roles.includes("ROLE_ADMIN")
+              );
+              break;
+            default:
+              filter = [...dataOrg];
+          }
+          break;
+        default:
+          filter = [...dataOrg];
+      }
+      setTotalResult(filter.length);
+      setData(filter.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+      setTotalPage(Math.ceil(filter.length / resultsPerPage));
+    } catch (error) {
+      console.log("Error occurred while handling search", error.message);
+      setTotalResult(data.length);
+      setData(data.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+      setTotalPage(Math.ceil(data.length / resultsPerPage));
+    }
+  };
+  useEffect(() => {
+    handleSearch();
+  }, [searchType, searchValue, page]);
+
   return (
     <div>
       {/* Breadcum */}
@@ -239,7 +348,7 @@ const UsersTable = () => {
       </div>
 
       {/* Search */}
-      <Card className="mt-5 mb-5 pt-3 pb-3 shadow-md flex justify-between items-center">
+      {/* <Card className="mt-5 mb-5 pt-3 pb-3 shadow-md flex justify-between items-center">
         <CardBody>
           <div className="flex items-center">
             <p className="text-md text-gray-600 dark:text-gray-400">
@@ -253,6 +362,7 @@ const UsersTable = () => {
             onChange={(e) => {
               setSearchType(e.target.value);
               setSearchValue("");
+              setPage(1);
             }}
           >
             <option hidden>Choose to search</option>
@@ -265,32 +375,54 @@ const UsersTable = () => {
         </Label>
         <Label className="mx-0 w-70">
           <div className="relative text-gray-500 dark:focus-within:text-purple-400">
-            <input
-              type={searchType === "Date" ? "date" : "text"}
-              className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
-              placeholder="Search..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center mr-3 cursor-pointer">
-              <SearchIcon
-                className="w-5 h-5 text-purple-500 transition-colors duration-200"
-                aria-hidden="true"
-              />
-            </div>
+            {searchType === "Role" ? (
+              <Select
+                className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-sm w-70"
+                value={searchValue}
+                onChange={(e) => {
+                  setPage(1);
+                  setSearchValue(e.target.value);
+                }}
+              >
+                <option hidden>Select a Option</option>
+                <option>Role Admin</option>
+                <option>Role User</option>
+              </Select>
+            ) : (
+              <div>
+                <input
+                  type="text"
+                  className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
+                  placeholder="Search..."
+                  value={searchValue}
+                  onChange={(e) => {
+                    setPage(1);
+                    setSearchValue(e.target.value);
+                  }}
+                />
+                <div className="absolute inset-y-0 right-0 flex items-center mr-3 cursor-pointer">
+                  <SearchIcon
+                    className="w-5 h-5 text-purple-500 transition-colors duration-200"
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </Label>
         <RoundIcon
           icon={RefreshIcon}
           onClick={() => {
-            // setSearchType("");
-            // setSearchValue("");
-            // setRefresh(!refresh);
-            // setResultPerPage(resultsPerPage);
+            setSearchType("Choose to search");
+            setSearchValue("");
+            setPage(1);
+            setResultPerPage(resultsPerPage);
+            setData(dataOrg);
+            handleSearch();
           }}
           className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
         />
-      </Card>
+      </Card> */}
 
       {/* Table */}
       {loadingGet ? (

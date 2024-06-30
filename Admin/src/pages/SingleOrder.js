@@ -285,7 +285,7 @@ const SingleOrder = () => {
                     </Badge>
                     {order.status === "CANCEL" && order.cancelDetail && (
                       <Badge
-                        className="py-1 px-2 gap-2 text-sm py-1 px-2 gap-2 text-sm leading-5
+                        className="py-1 px-2 gap-2 text-sm leading-5
                             font-semibold rounded-full bg-purple-100 text-purple-900 dark:bg-purple-700 dark:text-purple-100"
                         type="neutral"
                       >
@@ -300,7 +300,7 @@ const SingleOrder = () => {
                     )}
                     {order.status === "COMPLETED" && (
                       <Badge
-                        className="py-1 px-2 gap-2 text-sm py-1 px-2 gap-2 text-sm leading-5
+                        className=" py-1 px-2 gap-2 text-sm leading-5
                             font-semibold rounded-full bg-purple-100 text-purple-900 dark:bg-purple-700 dark:text-purple-100"
                         type="success"
                       >
@@ -318,7 +318,7 @@ const SingleOrder = () => {
                       {order.status === "CANCEL"
                         ? order.cancelDetail &&
                           order.cancelDetail.cancelRole === "ADMIN"
-                          ? "Cancelled by Admin"
+                          ? "Cancelled by Admin:" + " " + userInfo.email
                           : "Cancelled by customer"
                         : ""}
                     </span>
@@ -597,7 +597,7 @@ const SingleOrder = () => {
                                                 <div className="flex justify-end flex-grow flex-col">
                                                   <div className="flex items-center justify-between">
                                                     <div className="flex items-center justify-content-center">
-                                                      <p className="font-medium text-lg text-gray-800 dark:text-gray-300 font-semibold">
+                                                      <p className="font-medium text-lg text-gray-800 dark:text-gray-300">
                                                         {
                                                           review.account
                                                             .username

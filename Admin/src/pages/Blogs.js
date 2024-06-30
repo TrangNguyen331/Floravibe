@@ -29,9 +29,22 @@ import {
   ModalFooter,
   Badge,
 } from "@windmill/react-ui";
-import { Grid, Typography, Pagination } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Pagination,
+  DialogActions,
+  Dialog,
+  Toolbar,
+  IconButton,
+  Divider,
+  Paper,
+  DialogContent,
+  DialogContentText,
+} from "@mui/material";
 import { useToasts } from "react-toast-notifications";
 import Paginate from "../components/Pagination/Paginate";
+import { Close } from "@mui/icons-material";
 const Blogs = () => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
@@ -56,7 +69,8 @@ const Blogs = () => {
     createdDate: "",
     lastModifyDate: "",
   });
-  const closeModal = () => {
+  const closeModal = (event, reason) => {
+    if (reason && reason === "backdropClick") return;
     setMode(null);
     setSelectedBlog({
       id: "",
@@ -162,14 +176,17 @@ const Blogs = () => {
   };
   const fetchData = async (page) => {
     try {
+      // const response = await axiosInstance.get(
+      //   "/api/v1/blogs/paging?page=" + (page - 1) + "&size=" + resultsPerPage
+      // );
       const response = await axiosInstance.get(
-        "/api/v1/blogs/paging?page=" + (page - 1) + "&size=" + resultsPerPage
+        "/api/v1/blogs/paging?page=&size=30"
       );
       console.log("Response data", response.data.content);
 
-      // const sortedData = response.data.content.sort(
-      //   (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
-      // );
+      const sortedData = response.data.content.sort(
+        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+      );
       setData(response.data.content);
       setPage(page);
       setTotalPage(response.data.totalPages);
@@ -219,7 +236,7 @@ const Blogs = () => {
       </div>
 
       <div>
-        <Modal
+        {/* <Modal
           isOpen={isModalOpen}
           onClose={closeModal}
           className="fullscreen-modal"
@@ -273,7 +290,144 @@ const Blogs = () => {
               )}
             </div>
           </ModalFooter>
-        </Modal>
+        </Modal> */}
+
+        {mode === "edit" || mode === "add" ? (
+          <Dialog open={isModalOpen} onClose={closeModal} maxWidth={"md"}>
+            <div className="flex justify-between" sx={{ position: "relative" }}>
+              <Toolbar className="flex-grow justify-between">
+                <Typography
+                  className="justify-between"
+                  sx={{
+                    ml: 2,
+                    flex: 1,
+                    color: "#7e3af2",
+                    fontWeight: "bold",
+                  }}
+                  variant="h6"
+                  component="div"
+                >
+                  {mode === "edit" && "Edit Blog"}
+                  {mode === "add" && "Add Blog"}
+                </Typography>
+                <IconButton
+                  edge="end"
+                  style={{ color: "#7e3af2" }}
+                  onClick={closeModal}
+                  aria-label="close"
+                >
+                  <Close />
+                </IconButton>
+              </Toolbar>
+            </div>
+            <Divider />
+            <DialogContent dividers>
+              <DialogContentText tabIndex={-1}>
+                {/* <Paper className="pt-8 pr-8 pl-8 pb-16" elevation={0}> */}
+                <Paper className="p-8" elevation={0}>
+                  <ModalBody className="modal-body">
+                    <BlogForm
+                      data={selectedBlog}
+                      onSave={handleSave}
+                      onCancel={closeModal}
+                      onBlogChange={handleBlogChange}
+                    />
+                  </ModalBody>
+                </Paper>
+              </DialogContentText>
+            </DialogContent>
+            {/* <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
+            <BottomNavigation className="mt-2 mb-2 mr-3">
+              <div className="hidden sm:block">
+                <Button layout="outline" onClick={closeModal}>
+                  Cancel
+                </Button>
+              </div>
+              <div className="hidden sm:block">
+                <Button block onClick={() => handleSave("edit")}>
+                  Save
+                </Button>
+              </div>
+            </BottomNavigation>
+          </Paper> */}
+            <DialogActions className="mt-3 mb-3 mr-5">
+              <div className="hidden sm:block">
+                <Button layout="outline" onClick={closeModal}>
+                  Cancel
+                </Button>
+              </div>
+              <div className="hidden sm:block">
+                {mode === "edit" ? (
+                  <Button block onClick={() => handleSave("edit")}>
+                    Save
+                  </Button>
+                ) : (
+                  <Button block onClick={() => handleSave("add")}>
+                    Save
+                  </Button>
+                )}
+              </div>
+            </DialogActions>
+          </Dialog>
+        ) : (
+          <Dialog
+            onClose={closeModal}
+            open={isModalOpen}
+            className="flex justify-between"
+          >
+            <Toolbar className="justify-between">
+              <Typography
+                sx={{ color: "#7e3af2", fontWeight: "bold" }}
+                variant="h6"
+                component="div"
+              >
+                Delete Blog
+              </Typography>
+              <IconButton
+                edge="end"
+                style={{ color: "#7e3af2" }}
+                onClick={closeModal}
+                aria-label="close"
+              >
+                <Close />
+              </IconButton>
+            </Toolbar>
+            <DialogContent dividers>
+              <Typography className="pt-5 pb-5 pl-4 pr-4">
+                <p>
+                  Make sure you want to delete blog{" "}
+                  {selectedBlog && `"${selectedBlog.title}"`}
+                </p>
+              </Typography>
+            </DialogContent>
+            <DialogActions className="mt-2 mb-2 mr-3">
+              <div className="hidden sm:block">
+                <Button layout="outline" onClick={closeModal}>
+                  Cancel
+                </Button>
+              </div>
+              <div className="hidden sm:block">
+                <Button block onClick={() => handleSave("delete")}>
+                  Delete
+                </Button>
+              </div>
+            </DialogActions>
+            {/* <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
+            <BottomNavigation className="mt-2 mb-2 mr-3">
+              <div className="hidden sm:block">
+                <Button layout="outline" onClick={closeModal}>
+                  Cancel
+                </Button>
+              </div>
+              <div className="hidden sm:block">
+                <Button block onClick={() => handleSave("delete")}>
+                  Delete
+                </Button>
+              </div>
+            </BottomNavigation>
+          </Paper> */}
+          </Dialog>
+        )}
       </div>
 
       {/* Blog Views */}

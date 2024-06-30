@@ -143,7 +143,7 @@ const Order = ({ location, cartItems, currency }) => {
                           </li>
                         </ul>
                       </div>
-                      <div className="order-bottom">
+                      {/* <div className="order-bottom">
                         <ul>
                           <li>
                             <span className="order-bottom-left">
@@ -162,11 +162,17 @@ const Order = ({ location, cartItems, currency }) => {
                             <span>{order.deliveryTime}</span>
                           </li>
                         </ul>
-                      </div>
+                      </div> */}
                       <div className="order-total-wrap">
                         <ul>
-                          {/* <li className="order-total">{t("detail.total")}</li>
-                          <li>{order.total.toLocaleString("vi-VN")}₫</li> */}
+                          <li>
+                            <span className="order-total">
+                              {t("detail.unit-total")}
+                            </span>
+                            <span className="order-total-price">
+                              {order.unitTotal.toLocaleString("vi-VN")}₫
+                            </span>
+                          </li>
                           <li>
                             <span className="order-total">
                               {t("detail.total")}
@@ -209,6 +215,29 @@ const Order = ({ location, cartItems, currency }) => {
                           </li>
                           <li>
                             <span>Email:</span> {order.additionalOrder.email}
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="order-bottom">
+                        <ul>
+                          <li>
+                            {/* <span className="order-bottom-left">
+                              {t("detail.order-deli-date")}
+                            </span> */}
+                            <div className="order-deli">
+                              {t("detail.order-deli-date")}
+                            </div>
+                            <span>
+                              {new Date(order.deliveryDate).toLocaleDateString(
+                                "vi-VN"
+                              )}
+                            </span>
+                          </li>
+                          <li>
+                            <span className="order-bottom-left">
+                              {t("detail.order-deli-time")}
+                            </span>
+                            <span>{order.deliveryTime}</span>
                           </li>
                         </ul>
                       </div>

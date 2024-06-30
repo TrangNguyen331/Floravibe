@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import InfoCard from "../components/Cards/InfoCard";
 import ChartCard from "../components/Chart/ChartCard";
-import { Doughnut, Line } from "react-chartjs-2";
+import { Doughnut, Line, Bar } from "react-chartjs-2";
 import ChartLegend from "../components/Chart/ChartLegend";
 import PropTypes from "prop-types";
 import PageTitle from "../components/Typography/PageTitle";
@@ -22,6 +22,8 @@ import {
   lineOptions,
   doughnutLegends,
   lineLegends,
+  barOptions,
+  barLegends,
 } from "../utils/demo/chartsData";
 import OrdersTable from "../components/OrdersTable";
 import axiosInstance from "../axiosInstance";
@@ -282,8 +284,8 @@ function Dashboard() {
         </ChartCard>
 
         <ChartCard title="Revenue">
-          <Doughnut {...doughnutOptions} />
-          <ChartLegend legends={doughnutLegends} />
+          <Bar {...barOptions} />
+          <ChartLegend legends={barLegends} />
         </ChartCard>
       </div> */}
 

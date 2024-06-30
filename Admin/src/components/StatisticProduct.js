@@ -74,12 +74,10 @@ const TestStatstic = () => {
         <TableContainer className="mb-8">
           <Table>
             <TableHeader className="text-center">
-              <tr>
-                <TableCell>Product Name</TableCell>
-                <TableCell>Order Number For Product</TableCell>
-                <TableCell>Number Of Bouquets Sold</TableCell>
-                <TableCell>Rating Of Product</TableCell>
-              </tr>
+              <TableCell>Product Name</TableCell>
+              <TableCell>Order Number For Product</TableCell>
+              <TableCell>Number Of Bouquets Sold</TableCell>
+              <TableCell>Rating Of Product</TableCell>
             </TableHeader>
             <TableBody className="text-center">
               {data.map((product, index) => (

@@ -173,6 +173,31 @@ const OrdersTable = ({
     setData(displayedData);
   };
 
+  const handleSortEmail = () => {
+    let sortedData = [...ordersData];
+    if (sortType === "default") {
+      sortedData.sort((a, b) =>
+        a.additionalOrder.email.localeCompare(b.additionalOrder.email)
+      );
+      setSortType("asc");
+    } else if (sortType === "asc") {
+      sortedData.sort((a, b) =>
+        b.additionalOrder.email.localeCompare(a.additionalOrder.email)
+      );
+      setSortType("desc");
+    } else if (sortType === "desc") {
+      // fetchData(page, filter, resultsPerPage);
+      fetchAllOrdersData();
+      setSortType("default");
+    }
+    setOrdersData(sortedData);
+    let displayedData = sortedData.slice(
+      (page - 1) * resultsPerPage,
+      page * resultsPerPage
+    );
+    setData(displayedData);
+  };
+
   // Sort Total
   const handleSortTotal = () => {
     let sortedData = [...ordersData];
@@ -347,7 +372,22 @@ const OrdersTable = ({
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>Email</TableCell>
+                <div className="flex items-center">
+                  Email
+                  <div onClick={handleSortEmail} className="cursor-pointer">
+                    <Icon
+                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                      aria-hidden="true"
+                      icon={
+                        sortStatusType === "asc"
+                          ? UpIcon
+                          : sortStatusType === "desc"
+                          ? DownIcon
+                          : SortDefaultIcon
+                      }
+                    />
+                  </div>
+                </div>
                 <TableCell>Order ID</TableCell>
                 <TableCell>Items</TableCell>
                 <TableCell>

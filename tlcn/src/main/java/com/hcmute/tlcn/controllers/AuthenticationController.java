@@ -1,6 +1,7 @@
 package com.hcmute.tlcn.controllers;
 
 import com.hcmute.tlcn.dtos.*;
+import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
 import com.hcmute.tlcn.entities.Account;
 import com.hcmute.tlcn.entities.Product;
 import com.hcmute.tlcn.services.AccountService;
@@ -19,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/${application.version}/auth")
@@ -100,6 +102,11 @@ public class AuthenticationController {
     public ResponseEntity<Account> activeDeActive(@PathVariable String id){
         Account account = accountService.activeDeActive(id);
         return ResponseEntity.ok(account);
+    }
+    @GetMapping("/allUsers")
+    public ResponseEntity<List<Account>> getAllAccounts() {
+        List<Account> users = accountService.getAllAccounts();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
 }

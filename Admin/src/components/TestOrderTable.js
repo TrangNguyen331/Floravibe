@@ -46,6 +46,7 @@ const TestOrderTable = ({ resultsPerPage, setResultsPerPage }) => {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
   const [sortType, setSortType] = useState("default");
+  const [sortEmailType, setSortEmailType] = useState("default");
   const [sortTotalType, setSortTotalType] = useState("default");
   const [sortStatusType, setSortStatusType] = useState("default");
   const [sortDateType, setSortDateType] = useState("default");
@@ -193,6 +194,31 @@ const TestOrderTable = ({ resultsPerPage, setResultsPerPage }) => {
     setData(displayedData);
   };
 
+  const handleSortEmail = () => {
+    let sortedData = [...ordersData];
+    if (sortEmailType === "default") {
+      sortedData.sort((a, b) =>
+        a.additionalOrder.email.localeCompare(b.additionalOrder.email)
+      );
+      setSortEmailType("asc");
+    } else if (sortEmailType === "asc") {
+      sortedData.sort((a, b) =>
+        b.additionalOrder.email.localeCompare(a.additionalOrder.email)
+      );
+      setSortEmailType("desc");
+    } else if (sortEmailType === "desc") {
+      // fetchData(page, filter, resultsPerPage);
+      fetchAllOrdersData();
+      setSortEmailType("default");
+    }
+    setOrdersData(sortedData);
+    let displayedData = sortedData.slice(
+      (page - 1) * resultsPerPage,
+      page * resultsPerPage
+    );
+    setData(displayedData);
+  };
+
   // Sort Total
   const handleSortTotal = () => {
     let sortedData = [...ordersData];
@@ -257,13 +283,26 @@ const TestOrderTable = ({ resultsPerPage, setResultsPerPage }) => {
     );
     setData(displayedData);
   };
-
-  useEffect(() => {
+  const handleSearch = () => {
     let filteredData = [...ordersData];
     switch (searchType) {
       case "Client":
         filteredData = ordersData.filter((order) =>
           order.additionalOrder.fullName
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .includes(
+              searchValue
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+            )
+        );
+        break;
+      case "Email":
+        filteredData = ordersData.filter((order) =>
+          order.additionalOrder.email
             .toLowerCase()
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
@@ -320,6 +359,9 @@ const TestOrderTable = ({ resultsPerPage, setResultsPerPage }) => {
       filteredData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
     );
     setTotalPage(Math.ceil(filteredData.length / resultsPerPage));
+  };
+  useEffect(() => {
+    handleSearch();
   }, [searchType, searchValue, page]);
   const optionList = [
     { key: "All", value: "All Orders" },
@@ -419,6 +461,7 @@ const TestOrderTable = ({ resultsPerPage, setResultsPerPage }) => {
             >
               <option hidden>Choose to search</option>
               <option>Client</option>
+              <option>Email</option>
               <option>Order ID</option>
               <option>Name Of Product</option>
 
@@ -445,10 +488,11 @@ const TestOrderTable = ({ resultsPerPage, setResultsPerPage }) => {
           <RoundIcon
             icon={RefreshIcon}
             onClick={() => {
-              setSearchType("");
+              setSearchType("Choose to search");
               setSearchValue("");
-
+              setPage(1);
               setResultsPerPage(resultsPerPage);
+              handleSearch();
             }}
             className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
           />
@@ -493,7 +537,24 @@ const TestOrderTable = ({ resultsPerPage, setResultsPerPage }) => {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>Email</TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      Email
+                      <div onClick={handleSortEmail} className="cursor-pointer">
+                        <Icon
+                          className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                          aria-hidden="true"
+                          icon={
+                            sortEmailType === "asc"
+                              ? UpIcon
+                              : sortEmailType === "desc"
+                              ? DownIcon
+                              : SortDefaultIcon
+                          }
+                        />
+                      </div>
+                    </div>
+                  </TableCell>
                   <TableCell>Order ID</TableCell>
                   <TableCell>Items</TableCell>
                   <TableCell>
@@ -668,7 +729,7 @@ const TestOrderTable = ({ resultsPerPage, setResultsPerPage }) => {
                   </TableRow>
                 ))}
                 {searchValue && data.length === 0 && (
-                  <p className="text-center my-4 text-purple-500">
+                  <p className="flex-grow text-center my-4 text-purple-500">
                     No result match
                   </p>
                 )}

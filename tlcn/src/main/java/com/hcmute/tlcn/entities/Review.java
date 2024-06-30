@@ -14,7 +14,6 @@ import java.util.UUID;
 public class Review {
     public String id = UUID.randomUUID().toString();
     private String orderId;
-
     public String accountName;
     public Account account;
     public String content;
