@@ -96,22 +96,6 @@ public class ProductServiceImpl  implements ProductService {
     }
 
 
-//    public Product updateReview(String id,String reviewId, ReviewDto reviewDto) {
-//        Product product = repository.findById(id)
-//                .orElseThrow(() -> new NotFoundException("Product not found"));
-//        Optional<Review> reviewToReplace = product.getReviews().stream()
-//                .filter(obj -> obj.getId().equals(reviewId))
-//                .findFirst();
-//        Review review = new Review();
-//        modelMapper.map(reviewDto,review);
-//        reviewToReplace.ifPresent(obj -> {
-//            // Replace the object in the list
-//            int index = product.getReviews().indexOf(obj);
-//            product.getReviews().set(index, review);
-//        });
-//        repository.save(product);
-//        return product;
-//    }
     @Override
     public Product updateReview(String id,String reviewId,ReviewDto reviewDto,String orderId) {
         // Tìm sản phẩm trong đơn hàng

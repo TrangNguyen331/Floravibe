@@ -12,5 +12,7 @@ public interface VoucherService {
     Voucher addNew(VoucherDto dto);
     Voucher update(String id, VoucherDto dto);
     Voucher delete(String id);
+    Voucher updateGuest(String id);
+    Voucher updateOnlineVoucher(String id);
     List<Voucher> getAllVouchers();
 }

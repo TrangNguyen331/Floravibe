@@ -19,8 +19,6 @@ const Evaluate = (props) => {
         "/api/v1/orders/" + props.orderId
       );
       setOrder(response.data.details);
-      console.log("order", response.data);
-      console.log("details", response.data.details);
     } catch (error) {
       console.log("Fail to load Order");
     }
@@ -81,7 +79,6 @@ const Evaluate = (props) => {
   };
 
   const submitReview = async () => {
-    // console.log(submitData);
     try {
       setLoadingSubmit(true);
       for (const data of submitData) {

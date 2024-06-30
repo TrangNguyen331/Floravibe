@@ -51,6 +51,16 @@ public class VoucherController {
         Voucher result = service.delete(id);
         return ResponseEntity.ok(result);
     }
+    @PutMapping("activeForGuest/{id}")
+    public ResponseEntity<Voucher> updateGuest(@PathVariable String id) {
+        Voucher result = service.updateGuest(id);
+        return ResponseEntity.ok(result);
+    }
+    @PutMapping("activePaid/{id}")
+    public ResponseEntity<Voucher> updateOnlineVoucher(@PathVariable String id) {
+        Voucher result = service.updateOnlineVoucher(id);
+        return ResponseEntity.ok(result);
+    }
     @GetMapping
     public ResponseEntity<List<Voucher>> getAllVouchers() {
         List<Voucher> vouchers = service.getAllVouchers();

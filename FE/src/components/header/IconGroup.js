@@ -56,36 +56,30 @@ const IconGroup = ({
     username: "",
   });
   useEffect(() => {
+    let isMounted = true; // Biến hủy bỏ để theo dõi trạng thái của component
+
     const setDataInit = async () => {
-      if (isLogin) {
+      if (isLogin && isMounted) {
         const response = await axiosInstance.get("/api/v1/auth/identity");
-        setUserAvatar({
-          avatar: response.data.avatar || "",
-          username: response.data.username || "",
-        });
+        if (isMounted) {
+          setUserAvatar({
+            avatar: response.data.avatar || "",
+            username: response.data.username || "",
+          });
+        }
       }
     };
+
     setDataInit();
-  }, []);
+
+    return () => {
+      isMounted = false; // Đánh dấu component đã unmount
+    };
+  }, [isLogin]);
   return (
     <div
       className={`header-right-wrap ${iconWhiteClass ? iconWhiteClass : ""}`}
     >
-      {/* Search */}
-      {/* <div className="same-style header-search d-none d-lg-block">
-        <button className="search-active" onClick={(e) => handleClick(e)}>
-          <i className="pe-7s-search" />
-        </button>
-        <div className="search-content">
-          <form action="#">
-            <input type="text" placeholder="Search" />
-            <button className="button-search">
-              <i className="pe-7s-search" />
-            </button>
-          </form>
-        </div>
-      </div> */}
-
       <div>
         <Dropdown
           className="same-style translate-wrap"

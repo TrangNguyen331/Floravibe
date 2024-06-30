@@ -31,6 +31,9 @@ public class VoucherServiceImpl implements VoucherService {
         if(dto.isGuest()){
             voucher.setGuest(true);
         }
+        if(dto.isOnlinePayment()){
+            voucher.setOnlinePayment(true);
+        }
         repository.save(voucher);
         return voucher;
     }
@@ -47,6 +50,7 @@ public class VoucherServiceImpl implements VoucherService {
         voucher.setQuantity(dto.getQuantity());
         voucher.setUsedVoucher(dto.getUsedVoucher());
         voucher.setGuest(dto.isGuest());
+        voucher.setOnlinePayment(dto.isOnlinePayment());
         repository.save(voucher);
         return voucher;
     }
@@ -55,6 +59,22 @@ public class VoucherServiceImpl implements VoucherService {
         Voucher voucher= repository.findById(id)
                 .orElseThrow(()-> new NotFoundException("Voucher not found!"));
         voucher.setActive(!voucher.isActive);
+        repository.save(voucher);
+        return voucher;
+    }
+    @Override
+    public Voucher updateGuest(String id){
+        Voucher voucher= repository.findById(id)
+                .orElseThrow(()-> new NotFoundException("Voucher not found!"));
+        voucher.setGuest(!voucher.guest);
+        repository.save(voucher);
+        return voucher;
+    }
+    @Override
+    public Voucher updateOnlineVoucher(String id){
+        Voucher voucher= repository.findById(id)
+                .orElseThrow(()-> new NotFoundException("Voucher not found!"));
+        voucher.setOnlinePayment(!voucher.isOnlinePayment);
         repository.save(voucher);
         return voucher;
     }

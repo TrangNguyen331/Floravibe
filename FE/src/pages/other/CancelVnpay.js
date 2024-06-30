@@ -1,7 +1,9 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { Modal } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 const CancelVnpay = (props) => {
+  const { t } = useTranslation(["notify"]);
   return (
     <Fragment>
       <Modal
@@ -12,7 +14,7 @@ const CancelVnpay = (props) => {
         className="product-quickview-modal-wrapper"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Order Cancellation Notice</Modal.Title>
+          <Modal.Title>{t("order-cancel-notice")}</Modal.Title>
         </Modal.Header>
         <div className="modal-body">
           <div className="content-container">
@@ -21,7 +23,7 @@ const CancelVnpay = (props) => {
                 <div className="icon-speaker">
                   <i className="pe-7s-speaker" />
                 </div>
-
+                <h3 className="text-center">{t("cancel-success")}</h3>
                 <p>Dear Customer,</p>
                 <p>
                   Since you had already paid for this order, we will contact you

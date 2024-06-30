@@ -20,7 +20,13 @@ const Checkout = ({ location, cartItems, currency }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const history = useHistory();
-  const { t } = useTranslation(["checkout", "myacc", "orders", "breadcrumb"]);
+  const { t } = useTranslation([
+    "checkout",
+    "myacc",
+    "orders",
+    "breadcrumb",
+    "notify",
+  ]);
   const [cities, setCities] = useState([]);
 
   const [disableOption1, setDisableOption1] = useState(false);
@@ -128,9 +134,18 @@ const Checkout = ({ location, cartItems, currency }) => {
       return;
     }
     const selectedVoucher = token
-      ? vouchers
-          .filter((voucher) => voucher.isActive === true && !voucher.guest)
-          .find((voucher) => voucher.voucherName === submitData.voucherName)
+      ? paymentMethod === "CASH"
+        ? vouchers
+            .filter(
+              (voucher) =>
+                voucher.isActive === true &&
+                !voucher.guest &&
+                !voucher.isOnlinePayment
+            )
+            .find((voucher) => voucher.voucherName === submitData.voucherName)
+        : vouchers
+            .filter((voucher) => voucher.isActive === true && !voucher.guest)
+            .find((voucher) => voucher.voucherName === submitData.voucherName)
       : vouchers
           .filter((voucher) => voucher.isActive === true && voucher.guest)
           .find((voucher) => voucher.voucherName === submitData.voucherName);
@@ -235,32 +250,29 @@ const Checkout = ({ location, cartItems, currency }) => {
       voucherDetail: selectedVoucher
         ? {
             id: selectedVoucher.id,
-            voucherName: appliedVoucherName,
+            // voucherName: appliedVoucherName,
             voucherValue: selectedVoucher.voucherValue,
-            description: selectedVoucher.description,
-            effectiveDate: selectedVoucher.effectiveDate,
-            validUntil: selectedVoucher.validUntil,
-            quantity: selectedVoucher.quantity,
-            usedVoucher: selectedVoucher.usedVoucher,
+            // description: selectedVoucher.description,
+            // effectiveDate: selectedVoucher.effectiveDate,
+            // validUntil: selectedVoucher.validUntil,
+            // quantity: selectedVoucher.quantity,
+            // usedVoucher: selectedVoucher.usedVoucher,
+            // guest: selectedVoucher.guest,
+            // isOnlinePayment: selectedVoucher.isOnlinePayment,
           }
         : {
             id: null,
-            voucherName: "",
+            // voucherName: "",
             voucherValue: 0,
-            description: "",
-            effectiveDate: "",
-            validUntil: "",
-            quantity: 0,
-            usedVoucher: 0,
+            // description: "",
+            // effectiveDate: "",
+            // validUntil: "",
+            // quantity: 0,
+            // usedVoucher: 0,
           },
       deliveryDate: new Date(submitData.deliveryDate),
       deliveryTime: submitData.deliveryTime,
       total: totalValue - orderDiscount - voucherDiscount,
-      // total: token
-      //   ? orders.length === 0
-      //     ? totalValue - firstDiscount - voucherDiscount
-      //     : totalValue - voucherDiscount
-      //   : totalValue - voucherDiscount,
       status: "IN_REQUEST",
       methodPaid: paymentMethod,
       firstDiscount: orderDiscount,
@@ -271,7 +283,7 @@ const Checkout = ({ location, cartItems, currency }) => {
       const response = await axiosInstance.post("/api/v1/orders", body, {
         timeout: 8000,
       });
-      console.log("response", response);
+      console.log("response", response.data);
 
       if (selectedVoucher) {
         const quantity =
@@ -285,6 +297,8 @@ const Checkout = ({ location, cartItems, currency }) => {
           validUntil: selectedVoucher.validUntil,
           quantity: quantity,
           usedVoucher: usedVoucher,
+          guest: selectedVoucher.guest,
+          isOnlinePayment: selectedVoucher.isOnlinePayment,
         };
         try {
           await axiosInstance.put(
@@ -295,7 +309,6 @@ const Checkout = ({ location, cartItems, currency }) => {
           console.log(error);
         }
       }
-
       addToast("Order success", {
         appearance: "success",
         autoDismiss: true,
@@ -311,14 +324,20 @@ const Checkout = ({ location, cartItems, currency }) => {
       }
     } catch (error) {
       console.log(error);
-      // addToast(t("notice.fail-create-order"), {
-      //   appearance: "error",
-      //   autoDismiss: true,
-      // });
+      addToast(t("notice.fail-create-order"), {
+        appearance: "error",
+        autoDismiss: true,
+      });
     }
   };
 
   const clickPlaceOrder = async () => {
+    if (cartItems.length === 0) {
+      addToast(t("no-cartItem"), {
+        appearance: "error",
+        autoDismiss: true,
+      });
+    }
     if (
       submitData.firstName === "" ||
       submitData.lastName === "" ||
@@ -399,6 +418,8 @@ const Checkout = ({ location, cartItems, currency }) => {
   const [paymentMethod, setPaymentMethod] = useState("CASH");
   const handlePaymentMethodChange = (event) => {
     setPaymentMethod(event.target.value);
+    setVoucherDiscount(0);
+    setAppliedVoucherName("");
   };
   return (
     <Fragment>
@@ -672,6 +693,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                           name="email"
                           value={submitData.email}
                           onChange={handleInputChange}
+                          disabled={token ? true : false}
                         />
                       </div>
                     </div>

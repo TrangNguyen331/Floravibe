@@ -226,61 +226,9 @@ const Wishlist = ({
                                     </button>
                                   ) : (
                                     <button disabled className="active">
-                                      Out of Stock
+                                      {t("home:productgrid.out-of-stock")}
                                     </button>
                                   )}
-                                  {/* {wishlistItem.affiliateLink ? (
-                                    <a
-                                      href={wishlistItem.affiliateLink}
-                                      rel="noopener noreferrer"
-                                      target="_blank"
-                                    >
-                                      {t("home:productgrid.buy-now")}
-                                    </a>
-                                  ) : wishlistItem.variation &&
-                                    wishlistItem.variation.length >= 1 ? (
-                                    <Link
-                                      to={`${process.env.PUBLIC_URL}/product/${wishlistItem.id}`}
-                                    >
-                                      {t("home:productgrid.select-option")}
-                                    </Link>
-                                  ) : 
-                                  productStock &&
-                                    productStock.stockQty <= 0 ? (
-                                    <button>out of stock</button>
-                                  ) : (
-                                    <button
-                                      onClick={() => {
-                                        addToCart(wishlistItem, addToast);
-                                      }}
-                                      className={
-                                        cartItem !== undefined &&
-                                        cartItem.quantity > 0
-                                          ? "active"
-                                          : ""
-                                      }
-                                      disabled={
-                                        cartItem !== undefined &&
-                                        cartItem.quantity > 0
-                                        // (productStock &&
-                                        //   productStock.stockQty <= 0)
-                                      }
-                                      title={
-                                        wishlistItem !== undefined
-                                          ? t(
-                                              "home:productgrid.tooltip-added-to-cart"
-                                            )
-                                          : t(
-                                              "home:productgrid.tooltip-add-to-cart"
-                                            )
-                                      }
-                                    >
-                                      {cartItem !== undefined &&
-                                      cartItem.quantity > 0
-                                        ? t("home:productgrid.added")
-                                        : t("home:productgrid.add-to-cart")}
-                                    </button>
-                                  )} */}
                                 </td>
 
                                 <td className="product-remove">

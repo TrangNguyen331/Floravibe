@@ -4,12 +4,14 @@ import { reasonList } from "../../helpers/helper";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import axiosInstance from "../../axiosInstance";
+import { useToasts } from "react-toast-notifications";
 import CancelVnpay from "./CancelVnpay";
 const CancelReasonModal = (props) => {
   const [isCancelShow, setCancelShow] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [reason, setReason] = useState("");
-
+  const { t } = useTranslation(["notify"]);
+  const { addToast } = useToasts();
   const clickSubmit = async () => {
     setLoadingSubmit(true);
     try {
@@ -26,6 +28,12 @@ const CancelReasonModal = (props) => {
       if (props.methodPaid === "VNPAY") {
         setCancelShow(true);
       }
+      if (props.methodPaid === "CASH") {
+        addToast(t("cancel-success"), {
+          appearance: "success",
+          autoDismiss: true,
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -40,13 +48,13 @@ const CancelReasonModal = (props) => {
         className="product-quickview-modal-wrapper"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Lý do hủy đơn hàng</Modal.Title>
+          <Modal.Title>{t("cancel-reason")}</Modal.Title>
         </Modal.Header>
         <div className="modal-body">
           <div className="row">
             <div className="col-lg-12 col-md-7">
               <Form.Group>
-                <Form.Label>Chọn lý do:</Form.Label>
+                <Form.Label>{t("choose-reason")}</Form.Label>
                 <Form.Control
                   as="select"
                   value={reason}
@@ -75,7 +83,7 @@ const CancelReasonModal = (props) => {
                   role="status"
                   aria-hidden="true"
                 ></span>
-                Submit
+                Sumbit
               </div>
             ) : (
               "Submit"

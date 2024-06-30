@@ -1,4 +1,4 @@
-package com.hcmute.tlcn.dtos.order;
+package com.hcmute.tlcn.dtos.voucher;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CancelOrderDetailDto {
-    private String cancelEmail;
-    private String cancelReason;
-    private String cancelRole;
-
+public class VoucherDetailDto {
+    public String id;
+    public double voucherValue;
 }

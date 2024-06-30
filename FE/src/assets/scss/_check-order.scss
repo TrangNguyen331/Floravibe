@@ -182,7 +182,18 @@
         }
       }
     }
-
+    .order-details-link-wrapper {
+      display: flex;
+      justify-content: space-between;
+      .cancel-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      span {
+        color: #666;
+      }
+    }
     .order-details-link {
       display: flex;
       justify-content: end;

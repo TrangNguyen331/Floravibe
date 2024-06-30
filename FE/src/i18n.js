@@ -18,47 +18,49 @@ import wishlist_en from "../src/locales/en/wishlist.json";
 import wishlist_vi from "../src/locales/vi/wishlist.json";
 import loginregister_en from "../src/locales/en/login-register.json";
 import loginregister_vi from "../src/locales/vi/login-register.json";
-
+import notify_en from "../src/locales/en/notify.json";
+import notify_vi from "../src/locales/vi/notify.json";
 
 export const locales = {
-    en: 'EN',
-    vi: 'VI'
-}
-
+  en: "EN",
+  vi: "VI",
+};
 
 const resources = {
-    en:{
-        header: header_en,
-        home: home_en,
-        product: product_en,
-        breadcrumb: breadcrumb_en,
-        orders: order_en,
-        myacc: myaccount_en,
-        checkout: checkout_en,
-        wishlist: wishlist_en,
-        lore: loginregister_en
-    },
-    vi:{
-        header: header_vi,
-        home: home_vi,
-        product: product_vi,
-        breadcrumb: breadcrumb_vi,
-        orders: order_vi,
-        myacc: myaccount_vi,
-        checkout: checkout_vi,
-        wishlist: wishlist_vi,
-        lore: loginregister_vi
-    }
-}
-const defaultNS = 'header'
+  en: {
+    header: header_en,
+    home: home_en,
+    product: product_en,
+    breadcrumb: breadcrumb_en,
+    orders: order_en,
+    myacc: myaccount_en,
+    checkout: checkout_en,
+    wishlist: wishlist_en,
+    lore: loginregister_en,
+    notify: notify_en,
+  },
+  vi: {
+    header: header_vi,
+    home: home_vi,
+    product: product_vi,
+    breadcrumb: breadcrumb_vi,
+    orders: order_vi,
+    myacc: myaccount_vi,
+    checkout: checkout_vi,
+    wishlist: wishlist_vi,
+    lore: loginregister_vi,
+    notify: notify_vi,
+  },
+};
+const defaultNS = "header";
 
 i18n.use(initReactI18next).init({
-    resources,
-    lng: 'en',
-    fallbackLng: 'en',
-    ns: ['home', 'header'],
-    defaultNS,
-    interpolation: {
-        escapeValue: false
-    }
-})
+  resources,
+  lng: "en",
+  fallbackLng: "en",
+  ns: ["home", "header"],
+  defaultNS,
+  interpolation: {
+    escapeValue: false,
+  },
+});

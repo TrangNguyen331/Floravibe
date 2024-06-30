@@ -74,6 +74,7 @@ const Vouchers = () => {
         quantity: null,
         usedVoucher: null,
         guest: false,
+        isOnlinePayment: false,
       });
     }
     setMode(mode);
@@ -90,6 +91,7 @@ const Vouchers = () => {
     quantity: null,
     usedVoucher: null,
     guest: false,
+    isOnlinePayment: false,
   });
   const fetchData = async (page) => {
     try {
@@ -110,7 +112,6 @@ const Vouchers = () => {
     await fetchData(p);
   }
   const handleCheckboxChange = async (voucherId) => {
-    console.log("Handle on change", voucherId);
     try {
       await axiosInstance.put(`/api/v1/vouchers/active/${voucherId}`);
       await fetchData(1);
@@ -133,7 +134,52 @@ const Vouchers = () => {
       }
     }
   };
-
+  const handleCheckboxGuest = async (voucherId) => {
+    try {
+      await axiosInstance.put(`/api/v1/vouchers/activeForGuest/${voucherId}`);
+      await fetchData(1);
+      {
+        addToast("Update voucher successfully.", {
+          appearance: "success",
+          autoDismiss: true,
+          zIndex: 9999,
+        });
+        return;
+      }
+    } catch (error) {
+      console.log("Error", error);
+      {
+        addToast("Change status voucher fail.", {
+          appearance: "success",
+          autoDismiss: true,
+        });
+        return;
+      }
+    }
+  };
+  const handleCheckboxOnlPayment = async (voucherId) => {
+    try {
+      await axiosInstance.put(`/api/v1/vouchers/activePaid/${voucherId}`);
+      await fetchData(1);
+      {
+        addToast("Update voucher successfully.", {
+          appearance: "success",
+          autoDismiss: true,
+          zIndex: 9999,
+        });
+        return;
+      }
+    } catch (error) {
+      console.log("Error", error);
+      {
+        addToast("Change status voucher fail.", {
+          appearance: "success",
+          autoDismiss: true,
+        });
+        return;
+      }
+    }
+  };
   const handleSave = async (mode) => {
     if (new Date(voucherInfo.validUntil) < new Date(voucherInfo.effectiveDate))
       // {
@@ -171,6 +217,7 @@ const Vouchers = () => {
         quantity: voucherInfo.quantity,
         usedVoucher: voucherInfo.usedVoucher,
         guest: voucherInfo.guest,
+        isOnlinePayment: voucherInfo.isOnlinePayment,
       };
 
       if (mode === "add") {
@@ -196,6 +243,7 @@ const Vouchers = () => {
         validUntil: null,
         quantity: null,
         guest: false,
+        isOnlinePayment: false,
       });
       fetchData(1);
     } catch (error) {
@@ -315,6 +363,7 @@ const Vouchers = () => {
               <TableCell>Used</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>For Guest</TableCell>
+              <TableCell>For Online Payment</TableCell>
             </tr>
           </TableHeader>
           <TableBody>
@@ -359,11 +408,18 @@ const Vouchers = () => {
                   />
                 </TableCell>
                 <TableCell className="text-base text-center">
-                  {voucher.guest ? (
-                    <Input type="checkbox" checked={voucher.guest} />
-                  ) : (
-                    ""
-                  )}
+                  <Input
+                    type="checkbox"
+                    checked={voucher.guest}
+                    onChange={() => handleCheckboxGuest(voucher.id)}
+                  />
+                </TableCell>
+                <TableCell className="text-base text-center">
+                  <Input
+                    type="checkbox"
+                    checked={voucher.isOnlinePayment}
+                    onChange={() => handleCheckboxOnlPayment(voucher.id)}
+                  />
                 </TableCell>
                 <TableCell>
                   <Button

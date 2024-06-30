@@ -10,33 +10,29 @@ import { formatReadableDate } from "../../helpers/helper";
 import { Link } from "react-router-dom";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import { LuBadgeInfo } from "react-icons/lu";
-import CancelReasonModal from "./CancelReasonModal";
 const CheckOrder = ({ location }) => {
   const { pathname } = location;
   const { t } = useTranslation(["orders", "breadcrumb"]);
-  const token = useSelector((state) => state.auth.token);
   const [allOrders, setAllOrders] = useState([]);
   const [loadingGet, setLoadingGet] = useState(false);
   const [email, setEmail] = useState("");
-  const [cancelEmail, setCancelEmail] = useState("");
   const [orderId, setOrderId] = useState("");
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filterApplied, setFilterApplied] = useState(false);
-  const [methodPaid, setMethodPaid] = useState(null);
-  const [showCancelReason, setShowCancelReason] = useState(false);
-  const getAllOrders = async () => {
-    try {
-      const response = await axiosInstance.get("/api/v1/orders/allOrders", {
-        timeout: 10000,
-      });
-      setAllOrders(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    getAllOrders();
-  }, []);
+
+  // const getAllOrders = async () => {
+  //   try {
+  //     const response = await axiosInstance.get("/api/v1/orders/allOrders", {
+  //       timeout: 10000,
+  //     });
+  //     setAllOrders(response.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   getAllOrders();
+  // }, []);
   const clickCheckOrders = async () => {
     if (!email && !orderId) {
       return;
@@ -45,8 +41,8 @@ const CheckOrder = ({ location }) => {
     const response = await axiosInstance.get("/api/v1/orders/allOrders", {
       timeout: 10000,
     });
-
     let filtered = response.data;
+    // let filtered = allOrders;
     if (email) {
       filtered = filtered.filter(
         (order) => order.additionalOrder.email === email
@@ -57,15 +53,7 @@ const CheckOrder = ({ location }) => {
     }
     setFilteredOrders(filtered);
     setFilterApplied(true);
-    console.log(filtered);
-
     setLoadingGet(false);
-  };
-  const clickCancel = async (orderId, methodPaid, email) => {
-    setOrderId(orderId);
-    setMethodPaid(methodPaid);
-    setCancelEmail(email);
-    setShowCancelReason(true);
   };
   return (
     <Fragment>
@@ -82,10 +70,10 @@ const CheckOrder = ({ location }) => {
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb />
-        <div className="check-order-area pt-50 pb-50">
+        <div className="check-order-area pt-90 pb-50">
           <div className="container">
             <h3 className="check-order-title">Check Order Status</h3>
-            <div className="row flex items-center justify-content-center">
+            <div className="row items-end">
               <div className="col-lg-4 col-md-3">
                 <div className="check-input mb-20">
                   <label>Email</label>
@@ -96,8 +84,10 @@ const CheckOrder = ({ location }) => {
                   />
                 </div>
               </div>
-              <div className="label">
-                <label>Or</label>
+              <div className="col-sm-1 col-md-1">
+                <div className="mb-20 text-center">
+                  <label>Or</label>
+                </div>
               </div>
               <div className="col-lg-4 col-md-3">
                 <div className="check-input mb-20">
@@ -109,8 +99,8 @@ const CheckOrder = ({ location }) => {
                   />
                 </div>
               </div>
-              <div className="col-lg-2 col-md-4">
-                <div className="check-input mb-20 items-center justify-content-center">
+              <div className="col-lg-3 col-md-4">
+                <div className="check-input mb-20">
                   <button className="check-btn" onClick={clickCheckOrders}>
                     Check
                   </button>
@@ -215,19 +205,6 @@ const CheckOrder = ({ location }) => {
                             )}
                           </span>
                           <div className="order-details-link">
-                            {order.status === "IN_REQUEST" && (
-                              <button
-                                onClick={() =>
-                                  clickCancel(
-                                    order.id,
-                                    order.methodPaid,
-                                    order.additionalOrder.email
-                                  )
-                                }
-                              >
-                                Cancel
-                              </button>
-                            )}
                             <Link
                               to={
                                 process.env.PUBLIC_URL +
@@ -253,14 +230,6 @@ const CheckOrder = ({ location }) => {
           </div>
         </div>
       </LayoutOne>
-      <CancelReasonModal
-        show={showCancelReason}
-        onHide={() => setShowCancelReason(false)}
-        orderId={orderId}
-        methodPaid={methodPaid}
-        email={cancelEmail}
-        fetchData={getAllOrders}
-      />
     </Fragment>
   );
 };

@@ -21,4 +21,5 @@ public class VoucherDto {
     public int quantity;
     public int usedVoucher;
     public boolean guest=false;
+    public boolean isOnlinePayment=false;
 }

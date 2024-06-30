@@ -1,0 +1,12 @@
+{
+  "login-success": "Login Success",
+  "login-fail": "Something wrong! PLease try again",
+  "logout-success": "Logout success",
+  "cancel-success": "Cancel Successfully",
+  "cancel-fail": "Cancel Failed",
+  "no-cartItem": "No items found in cart",
+  "not-enough-product": "There are products out of stock",
+  "cancel-reason": "Cancel Reason",
+  "choose-reason": "Choose the reason:",
+  "order-cancel-notice": "Order Cancellation Notice"
+}

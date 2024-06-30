@@ -128,31 +128,35 @@ const ProductDescriptionTab = ({ spaceBottomClass }) => {
               <Tab.Pane eventKey="productReviews">
                 <div className="row">
                   <div className="col-lg-12">
-                    {getSortedReview(product ? product.reviews : []).map(
-                      (review) => (
-                        <div className="single-review" key={review.id}>
-                          <div className="review-img">
-                            <img src={review.account.avatar} alt="" />
-                          </div>
-                          <div className="review-content">
-                            <div className="review-top-wrap">
-                              <div className="review-left">
-                                <div className="review-name">
-                                  <h4>{review.account.username}</h4>
-                                  <span>
-                                    {formatReadableDate(review.createDate)}
-                                  </span>
+                    {product && product.reviews.length === 0 ? (
+                      <p>Không có đánh giá nào cho sản phẩm này.</p>
+                    ) : (
+                      getSortedReview(product ? product.reviews : []).map(
+                        (review) => (
+                          <div className="single-review" key={review.id}>
+                            <div className="review-img">
+                              <img src={review.account.avatar} alt="" />
+                            </div>
+                            <div className="review-content">
+                              <div className="review-top-wrap">
+                                <div className="review-left">
+                                  <div className="review-name">
+                                    <h4>{review.account.username}</h4>
+                                    <span>
+                                      {formatReadableDate(review.createDate)}
+                                    </span>
+                                  </div>
                                 </div>
+                                <ProductDescriptionRating
+                                  ratingValue={review.ratingValue}
+                                />
                               </div>
-                              <ProductDescriptionRating
-                                ratingValue={review.ratingValue}
-                              />
-                            </div>
-                            <div className="review-bottom">
-                              <p>{review.content}</p>
+                              <div className="review-bottom">
+                                <p>{review.content}</p>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        )
                       )
                     )}
                   </div>

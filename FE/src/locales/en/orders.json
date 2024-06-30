@@ -6,14 +6,16 @@
     "process": "Processing",
     "complete": "Completed",
     "cancel": "Cancel",
-    "canceled": "Canceled",
+    "canceled": "Cancelled",
     "view-details": "View Details",
-    "no-order": "No Orders Yet"
+    "no-order": "No Orders Yet",
+    "order-cancel-reason": "The reason cancellation:"
   },
   "detail": {
     "id": "Order ID:",
     "date": "Order Time:",
     "cancel-time": "Cancel Time:",
+    "complete-time": "Completed Time:",
     "shipping": "Shipping",
     "products": "Product(s)",
     "free": "Free",
@@ -35,7 +37,9 @@
     "stockQty": "Stock Quantity",
     "subtotal": "Subtotal",
     "cancel-user": "Cancelled by you",
-    "cancel-admin": "Cancelled by shop"
+    "cancel-admin": "Cancelled by shop",
+    "order-rating": "Rating",
+    "order-rated": "Rated"
   },
   "complete": {
     "order-complete": "Order Complete",

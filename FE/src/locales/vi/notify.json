@@ -1,0 +1,12 @@
+{
+  "login-success": "Đăng nhập thành công",
+  "login-fail": "Đăng nhập thất bại",
+  "logout-success": "Đăng xuất thành công",
+  "cancel-success": "Hủy thành công",
+  "cancel-fail": "Hủy thất bại",
+  "no-cartItem": "Không có sản phẩm trong giỏ hàng",
+  "not-enough-product": "Có sản phẩm không đủ số lượng trong kho",
+  "cancel-reason": "Lý do hủy đơn hàng",
+  "choose-reason": "Chọn lý dó:",
+  "order-cancel-notice": "Lưu ý việc hủy đơn"
+}

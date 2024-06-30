@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import "../../assets/scss/_banner-voucher.scss";
 import { Col, Row } from "reactstrap";
 import PropTypes from "prop-types";
@@ -33,8 +33,9 @@ const BannerVoucher = ({ data }) => {
               <span>Enter code</span>
             </div>
             <div className="code">{data.voucherName}</div>
-            <div>AT CHECKOUT</div>
+            <div style={{ fontSize: "13px" }}>AT CHECKOUT</div>
             <div className="quantity">Quantity: {data.quantity}</div>
+            {data.isOnlinePayment && <span>For VNPAY</span>}
           </Col>
         </Row>
       </div>

@@ -173,12 +173,43 @@ const FooterOne = ({
               sideMenu ? "col-xl-3 col-sm-8" : "col-lg-4 col-sm-6"
             }`}
           >
-            {/* footer newsletter */}
-            <FooterNewsletter
-              spaceBottomClass="mb-30"
-              spaceLeftClass="ml-70"
-              sideMenu={sideMenu}
-            />
+            <div
+              className={`${
+                sideMenu
+                  ? "footer-widget mb-30 ml-95"
+                  : "footer-widget mb-30 ml-50"
+              }`}
+            >
+              <div className="footer-title">
+                <h3>CONTACT INFO</h3>
+              </div>
+              <div className="footer-list">
+                <div className="single-contact-info">
+                  <div className="contact-icon">
+                    <i className="fa fa-phone" />
+                  </div>
+                  <div className="contact-info-dec">
+                    <p>+0188468580 | +0468580188</p>
+                  </div>
+                </div>
+                <div className="single-contact-info">
+                  <div className="contact-icon">
+                    <i className="fa fa-globe" />
+                  </div>
+                  <div className="contact-info-dec">
+                    <p>cskh_flowershop@yopmail.com</p>
+                  </div>
+                </div>
+                <div className="single-contact-info">
+                  <div className="contact-icon">
+                    <i className="fa fa-map-marker" />
+                  </div>
+                  <div className="contact-info-dec">
+                    <p>Address goes here, abc street, 1 Vo Van Ngan</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

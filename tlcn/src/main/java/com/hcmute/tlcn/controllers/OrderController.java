@@ -30,9 +30,6 @@ public class OrderController {
     private final OrderService service;
     private final PaymentService paymentService;
 
-//    public OrderController(OrderService service) {
-//        this.service = service;
-//    }
     @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<List<ResponseOrderDto>> getAllOrder(Principal principal){
@@ -83,11 +80,6 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
-//    @PostMapping
-//    public ResponseEntity<Order> addNewOrder(@RequestBody OrderDto dto){
-//        Order result = service.addNew(dto);
-//        return new ResponseEntity<>(result, HttpStatus.OK);
-//    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
