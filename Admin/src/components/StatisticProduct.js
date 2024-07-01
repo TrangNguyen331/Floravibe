@@ -11,7 +11,6 @@ import {
 } from "@windmill/react-ui";
 import axiosInstance from "../axiosInstance";
 import Paginate from "./Pagination/Paginate";
-import ProductAvgRating from "./ProductAvgRating";
 import { Link } from "react-router-dom";
 import { Box, LinearProgress, Rating } from "@mui/material";
 import { StarBorder } from "@mui/icons-material";
@@ -26,9 +25,7 @@ const TestStatstic = () => {
   const [data, setData] = useState([]);
 
   const onPageChange = async (e, p) => {
-    console.log("Trigger on page change");
     await fetchData(p);
-    console.log("page", p);
   };
 
   const fetchData = async (page) => {
@@ -46,7 +43,6 @@ const TestStatstic = () => {
       setTotalResult(response.data.totalElements);
       setDataLoaded(true);
       setLoadingGet(false);
-      console.log(response.data.content);
     } catch (error) {
       console.log(error);
     }
@@ -90,7 +86,7 @@ const TestStatstic = () => {
                       <Link to={`/app/product/${product.productId}`}>
                         <Avatar
                           className="hidden mr-4 md:block"
-                          src={product.productImage}
+                          src={product.productImages[0]}
                           alt="Product image"
                         />
                       </Link>

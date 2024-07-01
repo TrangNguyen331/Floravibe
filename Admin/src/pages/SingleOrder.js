@@ -4,7 +4,6 @@ import Icon from "../components/Icon";
 import PageTitle from "../components/Typography/PageTitle";
 import { DashboardIcon, Info } from "../icons";
 import { Card, CardBody, Badge, TableHeader, Avatar } from "@windmill/react-ui";
-import { genRating } from "../utils/genarateRating";
 import ReasonCancel from "../components/ReasonCancel";
 import axiosInstance from "../axiosInstance";
 import {
@@ -28,47 +27,22 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { statusSingleOptions } from "../helper/numberhelper";
 
 const SingleOrder = () => {
   const { id } = useParams();
   const [order, setOrder] = useState(null);
   const [payment, setPayment] = useState(null);
   const [open, setOpen] = useState({});
-  const [cancelOrder, setCancelOrder] = useState(null);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const token = localStorage.getItem("token");
   const [userInfo, setUserInfo] = useState({
     fullName: "",
     email: "",
   });
-  const statusOptions = [
-    {
-      value: "IN_REQUEST",
-      label: "IN REQUEST",
-      color:
-        "px-5 py-4 rounded-full bg-orange-100 text-orange-700 dark:bg-orange-700 dark:text-orange-100",
-    },
-    {
-      value: "IN_PROCESSING",
-      label: "IN PROGRESS",
-      color:
-        "px-4 py-4 rounded-full bg-pink-100 text-pink-700 dark:bg-pink-700 dark:text-pink-100",
-    },
-    {
-      value: "CANCEL",
-      label: "CANCELLED",
-      color:
-        "px-5 py-3 rounded-full bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-100",
-    },
-    {
-      value: "COMPLETED",
-      label: "COMPLETED",
-      color:
-        "px-5 py-3 rounded-full bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100",
-    },
-  ];
+
   const getStatusOption = (statusValue) => {
-    return statusOptions.find((option) => option.value === statusValue);
+    return statusSingleOptions.find((option) => option.value === statusValue);
   };
 
   const toggleOpen = (index) => {
@@ -185,8 +159,6 @@ const SingleOrder = () => {
         (payment) => payment.orderId === id
       );
       setPayment(paymentForOrder);
-      console.log("Payment");
-      console.log(paymentForOrder);
     } catch (error) {}
   };
 
@@ -194,8 +166,6 @@ const SingleOrder = () => {
     fetchData();
     fetchPaymentData();
   }, []);
-  console.log("order", order);
-
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handlePopoverOpen = (event) => {
@@ -267,9 +237,6 @@ const SingleOrder = () => {
                       </select>
                     )}
                   </div>
-                  {/* <span className={getStatusOption(order.status)?.color || ""}>
-                    {getStatusOption(order.status)?.label || ""}
-                  </span> */}
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -367,10 +334,6 @@ const SingleOrder = () => {
                     ) : (
                       ""
                     )}
-
-                    {/* <LightTooltip title="Order has been cancelled because:">
-                      <InfoOutlined className="w-1 h-1 text-purple-600 justify-between align-middle" />
-                    </LightTooltip> */}
                   </div>
                 </div>
               </div>
@@ -480,12 +443,6 @@ const SingleOrder = () => {
                   <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 700 }} aria-label="spanning table">
                       <TableHeader>
-                        {/* <TableRow>
-                          <TableCell align="center" colSpan={3}>
-                            DETAILS
-                          </TableCell>
-                          <TableCell align="right">PRICE</TableCell>
-                        </TableRow> */}
                         <TableRow>
                           {/* <TableCell /> */}
                           <TableCell className="ml-4">PRODUCT NAME</TableCell>

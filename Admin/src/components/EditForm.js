@@ -121,9 +121,11 @@ const EditForm = ({
                   type="number"
                   placeholder="Enter product price here"
                   className="mt-2 bg-transparent border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-opacity-0 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  onChange={(e) =>
-                    onProductChange("price", e.target?.value || "")
-                  }
+                  onChange={(e) => {
+                    if (e.target.value >= 0) {
+                      onProductChange("price", e.target?.value || "");
+                    }
+                  }}
                   value={(data && data.price) || ""}
                 />
               </div>
@@ -131,13 +133,6 @@ const EditForm = ({
 
             <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
               <span>Product Category</span>
-              {/* <TagsInput
-                  type="text"
-                  className="mt-2 bg-transparent border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder=""
-                  onChange={handleCollectionsChange}
-                  value={(data && data.collections) || []}
-                /> */}
               <Select
                 isMulti
                 className="custom-select"
@@ -176,12 +171,7 @@ const EditForm = ({
             </div>
             <div className="block mb-4 text-base font-medium text-gray-900 dark:text-white">
               <span>Product Tag</span>
-              {/* <TagsInput
-                classNames="mt-2"
-                onChange={handleTagsChange}
-                placeholder="Add tags (press Enter to add)"
-                value={(data && data.tags) || []}
-              /> */}
+
               <Select
                 isMulti
                 className="custom-select"
@@ -245,7 +235,6 @@ const EditForm = ({
                 }}
               />
             </div>
-
             <div className="block mt-2 text-base font-medium text-gray-900 dark:text-white">
               <div className="mb-2">
                 <span>Product Additional Information</span>
@@ -307,28 +296,6 @@ const EditForm = ({
             </div>
           </div>
           <div className="col-span-1 bg-gray-100 rounded-lg p-6">
-            {/* <div className="dark:text-white mb-4 text-base">
-              <span>Product Image</span>
-              <input type="file" multiple onChange={handleImgChange} />
-              <div className="flex flex-wrap gap-2 mt-1">
-                {data &&
-                  data.images.map((imageUrl, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={imageUrl}
-                        alt={`Product Image ${index}`}
-                        className="w-20 h-20 object-cover rounded-md border border-gray-300"
-                      />
-                      <button
-                        className="absolute top-1 right-1 text-red-500 hover:text-red-700"
-                        onClick={() => handleDeleteImage(index)}
-                      >
-                        x
-                      </button>
-                    </div>
-                  ))}
-              </div>
-            </div> */}
             <div className="flex justify-center">
               <label className="upload-product-img">
                 <FiUpload />

@@ -10,7 +10,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 const Order = ({ location, cartItems, currency }) => {
-  console.log("Order details page");
   const [order, setOrder] = useState(null);
   const [orders, setOrders] = useState([]);
   const { id } = useParams();
@@ -35,7 +34,6 @@ const Order = ({ location, cartItems, currency }) => {
     try {
       const response = await axiosInstance.get("/api/v1/orders");
       setOrders(response.data);
-      console.log("orders", orders);
     } catch (error) {
       console.log("Fail to load my orders");
     }

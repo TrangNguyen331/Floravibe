@@ -55,7 +55,6 @@ const ShopGridStandard = ({ location }) => {
     setVisible((prevCount) => prevCount + 6);
   };
   const handleSearch = (search) => {
-    console.log("handle search");
     setSearch(search);
     fetchDataAndProcess(0, search);
   };
@@ -116,8 +115,7 @@ const ShopGridStandard = ({ location }) => {
       );
       sortedProducts = filterSortedProducts;
 
-      setSortedProducts(sortedProducts);
-      console.log("sortedProducts", sortedProducts);
+      // setSortedProducts(sortedProducts);
       setCurrentData(sortedProducts.slice(offset, offset + pageLimit));
     } catch (error) {
       console.error("Error fetching data", error);

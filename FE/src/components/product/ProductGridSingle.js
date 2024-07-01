@@ -2,11 +2,7 @@ import PropTypes from "prop-types";
 import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
-// import { getDiscountPrice } from "../../helpers/product";
-import Rating from "./sub-components/ProductRating";
 import ProductModal from "./ProductModal";
-import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ProductAverageRating from "./sub-components/ProductAverageRating";
 const ProductGridSingle = ({
@@ -22,10 +18,7 @@ const ProductGridSingle = ({
   const { t } = useTranslation(["home"]);
   const [modalShow, setModalShow] = useState(false);
   const { addToast } = useToasts();
-  const token = useSelector((state) => state.auth.token);
-  const history = useHistory();
-  // const discountedPrice = getDiscountPrice(product.price, product.discount);
-  const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
+  const finalProductPrice = +product.price.toFixed(2);
   // const finalDiscountedPrice = +(
   //   discountedPrice * currency.currencyRate
   // ).toFixed(2);
@@ -176,9 +169,7 @@ const ProductGridSingle = ({
         onHide={() => setModalShow(false)}
         product={product}
         currency={currency}
-        // discountedprice={discountedPrice}
         finalproductprice={finalProductPrice}
-        // finaldiscountedprice={finalDiscountedPrice}
         cartitem={cartItem}
         wishlistitem={wishlistItem}
         addtocart={addToCart}

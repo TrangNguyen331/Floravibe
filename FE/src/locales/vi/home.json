@@ -14,7 +14,7 @@
     "added-to-wishlist": "Đã thêm vào yêu thích",
     "select-option": "Lựa chọn",
     "buy-now": "Mua Ngay",
-    "tooltip-add-to-cart": "Thêm vào Giỏ hangf",
+    "tooltip-add-to-cart": "Thêm vào Giỏ hàng",
     "tooltip-added-to-cart": "Đã thêm vào Giỏ hàng",
     "add-to-cart": "Thêm vào Giỏ",
     "added": "Đã thêm",
@@ -24,5 +24,6 @@
   "bannervoucher": {
     "shop-vouchers": "Mã giảm giá",
     "tagline": "Áp dụng cho tất cả đơn hàng trong shop"
-  }
+  },
+  "best-seller": "Bán Chạy"
 }

@@ -345,12 +345,14 @@ const Checkout = ({ location, cartItems, currency }) => {
       submitData.district === "" ||
       submitData.city === "" ||
       submitData.houseNumber === "" ||
-      submitData.phone === "" ||
+      // submitData.phone === "" ||
       submitData.email === "" ||
       submitData.deliveryDate === "" ||
-      submitData.deliveryTime === ""
+      submitData.deliveryTime === "" ||
+      !/^[0-9]+$/.test(submitData.phone)
     ) {
       setIsError(true);
+      console.log("error");
     } else {
       const isOverStock = cartItems.some((cartItem) => {
         const product = products.find((product) => product.id === cartItem.id);
@@ -364,7 +366,7 @@ const Checkout = ({ location, cartItems, currency }) => {
         });
       } else {
         setIsError(false);
-        await guestPlaceOrder();
+        // await guestPlaceOrder();
       }
     }
   };
@@ -443,34 +445,8 @@ const Checkout = ({ location, cartItems, currency }) => {
             <li>{t("form.order-complete")}</li>
           </ul>
         </div>
-        <div className="container mt-5">
-          <div className="discount-code-wrapper col-lg-6">
-            <h4>{t("form.order-complete")}</h4>
-            <div className="discount-code">
-              <div className="row">
-                <div className="col-lg-7 col-md-6">
-                  <input
-                    type="text"
-                    name="voucherName"
-                    placeholder={t("form.enter-coupon-code")}
-                    value={submitData.voucherName}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <button
-                  className="cart-btn-2"
-                  onClick={applyCoupon}
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Applying..." : t("form.apply")}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
         <div className="checkout-area pt-95 pb-100">
           <div className="container">
-            {/* {cartItems && cartItems.length >= 1 ? ( */}
             <div className="row">
               <div className="col-lg-7">
                 <div className="billing-info-wrap">
@@ -668,7 +644,10 @@ const Checkout = ({ location, cartItems, currency }) => {
                     <div className="col-lg-6 col-md-6">
                       <div
                         className={`billing-info mb-20 ${
-                          isError && !submitData.phone ? "error" : ""
+                          (isError && !submitData.phone) ||
+                          !/^[0-9]+$/.test(submitData.phone)
+                            ? "error"
+                            : ""
                         }`}
                       >
                         <label>{t("myacc:phone")}</label>
@@ -838,7 +817,33 @@ const Checkout = ({ location, cartItems, currency }) => {
                       </div>
                     </div>
                   </div>
-                  <div className="place-order mt-25">
+                  <div className="discount-code-wrapper mt-30">
+                    <h4>{t("form.use-coupon")}</h4>
+                    <div className="discount-code">
+                      <div className="row">
+                        <div className="col-lg-7 col-md-6">
+                          <input
+                            type="text"
+                            name="voucherName"
+                            placeholder={t("form.enter-coupon-code")}
+                            value={submitData.voucherName}
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                        <div className="col-lg-5 col-md-6">
+                          <button
+                            className="cart-btn-2"
+                            onClick={applyCoupon}
+                            disabled={isLoading}
+                          >
+                            {isLoading ? "Applying..." : t("form.apply")}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="place-order mt-35">
                     <button
                       className="btn-hover"
                       onClick={() => clickPlaceOrder()}

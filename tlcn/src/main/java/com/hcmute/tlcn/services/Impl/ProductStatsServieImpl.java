@@ -1,5 +1,6 @@
 package com.hcmute.tlcn.services.Impl;
 
+import com.hcmute.tlcn.dtos.statistic.ResponseBestProductDto;
 import com.hcmute.tlcn.dtos.statistic.ResponseProductStatsDto;
 import com.hcmute.tlcn.entities.Order;
 import com.hcmute.tlcn.entities.OrderDetail;
@@ -31,7 +32,7 @@ public class ProductStatsServieImpl implements ProductStatsService {
         for (Product product : allProducts) {
             if (product.isActive()) { // Chỉ xử lý các sản phẩm có isActive là true
 
-                String productImage = product.getImages().isEmpty() ? null : product.getImages().get(0);
+                List<String> productImages = product.getImages().isEmpty() ? null : product.getImages();
 
                 // Tính toán số sao trung bình và số lượng review
                 int totalRating = product.getReviews().stream().mapToInt(Review::getRatingValue).sum();
@@ -54,7 +55,7 @@ public class ProductStatsServieImpl implements ProductStatsService {
                     ResponseProductStatsDto statsDto = new ResponseProductStatsDto();
                     statsDto.setProductId(product.getId());
                     statsDto.setProductName(product.getName());
-                    statsDto.setProductImage(productImage);
+                    statsDto.setProductImages(productImages);
                     statsDto.setOrderCount(orderCount);
                     statsDto.setTotalQuantitySold(totalQuantitySold);
                     statsDto.setAverageRating(averageRating);
@@ -66,5 +67,36 @@ public class ProductStatsServieImpl implements ProductStatsService {
         }
 
         return PageUtils.convertListToPage(statsList, pageable);
+    }
+    @Override
+    public List<ResponseBestProductDto> getBestProducts() {
+        List<Order> completedOrders = orderRepository.findAllByStatus("COMPLETED");
+        List<Product> allProducts = productService.getAllProducts();
+        List<ResponseBestProductDto> bestProductList = new ArrayList<>();
+
+        for (Product product : allProducts) {
+            if (product.isActive()) {
+
+                // Tìm tất cả các chi tiết đơn hàng cho sản phẩm này trong các đơn hàng hoàn thành
+
+                int totalQuantitySold = 0;
+                for (Order order : completedOrders) {
+                    for (OrderDetail detail : order.getDetails()) {
+                        if (detail.getProductId().equals(product.getId())) {
+                            totalQuantitySold += detail.getQuantity();
+                        }
+                    }
+                }
+                    ResponseBestProductDto statsDto = new ResponseBestProductDto();
+                    statsDto.setProductId(product.getId());
+                    statsDto.setProduct(product);
+                    statsDto.setTotalQuantitySold(totalQuantitySold);
+
+                    bestProductList.add(statsDto);
+
+            }
+        }
+
+        return bestProductList;
     }
 }
