@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import PageTitle from "../components/Typography/PageTitle";
 import {
   EditIcon,
@@ -9,7 +9,6 @@ import {
   SortDefaultIcon,
   RefreshIcon,
   SearchIcon,
-  CancelIcon,
 } from "../icons";
 import {
   Card,
@@ -24,31 +23,23 @@ import {
   TableFooter,
   Avatar,
   Badge,
-  Modal,
-  ModalHeader,
   ModalBody,
-  ModalFooter,
   Label,
   Select,
 } from "@windmill/react-ui";
 import Icon from "../components/Icon";
 import EditForm from "../components/EditForm";
-import { AddIcon } from "../icons";
 import "../index.css";
 import axiosInstance from "../axiosInstance";
-import { fa, tr } from "faker/lib/locales";
 import RoundIcon from "../components/RoundIcon";
 import Paginate from "../components/Pagination/Paginate";
 import { useToasts } from "react-toast-notifications";
 import {
-  AppBar,
-  BottomNavigation,
   Box,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
   Divider,
   IconButton,
   LinearProgress,
@@ -56,7 +47,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { Cancel, Close } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import { Link, NavLink } from "react-router-dom/cjs/react-router-dom";
 // import { Grid, Typography, Pagination } from '@mui/material';
 
@@ -401,7 +392,6 @@ const ProductsAll = () => {
     return formattedNumber;
   }
   async function openModal(mode, productId) {
-    console.log("Product", productId);
     if (mode === "edit" || mode === "delete") {
       let product = await data.filter((product) => product.id === productId)[0];
       setSelectedProduct({
@@ -438,8 +428,6 @@ const ProductsAll = () => {
   };
   const handleSave = async (mode) => {
     try {
-      console.log("mode", mode);
-      console.log("current model", selectedProduct);
       if (mode === "delete") {
         try {
           await axiosInstance.delete("/api/v1/products/" + selectedProduct.id);
@@ -466,7 +454,6 @@ const ProductsAll = () => {
           collections: selectedProduct.collections,
           stockQty: selectedProduct.stockQty,
         };
-        console.log(body);
         try {
           await axiosInstance.put(
             "/api/v1/products/" + selectedProduct.id,
@@ -489,7 +476,6 @@ const ProductsAll = () => {
       ...prevProduct,
       [property]: value,
     }));
-    console.log(value);
   };
   const truncateContent = (content) => {
     return content.length > 120 ? content.substr(0, 120) + "..." : content;

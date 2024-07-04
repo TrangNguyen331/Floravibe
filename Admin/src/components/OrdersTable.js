@@ -11,24 +11,27 @@ import {
   Button,
 } from "@windmill/react-ui";
 import axiosInstance from "../axiosInstance";
-import { DownIcon, SortDefaultIcon, UpIcon, EyeIcon } from "../icons";
+import {
+  DownIcon,
+  SortDefaultIcon,
+  UpIcon,
+  EyeIcon,
+  RefreshIcon,
+  SearchIcon,
+} from "../icons";
 import Paginate from "./Pagination/Paginate";
 import { FaSpinner } from "react-icons/fa";
 import { Box, LinearProgress } from "@mui/material";
 import { statusOptions } from "../helper/numberhelper";
-
+import { Card, CardBody, Label, Select } from "@windmill/react-ui";
+import RoundIcon from "./RoundIcon";
+import CancelOrderForm from "./CancelOrderForm";
 function Icon({ icon, ...props }) {
   const Icon = icon;
   return <Icon {...props} />;
 }
 
-const OrdersTable = ({
-  resultsPerPage,
-  filter,
-  searchType,
-  searchValue,
-  refresh,
-}) => {
+const OrdersTable = ({ resultsPerPage, setResultsPerPage }) => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
   const [ordersData, setOrdersData] = useState([]);
@@ -39,32 +42,59 @@ const OrdersTable = ({
   const [dataLoaded, setDataLoaded] = useState(false);
   const [loadingGet, setLoadingGet] = useState(false);
 
+  const [cancelOrder, setCancelOrder] = useState(null);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+
   const [sortType, setSortType] = useState("default");
+  const [sortEmailType, setSortEmailType] = useState("default");
   const [sortTotalType, setSortTotalType] = useState("default");
   const [sortStatusType, setSortStatusType] = useState("default");
   const [sortDateType, setSortDateType] = useState("default");
-
-  const getStatusOption = (statusValue) => {
-    return statusOptions.find((option) => option.value === statusValue);
-  };
-  // pagination change control
-  // async function onPageChange(p) {
-  //   await fetchData(p, filter, resultsPerPage);
-  // }
+  const [filter, setFilter] = useState("");
+  const [searchType, setSearchType] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const token = localStorage.getItem("token");
+  const [userInfo, setUserInfo] = useState({
+    fullName: "",
+    email: "",
+  });
   async function onPageChange(e, p) {
     setPage(p);
     setData(ordersData.slice((p - 1) * resultsPerPage, p * resultsPerPage));
     setTotalPage(Math.ceil(ordersData.length / resultsPerPage));
   }
-
-  const handleStatusChange = async (status, orderId) => {
+  const closeModal = (event, reason) => {
+    if (reason && reason === "backdropClick") return;
+    setIsCancelModalOpen(false);
+  };
+  const handleStatusChange = async (newStatus, orderId) => {
     try {
-      let item = data.filter((x) => x.id === orderId)[0];
-      item.status = status;
-      await axiosInstance.put(`/api/v1/orders/${item.id}`, item);
-      fetchData(page, filter, resultsPerPage);
+      // Tìm item tương ứng với orderId
+      let updatedData = data.map((item) => {
+        if (item.id === orderId) {
+          if (newStatus === "CANCEL") {
+            setCancelOrder(orderId);
+            setIsCancelModalOpen(true);
+          } else {
+            item.status = newStatus;
+
+            axiosInstance
+              .put(`/api/v1/orders/${item.id}`, item)
+              .then(() => {
+                setData(updatedData);
+                fetchData(page, filter, resultsPerPage);
+              })
+              .catch((error) => {
+                console.log("Update status failed:", error);
+              });
+          }
+        }
+        return item;
+      });
+
+      setData(updatedData); // Cập nhật lại state data sau khi thay đổi
     } catch (error) {
-      console.log("Update status fail");
+      console.log("Update status fail:", error);
     }
   };
 
@@ -75,9 +105,9 @@ const OrdersTable = ({
           page - 1
         }&size=${resultsPerPage}&search=${filter}`
       );
-      const sortedData = response.data.content.sort(
-        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
-      );
+      //   const sortedData = response.data.content.sort(
+      //     (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+      //   );
       const filteredData = allOrdersData.filter(
         (order) => order.status === filter
       );
@@ -120,16 +150,6 @@ const OrdersTable = ({
       console.log("Fetch data error", error);
     }
   };
-
-  const resetData = async () => {
-    await fetchAllOrdersData();
-    setPage(1);
-    // setTotalPage(Math.ceil(allOrdersData.length / resultsPerPage));
-    // setTotalResult(ordersData.length);
-  };
-  useEffect(() => {
-    resetData();
-  }, [refresh]);
 
   useEffect(() => {
     setPage(1);
@@ -175,20 +195,20 @@ const OrdersTable = ({
 
   const handleSortEmail = () => {
     let sortedData = [...ordersData];
-    if (sortType === "default") {
+    if (sortEmailType === "default") {
       sortedData.sort((a, b) =>
         a.additionalOrder.email.localeCompare(b.additionalOrder.email)
       );
-      setSortType("asc");
-    } else if (sortType === "asc") {
+      setSortEmailType("asc");
+    } else if (sortEmailType === "asc") {
       sortedData.sort((a, b) =>
         b.additionalOrder.email.localeCompare(a.additionalOrder.email)
       );
-      setSortType("desc");
-    } else if (sortType === "desc") {
+      setSortEmailType("desc");
+    } else if (sortEmailType === "desc") {
       // fetchData(page, filter, resultsPerPage);
       fetchAllOrdersData();
-      setSortType("default");
+      setSortEmailType("default");
     }
     setOrdersData(sortedData);
     let displayedData = sortedData.slice(
@@ -262,13 +282,26 @@ const OrdersTable = ({
     );
     setData(displayedData);
   };
-
-  useEffect(() => {
+  const handleSearch = () => {
     let filteredData = [...ordersData];
     switch (searchType) {
       case "Client":
         filteredData = ordersData.filter((order) =>
           order.additionalOrder.fullName
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .includes(
+              searchValue
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+            )
+        );
+        break;
+      case "Email":
+        filteredData = ordersData.filter((order) =>
+          order.additionalOrder.email
             .toLowerCase()
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
@@ -325,204 +358,339 @@ const OrdersTable = ({
       filteredData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
     );
     setTotalPage(Math.ceil(filteredData.length / resultsPerPage));
-  }, [searchType, searchValue, page, refresh]);
+  };
+  useEffect(() => {
+    handleSearch();
+  }, [searchType, searchValue, page]);
+  const optionList = [
+    { key: "All", value: "All Orders" },
+    { key: "IN_REQUEST", value: "In Request Orders" },
+    { key: "IN_PROCESSING", value: "In Progress Orders" },
+    { key: "CANCEL", value: "Cancel Orders" },
+    { key: "COMPLETED", value: "Completed Orders" },
+  ];
 
+  const handleFilter = (filterKey) => {
+    switch (filterKey) {
+      case "All":
+        setFilter("");
+        setResultsPerPage(resultsPerPage);
+
+        break;
+      case "In Request Orders":
+        setFilter("IN_REQUEST");
+        break;
+      case "In Progress Orders":
+        setFilter("IN_PROCESSING");
+        break;
+      case "Cancel Orders":
+        setFilter("CANCEL");
+        break;
+      case "Completed Orders":
+        setFilter("COMPLETED");
+        break;
+      default:
+        setFilter("");
+        break;
+    }
+  };
   // useEffect(() => {
   //   let filteredData = [...ordersData];
   //   setData(
   //     filteredData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
   //   );
   // }, [page]);
+  useEffect(() => {
+    const setDataInit = async () => {
+      if (token) {
+        const response = await axiosInstance.get("/api/v1/auth/identity");
+        setUserInfo({
+          // ...userInfo,
+          fullName: response.data.fullName || "",
+          email: response.data.email || "",
+        });
+      }
+    };
+    setDataInit();
+  }, []);
   return (
     <div>
       {/* Table */}
-      {loadingGet ? (
-        <Box
-          sx={{ width: "100%", color: "grey.500", backgroundColor: "grey.500" }}
-        >
-          <LinearProgress
-            sx={{
-              "& .MuiLinearProgress-bar": {
-                backgroundColor: "#edebfe", // Customize bar color
-              },
-              backgroundColor: "#7e3af2", // Customize background color
-            }}
-          />
-        </Box>
-      ) : (
-        <TableContainer className="mb-8">
-          <Table>
-            <TableHeader>
-              <tr>
-                <TableCell>
-                  <div className="flex items-center">
-                    Client
-                    <div onClick={handleSort} className="cursor-pointer">
-                      <Icon
-                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
-                        aria-hidden="true"
-                        icon={
-                          sortType === "asc"
-                            ? UpIcon
-                            : sortType === "desc"
-                            ? DownIcon
-                            : SortDefaultIcon
-                        }
-                      />
-                    </div>
-                  </div>
-                </TableCell>
-                <div className="flex items-center">
-                  Email
-                  <div onClick={handleSortEmail} className="cursor-pointer">
-                    <Icon
-                      className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
-                      aria-hidden="true"
-                      icon={
-                        sortStatusType === "asc"
-                          ? UpIcon
-                          : sortStatusType === "desc"
-                          ? DownIcon
-                          : SortDefaultIcon
-                      }
-                    />
-                  </div>
-                </div>
-                <TableCell>Order ID</TableCell>
-                <TableCell>Items</TableCell>
-                <TableCell>
-                  <div className="flex items-center">
-                    Total
-                    <div onClick={handleSortTotal} className="cursor-pointer">
-                      <Icon
-                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
-                        aria-hidden="true"
-                        icon={
-                          sortTotalType === "asc"
-                            ? UpIcon
-                            : sortTotalType === "desc"
-                            ? DownIcon
-                            : SortDefaultIcon
-                        }
-                      />
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center">
-                    Status
-                    <div onClick={handleSortStatus} className="cursor-pointer">
-                      <Icon
-                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
-                        aria-hidden="true"
-                        icon={
-                          sortStatusType === "asc"
-                            ? UpIcon
-                            : sortStatusType === "desc"
-                            ? DownIcon
-                            : SortDefaultIcon
-                        }
-                      />
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center">
-                    Date
-                    <div onClick={handleSortDate} className="cursor-pointer">
-                      <Icon
-                        className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
-                        aria-hidden="true"
-                        icon={
-                          sortDateType === "asc"
-                            ? UpIcon
-                            : sortDateType === "desc"
-                            ? DownIcon
-                            : SortDefaultIcon
-                        }
-                      />
-                    </div>
-                  </div>
-                </TableCell>
-              </tr>
-            </TableHeader>
-            <TableBody>
-              {data.map((order, i) => (
-                <TableRow
-                  key={order.id}
-                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+      <div>
+        <Card className="mt-5 mb-5 shadow-md flex justify-between items-center">
+          <CardBody>
+            <div className="flex items-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Filter Orders
+              </p>
+              <Label className="mx-3">
+                <Select
+                  className="py-3"
+                  onChange={(e) => handleFilter(e.target.value)}
                 >
+                  {optionList.map((option) => (
+                    <option key={option.key} value={option.value}>
+                      {option.value}
+                    </option>
+                  ))}
+                </Select>
+              </Label>
+
+              <Label className="">
+                <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
+                  {/* <input
+                    className="py-3 pr-5 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+                    value={resultsPerPage}
+                    onChange={(e) => setResultsPerPage(e.target.value)}
+                  /> */}
+                  {/* <div className="absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-none">
+                    Results on Table
+                  </div> */}
+                </div>
+              </Label>
+            </div>
+          </CardBody>
+          <Label className="mx-0 ml-auto">
+            <Select
+              className="py-3 rounded-r-none bg-purple-200"
+              onChange={(e) => {
+                setSearchType(e.target.value);
+                setSearchValue("");
+              }}
+            >
+              <option hidden>Choose to search</option>
+              <option>Client</option>
+              <option>Email</option>
+              <option>Order ID</option>
+              <option>Name Of Product</option>
+
+              <option>Date</option>
+            </Select>
+          </Label>
+          <Label className="mx-0 w-70">
+            <div className="relative text-gray-500 dark:focus-within:text-purple-400">
+              <input
+                type={searchType === "Date" ? "date" : "text"}
+                className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
+                placeholder="Search..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center mr-3">
+                <SearchIcon
+                  className="w-5 h-5 text-purple-500 transition-colors duration-200"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
+          </Label>
+          <RoundIcon
+            icon={RefreshIcon}
+            onClick={() => {
+              setSearchType("Choose to search");
+              setSearchValue("");
+              setPage(1);
+              setResultsPerPage(resultsPerPage);
+              handleSearch();
+            }}
+            className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
+          />
+        </Card>
+        {loadingGet ? (
+          <Box
+            sx={{
+              width: "100%",
+              color: "grey.500",
+              backgroundColor: "grey.500",
+            }}
+          >
+            <LinearProgress
+              sx={{
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: "#edebfe", // Customize bar color
+                },
+                backgroundColor: "#7e3af2", // Customize background color
+              }}
+            />
+          </Box>
+        ) : (
+          <TableContainer className="mb-8">
+            <Table>
+              <TableHeader>
+                <tr>
                   <TableCell>
-                    <Link to={`/app/order/${order.id}`}>
-                      <div className="flex items-center text-sm">
-                        <div>
-                          <p className="font-semibold">
-                            {order.additionalOrder.fullName}
-                          </p>
-                        </div>
+                    <div className="flex items-center">
+                      Client
+                      <div onClick={handleSort} className="cursor-pointer">
+                        <Icon
+                          className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                          aria-hidden="true"
+                          icon={
+                            sortType === "asc"
+                              ? UpIcon
+                              : sortType === "desc"
+                              ? DownIcon
+                              : SortDefaultIcon
+                          }
+                        />
                       </div>
-                    </Link>
+                    </div>
                   </TableCell>
                   <TableCell>
-                    <Link to={`/app/order/${order.id}`}>
-                      <span className="text-base">
-                        {order.additionalOrder.email || ""}
-                      </span>
-                    </Link>
+                    <div className="flex items-center">
+                      Email
+                      <div onClick={handleSortEmail} className="cursor-pointer">
+                        <Icon
+                          className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                          aria-hidden="true"
+                          icon={
+                            sortEmailType === "asc"
+                              ? UpIcon
+                              : sortEmailType === "desc"
+                              ? DownIcon
+                              : SortDefaultIcon
+                          }
+                        />
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>Order ID</TableCell>
+                  <TableCell>Items</TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      Total
+                      <div onClick={handleSortTotal} className="cursor-pointer">
+                        <Icon
+                          className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                          aria-hidden="true"
+                          icon={
+                            sortTotalType === "asc"
+                              ? UpIcon
+                              : sortTotalType === "desc"
+                              ? DownIcon
+                              : SortDefaultIcon
+                          }
+                        />
+                      </div>
+                    </div>
                   </TableCell>
                   <TableCell>
-                    <Link to={`/app/order/${order.id}`}>
-                      <span className="text-base">{order.id || ""}</span>
-                    </Link>
+                    <div className="flex items-center">
+                      Status
+                      <div
+                        onClick={handleSortStatus}
+                        className="cursor-pointer"
+                      >
+                        <Icon
+                          className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                          aria-hidden="true"
+                          icon={
+                            sortStatusType === "asc"
+                              ? UpIcon
+                              : sortStatusType === "desc"
+                              ? DownIcon
+                              : SortDefaultIcon
+                          }
+                        />
+                      </div>
+                    </div>
                   </TableCell>
-                  <TableCell className="text-base">
-                    {order && order.details && order.details.length > 0
-                      ? order.details.map((detail) => (
-                          <div key={detail.productId} className="flex">
-                            <span
-                              className="px-2 inline-flex text-xs leading-5
-                              font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-700 dark:text-purple-100 mb-2 mt-2"
-                            >
-                              {detail.product.name} x {detail.quantity}
-                            </span>
+                  <TableCell>
+                    <div className="flex items-center">
+                      Date
+                      <div onClick={handleSortDate} className="cursor-pointer">
+                        <Icon
+                          className="w-3 h-3 ml-2 text-purple-600 hover:text-red-500"
+                          aria-hidden="true"
+                          icon={
+                            sortDateType === "asc"
+                              ? UpIcon
+                              : sortDateType === "desc"
+                              ? DownIcon
+                              : SortDefaultIcon
+                          }
+                        />
+                      </div>
+                    </div>
+                  </TableCell>
+                </tr>
+              </TableHeader>
+              <TableBody>
+                {data.map((order, i) => (
+                  <TableRow
+                    key={order.id}
+                    className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                  >
+                    <TableCell>
+                      <Link to={`/app/order/${order.id}`}>
+                        <div className="flex items-center text-sm">
+                          <div>
+                            <p className="font-semibold">
+                              {order.additionalOrder.fullName}
+                            </p>
                           </div>
-                        ))
-                      : ""}
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-base">
-                      {order.total.toLocaleString("vi-VN") || ""} ₫
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <select
-                      className={`form-control ${
-                        statusOptions.find(
-                          (option) => option.value === order.status
-                        ).color
-                      }`}
-                      value={order.status}
-                      onChange={(e) => {
-                        handleStatusChange(e.target.value, order.id);
-                        window.location.reload();
-                      }}
-                      disabled={
-                        order.status === "COMPLETED" ||
-                        order.status === "CANCEL"
-                      }
-                    >
-                      {statusOptions.map((option) => (
-                        <option
-                          key={option.value}
-                          value={option.value}
-                          className={option.color}
-                        >
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </TableCell>
-                  {/* <TableCell>
+                        </div>
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <Link to={`/app/order/${order.id}`}>
+                        <span className="text-base">
+                          {order.additionalOrder.email || ""}
+                        </span>
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <Link to={`/app/order/${order.id}`}>
+                        <span className="text-base">{order.id || ""}</span>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="text-base">
+                      {order && order.details && order.details.length > 0
+                        ? order.details.map((detail) => (
+                            <div key={detail.productId} className="flex">
+                              <span
+                                className="px-2 inline-flex text-xs leading-5
+                              font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-700 dark:text-purple-100 mb-2 mt-2"
+                              >
+                                {detail.product.name} x {detail.quantity}
+                              </span>
+                            </div>
+                          ))
+                        : ""}
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-base">
+                        {order.total.toLocaleString("vi-VN") || ""} ₫
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <select
+                        className={`form-control ${
+                          statusOptions.find(
+                            (option) => option.value === order.status
+                          ).color
+                        }`}
+                        value={order.status}
+                        onChange={(e) => {
+                          handleStatusChange(e.target.value, order.id);
+                        }}
+                        disabled={
+                          order.status === "COMPLETED" ||
+                          order.status === "CANCEL"
+                        }
+                      >
+                        {statusOptions.map((option) => (
+                          <option
+                            key={option.value}
+                            value={option.value}
+                            className={option.color}
+                          >
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </TableCell>
+                    {/* <TableCell>
                     <select
                       className={`form-control ${
                         statusOptions.find(
@@ -545,37 +713,48 @@ const OrdersTable = ({
                       ))}
                     </select>
                   </TableCell> */}
-                  <TableCell>
-                    <span className="text-base">
-                      {new Date(order.createdDate).toLocaleDateString("vi-VN")}
-                    </span>
-                  </TableCell>
-                  {/* <TableCell>
+                    <TableCell>
+                      <span className="text-base">
+                        {new Date(order.createdDate).toLocaleDateString(
+                          "vi-VN"
+                        )}
+                      </span>
+                    </TableCell>
+                    {/* <TableCell>
                     <Link to={`/app/order/${order.id}`}>
                       <Button icon={EyeIcon} layout="outline" />
                     </Link>
                   </TableCell> */}
-                </TableRow>
-              ))}
-              {searchValue && data.length === 0 && (
-                <p className="text-center my-4 text-purple-500">
-                  No result match
-                </p>
+                  </TableRow>
+                ))}
+                {searchValue && data.length === 0 && (
+                  <p className="flex-grow text-center my-4 text-purple-500">
+                    No result match
+                  </p>
+                )}
+              </TableBody>
+            </Table>
+            <TableFooter>
+              {dataLoaded && (
+                <Paginate
+                  totalPages={totalPages}
+                  totalResults={totalResults}
+                  page={page}
+                  onPageChange={onPageChange}
+                />
               )}
-            </TableBody>
-          </Table>
-          <TableFooter>
-            {dataLoaded && (
-              <Paginate
-                totalPages={totalPages}
-                totalResults={totalResults}
-                page={page}
-                onPageChange={onPageChange}
-              />
-            )}
-          </TableFooter>
-        </TableContainer>
-      )}
+            </TableFooter>
+          </TableContainer>
+        )}
+      </div>
+      <CancelOrderForm
+        isModalOpen={isCancelModalOpen}
+        onClose={closeModal}
+        orderId={cancelOrder}
+        cancelEmail={userInfo.email}
+        data={data}
+        fetchData={fetchAllOrdersData}
+      />
     </div>
   );
 };

@@ -27,8 +27,11 @@ import {
 import axiosInstance from "../axiosInstance";
 import StatisticProduct from "../components/StatisticProduct";
 import { Box, Divider, Tab, Tabs, Typography, styled } from "@mui/material";
-import TestOrderTable from "../components/TestOrderTable";
+import OrdersTable from "../components/OrdersTable";
 import UserStatistic from "../components/UserStatistic";
+import MonthlyRevenueChart from "../components/MonthlyRevenueChart";
+import TopSellProduct from "../components/TopSellProduct";
+// import TopSelling from "../components/TopSelling";
 
 function Dashboard() {
   const [dashboard, setDashBoard] = useState({
@@ -145,7 +148,6 @@ function Dashboard() {
           "/api/v1/about-us/dashboard"
         );
         setDashBoard(dashboardInfo.data);
-        console.log("dashboardInfo", dashboardInfo.data);
       } catch (error) {
         console.log("Load data Error", error);
       }
@@ -158,7 +160,8 @@ function Dashboard() {
   const [filter, setFilter] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [cusValue, setCusValue] = useState(0);
-  const [resultsPerPage, setResultsPerPage] = useState(10);
+  const [resultsPerPage, setResultsPerPage] = useState(7);
+  const currentYear = new Date().getFullYear();
   const handleChange = (event, newValue) => {
     setCusValue(newValue);
   };
@@ -273,6 +276,12 @@ function Dashboard() {
           />
         </InfoCard>
       </div>
+      {/* <TopSelling /> */}
+
+      <div className="grid gap-6 mb-8 md:grid-cols-2">
+        <TopSellProduct />
+        <MonthlyRevenueChart year={currentYear} />
+      </div>
       {/* <div className="grid gap-6 mb-8 md:grid-cols-2">
         <ChartCard title="User Analytics">
           <Line {...lineOptions} />
@@ -280,8 +289,8 @@ function Dashboard() {
         </ChartCard>
 
         <ChartCard title="Revenue">
-          <Bar {...barOptions} />
-          <ChartLegend legends={barLegends} />
+          <Doughnut {...doughnutOptions} />
+          <ChartLegend legends={doughnutLegends} />
         </ChartCard>
       </div> */}
 
@@ -298,7 +307,7 @@ function Dashboard() {
           </StyledTabs>
           <Divider className="mt-3" variant="middle" />
           <CustomTabPanel value={cusValue} index={0}>
-            <TestOrderTable
+            <OrdersTable
               resultsPerPage={resultsPerPage}
               setResultsPerPage={setResultsPerPage}
             />

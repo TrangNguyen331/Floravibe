@@ -28,7 +28,6 @@ const BlogForm = ({ data, onSave, onCancel, onBlogChange }) => {
         })
         .then((res) => {
           onBlogChange("image", res.data.data.url);
-          console.log(formData);
         });
     } catch (error) {
       console.error("Error uploading image:", error);

@@ -11,8 +11,14 @@ import {
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../axiosInstance";
 import Paginate from "./Pagination/Paginate";
-import { CheckBox } from "@mui/icons-material";
+import {
+  CheckBox,
+  LockOpenOutlined,
+  LockPerson,
+  LockPersonOutlined,
+} from "@mui/icons-material";
 import { Box, LinearProgress } from "@mui/material";
+import { green } from "@mui/material/colors";
 
 const UserStatistic = () => {
   const [page, setPage] = useState(1);
@@ -24,9 +30,7 @@ const UserStatistic = () => {
   const [data, setData] = useState([]);
 
   const onPageChange = async (e, p) => {
-    console.log("Trigger on page change");
     await fetchData(p);
-    console.log("page", p);
   };
 
   const fetchData = async (page) => {
@@ -44,7 +48,6 @@ const UserStatistic = () => {
       setPage(page);
       setDataLoaded(true);
       setLoadingGet(false);
-      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -113,9 +116,9 @@ const UserStatistic = () => {
                   <TableCell className="text-sm">{user.cancelTimes}</TableCell>
                   <TableCell className="text-sm">
                     {user.active ? (
-                      <CheckBox sx={{ color: "#7e3af2" }} disabled />
+                      <LockOpenOutlined style={{ color: "green" }} />
                     ) : (
-                      ""
+                      <LockPersonOutlined style={{ color: "red" }} />
                     )}
                   </TableCell>
                 </TableRow>

@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -15,4 +16,6 @@ public interface OrderRepository extends MongoRepository<Order,String> {
 
     @Query("{'status': {$regex: ?0, $options: 'i'}}")
     List<Order> findAllByStatus(String status);
+
+    List<Order> findByStatusAndCompletedDateBetween(String status, LocalDateTime startDate, LocalDateTime endDate);
 }

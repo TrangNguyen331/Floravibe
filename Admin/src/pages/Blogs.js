@@ -152,7 +152,6 @@ const Blogs = () => {
     }
   };
   const openModal = async (mode, blogId) => {
-    console.log("Blog", blogId);
     if (mode === "edit" || mode === "delete") {
       let blog = await data.filter((blog) => blog.id === blogId)[0];
       setSelectedBlog(blog);
@@ -182,7 +181,6 @@ const Blogs = () => {
       const response = await axiosInstance.get(
         "/api/v1/blogs/paging?page=&size=30"
       );
-      console.log("Response data", response.data.content);
 
       const sortedData = response.data.content.sort(
         (a, b) => new Date(b.createdDate) - new Date(a.createdDate)

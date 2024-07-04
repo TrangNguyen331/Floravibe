@@ -49,7 +49,6 @@ const EditForm = ({
       })
       .then((response) => {
         // Handle success
-        console.log("Upload successful:", response);
         response.data.forEach((item) => {
           newImages.push(
             "http://localhost:8080/api/v1/files/viewfile/" + item.identifier
@@ -96,7 +95,6 @@ const EditForm = ({
     const data = editor.getData();
     onProductChange("additionalInformation", data);
   };
-  console.log(data);
   return (
     <div>
       <form action="#">

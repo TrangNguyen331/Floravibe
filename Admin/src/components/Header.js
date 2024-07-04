@@ -16,7 +16,6 @@ import { useHistory } from "react-router-dom";
 import logout from "./Logout";
 
 function Header() {
-  console.log("Header");
   const { mode, toggleMode } = useContext(WindmillContext);
   const { toggleSidebar } = useContext(SidebarContext);
   const history = useHistory();

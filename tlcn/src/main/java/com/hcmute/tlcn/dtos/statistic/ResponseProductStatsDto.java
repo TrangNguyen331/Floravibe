@@ -17,4 +17,5 @@ public class ResponseProductStatsDto {
     private int totalQuantitySold;
     private double averageRating;
     private int reviewCount;
+    private double totalRevenue;
 }

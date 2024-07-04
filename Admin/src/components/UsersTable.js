@@ -63,12 +63,10 @@ const UsersTable = () => {
   const { addToast } = useToasts();
   // pagination change control
   async function onPageChange(e, p) {
-    console.log(p);
     await fetchData(p);
   }
   const fetchData = async (page) => {
     try {
-      console.log("page", page);
       // const response = await axiosInstance.get(
       //   "/api/v1/auth/paging?page=" + (page - 1) + "&size=" + resultsPerPage
       // );
@@ -89,7 +87,6 @@ const UsersTable = () => {
   };
 
   const handleCheckboxChange = async (userId) => {
-    console.log("Handle on change", userId);
     try {
       setLoadingGet(true);
       await axiosInstance.put(`/api/v1/auth/active/${userId}`);
@@ -447,6 +444,7 @@ const UsersTable = () => {
                 <TableCell>First Name</TableCell>
                 <TableCell>Last Name</TableCell>
                 <TableCell>Email</TableCell>
+                <TableCell>Phone</TableCell>
                 <TableCell>Roles</TableCell>
                 <TableCell>Active</TableCell>
               </tr>
@@ -484,6 +482,9 @@ const UsersTable = () => {
                   </TableCell>
                   <TableCell>
                     <span className="text-base">{user.email}</span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-base">{user.phone}</span>
                   </TableCell>
                   {/* <TableCell className="space-x-2">
                   {user.roles.map((role, index) => (

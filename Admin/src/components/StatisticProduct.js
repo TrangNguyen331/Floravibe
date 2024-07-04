@@ -26,9 +26,7 @@ const TestStatstic = () => {
   const [data, setData] = useState([]);
 
   const onPageChange = async (e, p) => {
-    console.log("Trigger on page change");
     await fetchData(p);
-    console.log("page", p);
   };
 
   const fetchData = async (page) => {
@@ -46,7 +44,6 @@ const TestStatstic = () => {
       setTotalResult(response.data.totalElements);
       setDataLoaded(true);
       setLoadingGet(false);
-      console.log(response.data.content);
     } catch (error) {
       console.log(error);
     }
@@ -77,6 +74,7 @@ const TestStatstic = () => {
               <TableCell>Product Name</TableCell>
               <TableCell>Order Number For Product</TableCell>
               <TableCell>Number Of Bouquets Sold</TableCell>
+              <TableCell>Revenue Of Each Product</TableCell>
               <TableCell>Rating Of Product</TableCell>
             </TableHeader>
             <TableBody className="text-center">
@@ -106,6 +104,9 @@ const TestStatstic = () => {
                   </TableCell>
                   <TableCell className="text-sm">
                     {product.totalQuantitySold}
+                  </TableCell>
+                  <TableCell className="text-sm">
+                    {product.totalRevenue.toLocaleString("vi-VN") || ""} ₫
                   </TableCell>
                   <TableCell className="text-center text-sm align-middle">
                     <Box

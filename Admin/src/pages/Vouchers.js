@@ -8,14 +8,11 @@ import {
   TableCell,
   TableRow,
   Input,
-  Modal,
-  ModalHeader,
   ModalBody,
-  ModalFooter,
 } from "@windmill/react-ui";
 import PageTitle from "../components/Typography/PageTitle";
 import { NavLink } from "react-router-dom";
-import { HomeIcon, AddIcon, EditIcon, DashboardIcon } from "../icons";
+import { AddIcon, EditIcon, DashboardIcon } from "../icons";
 import axiosInstance from "../axiosInstance";
 import VoucherForm from "../components/VoucherForm";
 import { useToasts } from "react-toast-notifications";
@@ -59,7 +56,6 @@ const Vouchers = () => {
     setIsModalOpen(false);
   };
   const openModal = async (mode, voucherId) => {
-    console.log(voucherId);
     if (mode === "edit") {
       let voucher = await data.find((product) => product.id === voucherId);
       setVoucherInfo(voucher);

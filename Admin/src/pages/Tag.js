@@ -337,10 +337,14 @@ const Tag = () => {
                 <Button block onClick={() => handleSave("edit")}>
                   Save
                 </Button>
-              ) : (
+              ) : mode === "add" ? (
                 <Button block onClick={() => handleSave("add")}>
                   {loadingSave ? <FaSpinner className="animate-spin" /> : null}
                   Add
+                </Button>
+              ) : (
+                <Button block onClick={() => handleSave("delete")}>
+                  Delete
                 </Button>
               )}
             </div>

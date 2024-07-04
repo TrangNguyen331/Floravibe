@@ -4,6 +4,7 @@ import com.hcmute.tlcn.dtos.order.CancelOrderDetailDto;
 import com.hcmute.tlcn.dtos.order.OrderDetailDto;
 import com.hcmute.tlcn.dtos.order.OrderDto;
 import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
+import com.hcmute.tlcn.dtos.statistic.MonthlyRevenueStatsDto;
 import com.hcmute.tlcn.dtos.voucher.VoucherDetailDto;
 import com.hcmute.tlcn.dtos.voucher.VoucherDto;
 import com.hcmute.tlcn.entities.*;
@@ -16,12 +17,14 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.YearMonth;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.hcmute.tlcn.utils.PageUtils.convertListToPage;
@@ -229,6 +232,23 @@ public class OrderServiceImpl implements OrderService {
             response.add(orderDto);
         }
         return response;
+    }
+
+    @Override
+    public List<MonthlyRevenueStatsDto> getMonthlyRevenueStats(int year) {
+        List<Order> completedOrders = repository.findByStatusAndCompletedDateBetween(
+                "COMPLETED", LocalDate.of(year, 1, 1).atStartOfDay(), LocalDate.of(year, 12, 31).atTime(23, 59, 59)
+        );
+
+        return completedOrders.stream()
+                .collect(Collectors.groupingBy(order -> YearMonth.from(order.getCompletedDate())))
+                .entrySet().stream()
+                .map(entry -> {
+                    YearMonth yearMonth = entry.getKey();
+                    double totalRevenue = entry.getValue().stream().mapToDouble(Order::getTotal).sum();
+                    return new MonthlyRevenueStatsDto(yearMonth.getYear(), yearMonth.getMonthValue(), totalRevenue);
+                })
+                .collect(Collectors.toList());
     }
 
 }

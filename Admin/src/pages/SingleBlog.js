@@ -18,7 +18,6 @@ const SingleBlog = () => {
     fetchData();
   }, []);
 
-  console.log("blog", blog);
   return (
     <div>
       <PageTitle>Blog Details</PageTitle>
@@ -27,7 +26,11 @@ const SingleBlog = () => {
           {/* Breadcum */}
           <div className="flex text-gray-800 dark:text-gray-300">
             <div className="flex items-center text-purple-600">
-              <Icon className="w-5 h-5" aria-hidden="true" icon={DashboardIcon} />
+              <Icon
+                className="w-5 h-5"
+                aria-hidden="true"
+                icon={DashboardIcon}
+              />
               <NavLink exact to="/app/dashboard" className="mx-2">
                 Dashboard
               </NavLink>

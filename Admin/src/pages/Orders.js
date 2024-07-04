@@ -3,18 +3,16 @@ import PageTitle from "../components/Typography/PageTitle";
 import { NavLink } from "react-router-dom";
 import { DashboardIcon, RefreshIcon, SearchIcon } from "../icons";
 import { Card, CardBody, Label, Select } from "@windmill/react-ui";
-import OrdersTable from "../components/OrdersTable";
 import RoundIcon from "../components/RoundIcon";
-import TestOrderTable from "../components/TestOrderTable";
+import OrdersTable from "../components/OrdersTable";
 function Icon({ icon, ...props }) {
   const Icon = icon;
   return <Icon {...props} />;
 }
 
 const Orders = () => {
-  console.log("Order Page");
   // pagination setup
-  const [resultsPerPage, setResultsPerPage] = useState(10);
+  const [resultsPerPage, setResultsPerPage] = useState(7);
   // filter/search
   const [filter, setFilter] = useState("");
   const [searchType, setSearchType] = useState("");
@@ -168,7 +166,7 @@ const Orders = () => {
       </Card> */}
 
       {/* Table */}
-      <TestOrderTable
+      <OrdersTable
         resultsPerPage={resultsPerPage}
         setResultsPerPage={setResultsPerPage}
       />

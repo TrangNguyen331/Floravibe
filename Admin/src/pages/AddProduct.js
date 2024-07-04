@@ -80,7 +80,6 @@ const AddProduct = () => {
       ...prevProduct,
       [property]: value,
     }));
-    console.log(value);
   };
   const handleAdditionalInfoChange = (e, editor) => {
     const data = editor.getData();
@@ -102,7 +101,6 @@ const AddProduct = () => {
       })
       .then((response) => {
         // Handle success
-        console.log("Upload successful:", response);
         response.data.forEach((item) => {
           urls.push(
             "http://localhost:8080/api/v1/files/viewfile/" + item.identifier

@@ -127,7 +127,6 @@ const SingleOrder = () => {
         setIsCancelModalOpen(true);
       } else {
         order.status = newStatus;
-        console.log(order);
 
         const updatedOrder = { ...order, status: newStatus };
         await axiosInstance.put(`/api/v1/orders/${id}`, order);
@@ -137,33 +136,6 @@ const SingleOrder = () => {
     } catch (error) {
       console.log("Update status fail:", error);
     }
-    //  try {
-    //    // Tìm item tương ứng với orderId
-    //    let updatedData = order.map((item) => {
-    //        if (newStatus === "CANCEL") {
-    //          setCancelOrder(id);
-    //          setIsCancelModalOpen(true);
-    //        } else {
-    //          item.status = newStatus;
-    //          console.log(item);
-
-    //          axiosInstance
-    //            .put(`/api/v1/orders/${item.id}`, item)
-    //            .then(() => {
-    //              setData(updatedData);
-    //              fetchData(page, filter, resultsPerPage);
-    //            })
-    //            .catch((error) => {
-    //              console.log("Update status failed:", error);
-    //            });
-    //        }
-    //      return item;
-    //    });
-
-    //    setData(updatedData); // Cập nhật lại state data sau khi thay đổi
-    //  } catch (error) {
-    //    console.log("Update status fail:", error);
-    //  }
   };
   useEffect(() => {
     const setDataInit = async () => {
@@ -185,8 +157,6 @@ const SingleOrder = () => {
         (payment) => payment.orderId === id
       );
       setPayment(paymentForOrder);
-      console.log("Payment");
-      console.log(paymentForOrder);
     } catch (error) {}
   };
 
@@ -194,7 +164,6 @@ const SingleOrder = () => {
     fetchData();
     fetchPaymentData();
   }, []);
-  console.log("order", order);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 

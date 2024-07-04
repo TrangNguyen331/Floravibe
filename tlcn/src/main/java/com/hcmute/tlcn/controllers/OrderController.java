@@ -6,6 +6,7 @@ import com.hcmute.tlcn.dtos.order.OrderDto;
 import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
 import com.hcmute.tlcn.dtos.payment.PaymentDTO;
 import com.hcmute.tlcn.dtos.payment.UpdatePaymentStatusRequest;
+import com.hcmute.tlcn.dtos.statistic.MonthlyRevenueStatsDto;
 import com.hcmute.tlcn.entities.Order;
 import com.hcmute.tlcn.services.OrderService;
 import com.hcmute.tlcn.services.PaymentService;
@@ -32,7 +33,7 @@ public class OrderController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public ResponseEntity<List<ResponseOrderDto>> getAllOrder(Principal principal){
+    public ResponseEntity<List<ResponseOrderDto>> getAllOrder(Principal principal) {
         List<ResponseOrderDto> result = service.getOrderByUser(principal.getName());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -42,20 +43,22 @@ public class OrderController {
     @GetMapping("/paging")
     public ResponseEntity<Page<ResponseOrderDto>> getOrderPaging(
             @RequestParam(name = "search", required = false, defaultValue = "") String search,
-                                                                 @RequestParam(name = "page", required = false, defaultValue = "${application.default.paging.page}") int page,
-                                                                 @RequestParam(name = "size", required = false, defaultValue = "${application.default.paging.size}") int size,
-                                                                 @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort,
-                                                                 @RequestParam(name = "column", required = false, defaultValue = "createdDate") String sortColumn){
+            @RequestParam(name = "page", required = false, defaultValue = "${application.default.paging.page}") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "${application.default.paging.size}") int size,
+            @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort,
+            @RequestParam(name = "column", required = false, defaultValue = "createdDate") String sortColumn) {
         Pageable pageable = PageUtils.createPageable(page, size, sort, sortColumn);
-        Page<ResponseOrderDto> result = service.getPaging(search,pageable);
+        Page<ResponseOrderDto> result = service.getPaging(search, pageable);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
     //@PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseOrderDto> getOrderById(@PathVariable String id){
+    public ResponseEntity<ResponseOrderDto> getOrderById(@PathVariable String id) {
         ResponseOrderDto result = service.getById(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
     @PostMapping
     public ResponseEntity<CheckoutResponse> addNewOrder(@RequestBody OrderDto dto) {
         Order result = service.addNew(dto);
@@ -83,14 +86,14 @@ public class OrderController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable String id,@RequestBody OrderDto dto){
-        Order result = service.updateOrder(id,dto);
+    public ResponseEntity<Order> updateOrder(@PathVariable String id, @RequestBody OrderDto dto) {
+        Order result = service.updateOrder(id, dto);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PutMapping("/{id}/cancel")
-    public ResponseEntity<Order> cancelOrder(@PathVariable String id,@RequestBody CancelOrderDetailDto cancelOrderDetailDto){
-        Order result = service.cancelOrder(id,cancelOrderDetailDto);
+    public ResponseEntity<Order> cancelOrder(@PathVariable String id, @RequestBody CancelOrderDetailDto cancelOrderDetailDto) {
+        Order result = service.cancelOrder(id, cancelOrderDetailDto);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

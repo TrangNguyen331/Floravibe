@@ -3,6 +3,7 @@ package com.hcmute.tlcn.services;
 import com.hcmute.tlcn.dtos.order.CancelOrderDetailDto;
 import com.hcmute.tlcn.dtos.order.OrderDto;
 import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
+import com.hcmute.tlcn.dtos.statistic.MonthlyRevenueStatsDto;
 import com.hcmute.tlcn.entities.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,4 +20,5 @@ public interface OrderService {
     List<ResponseOrderDto> getAllOrders();
 
     List<ResponseOrderDto> getOrderByEmail(String email);
+    List<MonthlyRevenueStatsDto> getMonthlyRevenueStats(int year);
 }

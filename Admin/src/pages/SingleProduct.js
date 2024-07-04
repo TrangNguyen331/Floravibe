@@ -45,7 +45,6 @@ const SingleProduct = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  console.log("getProduct", product);
 
   return (
     <div>
@@ -93,11 +92,11 @@ const SingleProduct = () => {
                     {product.name}
                   </h1>
                   <Box className="mb-2" display="flex" alignItems="center">
-                    <ProductAvgRating product={product} /> {" "} ({product.reviews.length}{" "}
-                      reviews)
+                    <ProductAvgRating product={product} /> (
+                    {product.reviews.length} reviews)
                   </Box>
                   <h4 className="mt-4 text-purple-600 text-2xl font-semibold">
-                    {product.price.toLocaleString("vi-VN")} {" "} ₫
+                    {product.price.toLocaleString("vi-VN")} ₫
                   </h4>
                   <div className="mb-5">
                     {product &&
@@ -191,13 +190,15 @@ const SingleProduct = () => {
                           <div className="flex justify-end mt-2">
                             {review.ratingValue && review.ratingValue > 0 ? (
                               <Rating
-                                  name="average-rating"
-                                  size="small"
-                                  value={review.ratingValue}
-                                  precision={0.1}
-                                  emptyIcon={<StarBorder style={{ fontSize: '18px' }}/>}
-                                  readOnly
-                                />
+                                name="average-rating"
+                                size="small"
+                                value={review.ratingValue}
+                                precision={0.1}
+                                emptyIcon={
+                                  <StarBorder style={{ fontSize: "18px" }} />
+                                }
+                                readOnly
+                              />
                             ) : (
                               ""
                             )}

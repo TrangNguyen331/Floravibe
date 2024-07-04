@@ -164,7 +164,7 @@ const Order = ({ location, cartItems, currency }) => {
                           </li>
                         </ul>
                       </div> */}
-                      <div className="order-total-wrap">
+                      <div className="order-bottom">
                         <ul>
                           <li>
                             <span className="order-total">
@@ -174,6 +174,10 @@ const Order = ({ location, cartItems, currency }) => {
                               {order.unitTotal.toLocaleString("vi-VN")}₫
                             </span>
                           </li>
+                        </ul>
+                      </div>
+                      <div className="order-total-wrap">
+                        <ul>
                           <li>
                             <span className="order-total">
                               {t("detail.total")}

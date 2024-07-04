@@ -9,10 +9,7 @@ export const lineLegends = [
   { title: "Paid", color: "bg-purple-600" },
 ];
 
-export const barLegends = [
-  { title: "Shoes", color: "bg-teal-600" },
-  { title: "Bags", color: "bg-purple-600" },
-];
+export const barLegends = [{ title: "Bags", color: "bg-purple-600" }];
 export const realTimeUsersBarLegends = [
   { title: "Active Users", color: "bg-teal-600" },
 ];
@@ -116,15 +113,21 @@ export const lineOptions = {
 
 export const barOptions = {
   data: {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "Septemper",
+      "October",
+      "November",
+      "December",
+    ],
     datasets: [
-      {
-        label: "Shoes",
-        backgroundColor: "#0694a2",
-        // borderColor: window.chartColors.red,
-        borderWidth: 1,
-        data: [-3, 14, 52, 74, 33, 90, 70],
-      },
       {
         label: "Bags",
         backgroundColor: "#7e3af2",
