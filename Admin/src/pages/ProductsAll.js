@@ -103,9 +103,9 @@ const ProductsAll = () => {
         "/api/v1/products/allProducts"
       );
 
-      const sortedProducts = allProductsResponse.data.sort(
-        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
-      );
+      const sortedProducts = allProductsResponse.data
+        .filter((items) => items.isActive)
+        .sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
       setProductsData(sortedProducts);
       // // setTotalPage(Math.ceil(sortedProducts.length / resultsPerPage));
 
@@ -121,9 +121,9 @@ const ProductsAll = () => {
         sortedProducts.length / resultsPerPage
       );
 
-      const sortedData = response.data.content.sort(
-        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
-      );
+      const sortedData = response.data.content
+        .filter((items) => items.isActive)
+        .sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
       setData(
         sortedData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
       );
@@ -431,6 +431,7 @@ const ProductsAll = () => {
       if (mode === "delete") {
         try {
           await axiosInstance.delete("/api/v1/products/" + selectedProduct.id);
+          await fetchData(page);
           addToast("Delete product successfully", {
             appearance: "success",
             autoDismiss: true,

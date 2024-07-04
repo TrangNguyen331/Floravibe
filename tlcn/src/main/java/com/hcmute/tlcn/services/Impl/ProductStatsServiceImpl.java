@@ -49,11 +49,13 @@ public class ProductStatsServiceImpl implements ProductStatsService {
                 // Tìm tất cả các chi tiết đơn hàng cho sản phẩm này trong các đơn hàng hoàn thành
                 int orderCount = 0;
                 int totalQuantitySold = 0;
+                double totalRevenue = 0.0;
                 for (Order order : completedOrders) {
                     for (OrderDetail detail : order.getDetails()) {
                         if (detail.getProductId().equals(product.getId())) {
                             orderCount++;
                             totalQuantitySold += detail.getQuantity();
+                            totalRevenue += detail.getSubtotal();
                         }
                     }
                 }
@@ -67,6 +69,7 @@ public class ProductStatsServiceImpl implements ProductStatsService {
                     statsDto.setTotalQuantitySold(totalQuantitySold);
                     statsDto.setAverageRating(averageRating);
                     statsDto.setReviewCount(reviewCount);
+                    statsDto.setTotalRevenue(totalRevenue);
 
                     statsList.add(statsDto);
                 }
@@ -75,7 +78,6 @@ public class ProductStatsServiceImpl implements ProductStatsService {
 
         return PageUtils.convertListToPage(statsList, pageable);
     }
-    
     @Override
     public List<ResponseBestProductDto> getBestProducts() {
         List<Order> completedOrders = orderRepository.findAllByStatus("COMPLETED");
