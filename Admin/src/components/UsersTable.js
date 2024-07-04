@@ -96,6 +96,16 @@ const UsersTable = () => {
       console.log("Error", error);
     }
   };
+  const handleAdminCheckboxChange = async (userId, admin) => {
+    try {
+      await axiosInstance.put(`/api/v1/auth/${userId}/updateRoles`, {
+        admin,
+      });
+      await fetchData(page);
+    } catch (error) {
+      console.error("Error updating roles:", error);
+    }
+  };
   // on page change, load new sliced data
   // here you would make another server request for new data
   useEffect(() => {
@@ -447,6 +457,7 @@ const UsersTable = () => {
                 <TableCell>Phone</TableCell>
                 <TableCell>Roles</TableCell>
                 <TableCell>Active</TableCell>
+                <TableCell>isAdmin</TableCell>
               </tr>
             </TableHeader>
             <TableBody>
@@ -514,6 +525,19 @@ const UsersTable = () => {
                       type="checkbox"
                       checked={user.isActive}
                       onChange={() => handleCheckboxChange(user.id)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Input
+                      type="checkbox"
+                      checked={
+                        user.roles.some((role) => role.includes("ROLE_ADMIN"))
+                          ? true
+                          : false
+                      }
+                      onChange={(e) =>
+                        handleAdminCheckboxChange(user.id, e.target.checked)
+                      }
                     />
                   </TableCell>
                 </TableRow>

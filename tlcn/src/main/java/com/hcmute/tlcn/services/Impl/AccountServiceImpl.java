@@ -126,4 +126,21 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> getAllAccounts() {
         return accountRepository.findAll();
     }
+
+    @Override
+    public Account updateRoles(String id, boolean isAdmin) {
+        Account account = accountRepository.findById(id).orElse(null);
+        if (account != null) {
+            if (isAdmin) {
+                if (!account.getRoles().contains("ROLE_ADMIN")) {
+                    account.getRoles().add("ROLE_ADMIN");
+                }
+            } else {
+                account.getRoles().remove("ROLE_ADMIN");
+            }
+            accountRepository.save(account);
+        }
+        return account;
+    }
+
 }

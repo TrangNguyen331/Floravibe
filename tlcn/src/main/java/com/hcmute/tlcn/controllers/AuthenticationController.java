@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/${application.version}/auth")
@@ -108,5 +109,10 @@ public class AuthenticationController {
         List<Account> users = accountService.getAllAccounts();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
-
+    @PutMapping("/{id}/updateRoles")
+    public ResponseEntity<Account> updateRoles(@PathVariable String id, @RequestBody Map<String, Boolean> body) {
+        boolean isAdmin = body.get("admin");
+        Account updatedAccount = accountService.updateRoles(id, isAdmin);
+        return ResponseEntity.ok(updatedAccount);
+    }
 }
