@@ -75,9 +75,7 @@ public class ProductStatsServiceImpl implements ProductStatsService {
 
         return PageUtils.convertListToPage(statsList, pageable);
     }
-
-        return PageUtils.convertListToPage(statsList, pageable);
-    }
+    
     @Override
     public List<ResponseBestProductDto> getBestProducts() {
         List<Order> completedOrders = orderRepository.findAllByStatus("COMPLETED");
