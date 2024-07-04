@@ -36,7 +36,32 @@ export const statusOptions = [
       "p-2 rounded-md bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100 mb-2 mt-2",
   },
 ];
-
+export const statusSingleOptions = [
+  {
+    value: "IN_REQUEST",
+    label: "IN REQUEST",
+    color:
+      "px-5 py-4 rounded-full bg-orange-100 text-orange-700 dark:bg-orange-700 dark:text-orange-100",
+  },
+  {
+    value: "IN_PROCESSING",
+    label: "IN PROGRESS",
+    color:
+      "px-4 py-4 rounded-full bg-pink-100 text-pink-700 dark:bg-pink-700 dark:text-pink-100",
+  },
+  {
+    value: "CANCEL",
+    label: "CANCELLED",
+    color:
+      "px-5 py-3 rounded-full bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-100",
+  },
+  {
+    value: "COMPLETED",
+    label: "COMPLETED",
+    color:
+      "px-5 py-3 rounded-full bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100",
+  },
+];
 export const reasonList = [
   {
     key: "out_of_stock",

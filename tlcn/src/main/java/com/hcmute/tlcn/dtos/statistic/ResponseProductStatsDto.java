@@ -5,13 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseProductStatsDto {
     private String productId;
-    private String productImage;
+    public List<String> productImages=new ArrayList<>();
     private String productName;
     private int orderCount;
     private int totalQuantitySold;

@@ -83,7 +83,7 @@ export const reasonList = [
     value: "Muốn đổi mã giảm giá",
   },
   {
-    key: "change_voucher",
+    key: "dont-buy",
     value: "Không muốn mua nữa",
   },
   {
@@ -91,7 +91,7 @@ export const reasonList = [
     value: "Phát hiện chỗ có giá rẻ hơn",
   },
   {
-    key: "cheaper_shop",
+    key: "no_reason",
     value: "Không tìm được lý do hủy phù hợp ",
   },
 ];

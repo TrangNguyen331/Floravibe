@@ -30,8 +30,6 @@ const EditReview = (props) => {
         "/api/v1/orders/" + props.orderId
       );
       setOrder(response.data.details);
-      console.log("order", response.data);
-      console.log("details", response.data.details);
     } catch (error) {
       console.log("Fail to load Order");
     }
@@ -55,12 +53,10 @@ const EditReview = (props) => {
         setReviewContent(reviewData);
         setInitialReviewContent(reviewData);
       }
-      console.log(result);
     }
     setShowEdit(true);
   };
   const clickSave = async (productId) => {
-    console.log(reviewContent);
     try {
       setLoadingSubmit(true);
       var body = {
@@ -113,7 +109,7 @@ const EditReview = (props) => {
         onHide={props.onHide}
         keyboard={false}
         backdrop="static"
-        className="product-quickview-modal-wrapper"
+        className="order-quickview-modal-wrapper"
       >
         <Modal.Header closeButton></Modal.Header>
         <div

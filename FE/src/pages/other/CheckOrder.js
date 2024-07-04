@@ -20,19 +20,6 @@ const CheckOrder = ({ location }) => {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filterApplied, setFilterApplied] = useState(false);
 
-  // const getAllOrders = async () => {
-  //   try {
-  //     const response = await axiosInstance.get("/api/v1/orders/allOrders", {
-  //       timeout: 10000,
-  //     });
-  //     setAllOrders(response.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   getAllOrders();
-  // }, []);
   const clickCheckOrders = async () => {
     if (!email && !orderId) {
       return;

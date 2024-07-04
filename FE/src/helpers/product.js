@@ -106,46 +106,6 @@ export const getSortedProducts = (products, sortType, sortValue) => {
     default:
       break;
   }
-  // if (products && sortType && sortValue) {
-  //   if (sortType === "category") {
-  //     return products.filter(
-  //       (product) =>
-  //         product.collections.filter(
-  //           (single) =>
-  //             single.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ===
-  //             sortValue.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-  //         )[0]
-  //     );
-  //   }
-  //   if (sortType === "tag") {
-  //     return products.filter(
-  //       (product) =>
-  //         product.tags.filter((single) => single.name === sortValue)[0]
-  //     );
-  //   }
-  //   if (sortType === "priceRange") {
-  //     return products.filter(
-  //       (product) =>
-  //         product.price >= sortValue[0] && product.price <= sortValue[1]
-  //     );
-  //   }
-  //   if (sortType === "filterSort") {
-  //     let sortProducts = [...products];
-  //     if (sortValue === "default") {
-  //       return sortProducts;
-  //     }
-  //     if (sortValue === "priceHighToLow") {
-  //       return sortProducts.sort((a, b) => {
-  //         return b.price - a.price;
-  //       });
-  //     }
-  //     if (sortValue === "priceLowToHigh") {
-  //       return sortProducts.sort((a, b) => {
-  //         return a.price - b.price;
-  //       });
-  //     }
-  //   }
-  // }
   return sortedProducts;
 };
 

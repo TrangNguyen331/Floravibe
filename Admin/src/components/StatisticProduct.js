@@ -11,7 +11,6 @@ import {
 } from "@windmill/react-ui";
 import axiosInstance from "../axiosInstance";
 import Paginate from "./Pagination/Paginate";
-import ProductAvgRating from "./ProductAvgRating";
 import { Link } from "react-router-dom";
 import { Box, LinearProgress, Rating } from "@mui/material";
 import { StarBorder } from "@mui/icons-material";
@@ -88,7 +87,7 @@ const TestStatstic = () => {
                       <Link to={`/app/product/${product.productId}`}>
                         <Avatar
                           className="hidden mr-4 md:block"
-                          src={product.productImage}
+                          src={product.productImages[0]}
                           alt="Product image"
                         />
                       </Link>

@@ -35,11 +35,6 @@ const MobileNavMenu = ({ strings }) => {
         <li>
           <Link to={process.env.PUBLIC_URL + "/blog"}>{t("blog")}</Link>
         </li>
-        <li>
-          <Link to={process.env.PUBLIC_URL + "/contact"}>
-            {t("contact_us")}
-          </Link>
-        </li>
         <li className="menu-item-has-children">
           <Link to={process.env.PUBLIC_URL + "/"}>{t("other")}</Link>
           <ul className="sub-menu">
@@ -59,6 +54,11 @@ const MobileNavMenu = ({ strings }) => {
             <li>
               <Link to={process.env.PUBLIC_URL + "/compare"}>
                 {t("compare")}
+              </Link>
+            </li>
+            <li>
+              <Link to={process.env.PUBLIC_URL + "/check-order"}>
+                {t("check-order")}
               </Link>
             </li>
             {token && (

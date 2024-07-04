@@ -13,7 +13,6 @@ const TabProduct = ({
   category,
 }) => {
   const { t } = useTranslation(["home"]);
-  console.log("TabProduct");
   return (
     <div
       className={`product-area ${spaceTopClass ? spaceTopClass : ""} ${

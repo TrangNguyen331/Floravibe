@@ -67,6 +67,19 @@
           margin-bottom: 30px;
           padding: 0 15px;
         }
+        .login-password-input {
+          position: relative;
+          .password-toggle-icon {
+            position: absolute;
+            right: 10px;
+            top: 0;
+            transform: translateY(50%);
+            cursor: pointer;
+            i {
+              font-size: 1.2rem;
+            }
+          }
+        }
         .forgot-password-link {
           position: relative;
           display: block;

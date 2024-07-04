@@ -10,36 +10,23 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 const Order = ({ location, cartItems, currency }) => {
-  console.log("Order details page");
   const [order, setOrder] = useState(null);
-  const [orders, setOrders] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get("/api/v1/orders/" + id);
-        console.log("order", response.data);
         setOrder((prevOrders) => response.data);
       } catch (error) {
-        console.log("Fail to load Order");
+        console.log(error);
       }
     };
 
     fetchData();
-    getAllOrders();
   }, []);
 
   const { pathname } = location;
-  const getAllOrders = async () => {
-    try {
-      const response = await axiosInstance.get("/api/v1/orders");
-      setOrders(response.data);
-      console.log("orders", orders);
-    } catch (error) {
-      console.log("Fail to load my orders");
-    }
-  };
   // const isFirstOrder = orders.length > 0 && orders[0].id === order.id;
   const { t } = useTranslation(["orders", "breadcrumb"]);
 

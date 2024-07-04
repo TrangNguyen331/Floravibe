@@ -1,5 +1,7 @@
 package com.hcmute.tlcn.controllers.Statistic;
 
+import com.hcmute.tlcn.dtos.order.ResponseOrderDto;
+import com.hcmute.tlcn.dtos.statistic.ResponseBestProductDto;
 import com.hcmute.tlcn.dtos.statistic.ResponseProductStatsDto;
 import com.hcmute.tlcn.dtos.statistic.TopSellingProductDto;
 import com.hcmute.tlcn.services.ProductStatsService;
@@ -13,10 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
-
 import java.time.Year;
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/${application.version}/productStats")
 @RequiredArgsConstructor
@@ -34,7 +34,12 @@ public class ProductStatsController {
         Page<ResponseProductStatsDto> result = service.getProductStats(search, pageable);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
+    @GetMapping("/bestSeller")
+    public  ResponseEntity<List<ResponseBestProductDto>> getBestProducts(){
+        List<ResponseBestProductDto> result = service.getBestProducts();
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
     @GetMapping("/top-products")
     public ResponseEntity<List<TopSellingProductDto>> getTopSellingProducts() {
         try {

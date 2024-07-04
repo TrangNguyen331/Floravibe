@@ -6,10 +6,9 @@ import BannerFour from "../../wrappers/banner/BannerFour";
 import TabProduct from "../../wrappers/product/TabProduct";
 import FeatureIconThree from "../../wrappers/feature-icon/FeatureIconThree";
 import VoucherSlider from "../../wrappers/voucher-banner/VoucherSlider";
-// import Newsletter from "../../wrappers/newsletter/Newsletter";
+import BestProductGrid from "../../wrappers/product/BestProductGrid";
 
 const HomePlants = () => {
-  console.log("home");
   return (
     <Fragment>
       <MetaTags>
@@ -25,9 +24,12 @@ const HomePlants = () => {
           spaceTopClass="pt-60"
           spaceBottomClass="pb-70"
           bgColorClass="bg-gray-2"
-          // category="plant"
         />
-
+        <BestProductGrid
+          spaceTopClass="pt-40"
+          spaceBottomClass="pb-70"
+          bgColorClass="bg-gray-2"
+        />
         {/* voucher slider */}
         <VoucherSlider spaceBottomClass="pb-90" bgColorClass="bg-gray-2" />
         {/* feature icon */}

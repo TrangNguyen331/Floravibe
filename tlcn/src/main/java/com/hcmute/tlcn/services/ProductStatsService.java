@@ -1,5 +1,6 @@
 package com.hcmute.tlcn.services;
 
+import com.hcmute.tlcn.dtos.statistic.ResponseBestProductDto;
 import com.hcmute.tlcn.dtos.statistic.ResponseProductStatsDto;
 import com.hcmute.tlcn.dtos.statistic.TopSellingProductDto;
 import org.springframework.data.domain.Page;
@@ -9,5 +10,6 @@ import java.util.List;
 
 public interface ProductStatsService {
     Page<ResponseProductStatsDto> getProductStats(String search, Pageable pageable);
+    List<ResponseBestProductDto> getBestProducts();
     List<TopSellingProductDto> getTopSellingProducts( int year);
 }
