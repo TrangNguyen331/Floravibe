@@ -14,16 +14,19 @@ import { useTranslation } from "react-i18next";
 
 const About = ({ location }) => {
   const { pathname } = location;
-  console.log("About page");
-  const {t} = useTranslation(['breadcrumb']);
+  const { t } = useTranslation(["breadcrumb"]);
   return (
     <Fragment>
       <MetaTags>
-        <title>Floravibe | {t('about')}</title>
+        <title>Floravibe | {t("about")}</title>
         <meta name="About us" content="About page" />
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('home')}</BreadcrumbsItem>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>{t('about')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>
+        {t("home")}
+      </BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
+        {t("about")}
+      </BreadcrumbsItem>
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb />
@@ -38,17 +41,17 @@ const About = ({ location }) => {
         <TextGridOne spaceBottomClass="pb-70" />
 
         {/* fun fact */}
-        <FunFactOne
+        {/* <FunFactOne
           spaceTopClass="pt-100"
           spaceBottomClass="pb-70"
           bgClass="bg-gray-3"
-        />
+        /> */}
 
         {/* team member */}
         <TeamMemberOne spaceTopClass="pt-95" spaceBottomClass="pb-70" />
 
         {/* brand logo slider */}
-        <BrandLogoSliderOne spaceBottomClass="pb-70" />
+        {/* <BrandLogoSliderOne spaceBottomClass="pb-70" /> */}
       </LayoutOne>
     </Fragment>
   );

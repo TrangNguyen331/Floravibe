@@ -23,7 +23,7 @@ const CancelReasonModal = (props) => {
       await axiosInstance.put(`api/v1/orders/${props.orderId}/cancel`, body);
       setLoadingSubmit(false);
       props.onHide();
-      await props.fetchData();
+      await props.fetchData(props.tabKey);
 
       if (props.methodPaid === "VNPAY") {
         setCancelShow(true);

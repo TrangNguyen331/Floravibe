@@ -16,10 +16,9 @@ const CheckOrderDetails = ({ location }) => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get("/api/v1/orders/" + id);
-        console.log("order", response.data);
         setOrder(response.data);
       } catch (error) {
-        console.log("Fail to load Order");
+        console.log(error);
       }
     };
 

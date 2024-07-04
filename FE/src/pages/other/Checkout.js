@@ -283,8 +283,6 @@ const Checkout = ({ location, cartItems, currency }) => {
       const response = await axiosInstance.post("/api/v1/orders", body, {
         timeout: 8000,
       });
-      console.log("response", response.data);
-
       if (selectedVoucher) {
         const quantity =
           selectedVoucher.quantity === 0 ? 0 : selectedVoucher.quantity - 1;
@@ -366,7 +364,7 @@ const Checkout = ({ location, cartItems, currency }) => {
         });
       } else {
         setIsError(false);
-        // await guestPlaceOrder();
+        await guestPlaceOrder();
       }
     }
   };

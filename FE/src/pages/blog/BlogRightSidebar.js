@@ -5,7 +5,6 @@ import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import BlogSidebar from "../../wrappers/blog/BlogSidebar";
-// import BlogPagination from "../../wrappers/blog/BlogPagination";
 import BlogPosts from "../../wrappers/blog/BlogPosts";
 import axiosInstance from "../../axiosInstance";
 import { useToasts } from "react-toast-notifications";
@@ -65,23 +64,10 @@ const BlogRightSidebar = ({ location }) => {
     }
   };
 
-  // const handleNextEvent = () => {
-  //   if (blogData.selectedPage < blogData.totalPage - 1) {
-  //     fetchData(blogData.selectedPage + 1);
-  //   }
-  // };
-  // const handlePreviousEvent = () => {
-  //   if (blogData.selectedPage > 0) {
-  //     fetchData(blogData.selectedPage + 1);
-  //   }
-  // };
-  // const handleSelectPageEvent = (page) => {
-  //   fetchData(page);
-  // };
   const handelSearchEvent = (search) => {
     fetchData(0, search);
   };
-  const {t} = useTranslation(['breadcrumb']);
+  const { t } = useTranslation(["breadcrumb"]);
 
   return (
     <Fragment>
@@ -92,7 +78,9 @@ const BlogRightSidebar = ({ location }) => {
           content="Blog of flone react minimalist eCommerce template."
         />
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('home')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>
+        {t("home")}
+      </BreadcrumbsItem>
       <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
         Blog
       </BreadcrumbsItem>
@@ -114,13 +102,6 @@ const BlogRightSidebar = ({ location }) => {
                   <div className="row">
                     <BlogPosts data={blogData.blogs} />
                   </div>
-                  {/* <BlogPagination
-                    totalPage={blogData.totalPage}
-                    selectedPage={blogData.selectedPage}
-                    onNextEvent={handleNextEvent}
-                    onPreviousEvent={handlePreviousEvent}
-                    onSelectPageEvent={handleSelectPageEvent}
-                  /> */}
                 </div>
               </div>
             </div>

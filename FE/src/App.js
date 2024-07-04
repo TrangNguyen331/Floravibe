@@ -3,9 +3,6 @@ import React, { Suspense, lazy } from "react";
 import ScrollToTop from "./helpers/scroll-top";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ToastProvider } from "react-toast-notifications";
-// import { multilanguage, loadLanguages } from "redux-multilanguage";
-// import { connect } from "react-redux";
-// import "./i18n";
 import { BreadcrumbsProvider } from "react-breadcrumbs-dynamic";
 
 const MyOrders = lazy(() => import("./pages/other/MyOrders"));

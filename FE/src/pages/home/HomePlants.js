@@ -7,10 +7,8 @@ import TabProduct from "../../wrappers/product/TabProduct";
 import FeatureIconThree from "../../wrappers/feature-icon/FeatureIconThree";
 import VoucherSlider from "../../wrappers/voucher-banner/VoucherSlider";
 import BestProductGrid from "../../wrappers/product/BestProductGrid";
-// import Newsletter from "../../wrappers/newsletter/Newsletter";
 
 const HomePlants = () => {
-  console.log("home");
   return (
     <Fragment>
       <MetaTags>

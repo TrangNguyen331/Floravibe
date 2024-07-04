@@ -49,7 +49,6 @@ const MyAccount = ({ location }) => {
       ...prevInfo,
       [property]: value,
     }));
-    console.log(property, value);
   };
   const API_KEY = process.env.REACT_APP_IMAGE_HOSTING_KEY;
   const handleImgChange = async (e) => {
@@ -70,8 +69,6 @@ const MyAccount = ({ location }) => {
       );
 
       handleInputChange("avatar", response.data.data.url);
-      console.log(formData);
-      console.log(response.data.data.url);
     } catch (error) {
       console.error("Error uploading image:", error);
     }

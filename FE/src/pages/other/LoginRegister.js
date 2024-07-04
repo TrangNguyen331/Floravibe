@@ -21,7 +21,10 @@ const LoginRegister = ({ location }) => {
     password: "",
     email: "",
   });
-
+  const [showPassword, setShowPassword] = useState({
+    loginPassword: false,
+    regPassword: false,
+  });
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.auth.token);
   const handleInputChange = (event) => {
@@ -29,6 +32,12 @@ const LoginRegister = ({ location }) => {
     setFormData({
       ...formData,
       [name]: value,
+    });
+  };
+  const showHide = (inputName) => {
+    setShowPassword({
+      ...showPassword,
+      [inputName]: !showPassword[inputName],
     });
   };
   const handleLogin = async (event) => {
@@ -53,19 +62,23 @@ const LoginRegister = ({ location }) => {
     });
   };
 
-  const {t} = useTranslation(['lore', 'breadcrumb']);
+  const { t } = useTranslation(["lore", "breadcrumb"]);
 
   return isLogin ? (
     <Redirect to={process.env.PUBLIC_URL + "/"}></Redirect>
   ) : (
     <Fragment>
       <MetaTags>
-        <title>{t('login')} | {t('register')}</title>
+        <title>
+          {t("login")} | {t("register")}
+        </title>
         <meta name="Login | Register" content="Login | Register" />
       </MetaTags>
-      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>{t('breadcrumb:home')}</BreadcrumbsItem>
+      <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>
+        {t("breadcrumb:home")}
+      </BreadcrumbsItem>
       <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-        {t('breadcrumb:login-register')}
+        {t("breadcrumb:login-register")}
       </BreadcrumbsItem>
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
@@ -79,12 +92,12 @@ const LoginRegister = ({ location }) => {
                     <Nav variant="pills" className="login-register-tab-list">
                       <Nav.Item>
                         <Nav.Link eventKey="login">
-                          <h4>{t('login')}</h4>
+                          <h4>{t("login")}</h4>
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
                         <Nav.Link eventKey="register">
-                          <h4>{t('register')}</h4>
+                          <h4>{t("register")}</h4>
                         </Nav.Link>
                       </Nav.Item>
                     </Nav>
@@ -98,27 +111,43 @@ const LoginRegister = ({ location }) => {
                                 name="username"
                                 value={formData.username}
                                 onChange={handleInputChange}
-                                placeholder={t('username')}
+                                placeholder={t("username")}
                               />
-                              <input
-                                type="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleInputChange}
-                                placeholder={t('password')}
-                              />
+                              <div className="login-password-input">
+                                <input
+                                  type={
+                                    showPassword.loginPassword
+                                      ? "text"
+                                      : "password"
+                                  }
+                                  name="password"
+                                  value={formData.password}
+                                  onChange={handleInputChange}
+                                  placeholder={t("password")}
+                                />
+                                <span
+                                  className="password-toggle-icon"
+                                  onClick={() => showHide("loginPassword")}
+                                >
+                                  {showPassword.loginPassword ? (
+                                    <i className="ri-eye-off-line" />
+                                  ) : (
+                                    <i className="ri-eye-line" />
+                                  )}
+                                </span>
+                              </div>
                               <div className="forgot-password-link">
                                 <Link
                                   to={
                                     process.env.PUBLIC_URL + "/forgot-password"
                                   }
                                 >
-                                  {t('forgot')}?
+                                  {t("forgot")}?
                                 </Link>
                               </div>
                               <div className="login-btn-wrapper">
                                 <button type="submit">
-                                  <span>{t('login')}</span>
+                                  <span>{t("login")}</span>
                                 </button>
                               </div>
                             </form>
@@ -134,15 +163,31 @@ const LoginRegister = ({ location }) => {
                                 name="username"
                                 value={formData.username}
                                 onChange={handleInputChange}
-                                placeholder={t('username')}
+                                placeholder={t("username")}
                               />
-                              <input
-                                type="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleInputChange}
-                                placeholder={t('password')}
-                              />
+                              <div className="login-password-input">
+                                <input
+                                  type={
+                                    showPassword.regPassword
+                                      ? "text"
+                                      : "password"
+                                  }
+                                  name="password"
+                                  value={formData.password}
+                                  onChange={handleInputChange}
+                                  placeholder={t("password")}
+                                />
+                                <span
+                                  className="password-toggle-icon"
+                                  onClick={() => showHide("regPassword")}
+                                >
+                                  {showPassword.regPassword ? (
+                                    <i className="ri-eye-off-line" />
+                                  ) : (
+                                    <i className="ri-eye-line" />
+                                  )}
+                                </span>
+                              </div>
                               <input
                                 name="email"
                                 value={formData.email}
@@ -152,7 +197,7 @@ const LoginRegister = ({ location }) => {
                               />
                               <div className="button-box">
                                 <button type="submit">
-                                  <span>{t('Register')}</span>
+                                  <span>{t("Register")}</span>
                                 </button>
                               </div>
                             </form>

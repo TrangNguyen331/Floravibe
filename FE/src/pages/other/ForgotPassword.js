@@ -17,12 +17,11 @@ const ForgotPassword = ({ location }) => {
   const handleSend = async () => {
     setIsLoading(true);
     try {
-      const response = await axiosInstance.post(
+      await axiosInstance.post(
         "/api/v1/auth/forgot-password",
         { email },
         { timeout: 6000 }
       );
-      console.log("Response:", response);
       addToast("Send email success!", {
         appearance: "success",
         autoDismiss: true,
@@ -55,7 +54,7 @@ const ForgotPassword = ({ location }) => {
       </MetaTags>
       <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
       <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-        Reset Password
+        Forgot Password
       </BreadcrumbsItem>
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}

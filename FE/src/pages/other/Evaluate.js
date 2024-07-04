@@ -20,7 +20,7 @@ const Evaluate = (props) => {
       );
       setOrder(response.data.details);
     } catch (error) {
-      console.log("Fail to load Order");
+      console.log(error);
     }
   };
   useEffect(() => {
@@ -91,7 +91,7 @@ const Evaluate = (props) => {
           body
         );
       }
-      props.fetchData();
+      await props.fetchData(props.tabKey);
       addToast("Post review success", {
         appearance: "success",
         autoDismiss: true,
@@ -117,7 +117,7 @@ const Evaluate = (props) => {
         onHide={props.onHide}
         keyboard={false}
         backdrop="static"
-        className="product-quickview-modal-wrapper"
+        className="order-quickview-modal-wrapper"
       >
         <Modal.Header closeButton></Modal.Header>
         <div

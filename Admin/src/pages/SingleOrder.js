@@ -218,14 +218,14 @@ const SingleOrder = () => {
                     ) : (
                       <select
                         className={`form-control ${
-                          statusOptions.find(
+                          statusSingleOptions.find(
                             (option) => option.value === order.status
                           ).color
                         } w-auto`}
                         value={order.status}
                         onChange={(e) => handleStatusChange(e.target.value)}
                       >
-                        {statusOptions.map((option) => (
+                        {statusSingleOptions.map((option) => (
                           <option
                             key={option.value}
                             value={option.value}

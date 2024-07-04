@@ -108,9 +108,9 @@
             justify-content: space-between;
             font-weight: 400;
             &.order-deli {
-                font-weight: bold; 
-                color: #a749ff; 
-              }
+              font-weight: bold;
+              color: #a749ff;
+            }
           }
           li.order-deli {
             font-weight: bold;
@@ -163,7 +163,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        .popover-reason-cancel{
+        .popover-reason-cancel {
           color: #a749ff;
         }
       }
@@ -289,9 +289,9 @@ h3.order-page-title {
   line-height: 1;
   padding: 10px 26px;
 }
-.product-quickview-modal-wrapper {
+.order-quickview-modal-wrapper {
   .modal-dialog {
-    width: 700px;
+    width: 850px;
   }
 }
 .content-container {

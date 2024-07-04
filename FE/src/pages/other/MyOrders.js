@@ -7,28 +7,20 @@ import { Link } from "react-router-dom";
 import {
   Nav,
   Tab,
-  Tooltip,
   OverlayTrigger,
-  ToggleButton,
   Popover,
   PopoverTitle,
   PopoverContent,
 } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import axiosInstance from "../../axiosInstance";
 import { LuBadgeInfo } from "react-icons/lu";
-import {
-  filterOrderByStatus,
-  formatReadableDate,
-  getStatus,
-} from "../../helpers/helper";
+import { filterOrderByStatus, formatReadableDate } from "../../helpers/helper";
 import { useTranslation } from "react-i18next";
 import Evaluate from "./Evaluate";
 import EditReview from "./EditReview";
 import CancelReasonModal from "./CancelReasonModal";
 
 const MyOrders = ({ location }) => {
-  const token = useSelector((state) => state.auth.token);
   const [orders, setOrders] = useState([]);
   const [orderId, setOrderId] = useState(null);
   const [methodPaid, setMethodPaid] = useState(null);
@@ -38,9 +30,25 @@ const MyOrders = ({ location }) => {
   const [modalShow, setModalShow] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [showCancelReason, setShowCancelReason] = useState(false);
+  const [tabKey, setTabKey] = useState("All");
   const { t } = useTranslation(["orders", "breadcrumb"]);
   const { pathname } = location;
+  const getStatus = (key) => {
+    switch (key) {
+      case "IN_REQUEST":
+        return t("list.request");
+      case "IN_PROCESSING":
+        return t("list.process");
+      case "COMPLETED":
+        return t("list.complete");
+      case "CANCEL":
+        return t("list.canceled");
+      default:
+        return "";
+    }
+  };
   const filterOrder = (key) => {
+    setTabKey(key);
     setCurrentOrderFilter(filterOrderByStatus(orders, key));
   };
   const getSortedOrder = (orders) => {
@@ -67,14 +75,14 @@ const MyOrders = ({ location }) => {
       return dateB - dateA;
     });
   };
-  const fetchData = async () => {
+  const fetchData = async (key) => {
     try {
       setLoadingGet(true);
       const response = await axiosInstance.get("/api/v1/orders");
-      console.log(response.data);
       setOrders(response.data);
+
       setCurrentOrderFilter((prevFilter) =>
-        filterOrderByStatus(response.data, "All")
+        filterOrderByStatus(response.data, key)
       );
       setLoadingGet(false);
     } catch (error) {
@@ -96,7 +104,7 @@ const MyOrders = ({ location }) => {
     setShowCancelReason(true);
   };
   useEffect(() => {
-    fetchData();
+    fetchData(tabKey);
   }, []);
 
   return (
@@ -195,15 +203,7 @@ const MyOrders = ({ location }) => {
                                           </div>
                                         </li>
                                         <li className="order-status">
-                                          {/* {getStatus(order.status)} */}
-                                          {order.status === "IN_REQUEST" &&
-                                            t("list.request")}
-                                          {order.status === "IN_PROCESSING" &&
-                                            t("list.process")}
-                                          {order.status === "COMPLETED" &&
-                                            t("list.complete")}
-                                          {order.status === "CANCEL" &&
-                                            t("list.canceled")}
+                                          {getStatus(order.status)}
                                         </li>
                                       </ul>
                                     </div>
@@ -375,9 +375,7 @@ const MyOrders = ({ location }) => {
                                           </div>
                                         </li>
                                         <li className="order-status">
-                                          {/* {getStatus(order.status)} */}
-                                          {order.status === "IN_REQUEST" &&
-                                            t("list.request")}
+                                          {getStatus(order.status)}
                                         </li>
                                       </ul>
                                     </div>
@@ -832,6 +830,7 @@ const MyOrders = ({ location }) => {
         onHide={() => setModalShow(false)}
         orderId={orderId}
         fetchData={fetchData}
+        tabKey={tabKey}
       />
       <EditReview
         show={isEdit}
@@ -846,6 +845,7 @@ const MyOrders = ({ location }) => {
         methodPaid={methodPaid}
         email={email}
         fetchData={fetchData}
+        tabKey={tabKey}
       />
     </Fragment>
   );

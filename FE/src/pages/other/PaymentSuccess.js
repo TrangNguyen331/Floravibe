@@ -10,19 +10,10 @@ import axiosInstance from "../../axiosInstance";
 const PaymentSuccess = ({ location }) => {
   const { pathname } = location;
   const { t } = useTranslation(["orders", "breadcrumb"]);
-  const [submitData, setSubmitData] = useState({
-    orderId: "",
-    vnp_BankCode: "",
-    vnp_BankTranNo: "",
-    vnp_ResponseCode: "",
-    vnp_TransactionNo: "",
-    vnp_TransactionStatus: "",
-  });
 
   useEffect(() => {
     getUrlParams(window.location.search);
   }, []);
-  console.log(submitData);
   const getUrlParams = async (url) => {
     if (url) {
       const params = new URLSearchParams(url);
@@ -38,17 +29,6 @@ const PaymentSuccess = ({ location }) => {
       const vnp_OrderInfo = params.get("vnp_OrderInfo");
       const orderId = vnp_OrderInfo.match(/\[OrderID\]\:\s*([\w\d]+)/)[1];
 
-      setSubmitData({
-        orderId: orderId,
-        vnp_BankCode: vnp_BankCode,
-        vnp_BankTranNo: vnp_BankTranNo,
-        vnp_CardType: vnp_CardType,
-        vnp_PayDate: vnp_PayDate,
-        vnp_ResponseCode: vnp_ResponseCode,
-        vnp_TransactionNo: vnp_TransactionNo,
-        vnp_TransactionStatus: vnp_TransactionStatus,
-      });
-
       let body = {
         status: "SUCCESS",
         transactionDetail: `${vnp_TransactionNo};${vnp_BankCode};${vnp_BankTranNo};${vnp_CardType};${vnp_ResponseCode};${vnp_ResponseCode};${vnp_TransactionStatus}`,
@@ -58,7 +38,6 @@ const PaymentSuccess = ({ location }) => {
         `api/v1/orders/${orderId}/payment/vnpay-callback`,
         body
       );
-      console.log("done");
     }
   };
 
