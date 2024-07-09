@@ -46,7 +46,11 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { Close } from "@mui/icons-material";
+import {
+  Close,
+  LockOpenOutlined,
+  LockPersonOutlined,
+} from "@mui/icons-material";
 const UsersTable = () => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
@@ -521,11 +525,27 @@ const UsersTable = () => {
                     ))}
                   </TableCell>
                   <TableCell>
-                    <Input
+                    {/* <Input
                       type="checkbox"
                       checked={user.isActive}
                       onChange={() => handleCheckboxChange(user.id)}
                     />
+                    {user.isActive ? (
+                      <IconButton>
+                        <LockOpenOutlined style={{color: "green"}}/>
+                      </IconButton>
+                    ) : (
+                      <IconButton>
+                        <LockPersonOutlined />
+                      </IconButton>
+                    )} */}
+                    <IconButton onClick={() => handleCheckboxChange(user.id)}>
+                      {user.isActive ? (
+                        <LockOpenOutlined style={{ color: "green" }} />
+                      ) : (
+                        <LockPersonOutlined style={{ color: "red" }} />
+                      )}
+                    </IconButton>
                   </TableCell>
                   <TableCell>
                     <Input
