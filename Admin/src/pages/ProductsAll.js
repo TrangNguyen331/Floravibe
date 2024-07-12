@@ -700,10 +700,8 @@ const ProductsAll = () => {
           </Toolbar>
           <DialogContent dividers>
             <Typography className="pt-5 pb-5 pl-4 pr-4">
-              <p>
-                Make sure you want to delete product{" "}
-                {selectedProduct && `"${selectedProduct.name}"`}
-              </p>
+              Make sure you want to delete product{" "}
+              {selectedProduct && `"${selectedProduct.name}"`}
             </Typography>
           </DialogContent>
           <DialogActions className="mt-2 mb-2 mr-3">
@@ -718,20 +716,6 @@ const ProductsAll = () => {
               </Button>
             </div>
           </DialogActions>
-          {/* <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
-            <BottomNavigation className="mt-2 mb-2 mr-3">
-              <div className="hidden sm:block">
-                <Button layout="outline" onClick={closeModal}>
-                  Cancel
-                </Button>
-              </div>
-              <div className="hidden sm:block">
-                <Button block onClick={() => handleSave("delete")}>
-                  Delete
-                </Button>
-              </div>
-            </BottomNavigation>
-          </Paper> */}
         </Dialog>
       )}
       {/* Product Views */}
