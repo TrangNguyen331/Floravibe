@@ -1,7 +1,7 @@
 import React from "react";
 import { Input } from "@windmill/react-ui";
 
-export const AccountForm = ({ data, handleInputChange }) => {
+const AccountForm = ({ data, handleInputChange }) => {
   return (
     <form action="#">
       <div>
@@ -73,3 +73,4 @@ export const AccountForm = ({ data, handleInputChange }) => {
     </form>
   );
 };
+export default AccountForm;

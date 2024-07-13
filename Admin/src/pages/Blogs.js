@@ -234,62 +234,6 @@ const Blogs = () => {
       </div>
 
       <div>
-        {/* <Modal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          className="fullscreen-modal"
-        >
-          <ModalHeader className="flex items-center text-2xl">
-            {mode === "edit" && "Edit Blog"}
-            {mode === "delete" && "Delete Blog"}
-            {mode === "add" && "Add New Blog"}
-          </ModalHeader>
-          <ModalBody>
-            {mode === "edit" ? (
-              <BlogForm
-                data={selectedBlog}
-                onSave={handleSave}
-                onCancel={closeModal}
-                onBlogChange={handleBlogChange}
-              />
-            ) : mode === "delete" ? (
-              <p>
-                Make sure you want to delete blog{" "}
-                {selectedBlog && `"${selectedBlog.title}"`}
-              </p>
-            ) : (
-              <BlogForm
-                data={selectedBlog}
-                onSave={handleSave}
-                onCancel={closeModal}
-                onBlogChange={handleBlogChange}
-              />
-            )}
-          </ModalBody>
-          <ModalFooter className="modal-footer">
-            <div className="hidden sm:block">
-              <Button layout="outline" onClick={closeModal}>
-                Cancel
-              </Button>
-            </div>
-            <div className="hidden sm:block">
-              {mode === "edit" ? (
-                <Button block onClick={() => handleSave("edit")}>
-                  Save
-                </Button>
-              ) : mode === "delete" ? (
-                <Button block onClick={() => handleSave("delete")}>
-                  Delete
-                </Button>
-              ) : (
-                <Button block size="large" onClick={() => handleSave("add")}>
-                  Add Blog
-                </Button>
-              )}
-            </div>
-          </ModalFooter>
-        </Modal> */}
-
         {mode === "edit" || mode === "add" ? (
           <Dialog open={isModalOpen} onClose={closeModal} maxWidth={"md"}>
             <div className="flex justify-between" sx={{ position: "relative" }}>

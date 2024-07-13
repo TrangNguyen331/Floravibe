@@ -73,22 +73,6 @@ const ReasonCancel = ({
           </IconButton>
         </Toolbar>
         <DialogContent dividers>
-          {/* <ModalBody>
-            <select
-              className="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg block w-full h-10 p-3"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-            >
-              <option value="" disabled>
-                Select reason for cancellation
-              </option>
-              {reasonList.map((reason) => (
-                <option key={reason.key} value={reason.value}>
-                  {reason.value}
-                </option>
-              ))}
-            </select>
-          </ModalBody> */}
           <ModalBody>
             <FormControl component="fieldset">
               <FormLabel component="legend">

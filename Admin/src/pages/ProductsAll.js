@@ -49,7 +49,6 @@ import {
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { Link, NavLink } from "react-router-dom/cjs/react-router-dom";
-// import { Grid, Typography, Pagination } from '@mui/material';
 
 const ProductsAll = () => {
   // Table and grid data handlling
@@ -59,7 +58,6 @@ const ProductsAll = () => {
   const [allTags, setAllTags] = useState([]);
   const [collectionLoaded, setCollectionLoaded] = useState(false);
   const [productsData, setProductsData] = useState([]);
-  const [allProductsData, setAllProductsData] = useState([]);
 
   const [sortName, setSortName] = useState("default");
   const [sortPrice, setSortPrice] = useState("default");
@@ -373,11 +371,6 @@ const ProductsAll = () => {
   useEffect(() => {
     handleSearch();
   }, [searchType, searchValue, page]);
-
-  const resetData = async () => {
-    await fetchData();
-    setPage(1);
-  };
 
   function formatNumberWithDecimal(number) {
     // Convert the number to a string

@@ -34,7 +34,7 @@ import {
 } from "../icons";
 import RoundIcon from "./RoundIcon";
 import axiosInstance from "../axiosInstance";
-import { AccountForm } from "./AccountForm";
+
 import { useToasts } from "react-toast-notifications";
 import {
   Box,
@@ -51,6 +51,7 @@ import {
   LockOpenOutlined,
   LockPersonOutlined,
 } from "@mui/icons-material";
+import AccountForm from "./AccountForm";
 const UsersTable = () => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);

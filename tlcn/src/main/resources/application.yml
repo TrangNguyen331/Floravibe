@@ -8,7 +8,6 @@ spring:
     username: blackofwhite55@gmail.com
     password: iilunvtopjcekxcv
     properties:
-      #      fojc uzjz echg thfv
       mail:
         smtp:
           auth: true
