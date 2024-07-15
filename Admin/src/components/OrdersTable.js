@@ -134,15 +134,32 @@ const OrdersTable = ({ resultsPerPage, setResultsPerPage }) => {
   const fetchAllOrdersData = async () => {
     try {
       setLoadingGet(true);
-      const response = await axiosInstance.get("/api/v1/orders/allOrders", {
-        timeout: 10000,
-      });
-      const sortedOrdersData = response.data.sort(
+
+      let page = 0;
+      let allOrders = [];
+      let totalPages = 1;
+
+      while (page < totalPages) {
+        const response = await axiosInstance.get(
+          `/api/v1/orders/paging?page=${page}&size=20`,
+          {
+            timeout: 10000,
+          }
+        );
+
+        allOrders = allOrders.concat(response.data.content);
+        totalPages = response.data.totalPages;
+        page++;
+      }
+      // const response = await axiosInstance.get("/api/v1/orders/allOrders", {
+      //   timeout: 10000,
+      // });
+      const sortedOrdersData = allOrders.sort(
         (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
       );
       setAllOrdersData(sortedOrdersData);
       setOrdersData(sortedOrdersData);
-      setTotalPage(Math.ceil(sortedOrdersData.length / resultsPerPage)); // dòng này sử dụng cho @mui
+      setTotalPage(Math.ceil(sortedOrdersData.length / resultsPerPage));
       setTotalResult(sortedOrdersData.length);
       setDataLoaded(true);
       setLoadingGet(false);

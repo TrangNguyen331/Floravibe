@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import PageTitle from "../components/Typography/PageTitle";
 import { NavLink } from "react-router-dom";
-import { DashboardIcon, RefreshIcon, SearchIcon } from "../icons";
-import { Card, CardBody, Label, Select } from "@windmill/react-ui";
-import RoundIcon from "../components/RoundIcon";
+import { DashboardIcon } from "../icons";
 import OrdersTable from "../components/OrdersTable";
 function Icon({ icon, ...props }) {
   const Icon = icon;
@@ -13,62 +11,6 @@ function Icon({ icon, ...props }) {
 const Orders = () => {
   // pagination setup
   const [resultsPerPage, setResultsPerPage] = useState(7);
-  // filter/search
-  const [filter, setFilter] = useState("");
-  const [searchType, setSearchType] = useState("");
-  const [searchValue, setSearchValue] = useState("");
-  const [refresh, setRefresh] = useState(false);
-
-  // const handleFilter = (filter_name) => {
-  //   // console.log(filter_name);
-  //   if (filter_name === "All") {
-  //     setRefresh(true);
-  //     setSearchType("");
-  //     setSearchValue("");
-  //     setResultPerPage(resultsPerPage);
-  //   }
-  //   if (filter_name === "In Request Orders") {
-  //     setFilter("IN_REQUEST");
-  //   }
-  //   if (filter_name === "In Progress Orders") {
-  //     setFilter("IN_PROCESSING");
-  //   }
-  //   if (filter_name === "Cancel Orders") {
-  //     setFilter("CANCEL");
-  //   }
-  //   if (filter_name === "Completed Orders") {
-  //     setFilter("COMPLETED");
-  //   }
-  // };
-  // const fetchData = async (page, filter, resultsPerPage) => {
-  //   try {
-  //     const response = await axiosInstance.get(
-  //       `/api/v1/orders/paging?page=${
-  //         page - 1
-  //       }&size=${resultsPerPage}&search=${filter}`
-  //     );
-
-  //     const filteredData = allOrdersData.filter(
-  //       (order) => order.status === filter
-  //     );
-
-  //     if (filter) {
-  //       setOrdersData(filteredData);
-  //       setData(
-  //         filteredData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
-  //       );
-  //       setTotalPage(Math.ceil(filteredData.length / resultsPerPage));
-  //       setTotalResult(filteredData.length);
-  //     } else {
-  //       setTotalPage(response.data.totalPages);
-  //       setTotalResult(response.data.totalElements);
-  //     }
-  //     setPage(page);
-  //     setDataLoaded(true);
-  //   } catch (error) {
-  //     console.log("Fetch data error", error);
-  //   }
-  // };
   return (
     <div>
       <PageTitle>Orders</PageTitle>
@@ -83,87 +25,6 @@ const Orders = () => {
         {">"}
         <p className="mx-2">Orders</p>
       </div>
-
-      {/* Sort */}
-      {/* <Card className="mt-5 mb-5 shadow-md flex justify-between items-center">
-        <CardBody>
-          <div className="flex items-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Filter Orders
-            </p>
-
-            <Label className="mx-3">
-              <Select
-                className="py-3"
-                onChange={(e) => handleFilter(e.target.value)}
-              >
-                <option>All</option>
-                <option>In Request Orders</option>
-                <option>In Progress Orders</option>
-                <option>Cancel Orders</option>
-                <option>Completed Orders</option>
-              </Select>
-            </Label>
-
-            <Label className="">
-              <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <input
-                  className="py-3 pr-5 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-                  value={resultsPerPage}
-                  onChange={(e) => setResultPerPage(e.target.value)}
-                />
-                <div className="absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-none">
-                 
-                  Results on Table
-                </div>
-              </div>
-            </Label>
-          </div>
-        </CardBody>
-        <Label className="mx-0 ml-auto">
-          <Select
-            className="py-3 rounded-r-none bg-purple-200"
-            onChange={(e) => {
-              setSearchType(e.target.value);
-              setSearchValue("");
-            }}
-          >
-            <option hidden>Choose to search</option>
-            <option>Client</option>
-            <option>Order ID</option>
-            <option>Name Of Product</option>
-        
-            <option>Date</option>
-          </Select>
-        </Label>
-        <Label className="mx-0 w-70">
-          <div className="relative text-gray-500 dark:focus-within:text-purple-400">
-            <input
-              type={searchType === "Date" ? "date" : "text"}
-              className="py-3 pl-5 pr-10 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input rounded-r-full w-70"
-              placeholder="Search..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center mr-3">
-              <SearchIcon
-                className="w-5 h-5 text-purple-500 transition-colors duration-200"
-                aria-hidden="true"
-              />
-            </div>
-          </div>
-        </Label>
-        <RoundIcon
-          icon={RefreshIcon}
-          onClick={() => {
-            setSearchType("");
-            setSearchValue("");
-            setRefresh(!refresh);
-            setResultPerPage(resultsPerPage);
-          }}
-          className="pr-3 mr-6 ml-3 hover:bg-gray-200 dark:hover:bg-gray-400 transition ease-in-out duration-200 cursor-pointer"
-        />
-      </Card> */}
 
       {/* Table */}
       <OrdersTable

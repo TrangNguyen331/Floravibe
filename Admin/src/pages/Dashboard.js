@@ -158,31 +158,12 @@ function Dashboard() {
     };
   }, []);
   const [filter, setFilter] = useState("");
-  const [refresh, setRefresh] = useState(false);
   const [cusValue, setCusValue] = useState(0);
   const [resultsPerPage, setResultsPerPage] = useState(7);
   const currentYear = new Date().getFullYear();
   const handleChange = (event, newValue) => {
     setCusValue(newValue);
   };
-  // const handleFilter = (filter_name) => {
-  //   // console.log(filter_name);
-  //   if (filter_name === "All") {
-  //     setRefresh(!refresh);
-  //   }
-  //   if (filter_name === "In Request Orders") {
-  //     setFilter("IN_REQUEST");
-  //   }
-  //   if (filter_name === "In Progress Orders") {
-  //     setFilter("IN_PROCESSING");
-  //   }
-  //   if (filter_name === "Cancel Orders") {
-  //     setFilter("CANCEL");
-  //   }
-  //   if (filter_name === "Completed Orders") {
-  //     setFilter("COMPLETED");
-  //   }
-  // };
 
   return (
     <>

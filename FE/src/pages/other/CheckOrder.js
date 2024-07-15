@@ -25,10 +25,26 @@ const CheckOrder = ({ location }) => {
       return;
     }
     setLoadingGet(true);
-    const response = await axiosInstance.get("/api/v1/orders/allOrders", {
-      timeout: 10000,
-    });
-    let filtered = response.data;
+    // const response = await axiosInstance.get("/api/v1/orders/allOrders", {
+    //   timeout: 10000,
+    // });
+    let page = 0;
+    let allOrders = [];
+    let totalPages = 1;
+
+    while (page < totalPages) {
+      const response = await axiosInstance.get(
+        `/api/v1/orders/paging?page=${page}&size=20`,
+        {
+          timeout: 10000,
+        }
+      );
+
+      allOrders = allOrders.concat(response.data.content);
+      totalPages = response.data.totalPages;
+      page++;
+    }
+    let filtered = allOrders;
     // let filtered = allOrders;
     if (email) {
       filtered = filtered.filter(
