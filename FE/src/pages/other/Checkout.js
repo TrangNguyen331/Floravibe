@@ -335,6 +335,7 @@ const Checkout = ({ location, cartItems, currency }) => {
         appearance: "error",
         autoDismiss: true,
       });
+      return;
     }
     if (
       submitData.firstName === "" ||
