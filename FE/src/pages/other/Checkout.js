@@ -188,7 +188,6 @@ const Checkout = ({ location, cartItems, currency }) => {
 
   const guestPlaceOrder = async () => {
     setIsLoadingPlaceOrder(true);
-
     const totalValue = cartItems.reduce(
       (sum, item) => sum + item.quantity * item.price,
       0
@@ -198,7 +197,6 @@ const Checkout = ({ location, cartItems, currency }) => {
       .find((voucher) => voucher.voucherName === appliedVoucherName);
 
     const voucherDiscount = selectedVoucher ? selectedVoucher.voucherValue : 0;
-
     let selectedCityName = "";
     let selectedDistrictName = "";
     let selectedWardName = "";
@@ -250,25 +248,11 @@ const Checkout = ({ location, cartItems, currency }) => {
       voucherDetail: selectedVoucher
         ? {
             id: selectedVoucher.id,
-            // voucherName: appliedVoucherName,
             voucherValue: selectedVoucher.voucherValue,
-            // description: selectedVoucher.description,
-            // effectiveDate: selectedVoucher.effectiveDate,
-            // validUntil: selectedVoucher.validUntil,
-            // quantity: selectedVoucher.quantity,
-            // usedVoucher: selectedVoucher.usedVoucher,
-            // guest: selectedVoucher.guest,
-            // isOnlinePayment: selectedVoucher.isOnlinePayment,
           }
         : {
             id: null,
-            // voucherName: "",
             voucherValue: 0,
-            // description: "",
-            // effectiveDate: "",
-            // validUntil: "",
-            // quantity: 0,
-            // usedVoucher: 0,
           },
       deliveryDate: new Date(submitData.deliveryDate),
       deliveryTime: submitData.deliveryTime,
@@ -281,7 +265,7 @@ const Checkout = ({ location, cartItems, currency }) => {
 
     try {
       const response = await axiosInstance.post("/api/v1/orders", body, {
-        timeout: 8000,
+        timeout: 10000,
       });
       if (selectedVoucher) {
         const quantity =
@@ -331,7 +315,7 @@ const Checkout = ({ location, cartItems, currency }) => {
 
   const clickPlaceOrder = async () => {
     if (cartItems.length === 0) {
-      addToast(t("no-cartItem"), {
+      addToast(t("notice.no-cartItem"), {
         appearance: "error",
         autoDismiss: true,
       });
@@ -351,7 +335,6 @@ const Checkout = ({ location, cartItems, currency }) => {
       !/^[0-9]+$/.test(submitData.phone)
     ) {
       setIsError(true);
-      console.log("error");
     } else {
       const isOverStock = cartItems.some((cartItem) => {
         const product = products.find((product) => product.id === cartItem.id);
@@ -359,7 +342,7 @@ const Checkout = ({ location, cartItems, currency }) => {
       });
 
       if (isOverStock) {
-        addToast("Có sản phẩm không đủ số lượng trong kho", {
+        addToast(t("notice.not-enough-product"), {
           appearance: "error",
           autoDismiss: true,
         });

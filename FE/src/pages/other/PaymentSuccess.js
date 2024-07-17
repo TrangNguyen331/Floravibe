@@ -34,10 +34,12 @@ const PaymentSuccess = ({ location }) => {
         transactionDetail: `${vnp_TransactionNo};${vnp_BankCode};${vnp_BankTranNo};${vnp_CardType};${vnp_ResponseCode};${vnp_ResponseCode};${vnp_TransactionStatus}`,
         payDate: vnp_PayDate,
       };
-      await axiosInstance.patch(
-        `api/v1/orders/${orderId}/payment/vnpay-callback`,
-        body
-      );
+      if (vnp_BankTranNo !== null) {
+        await axiosInstance.patch(
+          `api/v1/orders/${orderId}/payment/vnpay-callback`,
+          body
+        );
+      }
     }
   };
 

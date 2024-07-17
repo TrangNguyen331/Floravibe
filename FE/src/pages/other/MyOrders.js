@@ -353,7 +353,13 @@ const MyOrders = ({ location }) => {
                         )}
                       </Tab.Pane>
                       <Tab.Pane eventKey="inRequest">
-                        {currentFilterOrder.length > 0 ? (
+                        {loadingGet ? (
+                          <div className="d-flex justify-content-center">
+                            <div className="spinner-border" role="status">
+                              <span className="sr-only">Loading...</span>
+                            </div>
+                          </div>
+                        ) : currentFilterOrder.length > 0 ? (
                           getSortedOrder(currentFilterOrder).map((order) => (
                             <div className="row" key={order.id}>
                               <div className="col-lg-12">

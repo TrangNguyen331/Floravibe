@@ -77,48 +77,7 @@ function Dashboard() {
       },
     })
   );
-  // const StyledTabs = styled((props) => (
-  //   <Tabs
-  //     {...props}
-  //     TabIndicatorProps={{
-  //       children: <span className="MuiTabs-indicatorSpan" />,
-  //     }}
-  //   />
-  // ))({
-  //   "& .MuiTabs-indicator": {
-  //     display: "flex",
-  //     justifyContent: "center",
-  //     backgroundColor: "transparent",
-  //   },
-  //   "& .MuiTabs-indicatorSpan": {
-  //     // maxWidth: 60,
-  //     height: "8px",
-  //     width: "70%",
-  //     backgroundColor: "#7e3af2",
-  //   },
-  // });
-  // const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
-  //   ({ theme }) => ({
-  //     textTransform: "none",
-  //     fontWeight: 500,
-  //     fontSize: theme.typography.pxToRem(20),
-  //     marginRight: theme.spacing(1),
-  //     color: "#97979c",
-  //     "&.Mui-selected": {
-  //       fontWeight: 600,
-  //       fontSize: 22,
-  //       color: "#7e3af2",
-  //     },
-  //     "&.Mui-focusVisible": {
-  //       backgroundColor: "rgba(100, 95, 228, 0.32)",
-  //     },
-  //   })
-  // );
-  // CustomTabPanel.propTypes = {
-  //   children: PropTypes.node,
-  //   index: PropTypes.number.isRequired,
-  //   value: PropTypes.number.isRequired,
-  // };
+
   function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,
@@ -258,23 +217,10 @@ function Dashboard() {
         </InfoCard>
       </div>
       {/* <TopSelling /> */}
-
       <div className="grid gap-6 mb-8 md:grid-cols-2">
         <TopSellProduct />
         <MonthlyRevenueChart year={currentYear} />
       </div>
-      {/* <div className="grid gap-6 mb-8 md:grid-cols-2">
-        <ChartCard title="User Analytics">
-          <Line {...lineOptions} />
-          <ChartLegend legends={lineLegends} />
-        </ChartCard>
-
-        <ChartCard title="Revenue">
-          <Doughnut {...doughnutOptions} />
-          <ChartLegend legends={doughnutLegends} />
-        </ChartCard>
-      </div> */}
-
       <Box sx={{ width: "100%" }}>
         <Box sx={{ bgcolor: "#2e1534" }}>
           <StyledTabs

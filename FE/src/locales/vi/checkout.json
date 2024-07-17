@@ -7,7 +7,9 @@
     "invalid-voucher-code": "Mã voucher không hợp lệ!",
     "fail-create-order": "Không thể tạo đơn hàng. Vui lòng thử lại sau!",
     "must-login": "Vui lòng đăng nhập để đặt hàng!",
-    "load-order-fail": "Không thể tải đơn hàng"
+    "load-order-fail": "Không thể tải đơn hàng",
+    "no-cartItem": "Không có sản phẩm trong giỏ hàng",
+    "not-enough-product": "Có sản phẩm không đủ số lượng trong kho"
   },
   "form": {
     "checkout": "Đặt hàng",

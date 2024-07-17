@@ -1,5 +1,4 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import MetaTags from "react-meta-tags";
 import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
 import LayoutOne from "../../layouts/LayoutOne";
@@ -13,7 +12,6 @@ import { LuBadgeInfo } from "react-icons/lu";
 const CheckOrder = ({ location }) => {
   const { pathname } = location;
   const { t } = useTranslation(["orders", "breadcrumb"]);
-  const [allOrders, setAllOrders] = useState([]);
   const [loadingGet, setLoadingGet] = useState(false);
   const [email, setEmail] = useState("");
   const [orderId, setOrderId] = useState("");
@@ -45,7 +43,6 @@ const CheckOrder = ({ location }) => {
       page++;
     }
     let filtered = allOrders;
-    // let filtered = allOrders;
     if (email) {
       filtered = filtered.filter(
         (order) => order.additionalOrder.email === email

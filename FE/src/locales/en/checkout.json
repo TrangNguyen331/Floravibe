@@ -7,7 +7,9 @@
     "invalid-voucher-code": "Invalid voucher code!",
     "fail-create-order": "Fail to create Order. Please try again later!",
     "must-login": "Please login to place order!",
-    "load-order-fail": "Fail to load my order"
+    "load-order-fail": "Fail to load my order",
+    "no-cartItem": "No items found in cart",
+    "not-enough-product": "There are products out of stock"
   },
   "form": {
     "checkout": "Checkout",
